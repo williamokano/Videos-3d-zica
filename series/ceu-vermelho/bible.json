@@ -1,0 +1,27 @@
+{
+  "series": "ceu-vermelho",
+  "title": "De repente o céu ficou vermelho",
+  "language": "pt-BR",
+  "dubbing": ["en", "de"],
+  "format": { "width": 1080, "height": 1920, "fps": 30 },
+  "audio": { "provider": "elevenlabs", "defaultMode": "sts" },
+  "rules": [
+    {
+      "id": "ceu-vermelho",
+      "description": "De repente o céu ficou vermelho, e continua assim.",
+      "from": 1,
+      "until": null,
+      "effects": {
+        "environment": {
+          "skyTop": "#4a0606",
+          "skyHorizon": "#ff5a2b",
+          "sunColor": "#ffd2c2",
+          "sunIntensity": 2.2,
+          "ambientIntensity": 1.0,
+          "fogNear": 40,
+          "fogFar": 200
+        }
+      }
+    }
+  ]
+}
