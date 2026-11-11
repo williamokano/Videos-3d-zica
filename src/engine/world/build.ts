@@ -1,14 +1,27 @@
 import * as THREE from 'three';
-import { createAsset, mat } from '../assets/registry';
+import type { ActionTarget } from '../actions/catalog';
+import { assetKind, createAsset, mat, type AssetChannels } from '../assets/registry';
+import { buildDoor } from './doors';
 import { contains, subtractRects, type Rect } from './rect';
 import { layoutStairs, partHeight, type StairLayout } from './stairs';
-import type { Dir, Location, Opening, Prop, Room } from './types';
+import type { Location, Prop } from './types';
 import { DEFAULT_ROOM_H, DOOR_H, WALL_T, roomOpenings, roomWalls, sideGeometry, type WallPiece } from './walls';
 
 /** Footprint that blocks movement between heights y0 and y1. */
 export interface Collider extends Rect {
   y0: number;
   y1: number;
+  /** Lets walkers through for now (an open door). */
+  disabled?: boolean;
+}
+
+/** An object that episode actions can animate: a door leaf or a prop with an id. */
+export interface InteractiveObject extends ActionTarget {
+  object: THREE.Object3D;
+  /** Show a channel at a value. */
+  set(channel: string, value: number): void;
+  /** Where it is, for finding the nearest one: [x, y, z]. */
+  position(): [number, number, number];
 }
 
 /** Something to stand on: a floor, the ground, a landing or a flight of stairs. */
@@ -33,6 +46,8 @@ export interface BuiltLocation {
   stairs: { bottom: number; group: THREE.Group }[];
   colliders: Collider[];
   surfaces: Surface[];
+  /** Doors and props with an id, for the action track. */
+  interactives: InteractiveObject[];
 }
 
 const WALKER_HEIGHT = 1.7;
@@ -56,8 +71,16 @@ function pieceRect(p: WallPiece, thickness = WALL_T): Rect {
     : { minX: p.center - half, maxX: p.center + half, minZ: p.from, maxZ: p.to };
 }
 
-function placeProps(props: Prop[] | undefined, origin: [number, number], elevation: number, parent: THREE.Object3D): void {
+function placeProps(
+  props: Prop[] | undefined,
+  origin: [number, number],
+  elevation: number,
+  parent: THREE.Object3D,
+  interactives: InteractiveObject[],
+): void {
   for (const prop of props ?? []) {
+    if (prop.repeat && prop.id) throw new Error(`Prop "${prop.id}": um prop com id não pode usar "repeat".`);
+    if (prop.pickable && !prop.id) throw new Error(`Prop "${prop.asset}": um prop pegável precisa de "id".`);
     const [nx, nz] = prop.repeat?.count ?? [1, 1];
     const [dx, dz] = prop.repeat?.spacing ?? [0, 0];
     for (let i = 0; i < nx; i++) {
@@ -69,37 +92,32 @@ function placeProps(props: Prop[] | undefined, origin: [number, number], elevati
           if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
         });
         parent.add(obj);
+        if (prop.id) interactives.push(interactiveProp(prop, obj));
       }
     }
   }
 }
 
-/** Door leaf hinged at the start of the opening; emergency doors (opensFrom "inside") swing outward and get a push bar. */
-function doorLeaf(room: Room, o: Opening): THREE.Object3D {
-  const leaf = o.leaf!;
-  const g = sideGeometry(room, o.wall);
-  const hinge = g.from + o.at - o.width / 2;
-  const pivot = new THREE.Group();
-  pivot.position.set(g.axis === 'x' ? hinge : g.center, room.elevation ?? 0, g.axis === 'x' ? g.center : hinge);
-
-  const panel = new THREE.Mesh(new THREE.BoxGeometry(o.width - 0.04, DOOR_H - 0.04, 0.05), mat(leaf.color ?? '#8f563b'));
-  panel.position.set(o.width / 2, DOOR_H / 2, 0);
-  pivot.add(panel);
-  // Local +z of a closed leaf points into the room on n/e walls and out of it on s/w walls.
-  const inside = o.wall === 'n' || o.wall === 'e' ? 1 : -1;
-  const handleSides = leaf.opensFrom === 'inside' ? [inside] : leaf.opensFrom === 'outside' ? [-inside] : [1, -1];
-  for (const side of handleSides) {
-    const bar = leaf.opensFrom === 'inside';
-    const handle = new THREE.Mesh(new THREE.BoxGeometry(bar ? o.width * 0.7 : 0.12, 0.05, 0.05), mat('#d0d4dc'));
-    handle.position.set(bar ? o.width / 2 : o.width - 0.14, 1.02, side * 0.05);
-    pivot.add(handle);
-  }
-
-  const outward: Record<Dir, number> = { n: 1, s: -1, e: 1, w: -1 };
-  const swing = outward[o.wall] * (leaf.opensFrom === 'inside' ? 1 : -1);
-  pivot.rotation.y = (g.axis === 'x' ? 0 : -Math.PI / 2) + swing * THREE.MathUtils.degToRad(leaf.open ?? 0);
-  pivot.traverse((m) => (m.castShadow = m.receiveShadow = true));
-  return pivot;
+function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
+  const own = (obj.userData.channels ?? {}) as AssetChannels;
+  const placement: AssetChannels = {
+    x: { value: obj.position.x, apply: (v) => (obj.position.x = v) },
+    y: { value: obj.position.y, apply: (v) => (obj.position.y = v) },
+    z: { value: obj.position.z, apply: (v) => (obj.position.z = v) },
+    yaw: { value: prop.rot ?? 0, apply: (v) => (obj.rotation.y = THREE.MathUtils.degToRad(v)) },
+  };
+  // `held` is 1 while something carries the item; characters will read it to attach the item to a hand.
+  const held: AssetChannels = prop.pickable ? { held: { value: 0, apply: () => {} } } : {};
+  const all = { ...own, ...placement, ...held };
+  return {
+    id: prop.id!,
+    kind: prop.pickable ? 'item' : assetKind(prop.asset),
+    channels: Object.fromEntries(Object.entries(all).map(([name, c]) => [name, c.value])),
+    traits: { pickable: prop.pickable },
+    object: obj,
+    set: (channel, value) => all[channel]?.apply(value),
+    position: () => [obj.position.x, obj.position.y, obj.position.z],
+  };
 }
 
 /** Handrail from a to b ([x, y, z] at floor level) with posts; blocks movement across it. */
@@ -184,6 +202,7 @@ export function buildLocation(loc: Location): BuiltLocation {
   root.name = loc.id;
   const colliders: Collider[] = [];
   const surfaces: Surface[] = [];
+  const interactives: InteractiveObject[] = [];
 
   const layouts = (loc.stairs ?? []).map((st) => ({ st, layout: layoutStairs(st) }));
   /** Stair wells that pass through a slab at height y. */
@@ -198,7 +217,7 @@ export function buildLocation(loc: Location): BuiltLocation {
     exterior.add(ground);
     surfaces.push(flat(r, 0));
   }
-  placeProps(loc.props, [0, 0], 0, exterior);
+  placeProps(loc.props, [0, 0], 0, exterior, interactives);
   root.add(exterior);
 
   const openings = loc.rooms.flatMap(roomOpenings);
@@ -223,8 +242,33 @@ export function buildLocation(loc: Location): BuiltLocation {
       g.add(mesh);
       colliders.push({ ...pieceRect(piece), y0, y1 });
     }
-    for (const o of room.openings ?? []) if (o.leaf) g.add(doorLeaf(room, o));
-    placeProps(room.props, room.origin, elevation, g);
+    (room.openings ?? []).forEach((o, index) => {
+      if (!o.leaf || o.type !== 'door') return;
+      const door = buildDoor(room, o);
+      g.add(door.object);
+      // A closed door blocks the doorway; the collider follows the `open` channel.
+      const side = sideGeometry(room, o.wall);
+      const from = side.from + o.at - o.width / 2;
+      const collider: Collider = { ...pieceRect({ ...side, from, to: from + o.width, y0: 0, y1: 0, kind: 'wall' }), y0: elevation, y1: elevation + DOOR_H };
+      colliders.push(collider);
+      const set = (open: number) => {
+        door.setOpen(open);
+        collider.disabled = open >= door.passableAt;
+      };
+      set(o.leaf.open ?? 0);
+      interactives.push({
+        id: o.id ?? `${room.id}.${o.wall}${index}`,
+        kind: 'door',
+        channels: { open: o.leaf.open ?? 0 },
+        traits: { opensFrom: o.leaf.opensFrom ?? 'both', doorKind: o.leaf.kind ?? 'swing' },
+        object: door.object,
+        set: (channel, value) => {
+          if (channel === 'open') set(value);
+        },
+        position: () => (side.axis === 'x' ? [from + o.width / 2, elevation, side.center] : [side.center, elevation, from + o.width / 2]),
+      });
+    });
+    placeProps(room.props, room.origin, elevation, g, interactives);
     if (!room.outdoor) {
       // The ceiling hangs just under the floor of the storey above.
       const top = elevation + height - 0.06;
@@ -242,7 +286,12 @@ export function buildLocation(loc: Location): BuiltLocation {
     return { bottom: layout.bottom, group };
   });
 
-  return { group: root, rooms, exterior, stairs, colliders, surfaces };
+  const seen = new Set<string>();
+  for (const { id } of interactives) {
+    if (seen.has(id)) throw new Error(`Id repetido no local "${loc.id}": "${id}".`);
+    seen.add(id);
+  }
+  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives };
 }
 
 /** Floor height under a walker whose feet are at `feetY`: the highest surface they can stand on or step up to. */
@@ -260,6 +309,7 @@ export function surfaceHeight(surfaces: Surface[], x: number, z: number, feetY: 
 export function resolveCollisions(x: number, z: number, radius: number, colliders: Collider[], feetY = 0): [number, number] {
   for (let pass = 0; pass < 2; pass++) {
     for (const r of colliders) {
+      if (r.disabled) continue;
       if (feetY >= r.y1 - 0.3 || feetY + WALKER_HEIGHT <= r.y0) continue;
       const cx = Math.max(r.minX, Math.min(x, r.maxX));
       const cz = Math.max(r.minZ, Math.min(z, r.maxZ));

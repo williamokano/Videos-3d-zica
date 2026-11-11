@@ -8,14 +8,27 @@
 export type Dir = 'n' | 's' | 'e' | 'w';
 
 export interface DoorLeaf {
+  /**
+   * How the leaf moves (default "swing"):
+   * - swing: hinged at the start of the opening.
+   * - sliding: runs along the wall, on the side of the room that declares it.
+   * - rollup: shop shutter that rolls up into a box above the opening and comes down to close.
+   */
+  kind?: 'swing' | 'sliding' | 'rollup';
   color?: string;
   /** Which side the door can be opened from; "inside" is the room that declares the opening. */
   opensFrom?: 'inside' | 'outside' | 'both';
-  /** How far the leaf stands open, in degrees (0 = closed). */
+  /** How open the door starts, from 0 (closed) to 1 (fully open). Actions animate this as the `open` channel. */
   open?: number;
+  /** swing only: angle in degrees when fully open (default 90). */
+  angle?: number;
+  /** sliding only: which end of the opening the leaf slides toward (default "start", the west or north end). */
+  slide?: 'start' | 'end';
 }
 
 export interface Opening {
+  /** Name used by episode actions to target the door. Unique in the location. Defaults to "<room>.<wall><index>". */
+  id?: string;
   wall: Dir;
   type: 'door' | 'window';
   /** Center of the opening, measured along the wall from its west (n/s walls) or north (e/w walls) end. */
@@ -26,6 +39,13 @@ export interface Opening {
 }
 
 export interface Prop {
+  /**
+   * Makes the prop an interactive object that episode actions can target. Unique in the location.
+   * Its channels are x, y, z (location coordinates), yaw (degrees) and whatever the asset adds.
+   */
+  id?: string;
+  /** Can be picked up and put down by actions. Needs an `id`. */
+  pickable?: boolean;
   /** Asset id in the registry, e.g. "school.desk". */
   asset: string;
   /** [x, z] relative to the room origin (or absolute for location-level props). */

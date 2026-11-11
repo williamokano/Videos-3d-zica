@@ -88,11 +88,12 @@
         { "wall": "s", "type": "window", "at": 4.5, "width": 3.0 },
         { "wall": "s", "type": "window", "at": 19.5, "width": 3.0 },
         {
+          "id": "porta-escadaria",
           "wall": "e",
           "type": "door",
           "at": 1.5,
           "width": 1.0,
-          "leaf": { "color": "#6b4a3a", "open": 75 }
+          "leaf": { "color": "#6b4a3a", "angle": 80 }
         }
       ],
       "props": [
@@ -187,11 +188,12 @@
       "wallColor": "#b9b4aa",
       "openings": [
         {
+          "id": "porta-emergencia",
           "wall": "n",
           "type": "door",
           "at": 1.9,
           "width": 1.0,
-          "leaf": { "color": "#b03a2e", "opensFrom": "inside", "open": 0 }
+          "leaf": { "color": "#b03a2e", "opensFrom": "inside" }
         }
       ],
       "props": [

@@ -1,3 +1,4 @@
+import type { ActionClip } from '../actions/catalog';
 import type { CameraKey } from './camera';
 
 /** An episode: which location it plays in and its timeline tracks. Lives in series/<series>/episodes. */
@@ -9,6 +10,8 @@ export interface Episode {
   /** Length in seconds. */
   duration: number;
   camera: CameraKey[];
+  /** What happens to interactive objects: doors opening, cars driving, items picked up. */
+  actions?: ActionClip[];
 }
 
 export function frameCount(episode: Episode, fps: number): number {

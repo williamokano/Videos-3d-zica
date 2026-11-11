@@ -1,0 +1,32 @@
+{
+  "episode": 1,
+  "title": "Portas, carro e caixa",
+  "location": "rua",
+  "duration": 25,
+  "camera": [
+    { "t": 0, "pos": [5.5, 1.6, 9.5], "lookAt": [5.5, 1.3, 3], "fov": 55 },
+    { "t": 4, "pos": [5.5, 1.6, 8], "lookAt": [5.5, 1.2, 3], "fov": 55 },
+    { "t": 4, "pos": [13.4, 1.6, 7], "lookAt": [12.4, 1.1, 3], "cut": true },
+    { "t": 7, "pos": [13.2, 1.6, 6.4], "lookAt": [12.4, 1.1, 3] },
+    { "t": 7, "pos": [22.5, 1.6, 7.2], "lookAt": [22.5, 1.1, 3], "cut": true },
+    { "t": 10, "pos": [22.5, 1.6, 6.6], "lookAt": [22.5, 1.1, 3] },
+    { "t": 10, "pos": [22.5, 2.3, 4.2], "lookAt": [10, 0.6, 9], "fov": 60, "cut": true },
+    { "t": 14, "pos": [22.3, 2.2, 4.4], "lookAt": [17.5, 0.7, 9] },
+    { "t": 20, "pos": [21.8, 2.1, 4.6], "lookAt": [17.8, 0.7, 8.6] },
+    { "t": 20.5, "pos": [5.5, 1.6, 9], "lookAt": [5.5, 1.3, 3], "fov": 55, "cut": true },
+    { "t": 25, "pos": [5.5, 1.6, 9.5], "lookAt": [5.5, 1.3, 3], "fov": 55 }
+  ],
+  "actions": [
+    { "t": 0.5, "duration": 3, "target": "porta-loja", "action": "open" },
+    { "t": 4.6, "duration": 1.2, "target": "porta-casa", "action": "open" },
+    { "t": 7.6, "duration": 1.4, "target": "porta-mercado", "action": "open" },
+    { "t": 10.2, "duration": 4, "target": "carro", "action": "drive", "ease": "out", "params": { "path": [[10, 9], [18, 8.6]] } },
+    { "t": 14.4, "target": "carro", "action": "open", "params": { "part": "frontLeft" } },
+    { "t": 15.4, "target": "carro", "action": "open", "params": { "part": "rearLeft" } },
+    { "t": 16.4, "target": "caixa", "action": "pickUp", "params": { "to": [18.6, 1.05, 6.6] } },
+    { "t": 17.2, "duration": 0.9, "target": "caixa", "action": "putDown", "params": { "at": [17.2, 0.66, 8.2] } },
+    { "t": 18.4, "target": "carro", "action": "close", "params": { "part": "rearLeft" } },
+    { "t": 19.2, "target": "carro", "action": "close", "params": { "part": "frontLeft" } },
+    { "t": 21, "duration": 3, "target": "porta-loja", "action": "close" }
+  ]
+}

@@ -1,3 +1,4 @@
+import type { CompiledClip } from '../engine/actions/catalog';
 import type { Episode } from '../engine/timeline/episode';
 import { frameCount } from '../engine/timeline/episode';
 
@@ -16,6 +17,7 @@ export class TimelineBar {
     episode: Episode,
     private readonly fps: number,
     private readonly onChange: () => void,
+    actions: CompiledClip[] = [],
   ) {
     this.frames = frameCount(episode, fps);
     this.element.className = 'timeline';
@@ -47,6 +49,15 @@ export class TimelineBar {
       mark.style.left = `${(key.t / episode.duration) * 100}%`;
       if (key.cut) mark.className = 'cut';
       track.append(mark);
+    }
+
+    for (const clip of actions) {
+      const bar = document.createElement('i');
+      bar.className = 'action';
+      bar.title = `${clip.action} em ${clip.target}: ${clip.t}s, dura ${Math.round(clip.duration * 100) / 100}s`;
+      bar.style.left = `${(clip.t / episode.duration) * 100}%`;
+      bar.style.width = `max(2px, ${(clip.duration / episode.duration) * 100}%)`;
+      track.append(bar);
     }
 
     this.element.append(

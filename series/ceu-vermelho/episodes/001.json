@@ -16,5 +16,9 @@
     { "t": 24, "pos": [20.8, -1.4, -1.1], "lookAt": [10, -1.6, -1.6] },
     { "t": 28, "pos": [3.4, -1.4, -1.6], "lookAt": [2, -1.7, -6] },
     { "t": 30, "pos": [2.6, -1.4, -4.6], "lookAt": [1.9, -1.9, -7] }
+  ],
+  "actions": [
+    { "t": 8.8, "duration": 1.2, "target": "porta-escadaria", "action": "open" },
+    { "t": 28.3, "duration": 1.4, "target": "porta-emergencia", "action": "open", "params": { "from": "inside", "amount": 0.9 } }
   ]
 }

@@ -19,9 +19,9 @@ Metros; +x leste, +z sul, +y cima. Direções: `n` = -z, `s` = +z, `e` = +x, `w`
 
 - **Área** (`rooms`): retângulo com `origin` (canto noroeste), `size`, cores, e `elevation` (altura do piso: 0 térreo, negativo porão, positivo andar de cima). `outdoor: true` tira paredes e teto.
 - **Aberturas** (`openings`): porta ou janela numa parede, com `at` medido a partir da ponta oeste (paredes n/s) ou norte (paredes e/w). Uma abertura também corta a parede da área vizinha na mesma linha e no mesmo nível, então declare cada porta uma vez só.
-- **Folha de porta** (`leaf`): sem ela a porta é um vão livre. `opensFrom: "inside"` é porta de emergência (abre para fora, com barra); "dentro" é a área que declara a abertura. `open` é o ângulo em graus.
+- **Folha de porta** (`leaf`): sem ela a porta é um vão livre. `kind` é `swing` (de abrir, padrão), `sliding` (de correr; `slide` diz para que ponta) ou `rollup` (de enrolar, de loja). `opensFrom: "inside"` é porta de emergência (abre para fora, com barra); "dentro" é a área que declara a abertura. `open` é o estado inicial, de 0 (fechada) a 1 (aberta); `angle` é o ângulo máximo da porta de abrir. Porta fechada bloqueia a passagem. Dê um `id` à abertura para os episódios poderem abrir e fechar a porta (skill `direct-actions`).
 - **Escadas** (`stairs`): descritas de cima para baixo. `top` é o centro da borda superior do primeiro lance. O `path` alterna lances (`{ "flight": "e", "drop": 1.5 }`) e patamares (`straight`, `uturn` com `side`, `corner` com `side`). O motor abre o buraco nos pisos e tetos que a escada atravessa e põe corrimão e guarda-corpo.
-- **Objetos** (`props`): `asset` do catálogo, `pos` relativo à origem da área, `y` acima do piso, `rot` em graus, `repeat` para grades.
+- **Objetos** (`props`): `asset` do catálogo, `pos` relativo à origem da área, `y` acima do piso, `rot` em graus, `repeat` para grades. Com `id`, o objeto pode ser animado por ações do episódio; `pickable: true` permite pegá-lo.
 
 ## Regras de modelagem
 
@@ -39,5 +39,5 @@ Consulte o catálogo antes de criar: os ids e descrições estão nos `registerA
 ## Conferir
 
 1. `npm test` e `npm run typecheck`.
-2. Abra o estúdio (`npm run dev`) e tire screenshots com o Chromium headless: visão geral, cada nível, e o caminho a pé pelas portas e escadas novas. `window.__studio` expõe `setMode`, `setLevel`, `focusRoom` e `walk.placeAt(x, z, elevation, yaw)`.
+2. Abra o estúdio (`npm run dev`) e tire screenshots com o Chromium headless: visão geral, cada nível, e o caminho a pé pelas portas e escadas novas. `window.__studio` expõe `setMode`, `setLevel`, `focusRoom` e `walk.placeAt(x, z, elevation, yaw)`. Na visão Andar, a tecla E abre e fecha a porta mais próxima.
 3. Olhe as imagens: paredes sem vão errado, móveis virados para o lado certo, nada atravessando parede, escada chegando no piso.

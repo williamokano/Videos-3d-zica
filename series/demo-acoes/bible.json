@@ -1,0 +1,9 @@
+{
+  "series": "demo-acoes",
+  "title": "Demonstração de ações",
+  "language": "pt-BR",
+  "dubbing": [],
+  "format": { "width": 1080, "height": 1920, "fps": 30 },
+  "audio": { "provider": "elevenlabs", "defaultMode": "tts" },
+  "rules": []
+}

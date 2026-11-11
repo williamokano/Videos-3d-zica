@@ -1,0 +1,78 @@
+{
+  "id": "rua",
+  "name": "Rua de teste",
+  "ground": { "color": "#7fb069", "size": 200 },
+  "spawn": { "pos": [12, 5], "yaw": 0 },
+  "rooms": [
+    {
+      "id": "loja",
+      "name": "Loja",
+      "origin": [2, -4],
+      "size": [7, 7],
+      "floorColor": "#d8d2c4",
+      "wallColor": "#f0d9a8",
+      "openings": [
+        { "id": "porta-loja", "wall": "s", "type": "door", "at": 3.5, "width": 3, "leaf": { "kind": "rollup" } }
+      ],
+      "props": [
+        { "asset": "storage.shelf", "pos": [2, 0.4], "params": { "seed": 3, "width": 2.4 } },
+        { "asset": "storage.shelf", "pos": [5, 0.4], "params": { "seed": 7, "width": 2.4 } },
+        { "asset": "light.ceilingLamp", "pos": [3.5, 3.5], "y": 2.85 }
+      ]
+    },
+    {
+      "id": "casa",
+      "name": "Casa",
+      "origin": [11, -4],
+      "size": [6, 7],
+      "floorColor": "#c9a27a",
+      "wallColor": "#e6efe0",
+      "openings": [
+        { "id": "porta-casa", "wall": "s", "type": "door", "at": 1.5, "width": 1, "leaf": { "color": "#3f6fa8" } },
+        { "wall": "s", "type": "window", "at": 4.2, "width": 1.8 }
+      ],
+      "props": [{ "asset": "light.ceilingLamp", "pos": [3, 3.5], "y": 2.85 }]
+    },
+    {
+      "id": "mercado",
+      "name": "Mercado",
+      "origin": [19, -4],
+      "size": [7, 7],
+      "floorColor": "#e3e6ea",
+      "wallColor": "#e3e8f3",
+      "openings": [
+        { "id": "porta-mercado", "wall": "s", "type": "door", "at": 3.5, "width": 1.6, "leaf": { "kind": "sliding", "color": "#4d6a7a", "slide": "end" } },
+        { "wall": "s", "type": "window", "at": 1.2, "width": 1.6 }
+      ],
+      "props": [
+        { "asset": "storage.crates", "pos": [1.2, 1.5], "params": { "seed": 4 } },
+        { "asset": "light.ceilingLamp", "pos": [3.5, 3.5], "y": 2.85 }
+      ]
+    },
+    {
+      "id": "calcada",
+      "name": "Calçada",
+      "origin": [0, 3],
+      "size": [28, 3.5],
+      "outdoor": true,
+      "floorColor": "#c4c1b8",
+      "props": [
+        { "asset": "school.bench", "pos": [10, 1.2] },
+        { "id": "caixa", "pickable": true, "asset": "item.box", "pos": [18.2, 2.2] },
+        { "asset": "nature.tree", "pos": [0.8, 1.5], "params": { "seed": 2 } },
+        { "asset": "nature.tree", "pos": [27, 1.5], "params": { "seed": 5 } }
+      ]
+    },
+    {
+      "id": "rua",
+      "name": "Rua",
+      "origin": [0, 6.5],
+      "size": [28, 7],
+      "outdoor": true,
+      "floorColor": "#55585f"
+    }
+  ],
+  "props": [
+    { "id": "carro", "asset": "vehicle.car", "pos": [3, 9], "rot": -90 }
+  ]
+}

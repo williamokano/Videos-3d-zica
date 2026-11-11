@@ -119,3 +119,12 @@ body {
   word-break: break-all;
   user-select: all;
 }
+.timeline .track i.action { top: auto; bottom: -6px; height: 4px; background: #4fb3ff; border-radius: 2px; opacity: 0.85; }
+#panel .error {
+  margin-bottom: 8px;
+  padding: 8px;
+  border: 1px solid #ff5a4d;
+  border-radius: 6px;
+  color: #ffb3ac;
+  font-size: 12px;
+}

@@ -3,6 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '../engine/assets/school';
 import '../engine/assets/nature';
 import '../engine/assets/building';
+import '../engine/assets/vehicles';
+import '../engine/actions/builtin';
+import { compileActions, evaluateActions, type CompiledActions } from '../engine/actions/catalog';
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { evaluateCamera } from '../engine/timeline/camera';
@@ -17,10 +20,14 @@ const bibles = import.meta.glob<Bible>('/series/*/bible.json', { eager: true, im
 const locations = import.meta.glob<Location>('/series/*/world/*.json', { eager: true, import: 'default' });
 const episodes = import.meta.glob<Episode>('/series/*/episodes/*.json', { eager: true, import: 'default' });
 
-const bible = Object.values(bibles)[0];
+// Which series and episode to open comes from the address: ?series=<id>&ep=<number>.
+const query = new URLSearchParams(window.location.search);
+const allBibles = Object.values(bibles);
+const bible = allBibles.find((b) => b.series === query.get('series')) ?? allBibles[0];
 const inSeries = <T>(files: Record<string, T>) =>
   Object.entries(files).filter(([path]) => path.includes(`/series/${bible.series}/`)).map(([, v]) => v);
-const episode: Episode | undefined = inSeries(episodes).sort((a, b) => a.episode - b.episode)[0];
+const seriesEpisodes = inSeries(episodes).sort((a, b) => a.episode - b.episode);
+const episode: Episode | undefined = seriesEpisodes.find((e) => e.episode === Number(query.get('ep'))) ?? seriesEpisodes[0];
 const location = inSeries(locations).find((l) => !episode || l.id === episode.location);
 if (!location) throw new Error(`A série "${bible.series}" ainda não tem nenhum cenário em world/.`);
 const episodeNumber = episode?.episode ?? 1;
@@ -60,8 +67,50 @@ const gizmoCamera = new THREE.PerspectiveCamera(50, frameAspect, 0.2, 1.6);
 const gizmos = new THREE.Group();
 scene.add(gizmos);
 
+// ---- Episode actions ----
+
+let actions: CompiledActions = { tracks: [], clips: [] };
+let actionsError = '';
+try {
+  actions = compileActions(episode?.actions ?? [], built.interactives);
+} catch (error) {
+  actionsError = error instanceof Error ? error.message : String(error);
+}
+const interactiveById = new Map(built.interactives.map((o) => [o.id, o]));
+/** Doors opened or closed by hand in walk mode, until the timeline moves again. */
+const handOverrides = new Map<string, number>();
+
+function applyActions(t: number): void {
+  handOverrides.clear();
+  for (const [id, channels] of Object.entries(evaluateActions(actions, t))) {
+    const object = interactiveById.get(id)!;
+    for (const [channel, value] of Object.entries(channels)) object.set(channel, value);
+  }
+}
+
+/** Walk mode: open or close the nearest door within reach, ignoring which side it opens from. */
+function toggleNearestDoor(): void {
+  const p = camera.position;
+  let best: { id: string; distance: number } | undefined;
+  for (const o of built.interactives) {
+    if (o.kind !== 'door') continue;
+    const [x, y, z] = o.position();
+    const distance = Math.hypot(x - p.x, z - p.z);
+    if (distance < 2.5 && Math.abs(y + 1.6 - p.y) < 1.5 && (!best || distance < best.distance)) best = { id: o.id, distance };
+  }
+  if (!best) return;
+  const now = handOverrides.get(best.id) ?? evaluateActions(actions, timeline?.time ?? 0)[best.id]?.open ?? interactiveById.get(best.id)!.channels.open;
+  const next = now >= 0.5 ? 0 : 1;
+  handOverrides.set(best.id, next);
+  interactiveById.get(best.id)!.set('open', next);
+}
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'KeyE' && mode === 'walk') toggleNearestDoor();
+});
+
 function applyShot(t: number): void {
   if (!episode) return;
+  applyActions(t);
   const pose = evaluateCamera(episode.camera, t);
   shotCamera.position.set(...pose.pos);
   shotCamera.lookAt(...pose.lookAt);
@@ -152,7 +201,7 @@ function setMode(next: Mode): void {
     const spawn = location!.spawn;
     const [x, z] = spawn?.pos ?? roomCenter(location!.rooms[0]);
     walk.placeAt(x, z, spawn?.elevation ?? location!.rooms[0].elevation ?? 0, spawn?.yaw ?? 0);
-    hint.textContent = 'Clique para olhar com o mouse · WASD anda · Shift corre · setas viram · Esc solta o mouse';
+    hint.textContent = 'Clique para olhar com o mouse · WASD anda · Shift corre · setas viram · E abre e fecha a porta mais próxima · Esc solta o mouse';
   } else if (next === 'orbit') {
     overview();
     hint.textContent = 'Arraste para girar · roda do mouse aproxima · botão direito desloca';
@@ -227,6 +276,17 @@ function renderPanel(): void {
   const subtitle = episode ? `Episódio ${episode.episode}: ${episode.title}` : 'Sem episódio';
   panel.append(el('h1', bible.title), el('p', `${subtitle} · ${bible.language} · ${location!.name}`));
 
+  if (allBibles.length > 1 || seriesEpisodes.length > 1) {
+    panel.append(el('h2', 'Série e episódio'));
+    const open = (series: string, ep?: number) => {
+      window.location.search = `?series=${series}${ep === undefined ? '' : `&ep=${ep}`}`;
+    };
+    if (allBibles.length > 1) for (const b of allBibles) panel.append(button(b.title, b === bible, () => open(b.series)));
+    if (seriesEpisodes.length > 1) {
+      for (const e of seriesEpisodes) panel.append(button(`Episódio ${e.episode}: ${e.title}`, e === episode, () => open(bible.series, e.episode)));
+    }
+  }
+
   panel.append(el('h2', 'Visão'));
   const modes = el('div', '', 'row');
   modes.append(button('Geral', mode === 'orbit', () => setMode('orbit')), button('Andar', mode === 'walk', () => setMode('walk')));
@@ -256,6 +316,14 @@ function renderPanel(): void {
     if (snippet) panel.append(el('div', snippet, 'snippet'));
   }
 
+  if (actionsError || actions.clips.length) {
+    panel.append(el('h2', 'Ações do episódio'));
+    if (actionsError) panel.append(el('div', actionsError, 'error'));
+    for (const clip of actions.clips) {
+      panel.append(button(`${clip.t}s · ${clip.action} · ${clip.target}`, false, () => timeline?.seek(Math.round(clip.t * bible.format.fps))));
+    }
+  }
+
   panel.append(el('h2', 'Bíblia — regras ativas'));
   const rules = activeRules(bible, episodeNumber);
   if (!rules.length) panel.append(el('p', 'Nenhuma regra ativa neste episódio.'));
@@ -277,7 +345,7 @@ function renderPanel(): void {
 
 let timeline: TimelineBar | undefined;
 if (episode) {
-  timeline = new TimelineBar(episode, bible.format.fps, () => applyShot(timeline!.time));
+  timeline = new TimelineBar(episode, bible.format.fps, () => applyShot(timeline!.time), actions.clips);
   document.getElementById('viewport')!.append(timeline.element);
   applyShot(0);
 }
@@ -351,5 +419,8 @@ renderer.setAnimationLoop(() => {
 
 // Handle for automated checks and debugging from the console.
 Object.assign(window, {
-  __studio: { setMode, setLevel, focusRoom: (id: string) => focusRoom(location!.rooms.find((r) => r.id === id)!), walk, camera, timeline },
+  __studio: {
+    setMode, setLevel, focusRoom: (id: string) => focusRoom(location!.rooms.find((r) => r.id === id)!), walk, camera, timeline,
+    interactives: built.interactives, actionsError, toggleNearestDoor,
+  },
 });

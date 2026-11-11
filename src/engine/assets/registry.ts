@@ -8,14 +8,32 @@ interface AssetEntry {
   id: string;
   description: string;
   create: AssetFactory;
+  kind: string;
+}
+
+/** Animatable parts of an asset: channel name → starting value and how to show a value. */
+export type AssetChannels = Record<string, { value: number; apply(value: number): void }>;
+
+/** Declare the channels of an asset instance, so actions can animate it when the prop has an id. */
+export function setChannels<T extends THREE.Object3D>(obj: T, channels: AssetChannels): T {
+  obj.userData.channels = channels;
+  for (const c of Object.values(channels)) c.apply(c.value);
+  return obj;
 }
 
 const assets = new Map<string, AssetEntry>();
 
-/** Register a reusable asset. Check `listAssets()` before creating a new one. */
-export function registerAsset(id: string, description: string, create: AssetFactory): void {
+/**
+ * Register a reusable asset. Check `listAssets()` before creating a new one.
+ * `kind` tells which actions fit the asset ("vehicle", or plain "prop").
+ */
+export function registerAsset(id: string, description: string, create: AssetFactory, kind = 'prop'): void {
   if (assets.has(id)) throw new Error(`Asset already registered: ${id}`);
-  assets.set(id, { id, description, create });
+  assets.set(id, { id, description, create, kind });
+}
+
+export function assetKind(id: string): string {
+  return assets.get(id)?.kind ?? 'prop';
 }
 
 export function createAsset(id: string, params: AssetParams = {}): THREE.Object3D {
