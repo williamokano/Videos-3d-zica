@@ -17,6 +17,8 @@ npm run build
 - **Andar**: clique no cenário para olhar com o mouse, WASD anda, Shift corre, setas viram. Sobe e desce escadas.
 - **Câmera**: mostra o que a câmera do episódio vê, no formato final do vídeo.
 - **Timeline**: espaço toca e pausa, `,` e `.` andam um frame, a barra leva a qualquer frame. Nas visões Geral e Andar, o trajeto da câmera aparece no cenário e a prévia fica no canto.
+- **Ações do episódio**: lista as ações na ordem; clicar leva a timeline até aquele momento. Os pontos azuis na barra são as ações.
+- **Portas fechadas bloqueiam** (visão Andar): desmarque para explorar com todas as portas abertas.
 - **Copiar minha visão como keyframe**: gera o keyframe da visão atual, no tempo atual, para colar no arquivo do episódio.
 - **Bíblia**: liga e desliga cada regra ativa para comparar o cenário com e sem ela.
 - **Áreas**: leva a câmera até cada área do local.
@@ -27,10 +29,10 @@ npm run build
 |---|---|
 | `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio |
 | `series/<série>/world/*.json` | Locais (formato em `src/engine/world/types.ts`) |
-| `series/<série>/episodes/*.json` | Episódios: local, duração e trilha de câmera |
+| `series/<série>/episodes/*.json` | Episódios: local, duração, trilha de câmera e trilha de ações |
 | `src/engine/assets` | Catálogo de assets paramétricos |
 | `src/engine/world` | Construção do local: paredes, aberturas, níveis, escadas, colisão |
-| `src/engine/timeline` | Trilha de câmera e tempo por frame |
+| `src/engine/timeline` | Trilha de câmera, catálogo e trilha de ações, tempo por frame |
 | `.claude/skills` | Skills que ensinam a LLM a usar o motor |
 | `src/studio` | Página 3D |
 

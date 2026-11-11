@@ -53,3 +53,9 @@ registerAsset('storage.crates', 'Pilha de caixotes de madeira (params: seed)', (
   }
   return g;
 });
+
+registerAsset('storage.box', 'Caixa de papelão avulsa, boa para ser carregada (params: size, color)', (p) => {
+  const s = Number(p.size ?? 0.45);
+  const color = String(p.color ?? '#c8a06a');
+  return group(rbox(s, s * 0.8, s, color, [0, s * 0.4, 0], 0.02), rbox(s * 0.2, 0.012, s + 0.004, '#a67c4a', [0, s * 0.8, 0], 0.004));
+});

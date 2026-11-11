@@ -19,9 +19,9 @@ Metros; +x leste, +z sul, +y cima. Direções: `n` = -z, `s` = +z, `e` = +x, `w`
 
 - **Área** (`rooms`): retângulo com `origin` (canto noroeste), `size`, cores, e `elevation` (altura do piso: 0 térreo, negativo porão, positivo andar de cima). `outdoor: true` tira paredes e teto.
 - **Aberturas** (`openings`): porta ou janela numa parede, com `at` medido a partir da ponta oeste (paredes n/s) ou norte (paredes e/w). Uma abertura também corta a parede da área vizinha na mesma linha e no mesmo nível, então declare cada porta uma vez só.
-- **Folha de porta** (`leaf`): sem ela a porta é um vão livre. `opensFrom: "inside"` é porta de emergência (abre para fora, com barra); "dentro" é a área que declara a abertura. `open` é o ângulo em graus.
+- **Folha de porta** (`leaf`): sem ela a porta é um vão livre. `kind` é `swing` (de abrir), `sliding` (de correr) ou `rollup` (de enrolar, estilo loja). `open` é o estado inicial de 0 (fechada) a 1 (aberta). `opensFrom: "inside"` é porta de emergência (abre para fora, com barra); "dentro" é a área que declara a abertura. Dê um `id` a toda porta que um episódio vá abrir ou fechar. Porta fechada bloqueia a passagem.
 - **Escadas** (`stairs`): descritas de cima para baixo. `top` é o centro da borda superior do primeiro lance. O `path` alterna lances (`{ "flight": "e", "drop": 1.5 }`) e patamares (`straight`, `uturn` com `side`, `corner` com `side`). O motor abre o buraco nos pisos e tetos que a escada atravessa e põe corrimão e guarda-corpo.
-- **Objetos** (`props`): `asset` do catálogo, `pos` relativo à origem da área, `y` acima do piso, `rot` em graus, `repeat` para grades.
+- **Objetos** (`props`): `asset` do catálogo, `pos` relativo à origem da área, `y` acima do piso, `rot` em graus, `repeat` para grades. Dê um `id` (sem pontos, sem `repeat`) ao que um episódio vá mover, prender ou animar, como um carro ou uma caixa.
 
 ## Regras de modelagem
 

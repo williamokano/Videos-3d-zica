@@ -48,6 +48,13 @@ export class TimelineBar {
       if (key.cut) mark.className = 'cut';
       track.append(mark);
     }
+    for (const action of episode.actions ?? []) {
+      const mark = document.createElement('i');
+      mark.className = 'action';
+      mark.title = `${action.t}s · ${action.action} ${action.target}`;
+      mark.style.left = `${(action.t / episode.duration) * 100}%`;
+      track.append(mark);
+    }
 
     this.element.append(
       button('⏮', 'Voltar ao início', () => this.seek(0)),

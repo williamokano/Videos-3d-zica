@@ -108,6 +108,7 @@ body {
   pointer-events: none;
 }
 .timeline .track i.cut { background: var(--accent); }
+.timeline .track i.action { top: auto; bottom: -6px; width: 5px; height: 5px; margin-left: -2px; border-radius: 50%; background: #5bc0eb; }
 .timeline span { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
 #panel .snippet {
   margin-top: 6px;
@@ -119,3 +120,5 @@ body {
   word-break: break-all;
   user-select: all;
 }
+#panel button.event { display: flex; gap: 8px; padding: 4px 8px; font-size: 12px; }
+#panel button.event b { color: var(--muted); font-weight: 400; font-variant-numeric: tabular-nums; min-width: 34px; }

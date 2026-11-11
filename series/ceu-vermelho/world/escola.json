@@ -19,12 +19,7 @@
       "props": [
         { "asset": "school.blackboard", "pos": [0.15, 3.5], "rot": 90 },
         { "asset": "school.teacherDesk", "pos": [1.6, 3.6], "rot": -90 },
-        {
-          "asset": "school.desk",
-          "pos": [3.2, 1.3],
-          "rot": 90,
-          "repeat": { "count": [4, 4], "spacing": [1.15, 1.45] }
-        }
+        { "asset": "school.desk", "pos": [3.2, 1.3], "rot": 90, "repeat": { "count": [4, 4], "spacing": [1.15, 1.45] } }
       ]
     },
     {
@@ -42,13 +37,7 @@
       "props": [
         { "asset": "school.blackboard", "pos": [0.15, 3.5], "rot": 90 },
         { "asset": "school.teacherDesk", "pos": [1.6, 3.6], "rot": -90 },
-        {
-          "asset": "school.desk",
-          "pos": [3.2, 1.3],
-          "rot": 90,
-          "params": { "color": "#d95763" },
-          "repeat": { "count": [4, 4], "spacing": [1.15, 1.45] }
-        }
+        { "asset": "school.desk", "pos": [3.2, 1.3], "rot": 90, "params": { "color": "#d95763" }, "repeat": { "count": [4, 4], "spacing": [1.15, 1.45] } }
       ]
     },
     {
@@ -66,13 +55,7 @@
       "props": [
         { "asset": "school.blackboard", "pos": [0.15, 3.5], "rot": 90 },
         { "asset": "school.teacherDesk", "pos": [1.6, 3.6], "rot": -90 },
-        {
-          "asset": "school.desk",
-          "pos": [3.2, 1.3],
-          "rot": 90,
-          "params": { "color": "#6abe30" },
-          "repeat": { "count": [4, 4], "spacing": [1.15, 1.45] }
-        }
+        { "asset": "school.desk", "pos": [3.2, 1.3], "rot": 90, "params": { "color": "#6abe30" }, "repeat": { "count": [4, 4], "spacing": [1.15, 1.45] } }
       ]
     },
     {
@@ -84,33 +67,15 @@
       "wallColor": "#f3ead7",
       "openings": [
         { "wall": "w", "type": "door", "at": 1.5, "width": 1.6 },
-        { "wall": "s", "type": "door", "at": 12, "width": 2.4 },
+        { "wall": "s", "type": "door", "at": 12, "width": 2.4, "leaf": { "id": "porta-patio", "kind": "sliding", "color": "#9fb7c9" } },
         { "wall": "s", "type": "window", "at": 4.5, "width": 3.0 },
         { "wall": "s", "type": "window", "at": 19.5, "width": 3.0 },
-        {
-          "wall": "e",
-          "type": "door",
-          "at": 1.5,
-          "width": 1.0,
-          "leaf": { "color": "#6b4a3a", "open": 75 }
-        }
+        { "wall": "e", "type": "door", "at": 1.5, "width": 1.0, "leaf": { "id": "porta-escadaria", "color": "#6b4a3a" } }
       ],
       "props": [
-        {
-          "asset": "school.lockers",
-          "pos": [5, 0.15],
-          "params": { "count": 8 }
-        },
-        {
-          "asset": "school.lockers",
-          "pos": [13, 0.15],
-          "params": { "count": 8 }
-        },
-        {
-          "asset": "school.lockers",
-          "pos": [21, 0.15],
-          "params": { "count": 8 }
-        }
+        { "asset": "school.lockers", "pos": [5, 0.15], "params": { "count": 8 } },
+        { "asset": "school.lockers", "pos": [13, 0.15], "params": { "count": 8 } },
+        { "asset": "school.lockers", "pos": [21, 0.15], "params": { "count": 8 } }
       ]
     },
     {
@@ -125,22 +90,9 @@
         { "asset": "school.bench", "pos": [19, 1.0], "rot": 180 },
         { "asset": "school.bench", "pos": [1.0, 8], "rot": -90 },
         { "asset": "school.bench", "pos": [23, 8], "rot": 90 },
-        {
-          "asset": "nature.tree",
-          "pos": [6, 9],
-          "params": { "seed": 3, "height": 4.5 }
-        },
-        {
-          "asset": "nature.tree",
-          "pos": [18, 9],
-          "params": { "seed": 8, "height": 5 }
-        },
-        {
-          "asset": "nature.bush",
-          "pos": [12, 13.2],
-          "params": { "seed": 2 },
-          "repeat": { "count": [5, 1], "spacing": [1.4, 0] }
-        }
+        { "asset": "nature.tree", "pos": [6, 9], "params": { "seed": 3, "height": 4.5 } },
+        { "asset": "nature.tree", "pos": [18, 9], "params": { "seed": 8, "height": 5 } },
+        { "asset": "nature.bush", "pos": [12, 13.2], "params": { "seed": 2 }, "repeat": { "count": [5, 1], "spacing": [1.4, 0] } }
       ]
     },
     {
@@ -169,12 +121,7 @@
         { "wall": "w", "type": "door", "at": 2.2, "width": 1.0 }
       ],
       "props": [
-        {
-          "asset": "light.ceilingLamp",
-          "pos": [0.75, 1.5],
-          "y": 2.85,
-          "params": { "intensity": 8 }
-        }
+        { "asset": "light.ceilingLamp", "pos": [0.75, 1.5], "y": 2.85, "params": { "intensity": 8 } }
       ]
     },
     {
@@ -186,62 +133,17 @@
       "floorColor": "#85878c",
       "wallColor": "#b9b4aa",
       "openings": [
-        {
-          "wall": "n",
-          "type": "door",
-          "at": 1.9,
-          "width": 1.0,
-          "leaf": { "color": "#b03a2e", "opensFrom": "inside", "open": 0 }
-        }
+        { "wall": "n", "type": "door", "at": 1.9, "width": 1.0, "leaf": { "id": "porta-emergencia", "color": "#b03a2e", "opensFrom": "inside" } }
       ],
       "props": [
-        {
-          "asset": "light.ceilingLamp",
-          "pos": [3.5, 2.6],
-          "y": 2.85,
-          "repeat": { "count": [4, 2], "spacing": [5.6, 4.8] }
-        },
-        {
-          "asset": "structure.pillar",
-          "pos": [6, 5],
-          "repeat": { "count": [3, 1], "spacing": [6, 0] }
-        },
-        {
-          "asset": "storage.shelf",
-          "pos": [5, 3.2],
-          "params": { "seed": 3 },
-          "repeat": { "count": [6, 1], "spacing": [2.6, 0] }
-        },
-        {
-          "asset": "storage.shelf",
-          "pos": [5, 6.8],
-          "rot": 180,
-          "params": { "seed": 9 },
-          "repeat": { "count": [6, 1], "spacing": [2.6, 0] }
-        },
-        {
-          "asset": "storage.shelf",
-          "pos": [23.5, 3.5],
-          "rot": -90,
-          "params": { "seed": 5 },
-          "repeat": { "count": [1, 2], "spacing": [0, 2.4] }
-        },
-        {
-          "asset": "storage.crates",
-          "pos": [21, 0.8],
-          "params": { "seed": 2 }
-        },
-        {
-          "asset": "storage.crates",
-          "pos": [9, 0.8],
-          "rot": 90,
-          "params": { "seed": 6 }
-        },
-        {
-          "asset": "storage.crates",
-          "pos": [1, 8.2],
-          "params": { "seed": 4 }
-        }
+        { "asset": "light.ceilingLamp", "pos": [3.5, 2.6], "y": 2.85, "repeat": { "count": [4, 2], "spacing": [5.6, 4.8] } },
+        { "asset": "structure.pillar", "pos": [6, 5], "repeat": { "count": [3, 1], "spacing": [6, 0] } },
+        { "asset": "storage.shelf", "pos": [5, 3.2], "params": { "seed": 3 }, "repeat": { "count": [6, 1], "spacing": [2.6, 0] } },
+        { "asset": "storage.shelf", "pos": [5, 6.8], "rot": 180, "params": { "seed": 9 }, "repeat": { "count": [6, 1], "spacing": [2.6, 0] } },
+        { "asset": "storage.shelf", "pos": [23.5, 3.5], "rot": -90, "params": { "seed": 5 }, "repeat": { "count": [1, 2], "spacing": [0, 2.4] } },
+        { "asset": "storage.crates", "pos": [21, 0.8], "params": { "seed": 2 } },
+        { "asset": "storage.crates", "pos": [9, 0.8], "rot": 90, "params": { "seed": 6 } },
+        { "asset": "storage.crates", "pos": [1, 8.2], "params": { "seed": 4 } }
       ]
     },
     {
@@ -253,14 +155,25 @@
       "floorColor": "#7d7f84",
       "wallColor": "#a7a39b",
       "props": [
-        {
-          "asset": "light.ceilingLamp",
-          "pos": [0.9, 0.75],
-          "y": 2.85,
-          "params": { "intensity": 5, "color": "#ffb0a0" }
-        }
+        { "asset": "light.ceilingLamp", "pos": [0.9, 0.75], "y": 2.85, "params": { "intensity": 5, "color": "#ffb0a0" } }
       ]
-    }
+    },
+    {
+      "id": "cantina",
+      "name": "Cantina",
+      "origin": [24, 5],
+      "size": [5, 4],
+      "floorColor": "#c9b79a",
+      "wallColor": "#f0d9a8",
+      "openings": [
+        { "wall": "w", "type": "door", "at": 2, "width": 2.6, "leaf": { "id": "porta-cantina", "kind": "rollup", "color": "#8b9bb4", "open": 1 } }
+      ],
+      "props": [
+        { "asset": "storage.shelf", "pos": [4.5, 2], "rot": -90, "params": { "seed": 7 } },
+        { "asset": "light.ceilingLamp", "pos": [2.5, 2], "y": 2.85, "params": { "intensity": 6 } }
+      ]
+    },
+    { "id": "rua", "name": "Rua", "origin": [-14, 19], "size": [52, 6], "outdoor": true, "floorColor": "#5a5d63" }
   ],
   "stairs": [
     {
@@ -274,48 +187,16 @@
         { "flight": "w", "drop": 1.5 }
       ]
     },
-    {
-      "id": "escada-emergencia",
-      "top": [6.4, -7.75],
-      "elevation": 0,
-      "width": 1.2,
-      "riser": 0.2,
-      "tread": 0.25,
-      "path": [
-        { "flight": "w", "drop": 3 }
-      ]
-    }
+    { "id": "escada-emergencia", "top": [6.4, -7.75], "elevation": 0, "width": 1.2, "riser": 0.2, "tread": 0.25, "path": [ { "flight": "w", "drop": 3 } ] }
   ],
   "props": [
-    {
-      "asset": "nature.tree",
-      "pos": [-5, -4],
-      "params": { "seed": 11, "height": 6 }
-    },
-    {
-      "asset": "nature.tree",
-      "pos": [-6, 6],
-      "params": { "seed": 12, "height": 5 }
-    },
-    {
-      "asset": "nature.tree",
-      "pos": [29, -3],
-      "params": { "seed": 13, "height": 5.5 }
-    },
-    {
-      "asset": "nature.tree",
-      "pos": [30, 10],
-      "params": { "seed": 14, "height": 6 }
-    },
-    {
-      "asset": "nature.tree",
-      "pos": [8, -12],
-      "params": { "seed": 15, "height": 5 }
-    },
-    {
-      "asset": "nature.tree",
-      "pos": [19, -13],
-      "params": { "seed": 16, "height": 6.5 }
-    }
+    { "asset": "nature.tree", "pos": [-5, -4], "params": { "seed": 11, "height": 6 } },
+    { "asset": "nature.tree", "pos": [-6, 6], "params": { "seed": 12, "height": 5 } },
+    { "asset": "nature.tree", "pos": [29, -3], "params": { "seed": 13, "height": 5.5 } },
+    { "asset": "nature.tree", "pos": [30, 10], "params": { "seed": 14, "height": 6 } },
+    { "asset": "nature.tree", "pos": [8, -12], "params": { "seed": 15, "height": 5 } },
+    { "asset": "nature.tree", "pos": [19, -13], "params": { "seed": 16, "height": 6.5 } },
+    { "id": "carro", "asset": "vehicle.car", "pos": [-9, 23.4], "rot": -90, "params": { "color": "#3f7fd1" } },
+    { "id": "caixa", "asset": "storage.box", "pos": [-9, 22] }
   ]
 }

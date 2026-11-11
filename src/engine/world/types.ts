@@ -7,12 +7,24 @@
 /** Compass direction: n = -z, s = +z, e = +x, w = -x. */
 export type Dir = 'n' | 's' | 'e' | 'w';
 
+/**
+ * - swing: hinged at the start of the opening.
+ * - sliding: slides along the wall, toward the start of the opening.
+ * - rollup: shop shutter that rolls up into a housing above the opening.
+ */
+export type DoorKind = 'swing' | 'sliding' | 'rollup';
+
 export interface DoorLeaf {
+  /** Name used by actions. Defaults to "<room>:<wall>:<at>". */
+  id?: string;
+  kind?: DoorKind;
   color?: string;
   /** Which side the door can be opened from; "inside" is the room that declares the opening. */
   opensFrom?: 'inside' | 'outside' | 'both';
-  /** How far the leaf stands open, in degrees (0 = closed). */
+  /** Starting state, from 0 (closed) to 1 (fully open). */
   open?: number;
+  /** swing only: angle in degrees when fully open (default 95). */
+  angle?: number;
 }
 
 export interface Opening {
@@ -26,6 +38,8 @@ export interface Opening {
 }
 
 export interface Prop {
+  /** Name used by actions; only named props can be moved, attached or animated. No dots, and not with `repeat`. */
+  id?: string;
   /** Asset id in the registry, e.g. "school.desk". */
   asset: string;
   /** [x, z] relative to the room origin (or absolute for location-level props). */

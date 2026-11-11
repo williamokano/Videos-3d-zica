@@ -5,9 +5,12 @@ import '../engine/assets/nature';
 import '../engine/assets/building';
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
+import '../engine/assets/vehicles';
+import { compileActions, evaluateActions } from '../engine/timeline/actions';
 import { evaluateCamera } from '../engine/timeline/camera';
 import type { Episode } from '../engine/timeline/episode';
 import { buildLocation } from '../engine/world/build';
+import { describeTarget } from '../engine/world/interactive';
 import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
 import { WalkControls } from './walk';
@@ -90,6 +93,38 @@ if (episode) {
   }
 }
 
+// ---- Actions ----
+
+const compiled = compileActions(episode?.actions ?? [], [...built.interactives.values()].map(describeTarget));
+let doorsBlock = true;
+
+/** Put every interactive object in the state it has at time t. */
+function applyActions(t: number): void {
+  const states = evaluateActions(compiled, t);
+  for (const [id, state] of states) {
+    const it = built.interactives.get(id)!;
+    for (const [name, value] of Object.entries(state.channels)) it.channels[name].set(value);
+    if (state.pose) {
+      it.object.position.set(state.pose.x, state.pose.y, state.pose.z);
+      it.object.rotation.y = THREE.MathUtils.degToRad(state.pose.rot);
+    }
+  }
+  // Riders follow their anchor once every carrier is in place.
+  built.group.updateMatrixWorld(true);
+  const position = new THREE.Vector3();
+  const direction = new THREE.Vector3();
+  for (const [id, state] of states) {
+    if (!state.attachedTo) continue;
+    const dot = state.attachedTo.indexOf('.');
+    const anchor = built.interactives.get(state.attachedTo.slice(0, dot))!.anchors[state.attachedTo.slice(dot + 1)];
+    const rider = built.interactives.get(id)!.object;
+    rider.position.copy(anchor.getWorldPosition(position));
+    anchor.getWorldDirection(direction);
+    rider.rotation.y = Math.atan2(direction.x, direction.z);
+  }
+  if (!doorsBlock) for (const it of built.interactives.values()) if (it.kind === 'door') it.channels.open.set(1);
+}
+
 // ---- State ----
 
 type Mode = 'orbit' | 'walk' | 'shot';
@@ -157,8 +192,9 @@ function setMode(next: Mode): void {
     overview();
     hint.textContent = 'Arraste para girar · roda do mouse aproxima · botão direito desloca';
   } else {
-    hint.textContent = 'Visão da câmera do episódio no formato final · espaço toca · , e . andam um frame';
+    hint.textContent = '';
   }
+  hint.hidden = !hint.textContent;
   renderPanel();
 }
 
@@ -256,6 +292,26 @@ function renderPanel(): void {
     if (snippet) panel.append(el('div', snippet, 'snippet'));
   }
 
+  if (mode === 'walk') {
+    panel.append(el('h2', 'Portas'));
+    panel.append(
+      checkbox('Portas fechadas bloqueiam', 'Desmarque para explorar com todas abertas.', doorsBlock, (on) => {
+        doorsBlock = on;
+        applyActions(timeline?.time ?? 0);
+      }),
+    );
+  }
+
+  if (episode?.actions?.length) {
+    panel.append(el('h2', 'Ações do episódio'));
+    for (const action of [...episode.actions].sort((a, b) => a.t - b.t)) {
+      const b = el('button', '', 'event');
+      b.append(el('b', `${action.t}s`), el('span', `${action.action} · ${action.target}${action.params?.part ? ` (${action.params.part})` : ''}`));
+      b.onclick = () => timeline?.seek(action.t * bible.format.fps);
+      panel.append(b);
+    }
+  }
+
   panel.append(el('h2', 'Bíblia — regras ativas'));
   const rules = activeRules(bible, episodeNumber);
   if (!rules.length) panel.append(el('p', 'Nenhuma regra ativa neste episódio.'));
@@ -277,10 +333,14 @@ function renderPanel(): void {
 
 let timeline: TimelineBar | undefined;
 if (episode) {
-  timeline = new TimelineBar(episode, bible.format.fps, () => applyShot(timeline!.time));
+  timeline = new TimelineBar(episode, bible.format.fps, () => {
+    applyShot(timeline!.time);
+    applyActions(timeline!.time);
+  });
   document.getElementById('viewport')!.append(timeline.element);
   applyShot(0);
 }
+applyActions(0);
 
 // ---- Loop ----
 
