@@ -14,12 +14,12 @@ O vídeo é uma função determinística: **(mundo + roteiro + tempo t) → fram
 ## Camadas
 
 1. **Bíblia da série** (`series/<série>/bible.json`): regras de mundo com validade por episódio (`from` / `until`), idioma original, idiomas de dublagem, formato e configuração de áudio.
-2. **Mundo persistente** (`series/<série>/world/*.json`): local → áreas → objetos. Cresce por patches incrementais, como o mapa de um jogo. Se a série não tem nenhum local, a LLM pergunta onde é o primeiro cenário.
+2. **Mundo persistente** (`series/<série>/world/*.json`): local → áreas → objetos, com níveis (térreo, porão, andares), escadas e portas. O mapa é dado da série; o motor só interpreta. Cresce por patches incrementais, como o mapa de um jogo. Se a série não tem nenhum local, a LLM pergunta onde é o primeiro cenário.
 3. **Kit de assets** (`src/engine/assets`): geradores paramétricos registrados num catálogo para reuso; importação de GLB.
 4. **Personagens**: esqueleto humanoide padrão, corpo paramétrico cartoon, rosto com blendshapes (piscar automático, expressões, visemas), biblioteca de movimentos com transições e IK nas mãos. Um personagem pode ser trocado por um GLB desde que o esqueleto seja mapeado para o padrão; sem blendshapes de rosto no GLB, ele perde expressões e lip-sync.
 5. **Direção por código**: API de alto nível (`ana.walkTo(...)`, `ana.say(...)`, `camera.mode('fpv', ana)`) compilada numa timeline de trilhas e clipes.
 6. **Câmera**: flag por plano — `fpv`, `third_person` ou `cinematic`.
-7. **Estúdio**: viewport navegável, timeline com scrub, mapa visto de cima com personagens e câmera, preview do que a câmera vê.
+7. **Estúdio**: viewport navegável por nível, timeline com scrub por frame, trajeto da câmera no cenário e prévia do que ela vê no formato final.
 8. **Skills** (`.claude/skills`): bíblia, construir local, criar asset, criar personagem, escrever episódio, renderizar — sempre consultando o catálogo antes de criar algo novo.
 
 ## Áudio e idiomas
@@ -37,8 +37,9 @@ O vídeo é uma função determinística: **(mundo + roteiro + tempo t) → fram
 | Fase | Entrega | Estado |
 |---|---|---|
 | 1 | Formato do mundo, kit básico, bíblia com regras de ambiente, estúdio navegável, escola de exemplo | feito |
+| 1b | Níveis, escadas (reta, em U, em L), folhas de porta, luz interna; trilha de câmera com timeline por frame e visão no formato final; skill `build-location` | feito |
 | 2 | Personagem: rig, locomoção no navmesh, rosto com piscar e expressões; importação de GLB | |
-| 3 | API de direção, timeline no estúdio, câmeras FPV / terceira pessoa | |
+| 3 | API de direção em código, trilhas de personagem na timeline, câmeras FPV / terceira pessoa presas ao personagem, portas que abrem | |
 | 4 | Fala: TTS e STS, alinhamento, lip-sync, dublagem, render para MP4 | |
-| 5 | Skills e catálogo de reuso; episódio piloto de ponta a ponta | |
+| 5 | Demais skills e catálogo de reuso; episódio piloto de ponta a ponta | |
 | 6 | Mais biblioteca: carros, prédios, casas, animações, pegar e segurar com IK | |

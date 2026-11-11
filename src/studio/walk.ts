@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { resolveCollisions, type Rect } from '../engine/world/build';
+import { resolveCollisions, surfaceHeight, type Collider, type Surface } from '../engine/world/build';
 
 const EYE_HEIGHT = 1.6;
 const RADIUS = 0.3;
@@ -12,12 +12,14 @@ export class WalkControls {
   enabled = false;
   private yaw = 0;
   private pitch = 0;
+  private feetY = 0;
   private readonly keys = new Set<string>();
 
   constructor(
     private readonly camera: THREE.PerspectiveCamera,
     private readonly dom: HTMLElement,
-    private readonly colliders: Rect[],
+    private readonly colliders: Collider[],
+    private readonly surfaces: Surface[],
   ) {
     window.addEventListener('keydown', (e) => this.keys.add(e.code));
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
@@ -32,9 +34,10 @@ export class WalkControls {
     });
   }
 
-  /** Stand at (x, z) looking along `yawDeg` (0 = north, 90 = west). */
-  placeAt(x: number, z: number, yawDeg = 0): void {
-    this.camera.position.set(x, EYE_HEIGHT, z);
+  /** Stand at (x, z) on the floor at `elevation`, looking along `yawDeg` (0 = north, 90 = west). */
+  placeAt(x: number, z: number, elevation = 0, yawDeg = 0): void {
+    this.feetY = elevation;
+    this.camera.position.set(x, elevation + EYE_HEIGHT, z);
     this.yaw = THREE.MathUtils.degToRad(yawDeg);
     this.pitch = 0;
     this.applyRotation();
@@ -60,8 +63,12 @@ export class WalkControls {
       const p = this.camera.position;
       const x = p.x + ((-sin * forward + cos * strafe) / len) * speed;
       const z = p.z + ((-cos * forward - sin * strafe) / len) * speed;
-      [p.x, p.z] = resolveCollisions(x, z, RADIUS, this.colliders);
+      [p.x, p.z] = resolveCollisions(x, z, RADIUS, this.colliders, this.feetY);
+      this.feetY = surfaceHeight(this.surfaces, p.x, p.z, this.feetY);
     }
+    // Ease the eye toward the floor height so steps feel like a ramp.
+    const eye = this.feetY + EYE_HEIGHT;
+    this.camera.position.y += (eye - this.camera.position.y) * Math.min(1, dt * 14);
     this.applyRotation();
   }
 

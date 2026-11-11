@@ -51,7 +51,6 @@ body {
 #panel label { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; cursor: pointer; }
 #panel label small { display: block; color: var(--muted); }
 #viewport { position: relative; flex: 1; min-width: 0; }
-#viewport canvas { display: block; width: 100%; height: 100%; }
 #hint {
   position: absolute;
   left: 12px;
@@ -66,4 +65,57 @@ body {
 @media (max-width: 700px) {
   body { flex-direction: column-reverse; }
   #panel { width: 100%; max-height: 40%; border-right: 0; border-top: 1px solid var(--line); }
+}
+
+#viewport { display: flex; flex-direction: column; }
+#stage { position: relative; flex: 1; min-height: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+#preview-label {
+  position: absolute;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 11px;
+  pointer-events: none;
+}
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+}
+.timeline button {
+  width: 30px;
+  height: 28px;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.timeline button:hover { border-color: var(--muted); }
+.timeline .track { position: relative; flex: 1; margin: 0 8px; }
+.timeline .track input { width: 100%; margin: 0; display: block; accent-color: var(--accent); }
+.timeline .track i {
+  position: absolute;
+  top: -5px;
+  width: 2px;
+  height: 5px;
+  background: var(--muted);
+  pointer-events: none;
+}
+.timeline .track i.cut { background: var(--accent); }
+.timeline span { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
+#panel .snippet {
+  margin-top: 6px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: 11px/1.4 ui-monospace, monospace;
+  color: var(--muted);
+  word-break: break-all;
+  user-select: all;
 }

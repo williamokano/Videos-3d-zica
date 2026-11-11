@@ -1,4 +1,4 @@
-import type { Room, WallSide } from './types';
+import type { Dir, Room } from './types';
 
 export const WALL_T = 0.15;
 export const DOOR_H = 2.1;
@@ -10,6 +10,8 @@ export interface WorldOpening {
   axis: 'x' | 'z';
   /** Coordinate of the room boundary the wall sits on (z for x-walls, x for z-walls). */
   line: number;
+  /** Floor height of the room that declares the opening. */
+  elevation: number;
   from: number;
   to: number;
   type: 'door' | 'window';
@@ -26,9 +28,9 @@ export interface WallPiece {
   kind: 'wall' | 'glass';
 }
 
-const SIDES: WallSide[] = ['n', 's', 'e', 'w'];
+const SIDES: Dir[] = ['n', 's', 'e', 'w'];
 
-function sideGeometry(room: Room, side: WallSide) {
+export function sideGeometry(room: Room, side: Dir) {
   const [x0, z0] = room.origin;
   const x1 = x0 + room.size[0];
   const z1 = z0 + room.size[1];
@@ -44,7 +46,7 @@ export function roomOpenings(room: Room): WorldOpening[] {
   return (room.openings ?? []).map((o) => {
     const g = sideGeometry(room, o.wall);
     const c = g.from + o.at;
-    return { axis: g.axis, line: g.line, from: c - o.width / 2, to: c + o.width / 2, type: o.type };
+    return { axis: g.axis, line: g.line, elevation: room.elevation ?? 0, from: c - o.width / 2, to: c + o.width / 2, type: o.type };
   });
 }
 
@@ -79,16 +81,17 @@ export function splitWall(
 }
 
 /**
- * Wall pieces for a room. Walls sit just inside the room bounds, and any opening
- * on the same boundary line cuts them, so a door declared by one room also opens
- * the wall of the room next to it.
+ * Wall pieces for a room, with heights relative to its floor. Walls sit just inside
+ * the room bounds, and any opening on the same boundary line and floor height cuts
+ * them, so a door declared by one room also opens the wall of the room next to it.
  */
 export function roomWalls(room: Room, allOpenings: WorldOpening[]): WallPiece[] {
   if (room.outdoor) return [];
   const height = room.height ?? DEFAULT_ROOM_H;
   return SIDES.flatMap((side) => {
     const g = sideGeometry(room, side);
-    const hits = allOpenings.filter((o) => o.axis === g.axis && Math.abs(o.line - g.line) < 0.05);
+    const elevation = room.elevation ?? 0;
+    const hits = allOpenings.filter((o) => o.axis === g.axis && Math.abs(o.line - g.line) < 0.05 && Math.abs(o.elevation - elevation) < 0.05);
     return splitWall(g, height, hits);
   });
 }
