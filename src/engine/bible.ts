@@ -30,6 +30,16 @@ export interface BibleRule {
   effects: { environment?: Partial<Environment> };
 }
 
+/** The look of the series. */
+export interface Style {
+  /** "soft": smooth shading, the look the kit was made with. "cel": light in flat bands and a dark outline. */
+  look: 'soft' | 'cel';
+  /** cel: thickness of the outline in meters (default 0.01). 0 leaves only the bands of light. */
+  outline?: number;
+  /** cel: number of bands of light (default 3). */
+  bands?: number;
+}
+
 export interface Bible {
   series: string;
   title: string;
@@ -45,6 +55,14 @@ export interface Bible {
     defaultMode: 'tts' | 'sts';
   };
   rules: BibleRule[];
+  /** Without it, the series is "soft". */
+  style?: Style;
+}
+
+/** The style of a series with every value filled in. */
+export function resolveStyle(bible: Pick<Bible, 'style'>): Required<Style> {
+  const bands = Math.round(bible.style?.bands ?? 3);
+  return { look: bible.style?.look ?? 'soft', outline: Math.max(0, bible.style?.outline ?? 0.01), bands: Math.max(1, Math.min(8, bands)) };
 }
 
 export function activeRules(bible: Bible, episode: number): BibleRule[] {

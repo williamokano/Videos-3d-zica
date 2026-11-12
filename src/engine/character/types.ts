@@ -50,6 +50,15 @@ export interface FaceParams {
   /** 0 closed to 1 wide open. */
   mouthOpen: number;
   mouthWidth: number;
+  /** Lips pushed forward into a small round mouth, 0 to 1 (the sounds O and U). */
+  mouthRound: number;
+  /** How much of the upper teeth shows in an open mouth, 0 to 1. At 1 they reach the lower lip (F and V). */
+  teeth: number;
+  /** Where the eyes look inside the face, -1 to 1: `gazeX` to the character's left, `gazeY` up. */
+  gazeX: number;
+  gazeY: number;
+  /** Slant of the upper eyelids: 1 angry (lower toward the nose) to -1 sad (lower toward the ears). */
+  lidTilt: number;
 }
 
 /** Character file in series/<series>/characters/<id>.json. */
@@ -65,6 +74,8 @@ export interface CharacterDef {
   skin?: string;
   hair?: string;
   hairStyle?: 'short' | 'long' | 'bun' | 'none';
+  /** Color of the eyes (default dark brown). */
+  eyes?: string;
   shirt?: string;
   pants?: string;
   shoes?: string;
@@ -77,7 +88,7 @@ export interface CharacterDef {
   bones?: Partial<Record<Joint, string>>;
   /** GLB only: which way the model faces in its file (default "+z", the glTF convention). */
   facing?: '+z' | '-z';
-  /** GLB only: face channel ("blink", "talk" or an expression name) → morph target name. */
+  /** GLB only: face channel ("blink", "talk", an expression name, or a mouth shape as "vis.A", "vis.E", "vis.O", "vis.U", "vis.F") → morph target name. */
   morphs?: Record<string, string>;
 }
 
@@ -85,8 +96,8 @@ export interface CharacterDef {
 export interface CharacterRig {
   object: import('three').Object3D;
   applyPose(pose: Pose): void;
-  /** `blink` and `talk` go from 0 to 1; `expressions` are weights by name. */
-  setFace(face: FaceParams, raw: { blink: number; talk: number; expressions: Record<string, number> }): void;
+  /** `blink` and `talk` go from 0 to 1; `expressions` and `visemes` (mouth shapes of speech) are weights by name. */
+  setFace(face: FaceParams, raw: { blink: number; talk: number; expressions: Record<string, number>; visemes: Record<string, number> }): void;
   /** Height of the eyes above the feet when standing, in meters. */
   eyeHeight: number;
   /** Hide the head so a camera can sit in it. Bodies that cannot do it are hidden whole in first person. */

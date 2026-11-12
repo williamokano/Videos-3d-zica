@@ -1,21 +1,29 @@
-# Tarefa 1 do motor: vitrine de personagens
+# Tarefa 3 do motor: contorno grosso e luz em faixas
 
-Plano aprovado em 2026-11-12. Endereço: `?vitrine=personagens`.
+Plano aprovado em 2026-11-12.
 
-- [x] Entrada: `src/studio/entry.ts` escolhe entre estúdio e vitrine; `index.html` aponta para ela
-- [x] `src/studio/ui.ts` com os controles do painel, usados pelas duas páginas
-- [x] Motor: `src/engine/character/showcase.ts` (disposição, poses em loop, comportamentos, olhar)
-- [x] Página: `src/studio/showcase.ts` (cena, elenco, seleção, menu, tempo, `window.__vitrine`)
-- [x] Testes: `src/engine/showcase.test.ts`
-- [x] Conferir com screenshots (expressões, poses, chat, olhar, aparência, céu vermelho)
-- [x] Conferir que o estúdio e o render continuam iguais
-- [x] Registro: `docs/NEXT.md`, `README.md`, skill `create-character`
+- [x] Estilo na bíblia: `style` e `resolveStyle`
+- [x] `src/engine/style.ts`: `applyStyle` com luz em faixas e contorno por casca invertida
+- [x] Rosto: detalhes marcados sem contorno
+- [x] Estúdio e vitrine: aplicar o estilo e trocar pelo painel
+- [x] `ceu-vermelho` em `cel`
+- [x] Testes: `src/engine/style.test.ts`
+- [x] Conferir com screenshots e medir o render
+- [x] Registro: `docs/NEXT.md`, `README.md`, skills
 
 ## Revisão
 
-- `npm run typecheck` limpo; `npm test` com 83 testes (68 de antes mais 15 da vitrine).
-- Conferido em Chromium headless, olhando as imagens: palco das duas séries e de todas juntas, rosto da Maria nas cinco expressões, as oito poses em dois instantes cada, `chat` em três instantes, olhar para a câmera com a câmera de lado, aparência trocada, seis figurantes, céu vermelho, modelo GLB andando. Clique num personagem, lista de pose e controle de altura testados pela própria página.
-- Estúdio abre como antes e o render de 3 s do episódio 1 saiu normal.
-- Ajustes feitos depois de ver as imagens: a fileira de trás fica nos vãos da fileira da frente (os figurantes ficavam escondidos) e o enquadramento "Rosto" subiu para o centro do rosto.
-- Mudanças fora da vitrine: `headAngles` extraída do `gazeAt` e `NO_AMBIENT` exportada (sem mudança de comportamento); `el`, `button` e `checkbox` saíram de `main.ts` para `ui.ts`.
-- Sem commit: aguardando o autor pedir.
+- `npm run typecheck` limpo; `npm test` com 101 testes (93 de antes mais 8).
+- Vitrine nos dois estilos: palco, corpo com celular, rosto de frente e de três quartos, `demo-acoes` com o GLB.
+- Estúdio: episódio 1 pela câmera em nove instantes, nos dois estilos lado a lado; visão geral da escola e da `demo-acoes`.
+- Render completo do episódio 1: 36 s antes e 36 s depois. Dois quadros tirados do vídeo conferidos.
+- Mudanças em relação ao plano, feitas depois de ver as imagens:
+  - A rampa de luz só tem faixas no lado que olha para a luz. Com a rampa comum do toon os interiores lavavam.
+  - O casco do cenário ficou sem faixas, além de sem contorno: as lâmpadas desenhavam arcos nas paredes. O casco é reconhecido pela geometria (caixa ou plano de quina viva), sem marcação em `build.ts`.
+  - Nariz sem contorno (virava um anel) e contorno padrão de 0,01 m em vez de 0,012.
+  - Cores por vértice do GLB mantidas (o robô ficava branco).
+- Pendências anotadas em "Limitações conhecidas": contorno do GLB de teste não aparece; faixas de várias lâmpadas se cruzam no rosto em close.
+- Não conferido em imagem: a última mudança, a cabeça com mais segmentos (para o contorno não ficar facetado em close).
+- O autor aprovou ("gostei bastante"). As tarefas 2 (rosto) e 3 foram num commit só, porque mexem nos mesmos arquivos.
+
+Próxima: tarefa 4, mãos com dedos (ver `docs/NEXT.md`).

@@ -1,4 +1,5 @@
-import { BEHAVIOURS, mouthFlap } from './ambient';
+import { VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
+import { BEHAVIOURS } from './ambient';
 import { registerAction, type WalkPath } from './catalog';
 import { BODY, reachBody } from './hands';
 
@@ -285,7 +286,7 @@ registerAction({
 
 registerAction({
   id: 'say',
-  description: 'O personagem fala: a boca mexe e as mãos acompanham. A fala fica registrada no episódio (legenda agora, voz depois). Sem "duration", dura conforme o tamanho do texto.',
+  description: 'O personagem fala: a boca faz as formas das letras do texto e as mãos acompanham. A fala fica registrada no episódio (legenda agora, voz depois). Sem "duration", dura conforme o tamanho do texto.',
   appliesTo: ['character'],
   params: {
     text: { type: 'string', description: 'o que ele diz', required: true },
@@ -297,12 +298,14 @@ registerAction({
     const to = ctx.params.to as string | undefined;
     if (to !== undefined) ctx.object(to);
     const duration = Math.max(1, 0.5 + text.length * 0.065);
-    const seed = text.length * 7.3;
+    const shapes = visemeTrack(text);
     return {
       duration,
-      // The mouth follows the clock, not the easing: syllables keep their pace.
+      // The mouth follows the letters of the line at an even pace, not the easing.
       writes: [
-        { channel: 'talk', at: (u) => mouthFlap(u * duration, seed) * Math.min(1, u * 10, (1 - u) * 10) },
+        ...VISEME_NAMES.map((name) => ({ channel: `vis.${name}`, at: (u: number) => shapes(u)[name] })),
+        // For faces with a single control for the mouth.
+        { channel: 'talk', at: (u: number) => mouthOpenOf(shapes(u)) },
         { channel: 'gesture', at: (u) => Math.min(1, u * 4, (1 - u) * 4) },
       ],
       events: [{ type: 'line', data: { text, duration } }],

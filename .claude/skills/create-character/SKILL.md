@@ -19,6 +19,7 @@ Um personagem é dado da série: `series/<série>/characters/<id>.json`, no form
 ```
 
 - `height` em metros: adulto 1.6 a 1.85, criança 1.1 a 1.4. A cabeça não encolhe junto, o que faz a criança parecer criança.
+- `eyes`: cor dos olhos (padrão castanho-escuro). As sobrancelhas saem da cor do cabelo.
 - `hairStyle`: `short`, `long`, `bun`, `none`. `build` alarga ou afina o corpo (padrão 1). `headScale` muda o tamanho da cabeça (padrão 1.3).
 - Dê a cada personagem uma cor de roupa própria; é o que o distingue de longe num vídeo vertical.
 
@@ -33,7 +34,7 @@ Ponha o arquivo ao lado do JSON e aponte para ele:
 - O modelo precisa ter esqueleto (skinned) e estar em T-pose. Os eixos dos ossos não importam.
 - Os ossos são achados pelo nome (padrão Mixamo e variações comuns). Se algum faltar, o erro diz qual; informe em `bones`, por exemplo `{ "upperArmL": "Braco_E" }`.
 - `facing`: `"+z"` (padrão do glTF) ou `"-z"`, o lado para onde o modelo olha no arquivo.
-- Rosto: só funciona se o modelo tiver morph targets. Ligue em `morphs`, por exemplo `{ "blink": "eyesClosed", "happy": "smile", "talk": "jawOpen" }`. Sem isso o personagem não pisca, não muda de expressão e não terá lip-sync. Avise o autor.
+- Rosto: só funciona se o modelo tiver morph targets. Ligue em `morphs`, por exemplo `{ "blink": "eyesClosed", "happy": "smile", "talk": "jawOpen" }`. As formas de boca da fala também podem ser ligadas, como `"vis.A"`, `"vis.E"`, `"vis.O"`, `"vis.U"` e `"vis.F"`; sem elas a boca só abre e fecha por `talk`. Sem isso o personagem não pisca, não muda de expressão e não terá lip-sync. Avise o autor.
 
 ## Colocar no episódio
 
@@ -49,11 +50,16 @@ No arquivo do episódio, `cast` diz quem aparece e onde começa:
 
 - Movimentos são funções puras em `src/engine/character/motion.ts`: recebem tempo ou distância e devolvem uma pose (rotação de cada junta a partir da T-pose). Um movimento novo entra ali e serve a todos os personagens.
 - Poses em loop da vitrine ficam em `SHOWCASE_POSES` (`src/engine/character/showcase.ts`). Um movimento novo ganha uma entrada ali para poder ser conferido.
-- Expressões ficam em `EXPRESSIONS`, no mesmo arquivo de movimentos. Existem: `happy`, `sad`, `angry`, `surprised`, `scared`. Confira antes de criar outra.
+- Expressões ficam em `EXPRESSIONS`, no mesmo arquivo de movimentos. Existem: `happy`, `sad`, `angry`, `surprised`, `scared`. Confira antes de criar outra. Uma expressão diz só o que muda do rosto neutro (`FaceParams` em `types.ts`): olhos, sobrancelhas, pálpebras, boca e dentes.
+- Formas de boca da fala ficam em `VISEMES`, também em `motion.ts`.
+
+## Estilo da série
+
+Se a bíblia tem `"style": { "look": "cel" }`, o personagem ganha luz em faixas e contorno (`src/engine/style.ts`). Peças pequenas do rosto ficam sem contorno por `userData.noOutline`; marque assim qualquer detalhe novo que o contorno enterraria. Confira o personagem nos dois estilos pelo menu "Estilo" da vitrine.
 
 ## Conferir
 
 1. `npm test` e `npm run typecheck`.
-2. Abra a vitrine, `?vitrine=personagens&series=<série>`: todos os personagens da série lado a lado, sem precisar de episódio. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada. Pelo console: `window.__vitrine.select('<id>', 'body' | 'face')`, `setPose('walk')`, `setExpression('happy')`, `setBehaviour('chat')`, `setLook('camera')`, `restyle('<id>', { hairStyle: 'bun' })`, `addExtras('<id>', 6)`, `pause(<segundos>)`. `select(null)` volta a todos.
+2. Abra a vitrine, `?vitrine=personagens&series=<série>`: todos os personagens da série lado a lado, sem precisar de episódio. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada. Pelo console: `window.__vitrine.select('<id>', 'body' | 'face')`, `setPose('walk')`, `setExpression('happy')`, `setMouth('O')`, `setBehaviour('chat')`, `setLook('camera')`, `restyle('<id>', { hairStyle: 'bun' })`, `addExtras('<id>', 6)`, `pause(<segundos>)`. `select(null)` volta a todos.
 3. Para ver o personagem dentro de um episódio, o painel do estúdio lista o elenco; clicar leva a câmera até ele.
 4. Olhe as imagens: pés no chão, braços para baixo, rosto visível sob o cabelo, personagem olhando para onde anda.

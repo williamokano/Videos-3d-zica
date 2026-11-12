@@ -141,19 +141,145 @@ export function blink(t: number, seed: number): number {
   return u <= 0 || u >= 1 ? 0 : 1 - Math.abs(u * 2 - 1);
 }
 
-export const NEUTRAL_FACE: FaceParams = { eyeOpen: 1, browLift: 0, browTilt: 0, mouthCurve: 0.15, mouthOpen: 0, mouthWidth: 1 };
+export const NEUTRAL_FACE: FaceParams = {
+  eyeOpen: 1, browLift: 0, browTilt: 0, mouthCurve: 0.15, mouthOpen: 0, mouthWidth: 1, mouthRound: 0, teeth: 0, gazeX: 0, gazeY: 0, lidTilt: 0,
+};
+
+const face = (changes: Partial<FaceParams>): FaceParams => ({ ...NEUTRAL_FACE, ...changes });
 
 /** The expression catalog. Check here before adding one. */
 export const EXPRESSIONS: Record<string, FaceParams> = {
-  happy: { eyeOpen: 0.85, browLift: 0.3, browTilt: 0, mouthCurve: 1, mouthOpen: 0.25, mouthWidth: 1.15 },
-  sad: { eyeOpen: 0.8, browLift: 0.1, browTilt: -0.8, mouthCurve: -0.8, mouthOpen: 0, mouthWidth: 0.9 },
-  angry: { eyeOpen: 0.8, browLift: -0.5, browTilt: 0.9, mouthCurve: -0.5, mouthOpen: 0, mouthWidth: 0.95 },
-  surprised: { eyeOpen: 1.3, browLift: 0.9, browTilt: 0, mouthCurve: 0, mouthOpen: 0.8, mouthWidth: 0.7 },
-  scared: { eyeOpen: 1.35, browLift: 0.7, browTilt: -0.6, mouthCurve: -0.4, mouthOpen: 0.5, mouthWidth: 0.85 },
+  happy: face({ eyeOpen: 0.82, browLift: 0.3, mouthCurve: 1, mouthOpen: 0.3, mouthWidth: 1.15, teeth: 0.9 }),
+  sad: face({ eyeOpen: 0.75, browLift: 0.1, browTilt: -0.8, lidTilt: -0.7, mouthCurve: -0.8, mouthWidth: 0.9 }),
+  angry: face({ eyeOpen: 0.72, browLift: -0.5, browTilt: 0.9, lidTilt: 0.9, mouthCurve: -0.5, mouthWidth: 0.95 }),
+  surprised: face({ eyeOpen: 1.3, browLift: 0.9, mouthCurve: 0, mouthOpen: 0.8, mouthWidth: 0.7, mouthRound: 0.6, teeth: 0.2 }),
+  scared: face({ eyeOpen: 1.35, browLift: 0.7, browTilt: -0.6, lidTilt: -0.3, mouthCurve: -0.4, mouthOpen: 0.5, mouthWidth: 0.85, teeth: 0.6 }),
 };
 
-/** Face from expression weights, a blink amount and how open speech holds the mouth. */
-export function resolveFace(weights: Record<string, number>, blinkAmount: number, talk: number): FaceParams {
+/** Mouth shapes of speech. A closed mouth (rest, and the sounds M, B, P) is the absence of all of them. */
+export const VISEME_NAMES = ['A', 'E', 'O', 'U', 'F'] as const;
+export type Viseme = (typeof VISEME_NAMES)[number];
+export type VisemeWeights = Record<Viseme, number>;
+
+type MouthShape = Pick<FaceParams, 'mouthOpen' | 'mouthWidth' | 'mouthRound' | 'teeth'>;
+
+export const VISEMES: Record<Viseme, MouthShape> = {
+  A: { mouthOpen: 0.75, mouthWidth: 1, mouthRound: 0, teeth: 0.45 },
+  E: { mouthOpen: 0.34, mouthWidth: 1.22, mouthRound: 0, teeth: 0.9 },
+  O: { mouthOpen: 0.62, mouthWidth: 0.7, mouthRound: 0.8, teeth: 0.1 },
+  U: { mouthOpen: 0.3, mouthWidth: 0.55, mouthRound: 1, teeth: 0 },
+  // Upper teeth on the lower lip.
+  F: { mouthOpen: 0.16, mouthWidth: 0.95, mouthRound: 0, teeth: 1 },
+};
+
+export const NO_VISEMES: VisemeWeights = { A: 0, E: 0, O: 0, U: 0, F: 0 };
+
+/** How open the mouth is for a mix of shapes, 0 to 1: what a face with a single "talk" control can show of them. */
+export function mouthOpenOf(visemes: Partial<VisemeWeights>): number {
+  return VISEME_NAMES.reduce((sum, name) => sum + (visemes[name] ?? 0) * VISEMES[name].mouthOpen, 0);
+}
+
+const smooth = (u: number): number => {
+  const v = Math.max(0, Math.min(1, u));
+  return v * v * (3 - 2 * v);
+};
+
+interface Phone {
+  shape: Viseme | null;
+  weight: number;
+  /** In units of one vowel. */
+  length: number;
+}
+
+const VOWELS: Record<string, Viseme> = { a: 'A', e: 'E', i: 'E', y: 'E', o: 'O', u: 'U' };
+
+/** The sounds of a text, one per letter: vowels open the mouth, F and V bite the lip, M, B and P close it. */
+function phonesOf(text: string): Phone[] {
+  const plain = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const closed = (length: number): Phone => ({ shape: null, weight: 0, length });
+  const phones: Phone[] = [closed(0.6)];
+  /** Consonants that take the shape of the vowel next to them, found once all the letters are known. */
+  const borrowed: number[] = [];
+  for (const ch of plain) {
+    if (VOWELS[ch]) phones.push({ shape: VOWELS[ch], weight: 1, length: 1 });
+    else if (ch === 'f' || ch === 'v') phones.push({ shape: 'F', weight: 1, length: 0.7 });
+    else if (ch === 'm' || ch === 'b' || ch === 'p') phones.push(closed(0.6));
+    else if (/[a-z0-9]/.test(ch)) borrowed.push(phones.push({ shape: null, weight: 0.45, length: 0.45 }) - 1);
+    // Words run into each other; punctuation is a breath.
+    else if (/[.,;:!?…—-]/.test(ch)) phones.push(closed(1.6));
+  }
+  const vowelNear = (i: number): Viseme => {
+    for (const k of [i + 1, i + 2, i - 1, i - 2]) if (phones[k]?.weight === 1 && phones[k].shape && phones[k].shape !== 'F') return phones[k].shape!;
+    return 'E';
+  };
+  for (const i of borrowed) phones[i].shape = vowelNear(i);
+  phones.push(closed(0.8));
+  return phones;
+}
+
+const tracks = new Map<string, (u: number) => VisemeWeights>();
+
+/**
+ * The mouth shapes of a line of speech: a function of how far along the line is (0 to 1) that gives the weight
+ * of each shape. It follows the letters of the text, so the mouth says what is written even without a voice.
+ * The mouth is closed at both ends.
+ */
+export function visemeTrack(text: string): (u: number) => VisemeWeights {
+  const known = tracks.get(text);
+  if (known) return known;
+  const phones = phonesOf(text);
+  const starts: number[] = [];
+  let total = 0;
+  for (const phone of phones) {
+    starts.push(total);
+    total += phone.length;
+  }
+  let last: { u: number; weights: VisemeWeights } | undefined;
+  const track = (u: number): VisemeWeights => {
+    if (last?.u === u) return last.weights;
+    const weights = { ...NO_VISEMES };
+    if (u > 0 && u < 1) {
+      const at = u * total;
+      let i = phones.length - 1;
+      while (i > 0 && starts[i] > at) i--;
+      // Each sound comes in over the first half of its time, as the one before goes out.
+      const into = smooth((at - starts[i]) / phones[i].length / 0.5);
+      const [now, before] = [phones[i], phones[i - 1]];
+      if (now.shape) weights[now.shape] += now.weight * into;
+      if (before?.shape) weights[before.shape] += before.weight * (1 - into);
+    }
+    last = { u, weights };
+    return weights;
+  };
+  tracks.set(text, track);
+  return track;
+}
+
+/** How far the eyes turn by themselves, in degrees, and the turn that puts the iris at the edge of the eye. */
+const EYE_REACH = { yaw: 18, pitch: 12 };
+const EYE_EDGE = { yaw: 30, pitch: 22 };
+
+/**
+ * Share a look between the eyes and the head. `yaw` and `pitch` are how far the look is from straight ahead,
+ * in degrees. The eyes take the first part and the neck the rest, so the two together always add up to the look.
+ */
+export function splitGaze(yaw: number, pitch: number): { head: { yaw: number; pitch: number }; eyes: { x: number; y: number } } {
+  const part = (angle: number, reach: number): number => Math.max(-reach, Math.min(reach, angle * 0.4));
+  const [eyeYaw, eyePitch] = [part(yaw, EYE_REACH.yaw), part(pitch, EYE_REACH.pitch)];
+  return { head: { yaw: yaw - eyeYaw, pitch: pitch - eyePitch }, eyes: { x: eyeYaw / EYE_EDGE.yaw, y: eyePitch / EYE_EDGE.pitch } };
+}
+
+/**
+ * Face from expression weights, a blink amount, how open speech holds the mouth, the mouth shapes of speech
+ * and where the eyes look. Speech shapes the mouth on top of the expression: who talks smiling keeps smiling.
+ */
+export function resolveFace(
+  weights: Record<string, number>,
+  blinkAmount: number,
+  talk: number,
+  visemes: Partial<VisemeWeights> = {},
+  eyes: { x: number; y: number } = { x: 0, y: 0 },
+): FaceParams {
   const face = { ...NEUTRAL_FACE };
   for (const [name, w] of Object.entries(weights)) {
     const e = EXPRESSIONS[name];
@@ -161,6 +287,20 @@ export function resolveFace(weights: Record<string, number>, blinkAmount: number
     for (const key of Object.keys(face) as (keyof FaceParams)[]) face[key] += (e[key] - NEUTRAL_FACE[key]) * w;
   }
   face.eyeOpen *= 1 - blinkAmount;
+  const speaking = Math.min(1, VISEME_NAMES.reduce((sum, name) => sum + (visemes[name] ?? 0), 0));
+  if (speaking > 0.001) {
+    const shape = { mouthOpen: 0, mouthWidth: 0, mouthRound: 0, teeth: 0 };
+    for (const name of VISEME_NAMES) {
+      for (const key of Object.keys(shape) as (keyof MouthShape)[]) shape[key] += ((visemes[name] ?? 0) / speaking) * VISEMES[name][key];
+    }
+    face.mouthOpen += (shape.mouthOpen - face.mouthOpen) * speaking;
+    face.mouthRound += (shape.mouthRound - face.mouthRound) * speaking;
+    face.teeth = Math.max(face.teeth, shape.teeth * speaking);
+    // The width of a smile stays; the shape narrows or widens it.
+    face.mouthWidth *= 1 + (shape.mouthWidth - 1) * speaking;
+  }
   face.mouthOpen = Math.max(face.mouthOpen, talk);
+  face.gazeX = eyes.x;
+  face.gazeY = eyes.y;
   return face;
 }

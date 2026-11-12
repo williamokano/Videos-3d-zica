@@ -40,7 +40,7 @@ export function rigFromModel(def: CharacterDef, model: THREE.Object3D): Characte
     eyeHeight: (def.height ?? 1.7) * 0.93,
     setFace(_face, raw) {
       for (const [channel, target] of morphs) {
-        const value = channel === 'blink' ? raw.blink : channel === 'talk' ? raw.talk : (raw.expressions[channel] ?? 0);
+        const value = channel === 'blink' ? raw.blink : channel === 'talk' ? raw.talk : channel.startsWith('vis.') ? (raw.visemes[channel.slice(4)] ?? 0) : (raw.expressions[channel] ?? 0);
         for (const mesh of meshes) {
           const index = mesh.morphTargetDictionary![target];
           if (index !== undefined) mesh.morphTargetInfluences![index] = value;

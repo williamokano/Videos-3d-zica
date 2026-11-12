@@ -3,7 +3,7 @@ import type { Ambient } from '../actions/ambient';
 import type { InteractiveObject } from '../world/build';
 import { buildBody } from './body';
 import { reachPose, wristPosition, type Side } from './ik';
-import { EXPRESSIONS, blink, carryPose, crouchPose, locomotionPose, resolveFace, sitPose } from './motion';
+import { EXPRESSIONS, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, resolveFace, sitPose, splitGaze } from './motion';
 import type { CharacterDef, CharacterRig, Joint } from './types';
 
 /** A character placed in an episode. */
@@ -29,8 +29,8 @@ const STRIDE = 1.5;
 
 /**
  * Put a character in the scene as an interactive object. Its channels are x, y, z, yaw, `stride` (walk cycles
- * covered), `gait` (0 stands, 1 walks, 2 runs), `talk` (mouth held open by speech), one `expr.<name>` weight
- * per expression, and the body channels: `crouch`, `sit`, `attached` (how much it rides on a seat), and for each
+ * covered), `gait` (0 stands, 1 walks, 2 runs), `talk` (mouth held open by speech), one `vis.<shape>` weight per mouth shape of speech,
+ * one `expr.<name>` weight per expression, and the body channels: `crouch`, `sit`, `attached` (how much it rides on a seat), and for each
  * hand `carryL` / `carryR` (holding something) and `reachL` / `reachR` with `.x`, `.y`, `.z` (hand going to a point
  * of the location, or of the body itself when `.local` is 1). `look.yaw` and `look.pitch` turn the head from the body, in degrees. `rig` replaces the built-in body, e.g. by a loaded GLB.
  */
@@ -48,6 +48,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
+    ...Object.fromEntries(VISEME_NAMES.map((n) => [`vis.${n}`, 0])),
   };
   const scale = (def.height ?? 1.7) / 1.7;
   // Each character blinks at its own moments.
@@ -83,8 +84,9 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       const target = state[`reach${side}.local`] > 0.5 ? point.setY(point.y + pose.lift) : object.worldToLocal(point).divideScalar(scale);
       pose = reachPose(pose, side, wristPosition(pose, side).lerp(target, reach));
     }
-    // The neck takes part of the turn and the head the rest.
-    const [yaw, pitch] = [state['look.yaw'], state['look.pitch']];
+    // The eyes take the first part of a look; of what is left, the neck takes part and the head the rest.
+    const gaze = splitGaze(state['look.yaw'], state['look.pitch']);
+    const { yaw, pitch } = gaze.head;
     if (yaw || pitch) {
       const turned = (joint: Joint, share: number): [number, number, number] => {
         const [x, y, z] = pose.joints[joint] ?? [0, 0, 0];
@@ -104,7 +106,10 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], ambient?.expressions[n] ?? 0)]));
     const closed = blink(t, seed);
     const talk = Math.max(state.talk, ambient?.talk ?? 0);
-    rig.setFace(resolveFace(expressions, closed, talk), { blink: closed, talk, expressions });
+    const visemes = Object.fromEntries(VISEME_NAMES.map((n) => [n, Math.max(state[`vis.${n}`], ambient?.visemes[n] ?? 0)]));
+    // Eyes nobody directs wander a little by themselves.
+    const eyes = { x: gaze.eyes.x + (ambient?.dart[0] ?? 0), y: gaze.eyes.y + (ambient?.dart[1] ?? 0) };
+    rig.setFace(resolveFace(expressions, closed, talk, visemes, eyes), { blink: closed, talk, expressions, visemes });
   };
   tick(0);
 

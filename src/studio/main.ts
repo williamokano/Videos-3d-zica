@@ -5,8 +5,9 @@ import { evaluateActions, type CompiledActions } from '../engine/actions/catalog
 import { loadGlbCharacter } from '../engine/character/glb';
 import type { CharacterDef, CharacterRig } from '../engine/character/types';
 import { applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpisode } from '../engine/timeline/stage';
-import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
+import { activeRules, resolveEnvironment, resolveStyle, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
+import { applyStyle } from '../engine/style';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
 import { frameCount, type Episode } from '../engine/timeline/episode';
@@ -137,6 +138,9 @@ if (episode) {
     actionsError = [actionsError, error instanceof Error ? error.message : String(error)].filter(Boolean).join('\n');
   }
 }
+// The look of the series, on everything that was built. The panel can switch it to compare; that is not saved.
+const style = resolveStyle(bible);
+applyStyle(scene, style);
 const shotStage: CameraStage = cameraStage(actions, built, cast);
 /** Character whose eyes the episode camera is in right now, if any. */
 let firstPerson: InteractiveObject | undefined;
@@ -346,6 +350,17 @@ function renderPanel(): void {
   panel.append(el('h2', 'Assets'), button('Vitrine de personagens', false, () => {
     window.location.search = `?vitrine=personagens&series=${bible.series}`;
   }));
+
+  panel.append(el('h2', 'Estilo'));
+  const looks = el('div', '', 'row');
+  for (const [look, label] of [['soft', 'Suave'], ['cel', 'Cel shading']] as const) {
+    looks.append(button(label, style.look === look, () => {
+      style.look = look;
+      applyStyle(scene, style);
+      renderPanel();
+    }));
+  }
+  panel.append(looks);
 
   panel.append(el('h2', 'Visão'));
   const modes = el('div', '', 'row');

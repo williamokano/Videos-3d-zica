@@ -1,6 +1,7 @@
-import { BEHAVIOURS, NO_AMBIENT, mouthFlap, type Ambient } from '../actions/ambient';
+import { BEHAVIOURS, NO_AMBIENT, type Ambient } from '../actions/ambient';
 import type { ActionClip, Link, TargetTraits } from '../actions/catalog';
 import { BODY } from '../actions/hands';
+import { VISEME_NAMES, mouthOpenOf, visemeTrack } from './motion';
 
 /**
  * The showcase: characters side by side on an empty stage, each one doing a pose in a loop, to look at and
@@ -43,7 +44,12 @@ export interface ShowcasePose {
 export const POSE_REST: Record<string, number> = {
   gait: 0, stride: 0, sit: 0, seat: 0, y: 0, crouch: 0, talk: 0, gesture: 0, carryR: 0,
   reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
+  ...Object.fromEntries(VISEME_NAMES.map((name) => [`vis.${name}`, 0])),
 };
+
+/** What a character says on the stage, over and over: every mouth shape is in it. */
+export const SHOWCASE_LINE = 'De repente o céu ficou vermelho, e ninguém soube o que fazer. Você viu?';
+const LINE_SECONDS = 0.5 + SHOWCASE_LINE.length * 0.065;
 
 const WALK_SPEED = 1.4;
 const RUN_SPEED = 3.6;
@@ -56,7 +62,14 @@ export const SHOWCASE_POSES: Record<string, ShowcasePose> = {
   run: { label: 'Correr', channels: (t, traits) => ({ gait: 2, stride: (t * RUN_SPEED) / ((traits.strideLength ?? 1.5) * 1.75) }) },
   sit: { label: 'Sentar', channels: () => ({ sit: 1, seat: STOOL, y: STOOL }) },
   crouch: { label: 'Agachar', channels: () => ({ crouch: 1 }) },
-  talk: { label: 'Falar', channels: (t, _traits, seed) => ({ talk: mouthFlap(t, seed), gesture: 1 }) },
+  talk: {
+    label: 'Falar',
+    // Each one starts the line at its own moment.
+    channels: (t, _traits, seed) => {
+      const shapes = visemeTrack(SHOWCASE_LINE)(((t + seed * 0.37) / LINE_SECONDS) % 1);
+      return { ...Object.fromEntries(VISEME_NAMES.map((name) => [`vis.${name}`, shapes[name]])), talk: mouthOpenOf(shapes), gesture: 1 };
+    },
+  },
   cross: { label: 'Cruzar os braços', ambient: () => ({ ...NO_AMBIENT, cross: 1 }) },
   gesture: {
     label: 'Gesticular',

@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 83 testes
+npm run typecheck && npm test   # 101 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine em http://localhost:5173/?vitrine=personagens
 ```
@@ -64,11 +64,29 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - `headAngles` (`src/engine/actions/catalog.ts`) é a conta do olhar, agora usada pelo `gazeAt` e pela vitrine.
   - Menu: expressão e intensidade, pose, comportamento de figurante, olhar, aparência na hora, figurantes por `extraLook`, regras da bíblia. A aparência ajustada não é gravada; o JSON aparece para copiar.
 
+- Rosto expressivo (tarefa 2), em `src/engine/character/body.ts` (`buildFace`) e `motion.ts`:
+  - Olhos com branco, íris (cor em `eyes` na ficha), pupila, brilho e pálpebras que giram sobre o globo, com uma linha de cílios. Sobrancelhas grossas na cor do cabelo, nariz, orelhas. Boca com lábios, dentes e língua, numa malha cujos pontos se movem sem recriar a geometria.
+  - `FaceParams` ganhou `gazeX` / `gazeY`, `lidTilt`, `mouthRound` e `teeth`. As cinco expressões foram reajustadas.
+  - Formas de boca da fala em `VISEMES` (`A`, `E`, `O`, `U`, `F`; boca fechada é a ausência delas). `visemeTrack(texto)` tira as formas das letras do texto, e `say` escreve os canais `vis.<forma>` do personagem, além de `talk`. Figurantes em `chat` falam frases de `SMALL_TALK` (`actions/ambient.ts`), que ninguém ouve.
+  - `splitGaze` divide o olhar: os olhos cobrem a primeira parte do ângulo e a cabeça o resto; a soma é o olhar pedido, então a câmera em primeira pessoa não mudou. Figurantes têm pequenos desvios de olhos (`dart` em `Ambient`).
+  - Na vitrine: menu "Boca" segura uma forma, "Falar" diz uma frase de teste, e a cor dos olhos entra na aparência.
+
+- Contorno e luz em faixas (tarefa 3), em `src/engine/style.ts`:
+  - A bíblia escolhe o estilo: `"style": { "look": "cel", "outline": 0.01, "bands": 3 }`. Sem `style`, a série é `soft` (o visual de antes). `ceu-vermelho` está em `cel`; `demo-acoes` em `soft`.
+  - `applyStyle(raiz, estilo)` é uma passada sobre a cena já montada: nada que monta a cena sabe de estilo. Pode ser chamada de novo (troca de estilo, personagem reconstruído); voltar para `soft` devolve os materiais originais.
+  - Faixas: cada `MeshStandardMaterial` vira `MeshToonMaterial` da mesma cor. A rampa só tem faixas no lado que olha para a luz; o lado de trás fica escuro, senão toda lâmpada ilumina o teto em que está pendurada e os interiores lavam.
+  - Contorno: casca invertida, com a espessura em metros na cena (os vértices são empurrados pela normal vista pela câmera).
+  - O casco do cenário (caixas e planos de quina viva: paredes, pisos, tetos, folhas de porta) fica como foi montado, sem faixas e sem contorno, como um fundo pintado atrás de personagens em cel. Com faixas, as lâmpadas desenhavam arcos grandes nas paredes.
+  - Sem contorno: vidros, telas (`MeshBasicMaterial`), e o que tiver `userData.noOutline` nele ou acima (olhos, sobrancelhas, nariz e boca).
+  - O estúdio e a vitrine têm "Estilo" no painel para comparar; a vitrine ajusta espessura e faixas e mostra o trecho para colar na bíblia.
+
 ## Próximas tarefas, em ordem
 
-1. ~~Vitrine de personagens~~: feita. As tarefas 2 a 6 são ajustadas e conferidas nela.
-2. **Rosto expressivo**: olhos com branco, íris, brilho e pálpebra, olhos que se mexem dentro do rosto, sobrancelhas grossas, nariz, orelhas, boca com formas de fala.
-3. **Contorno grosso e luz em faixas**: o estilo da série passa a ser escolhido na bíblia (atual ou cell shading).
+As tarefas 1 a 3 estão feitas. A próxima é a 4. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+
+1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
+2. ~~Rosto expressivo~~: feito.
+3. ~~Contorno grosso e luz em faixas~~: feito.
 4. **Mãos com dedos**: poses de mão, mão que fecha no que segura, ação de apontar.
 5. **Cabelo com volume e ficha mais configurável**: mais estilos de cabelo, formato de cabeça, olhos, nariz, boca, barba, óculos; `extraLook` sorteando tudo.
 6. **Cor do mundo por regra da bíblia**: o céu vermelho tingindo a cena inteira.
@@ -124,7 +142,7 @@ Só começa com confirmação do autor. O que falta, em ordem sugerida:
 
 1. Áudio de cada fala pela ElevenLabs (confirmar os endpoints na documentação), em `tts` ou `sts`, com cache em arquivo e tempos por palavra. As falas já estão no episódio compilado: eventos `line` com quem fala, o texto e a duração estimada.
 2. `resolveScript` recebendo o idioma e a duração real de cada fala, para a timeline sair do áudio.
-3. Lip-sync pelos visemas da tarefa 2; mixagem do áudio no render.
+3. Lip-sync: os visemas já existem e hoje saem das letras do texto, num ritmo uniforme (`visemeTrack` em `character/motion.ts`). Com a voz, os tempos por palavra entram nessa função. Mixagem do áudio no render.
 4. Sons do mundo (celular vibrando, burburinho da turma, passos).
 
 ## Ideias soltas, sem ordem
@@ -146,7 +164,13 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - O braço do GLB erra o alvo por alguns centímetros quando as proporções do modelo diferem do esqueleto padrão; o item segue a mão de verdade.
 - A mão vai até onde a maçaneta fica com a porta fechada e não acompanha a folha enquanto ela gira. Porta de carro não tem maçaneta conhecida: a mão vai para a frente do corpo.
 - `sit` não confere se a porta do carro está aberta, e o personagem atravessa a lataria se ela estiver fechada.
-- O olhar move só a cabeça e o pescoço; os olhos não se mexem dentro do rosto.
+- Não há ação para dirigir só os olhos (olhar de lado sem virar a cabeça): eles seguem o `lookAt` junto com a cabeça.
+- As formas de boca seguem as letras, não os sons: "ch", "nh" e ditongos saem aproximados, e o ritmo é uniforme até a voz dar os tempos.
+- De três quartos, o olho do lado de lá passa um pouco do contorno da cabeça.
+- Em `cel`, o casco do cenário não tem contorno. Um contorno por pós-processamento (detecção de bordas) resolveria as quinas vivas, se fizer falta.
+- Em `cel`, num ambiente com várias lâmpadas, cada uma desenha as suas faixas, e num rosto em close elas se cruzam.
+- Em `cel`, o modelo GLB de teste (`robo.glb`) recebe as faixas mas o contorno não aparece; a causa não foi investigada.
+- Cilindros (pés de carteira, postes) têm quina viva nas tampas, e o contorno abre ali.
 - Na vitrine, com um comportamento de figurante ligado, as poses "cruzar os braços" e "gesticular" não aparecem: as mãos livres são do comportamento.
 - Na vitrine, a pose "sentar" usa um banco de 0,46 m para todos; personagens baixos ficam com os pés fora do chão.
 - Sentado, os braços ficam ao lado do corpo (não seguram o volante).
@@ -162,4 +186,4 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 
 O Chromium headless já vem instalado (`require('playwright')`, lançar com `--use-gl=swiftshader --enable-unsafe-swiftshader`). `window.__studio` expõe `setMode`, `setLevel`, `focusRoom`, `walk.placeAt(x, z, elevation, yaw)`, `camera`, `orbit`, `timeline.seek(frame)`, `interactives`, `cast`, `actionsError` (ações e câmera) e `toggleNearestDoor()`. Para um close de um personagem: `orbit.target` na posição dele, `camera.position` à frente, `orbit.update()`.
 
-Na vitrine (`?vitrine=personagens&series=<id>`), `window.__vitrine` expõe `ids()`, `select(id | null, 'body' | 'face')`, `frame('all' | 'body' | 'face')`, `setPose`, `setBehaviour`, `setLook('free' | 'camera' | 'selected' | 'ahead')`, `setExpression(nome, intensidade)`, `restyle(id, mudanças)`, `addExtras(id, n)`, `setRule(id, ligada)`, `pause(segundos)`, `play()`, `camera`, `orbit`, `cast()` e `error`. Pause num instante fixo antes de cada screenshot, para a imagem não depender do relógio.
+Na vitrine (`?vitrine=personagens&series=<id>`), `window.__vitrine` expõe `ids()`, `select(id | null, 'body' | 'face')`, `frame('all' | 'body' | 'face')`, `setPose`, `setBehaviour`, `setLook('free' | 'camera' | 'selected' | 'ahead')`, `setExpression(nome, intensidade)`, `setMouth('A' | 'E' | 'O' | 'U' | 'F' | '')`, `restyle(id, mudanças)`, `addExtras(id, n)`, `setStyle('soft' | 'cel', contorno, faixas)`, `setRule(id, ligada)`, `pause(segundos)`, `play()`, `camera`, `orbit`, `cast()` e `error`. Pause num instante fixo antes de cada screenshot, para a imagem não depender do relógio.

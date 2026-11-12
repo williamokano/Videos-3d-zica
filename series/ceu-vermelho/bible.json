@@ -5,6 +5,7 @@
   "dubbing": ["en", "de"],
   "format": { "width": 1080, "height": 1920, "fps": 30 },
   "audio": { "provider": "elevenlabs", "defaultMode": "sts" },
+  "style": { "look": "cel" },
   "rules": [
     {
       "id": "ceu-vermelho",

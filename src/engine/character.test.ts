@@ -9,7 +9,7 @@ import './assets/nature';
 import './assets/school';
 import { buildBody } from './character/body';
 import { buildCharacter } from './character/cast';
-import { blink, locomotionPose, resolveFace, walkPose } from './character/motion';
+import { NO_VISEMES, VISEMES, VISEME_NAMES, blink, locomotionPose, mouthOpenOf, resolveFace, splitGaze, visemeTrack, walkPose } from './character/motion';
 import { mapBones, retarget } from './character/retarget';
 import { JOINTS, PARENT, type CharacterDef, type Joint } from './character/types';
 import { buildLocation } from './world/build';
@@ -49,6 +49,110 @@ describe('motion', () => {
     expect(resolveFace({ happy: 0.5 }, 0, 0).mouthCurve).toBeCloseTo(0.575);
     expect(resolveFace({ happy: 1 }, 1, 0).eyeOpen).toBe(0);
     expect(resolveFace({}, 0, 0.6).mouthOpen).toBe(0.6);
+  });
+
+  it('shapes the mouth for speech on top of the expression', () => {
+    const smiling = resolveFace({ happy: 1 }, 0, 0);
+    const saying = resolveFace({ happy: 1 }, 0, 0, { U: 1 });
+    expect(saying.mouthCurve).toBe(smiling.mouthCurve);
+    expect(saying.mouthRound).toBe(VISEMES.U.mouthRound);
+    expect(saying.mouthWidth).toBeLessThan(smiling.mouthWidth);
+    expect(resolveFace({}, 0, 0, { A: 0.5 }).mouthOpen).toBeCloseTo(VISEMES.A.mouthOpen / 2);
+    expect(resolveFace({}, 0, 0, { F: 1 }).teeth).toBe(1);
+    // No shape at all leaves the face as the expression has it.
+    expect(resolveFace({ happy: 1 }, 0, 0, NO_VISEMES)).toEqual(smiling);
+  });
+
+  it('puts the eyes where they are told to look', () => {
+    expect(resolveFace({}, 0, 0, {}, { x: 0.4, y: -0.2 })).toMatchObject({ gazeX: 0.4, gazeY: -0.2 });
+  });
+
+  it('shares a look between the eyes and the head', () => {
+    for (const [yaw, pitch] of [[0, 0], [10, -5], [-30, 20], [75, 40], [-75, -40]]) {
+      const { head, eyes } = splitGaze(yaw, pitch);
+      // The eyes turn by what the head leaves: together they are the look asked for.
+      expect(head.yaw + eyes.x * 30).toBeCloseTo(yaw);
+      expect(head.pitch + eyes.y * 22).toBeCloseTo(pitch);
+      expect(Math.abs(eyes.x)).toBeLessThanOrEqual(0.6 + 1e-9);
+      expect(Math.abs(eyes.y)).toBeLessThanOrEqual(12 / 22 + 1e-9);
+    }
+    // A small look is mostly the eyes' share growing with it; a large one is mostly the head.
+    expect(splitGaze(10, 0).eyes.x).toBeGreaterThan(0);
+    expect(splitGaze(75, 0).head.yaw).toBe(57);
+  });
+});
+
+describe('speech', () => {
+  const weights = (text: string, u: number) => visemeTrack(text)(u);
+  const total = (text: string, u: number) => VISEME_NAMES.reduce((sum, name) => sum + weights(text, u)[name], 0);
+  const steps = Array.from({ length: 201 }, (_, i) => i / 200);
+
+  it('gives the same shapes for the same text and moment, closed at both ends', () => {
+    expect(weights('Olá, tudo bem?', 0.37)).toEqual(weights('Olá, tudo bem?', 0.37));
+    expect(weights('Olá, tudo bem?', 0)).toEqual(NO_VISEMES);
+    expect(weights('Olá, tudo bem?', 1)).toEqual(NO_VISEMES);
+  });
+
+  it('never opens more than one whole shape at a time', () => {
+    for (const u of steps) {
+      expect(total('De repente o céu ficou vermelho!', u)).toBeLessThanOrEqual(1 + 1e-9);
+      expect(total('De repente o céu ficou vermelho!', u)).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('follows the letters: each vowel its shape, accents and case aside', () => {
+    const strongest = (text: string) => VISEME_NAMES.filter((name) => steps.some((u) => weights(text, u)[name] > 0.9));
+    expect(strongest('aaa')).toEqual(['A']);
+    expect(strongest('ÉÍ')).toEqual(['E']);
+    expect(strongest('ó')).toEqual(['O']);
+    expect(strongest('uuu')).toEqual(['U']);
+    expect(strongest('fff')).toEqual(['F']);
+    expect(strongest('vovô')).toEqual(['O', 'F']);
+  });
+
+  it('closes the mouth for m, b and p and for a pause', () => {
+    expect(steps.every((u) => total('mmm bbb ppp', u) === 0)).toBe(true);
+    // Between the two words the mouth shuts.
+    expect(Math.min(...steps.slice(60, 140).map((u) => total('aaaa. aaaa', u)))).toBeLessThan(0.05);
+    expect(Math.max(...steps.map((u) => total('aaaa. aaaa', u)))).toBeGreaterThan(0.95);
+  });
+
+  it('opens the mouth by what the shapes open', () => {
+    expect(mouthOpenOf(NO_VISEMES)).toBe(0);
+    expect(mouthOpenOf({ A: 1 })).toBe(VISEMES.A.mouthOpen);
+    expect(mouthOpenOf({ A: 0.5, U: 0.5 })).toBeCloseTo((VISEMES.A.mouthOpen + VISEMES.U.mouthOpen) / 2);
+  });
+
+  it('is what the action "say" writes, ending with the mouth closed', () => {
+    const who = buildCharacter({ character: 'ana', at: [0, 0] }, ana);
+    const compiled = compileActions([{ t: 1, target: 'ana', action: 'say', params: { text: 'Uau, você viu o fogo?' } }], [who]);
+    const end = 1 + compiled.clips[0].duration;
+    const at = (t: number) => evaluateActions(compiled, t).ana;
+    const seen = new Set<string>();
+    for (let t = 1; t < end; t += 0.02) {
+      for (const name of VISEME_NAMES) if (at(t)[`vis.${name}`] > 0.6) seen.add(name);
+      expect(at(t).talk).toBeCloseTo(mouthOpenOf(Object.fromEntries(VISEME_NAMES.map((n) => [n, at(t)[`vis.${n}`]]))));
+    }
+    expect([...seen].sort()).toEqual(['A', 'E', 'F', 'O', 'U']);
+    for (const name of VISEME_NAMES) expect(at(end + 0.5)[`vis.${name}`]).toBe(0);
+    expect(at(end + 0.5).talk).toBe(0);
+  });
+});
+
+describe('face', () => {
+  it('builds without a browser and takes any face, eyes shut or wide, mouth in every shape', () => {
+    const rig = buildBody({ ...ana, eyes: '#3a6ea5' });
+    for (const name of [undefined, ...VISEME_NAMES]) {
+      for (const eyeOpen of [0, 1, 1.4]) {
+        const face = { ...resolveFace({ scared: 0.5 }, 0, 0, name ? { [name]: 1 } : {}, { x: 1, y: -1 }), eyeOpen };
+        rig.setFace(face, { blink: 0, talk: 0, expressions: {}, visemes: {} });
+      }
+    }
+    const numbers: number[] = [];
+    rig.object.traverse((o) => {
+      if (o instanceof THREE.Mesh) numbers.push(...o.geometry.attributes.position.array, ...o.position.toArray());
+    });
+    expect(numbers.every(Number.isFinite)).toBe(true);
   });
 });
 

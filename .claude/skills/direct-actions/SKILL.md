@@ -36,7 +36,7 @@ export default direct(
 | `d.together(() => ..., () => ...)` | coisas ao mesmo tempo; o relógio vai para o fim da mais longa |
 | `d.background(() => ...)` | algo que acontece enquanto o roteiro segue; o relógio não anda. Devolve `{ start, end }` |
 | `d.waitFor(passo ou tempo)` | espera até lá, se ainda não passou |
-| `ana.say('texto', { to: beto })` | fala: a boca mexe, as mãos acompanham e a fala vira legenda (a voz vem depois). Dura conforme o texto |
+| `ana.say('texto', { to: beto })` | fala: a boca faz as formas das letras do texto (A, E, O, U, F/V, fechada em M, B, P e nas pausas), as mãos acompanham e a fala vira legenda (a voz vem depois). Dura conforme o texto |
 | `ana.behave(modo, opções)` | o que o personagem faz sozinho daqui em diante (figurantes); não gasta tempo. Ver "Figurantes" |
 | `ana.pickUp('celular')`, `raise('eyes' ou 'chest')`, `lower()`, `putAway('celular')` | tira do bolso (ou pega), levanta para ler, abaixa, guarda no bolso |
 | `d.phone('celular')` | a tela de um celular: `setup({...})`, `receive(texto)`, `send(texto)`, `typing(true)`, `open(chat)`, `screen(false)`, `network(false)`. Acontecem na hora |

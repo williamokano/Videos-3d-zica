@@ -21,6 +21,7 @@ npm run build
 - **Ações**: portas, carros e itens se movem conforme a trilha `actions` do episódio. Aparecem como barras azuis na timeline e em lista no painel; clicar leva ao instante da ação.
 - **Personagens**: o elenco do episódio aparece no painel; clicar leva a câmera até a pessoa. Eles andam, correm, viram e mudam de expressão pelas ações do episódio.
 - **Série e episódio**: escolha no painel ou pelo endereço, `?series=<id>&ep=<número>`. A série `demo-acoes` mostra todas as ações.
+- **Estilo**: troca entre o visual suave e o cel shading para comparar. O que vale no vídeo é o `style` da bíblia.
 - **Bíblia**: liga e desliga cada regra ativa para comparar o cenário com e sem ela.
 - **Áreas**: leva a câmera até cada área do local.
 
@@ -38,7 +39,7 @@ npm run build
 
 | Caminho | Conteúdo |
 |---|---|
-| `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio |
+| `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio e estilo (`style`: `soft` ou `cel`, com contorno e faixas de luz) |
 | `series/<série>/world/*.json` | Locais (formato em `src/engine/world/types.ts`) |
 | `series/<série>/characters/*.json` | Personagens (formato em `src/engine/character/types.ts`), com GLB opcional ao lado |
 | `series/<série>/episodes/*.ts` ou `*.json` | Episódios: roteiro em código (os tempos saem sozinhos) ou dado com os tempos escritos à mão |

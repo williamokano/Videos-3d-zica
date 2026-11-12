@@ -41,3 +41,7 @@ Consulte o catálogo antes de criar: os ids e descrições estão nos `registerA
 1. `npm test` e `npm run typecheck`.
 2. Abra o estúdio (`npm run dev`) e tire screenshots com o Chromium headless: visão geral, cada nível, e o caminho a pé pelas portas e escadas novas. `window.__studio` expõe `setMode`, `setLevel`, `focusRoom` e `walk.placeAt(x, z, elevation, yaw)`. Na visão Andar, a tecla E abre e fecha a porta mais próxima.
 3. Olhe as imagens: paredes sem vão errado, móveis virados para o lado certo, nada atravessando parede, escada chegando no piso.
+
+## Estilo da série
+
+Com `"style": { "look": "cel" }` na bíblia (`src/engine/style.ts`), os assets arredondados do kit ganham luz em faixas e contorno; paredes, pisos e tetos ficam como estão. Um asset novo deve usar `mat()` e `rbox()` de `src/engine/assets/registry.ts`: uma caixa de quina viva (`BoxGeometry`) é tratada como casco e fica sem contorno. Confira o local nos dois estilos pelo "Estilo" do painel do estúdio.

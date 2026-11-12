@@ -5,14 +5,15 @@ import '../engine/assets';
 import { BEHAVIOURS } from '../engine/actions/ambient';
 import { compileActions, headAngles, type CompiledActions } from '../engine/actions/catalog';
 import { mat, rbox } from '../engine/assets/registry';
-import { resolveEnvironment, type Bible } from '../engine/bible';
+import { resolveEnvironment, resolveStyle, type Bible } from '../engine/bible';
 import { buildCharacter } from '../engine/character/cast';
 import { extraLook } from '../engine/character/extras';
 import { loadGlbCharacter } from '../engine/character/glb';
-import { EXPRESSIONS } from '../engine/character/motion';
+import { EXPRESSIONS, VISEME_NAMES } from '../engine/character/motion';
 import { SHOWCASE_BEHAVIOURS, SHOWCASE_POSES, SHOWCASE_YAW, STOOL, phoneOf, poseChannels, showcaseLayout, stageTrack } from '../engine/character/showcase';
 import type { CharacterDef } from '../engine/character/types';
 import { EnvironmentRig } from '../engine/environment';
+import { applyStyle } from '../engine/style';
 import { applyStage } from '../engine/timeline/stage';
 import { buildProp, type InteractiveObject } from '../engine/world/build';
 import { button, checkbox, color, el, select, slider } from './ui';
@@ -71,6 +72,8 @@ interface Slot {
   look: Look;
   expression: string;
   intensity: number;
+  /** A mouth shape of speech held still, or '' to leave the mouth to the pose. */
+  mouth: string;
   stool: THREE.Mesh;
   phone?: InteractiveObject;
   nameplate: HTMLDivElement;
@@ -87,6 +90,8 @@ let time = 0;
 let paused = false;
 let error = '';
 const rulesOn = new Set<string>();
+/** The look of the series; the menu can change it to compare, without saving. */
+const style = resolveStyle(everySeries ? {} : bible);
 
 const seedOf = (id: string): number => [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
 const targets = (): Slot[] => (selected ? [selected] : slots);
@@ -109,7 +114,7 @@ async function addSlot(id: string, file: CharacterDef, def: CharacterDef, model?
   stool.castShadow = stool.receiveShadow = true;
   const nameplate = el('div', def.name, 'nameplate');
   const slot: Slot = {
-    id, file, def, model, extra, stool, nameplate, at: [0, 0], pose: 'idle', behaviour: 'none', look: 'free', expression: '', intensity: 1,
+    id, file, def, model, extra, stool, nameplate, at: [0, 0], pose: 'idle', behaviour: 'none', look: 'free', expression: '', intensity: 1, mouth: '',
     object: await build({ id, def, model, at: [0, 0] }),
   };
   nameplate.onclick = () => select_(slot);
@@ -165,6 +170,8 @@ function restage(): void {
     compiled = compileActions([], all);
     error = e instanceof Error ? e.message : String(e);
   }
+  // Whoever just came in gets the look of the rest.
+  applyStyle(scene, style);
 }
 
 const eye = new THREE.Vector3();
@@ -194,6 +201,7 @@ function apply(t: number): void {
     const pose = SHOWCASE_POSES[slot.pose];
     for (const [channel, value] of Object.entries(poseChannels(slot.pose, t, object.traits, seedOf(slot.id)))) object.set(channel, value);
     for (const name of Object.keys(EXPRESSIONS)) object.set(`expr.${name}`, name === slot.expression ? slot.intensity : 0);
+    if (slot.mouth) for (const name of VISEME_NAMES) object.set(`vis.${name}`, name === slot.mouth ? 1 : 0);
     object.set('look.yaw', 0);
     object.set('look.pitch', 0);
     // A behaviour, when there is one, takes the free hands; applyStage sets it.
@@ -328,9 +336,9 @@ function renderPanel(): void {
   }
 
   const who = targets();
-  const shared = <K extends 'pose' | 'behaviour' | 'look' | 'expression'>(key: K): string => (who.every((s) => s[key] === who[0]?.[key]) ? (who[0]?.[key] ?? '') : '');
+  const shared = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'mouth'>(key: K): string => (who.every((s) => s[key] === who[0]?.[key]) ? (who[0]?.[key] ?? '') : '');
   const mixed: [string, string][] = selected ? [] : [['', '(vários)']];
-  const set = <K extends 'pose' | 'behaviour' | 'look' | 'expression'>(key: K, value: Slot[K]): void => {
+  const set = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'mouth'>(key: K, value: Slot[K]): void => {
     for (const slot of who) slot[key] = value;
     restage();
     renderPanel();
@@ -343,6 +351,7 @@ function renderPanel(): void {
     slider('Intensidade', [0, 1.5, 0.05], who[0]?.intensity ?? 1, (v) => {
       for (const slot of who) slot.intensity = v;
     }),
+    select('Boca', [['', 'Da pose'], ...VISEME_NAMES.map((name): [string, string] => [name, name === 'F' ? 'F / V' : name])], shared('mouth'), (v) => set('mouth', v)),
     select('Pose', [...(shared('pose') ? [] : mixed), ...Object.entries(SHOWCASE_POSES).map(([id, p]): [string, string] => [id, p.label])], shared('pose'), (v) => v && set('pose', v)),
     select('Figurante', [...(shared('behaviour') ? [] : mixed), ['none', 'Sem comportamento'], ...SHOWCASE_BEHAVIOURS.map((mode): [string, string] => [mode, mode])], shared('behaviour'), (v) => v && set('behaviour', v)),
   );
@@ -360,6 +369,7 @@ function renderPanel(): void {
       const live = (change: Partial<CharacterDef>) => void restyle(slot, change);
       panel.append(
         color('Pele', def.skin ?? '#e8b88f', (v) => live({ skin: v }), renderPanel),
+        color('Olhos', def.eyes ?? '#4a2f1d', (v) => live({ eyes: v }), renderPanel),
         color('Cabelo', def.hair ?? '#3b2a20', (v) => live({ hair: v }), renderPanel),
         select('Corte', [['short', 'curto'], ['long', 'comprido'], ['bun', 'coque'], ['none', 'sem cabelo']], def.hairStyle ?? 'short', (v) => {
           void restyle(slot, { hairStyle: v as CharacterDef['hairStyle'] }).then(renderPanel);
@@ -391,6 +401,30 @@ function renderPanel(): void {
       restage();
       select_(null);
     }));
+  }
+
+  panel.append(el('h2', 'Estilo'));
+  const looks = el('div', '', 'row');
+  for (const [look, label] of [['soft', 'Suave'], ['cel', 'Cel shading']] as const) {
+    looks.append(button(label, style.look === look, () => {
+      style.look = look;
+      applyStyle(scene, style);
+      renderPanel();
+    }));
+  }
+  panel.append(looks);
+  if (style.look === 'cel') {
+    panel.append(
+      slider('Contorno', [0, 0.03, 0.001], style.outline, (v) => {
+        style.outline = v;
+        applyStyle(scene, style);
+      }, renderPanel),
+      slider('Faixas', [1, 6, 1], style.bands, (v) => {
+        style.bands = v;
+        applyStyle(scene, style);
+      }, renderPanel),
+      el('p', `Para a série: "style": ${JSON.stringify({ look: 'cel', outline: style.outline, bands: style.bands })} na bíblia.`, 'note'),
+    );
   }
 
   if (!everySeries && bible.rules.length) {
@@ -460,7 +494,7 @@ const bySlot = (id: string): Slot => {
   if (!slot) throw new Error(`Não há "${id}" na vitrine. Existem: ${slots.map((s) => s.id).join(', ')}.`);
   return slot;
 };
-const setAll = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'intensity'>(key: K, value: Slot[K]): void => {
+const setAll = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'intensity' | 'mouth'>(key: K, value: Slot[K]): void => {
   for (const slot of targets()) slot[key] = value;
   restage();
   renderPanel();
@@ -479,8 +513,16 @@ Object.assign(window, {
       setAll('intensity', intensity);
       setAll('expression', name);
     },
+    /** Hold a mouth shape of speech ("A", "E", "O", "U", "F"), or '' to let the pose move the mouth. */
+    setMouth: (shape: string) => setAll('mouth', shape),
     restyle: (id: string, change: Partial<CharacterDef>) => restyle(bySlot(id), change).then(renderPanel),
     addExtras: (id: string, count = 6) => addExtras(bySlot(id), count),
+    /** "soft" or "cel", and for cel the outline in meters and the number of bands of light. */
+    setStyle: (look: 'soft' | 'cel', outline = style.outline, bands = style.bands) => {
+      Object.assign(style, { look, outline, bands });
+      applyStyle(scene, style);
+      renderPanel();
+    },
     setRule: (id: string, on: boolean) => {
       if (on) rulesOn.add(id);
       else rulesOn.delete(id);

@@ -5,6 +5,8 @@
  * drawn on its own and two characters never move in step.
  */
 
+import { VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
+
 export type Vec3 = [number, number, number];
 
 /** A behaviour in effect from t0 until the character's next one. */
@@ -48,12 +50,16 @@ export interface Ambient {
   /** Weight from one leg to the other, -1 to 1. */
   sway: number;
   expressions: Record<string, number>;
+  /** Mouth shapes of speech, by name (see VISEMES in character/motion.ts). */
+  visemes: Record<string, number>;
+  /** Eyes wandering inside the face: [to the left, up], each about -0.3 to 0.3. */
+  dart: [number, number];
   /** Head: going from `from` to `to`, `blend` of the way there. */
   gaze: { from: GazeSpec; to: GazeSpec; blend: number };
 }
 
 /** A body doing nothing by itself. */
-export const NO_AMBIENT: Ambient = { talk: 0, cross: 0, gestureL: 0, gestureR: 0, write: 0, nod: 0, sway: 0, expressions: {}, gaze: { from: null, to: null, blend: 1 } };
+export const NO_AMBIENT: Ambient = { talk: 0, cross: 0, gestureL: 0, gestureR: 0, write: 0, nod: 0, sway: 0, expressions: {}, visemes: {}, dart: [0, 0], gaze: { from: null, to: null, blend: 1 } };
 
 const hash = (a: number, b: number): number => {
   const v = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
@@ -73,13 +79,15 @@ const windowAt = (t: number, length: number, seed: number): { k: number; u: numb
   return { k, u: x - k, into: (x - k) * length };
 };
 
-/** Mouth of someone talking: syllables of uneven size, with short pauses. */
-export function mouthFlap(t: number, seed: number): number {
-  const syllable = Math.abs(Math.sin(t * 10.5 + seed));
-  const phrase = 0.55 + 0.45 * Math.sin(t * 2.7 + seed * 1.3);
-  const pause = Math.sin(t * 0.9 + seed * 0.7) > 0.86 ? 0 : 1;
-  return Math.max(0, 0.08 + 0.72 * syllable * phrase) * pause;
-}
+/** What extras say to each other: nobody hears it, the mouths only need something to shape. Each lasts about a turn. */
+const SMALL_TALK = [
+  'pois é, eu falei pra ela ontem',
+  'não, mas olha só o que aconteceu',
+  'você viu aquilo? foi muito bom',
+  'eu acho que vai dar tudo certo',
+  'ah, para, não acredito nisso',
+  'depois a gente vê isso com calma',
+];
 
 const TURN = 2.8;
 
@@ -102,7 +110,7 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
   const mine = behaviourAt(behaviours, id, t);
   if (!mine) return NO_AMBIENT;
   const seed = seedOf(id);
-  const out: Ambient = { ...NO_AMBIENT, expressions: {}, sway: Math.sin(t * 0.45 + seed) * 0.7 + Math.sin(t * 0.17 + seed * 2) * 0.3 };
+  const out: Ambient = { ...NO_AMBIENT, expressions: {}, visemes: {}, sway: Math.sin(t * 0.45 + seed) * 0.7 + Math.sin(t * 0.17 + seed * 2) * 0.3 };
   // Coming into a behaviour, things start gently.
   const settle = smooth((t - mine.t0) / 0.6);
 
@@ -127,7 +135,9 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
     const turn = windowAt(t, TURN, seedOf(group));
     const speaker = speakerOf(members, group, turn.k);
     if (speaker === id) {
-      out.talk = mouthFlap(t, seed) * bell(turn.u, 0.1) * settle;
+      const shapes = visemeTrack(SMALL_TALK[Math.floor(hash(turn.k, seed + 16) * SMALL_TALK.length) % SMALL_TALK.length])(turn.u);
+      for (const name of VISEME_NAMES) out.visemes[name] = shapes[name] * settle;
+      out.talk = mouthOpenOf(shapes) * settle;
       out.cross = 0;
       if (hash(turn.k, seed + 7) < 0.65) out[hash(turn.k, seed + 8) < 0.5 ? 'gestureL' : 'gestureR'] = bell(turn.u, 0.2) * settle;
     }
@@ -158,5 +168,10 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
     if (feeling < 0.15) out.expressions.happy = 0.4 * bell(mood.u) * settle;
   }
   out.gaze = { from: spec(frame.k - 1), to: spec(frame.k), blend: smooth(frame.into / 0.45) };
+  // Eyes jump to a new spot now and then, and stay there.
+  const look = windowAt(t, 1.9, seed + 53);
+  const spot = (k: number): [number, number] => (hash(k, seed + 17) < 0.45 ? [0, 0] : [(hash(k, seed + 18) - 0.5) * 0.6, (hash(k, seed + 19) - 0.5) * 0.4]);
+  const [from, to, jump] = [spot(look.k - 1), spot(look.k), smooth(look.into / 0.12)];
+  out.dart = [(from[0] + (to[0] - from[0]) * jump) * settle, (from[1] + (to[1] - from[1]) * jump) * settle];
   return out;
 }
