@@ -43,6 +43,11 @@ export interface TargetTraits {
   size?: [number, number, number];
   /** Doors: where the handle is when the door is closed, and the direction that points into the room that declares it. */
   door?: { handle: [number, number, number]; center: [number, number, number]; inside: [number, number]; width: number };
+  /**
+   * Hinged parts (car doors), in the object's own frame: where the hinge is ([x, z]), how long the leaf is, the
+   * side it swings out to (1 for +x, -1 for -x) and how far, in radians. Closed, the leaf runs from the hinge toward +z.
+   */
+  parts?: Record<string, { hinge: [number, number]; length: number; side: number; angle: number }>;
   /** Characters: names of the expressions the face can show. */
   expressions?: string[];
 }

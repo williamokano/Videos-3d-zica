@@ -1,20 +1,19 @@
-# Tarefa 9 do motor: vitrine de assets
+# Tarefa 10 do motor: carros melhores
 
-Pedido do autor em 2026-11-12. A tarefa 8 está no commit `6b962fd`, enviado. Esta ainda não foi commitada.
+Pedido do autor em 2026-11-12. A tarefa 9 está no commit `580cad8`, enviado. Esta ainda não foi commitada.
 
-- [x] `src/engine/assets/showcase.ts`: grupos, disposição em fila, ações por tipo, faixa de cada canal
-- [x] `src/studio/assets-showcase.ts`: página `?vitrine=assets`, com seleção, canais, ações, estilo, pessoa de escala
-- [x] Navegação entre estúdio e as duas vitrines
-- [x] Testes: `src/engine/assets-showcase.test.ts`
-- [x] Registro: `docs/NEXT.md`, `README.md`, skill `build-location`
-- [x] Tarefa nova registrada: carros melhores (tarefa 10 em `docs/NEXT.md`, com as palavras do autor); voz virou a 11
+- [x] Carro em blocos com para-brisa e vidro traseiro inclinados (`src/engine/assets/vehicles.ts`)
+- [x] Portas alinhadas com a lataria e com os vidros
+- [x] Quem está no arco da porta sai da frente antes de ela se mover (`outOfTheWay` em `actions/builtin.ts`)
+- [x] Testes: `src/engine/car.test.ts`
+- [x] Registro: `docs/NEXT.md`
 
 ## Revisão
 
-- `npm run typecheck` limpo; `npm test` com 136 testes (132 de antes mais 4).
-- Olhado em imagem: o carro selecionado com o painel (canais, lugares, ação escolhida) e o grupo Escola inteiro.
-- Testado pela página: seleção por clique (armários), controle de porta pelo painel, e o controle acompanhando um valor posto por fora.
-- Capturados mas não olhados: grupos Depósito, Itens e Natureza; o carro só com as portas abertas.
-- Não conferido: "Animar os canais"; estilo suave nesta página.
+- `npm run typecheck` limpo; `npm test` com 143 testes (136 de antes mais 7).
+- Vitrine de assets: o carro de lado e de três quartos de frente, nos dois estilos, e com duas portas abertas.
+- `demo-acoes`, episódio 1, visto de cima do lado da personagem em oito instantes: ela abre a porta de trás, põe a caixa, dá um passo para fora e a porta fecha na frente dela; depois abre a da frente.
+- Não conferido: o carro por trás em imagem (capturado, não olhado); a personagem sentada dirigindo; render em vídeo; o episódio 2 da `demo-acoes` (não usa carro).
+- Fora desta tarefa, anotado em "Limitações conhecidas": rodas da frente não viram, porta-malas não abre, `sit` não confere a porta, braços não seguram o volante.
 
-Próxima: tarefa 10, carros melhores (ver `docs/NEXT.md`).
+Próxima: tarefa 11, voz, só com a confirmação do autor.

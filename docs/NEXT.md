@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 136 testes
+npm run typecheck && npm test   # 143 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine de personagens em http://localhost:5173/?vitrine=personagens
                                 # vitrine de assets em http://localhost:5173/?vitrine=assets
@@ -120,9 +120,15 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Parte pura em `src/engine/assets/showcase.ts`: `assetGroups`, `rowLayout`, `actionsFor`, `channelRange`.
   - `window.__assets` expõe `ids()`, `select(id | null)`, `channels(id)`, `set(id, canal, valor)`, `actions(id)`, `setStyle`, `animate`, `camera`, `orbit`.
 
+- Carros melhores (tarefa 10), em `src/engine/assets/vehicles.ts` e `src/engine/actions/builtin.ts`:
+  - O carro continua em blocos, agora com para-brisa e vidro traseiro inclinados, colunas acompanhando, vidros das portas em trapézio, para-choques, faróis e lanternas separados, grade e retrovisores.
+  - As portas preenchem a lateral entre capô e porta-malas, na mesma altura e rentes à lataria.
+  - `userData.parts` (e `traits.parts`) diz onde cada porta tem a dobradiça, o comprimento da folha, o lado e o ângulo.
+  - `open` e `close` com `by`: se o personagem está no arco que a folha vai varrer, ele dá um passo para fora antes (`outOfTheWay`), andando, e só então a porta se move. Quem está sentado dentro não se mexe.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 9 estão feitas. A próxima é a 10, carros melhores. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 10 estão feitas. Falta a 11, voz, que só começa com a confirmação do autor. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
@@ -133,7 +139,7 @@ As tarefas 1 a 9 estão feitas. A próxima é a 10, carros melhores. O autor viu
 7. ~~Tela final interativa~~: feita.
 8. ~~Grande-angular por plano e granulado opcional~~: feito.
 9. ~~Vitrine para os outros assets~~: feita. Só existe um veículo (`vehicle.car`); caminhão e escavadeira ainda não existem.
-10. **Carros melhores** (pedido do autor em 2026-11-12, ver a seção abaixo).
+10. ~~Carros melhores~~: feito (pedido do autor em 2026-11-12, ver a seção abaixo).
 11. **Voz**: só com confirmação do autor.
 
 Os itens 2 a 8 vêm de uma referência de estilo que o autor mostrou; as decisões sobre o que puxar dela estão na seção seguinte.
@@ -163,7 +169,7 @@ Puxar com moderação (tarefa 8):
 
 Nas palavras do autor: "O que tem funciona relativamente bem, mas ele é todo quadrado, não precisa modelar com curvas, mas geralmente os vidros são angulados. As portas não estão muito bem alinhadas e na animação de teste a porta do carro fecha com a mulher e passa por ela, ela teria que ter saído da frente."
 
-O que fazer, em `src/engine/assets/vehicles.ts` e nas ações de porta:
+Feito. O que foi pedido, para referência:
 
 - **Forma**: continuar em blocos, sem curvas, mas com para-brisa e vidro traseiro inclinados, e colunas acompanhando. Hoje a cabine é uma caixa reta.
 - **Portas**: alinhar as folhas com a lataria (altura, espessura e vãos) e com os vidros das portas.
@@ -235,6 +241,8 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - Um keyframe de câmera que não repete `fov`, `pitch` ou `lens` leva esse valor de volta ao padrão: ao abrir a lente com `moveTo`, repita o `fov` do plano.
 - A lente amplia o meio da imagem, que perde um pouco de nitidez com `lens` alto.
 - A vitrine de assets não mostra as portas do cenário (são vãos de sala, não assets) nem deixa mudar os parâmetros de um asset (cor, tamanho).
+- O passo para fora do arco da porta só vale para partes com dobradiça de veículos; as portas do cenário não conferem quem está no caminho.
+- Ao sair do arco da porta, o personagem anda de costas ou de lado sem virar o corpo, e a mão vai ao ponto de antes do passo.
 - Modelos GLB não têm dedos e seguram pelo pulso.
 - O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
 - Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.

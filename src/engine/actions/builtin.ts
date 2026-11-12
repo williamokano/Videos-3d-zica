@@ -34,11 +34,54 @@ function byHand(ctx: ActionContext, channel: string, to: number): ActionResult {
     point = [place.pos[0] - Math.sin(a) * 0.5 * scale, place.pos[1] + 0.95 * scale, place.pos[2] - Math.cos(a) * 0.5 * scale];
   }
   const from = ctx.current(channel);
-  const writes: ChannelWrite[] = [
-    { channel, at: (u) => from + (to - from) * ramp(u, 0.3, 1) },
-    ...reach(ctx, by, freeHand(ctx, by), point, outAndBack(0.3, 0.6), door ? `a maçaneta de "${ctx.target.id}"` : `"${ctx.target.id}"`),
-  ];
-  return { writes, duration: 1.2 };
+  const hand = reach(ctx, by, freeHand(ctx, by), point, outAndBack(0.3, 0.6), door ? `a maçaneta de "${ctx.target.id}"` : `"${ctx.target.id}"`);
+  // Standing where the leaf is about to pass, the character steps out of its way first.
+  const aside = ctx.linkOf(by) ? undefined : outOfTheWay(ctx, ctx.params.part as string | undefined, from, to, place.pos);
+  if (!aside) return { writes: [{ channel, at: (u) => from + (to - from) * ramp(u, 0.3, 1) }, ...hand], duration: 1.2 };
+  const far = Math.hypot(aside[0] - place.pos[0], aside[1] - place.pos[2]);
+  const stride = ctx.current('stride', by);
+  const step = (u: number): number => ramp(u, 0, 0.4);
+  return {
+    duration: 1.7,
+    writes: [
+      { target: by, channel: 'x', at: (u) => place.pos[0] + (aside[0] - place.pos[0]) * step(u) },
+      { target: by, channel: 'z', at: (u) => place.pos[2] + (aside[1] - place.pos[2]) * step(u) },
+      { target: by, channel: 'stride', at: (u) => stride + (far / (who.traits.strideLength ?? 1.5)) * step(u) },
+      { target: by, channel: 'gait', at: (u) => Math.max(0, Math.min(1, u / 0.08, (0.4 - u) / 0.08)) },
+      { channel, at: (u) => from + (to - from) * ramp(u, 0.45, 1) },
+      ...hand,
+    ],
+  };
+}
+
+/** How wide a person is, for a door not to touch them. */
+const BODY_RADIUS = 0.28;
+
+/**
+ * Where a character at `pos` has to go so that a hinged part does not pass through them while it moves from
+ * `from` to `to` open: straight away from the hinge, to just past the end of the leaf. Undefined when the part
+ * is not hinged or the character is already clear of it.
+ */
+function outOfTheWay(ctx: ActionContext, part: string | undefined, from: number, to: number, pos: Point3): [number, number] | undefined {
+  const hinged = part ? ctx.target.traits.parts?.[part] : undefined;
+  if (!hinged) return undefined;
+  const base = ctx.placeOf(ctx.target.id);
+  const a = (base.yaw * Math.PI) / 180;
+  const [dx, dz] = [pos[0] - base.pos[0], pos[2] - base.pos[2]];
+  // In the object's own frame, from the hinge.
+  const rel = [dx * Math.cos(a) - dz * Math.sin(a) - hinged.hinge[0], dx * Math.sin(a) + dz * Math.cos(a) - hinged.hinge[1]];
+  const r = Math.hypot(rel[0], rel[1]);
+  if (r > hinged.length + BODY_RADIUS) return undefined;
+  // Angle from the closed leaf (+z) out to the side the part swings to.
+  const at = Math.atan2(hinged.side * rel[0], rel[1]);
+  const margin = Math.asin(Math.min(1, BODY_RADIUS / Math.max(r, BODY_RADIUS)));
+  const [low, high] = [Math.min(from, to) * hinged.angle - margin, Math.max(from, to) * hinged.angle + margin];
+  if (at < low || at > high) return undefined;
+  // Never back into the body of the car: at least a little out to the side.
+  const out = Math.max(at, 0.35);
+  const far = hinged.length + BODY_RADIUS + 0.12;
+  const [x, z] = [hinged.hinge[0] + hinged.side * Math.sin(out) * far, hinged.hinge[1] + Math.cos(out) * far];
+  return [base.pos[0] + x * Math.cos(a) + z * Math.sin(a), base.pos[2] - x * Math.sin(a) + z * Math.cos(a)];
 }
 
 /** Side of a door a character stands on. */
