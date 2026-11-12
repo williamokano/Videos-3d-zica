@@ -128,3 +128,9 @@ body {
   color: #ffb3ac;
   font-size: 12px;
 }
+
+/* Frame source for the renderer: nothing but the picture, at its exact size. */
+body.render { display: block; background: #000; overflow: hidden; }
+body.render #panel, body.render #hint, body.render #preview-label, body.render .timeline { display: none !important; }
+body.render #viewport { display: block; width: var(--frame-w); height: var(--frame-h); }
+body.render #stage { width: var(--frame-w); height: var(--frame-h); flex: none; }

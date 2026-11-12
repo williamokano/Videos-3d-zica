@@ -48,3 +48,23 @@ npm run build
 - Objetos animáveis têm `id` e canais numéricos (uma porta tem `open` de 0 a 1). Ações do catálogo movem os canais; o estado em qualquer instante é função pura do tempo.
 - Personagens olham para -z; `yaw` 0 é norte e 90 é oeste. Todos usam o mesmo esqueleto padrão em T-pose.
 - Escadas são descritas de cima para baixo; o motor fura os pisos que elas atravessam.
+
+## Renderizar para MP4
+
+```sh
+npm run render -- --series ceu-vermelho --ep 1
+```
+
+Um Chrome sem janela desenha o episódio frame a frame e o ffmpeg junta tudo em `out/<série>-ep<n>.mp4`. O vídeo sai mudo.
+
+| Opção | O que faz |
+|---|---|
+| `--series`, `--ep` | qual episódio (padrão: o primeiro) |
+| `--from`, `--to` | só um trecho, em segundos |
+| `--scale 0.5` | metade do tamanho, para uma prévia rápida |
+| `--out arquivo.mp4` | onde gravar |
+| `--software` | desenha na CPU mesmo havendo placa de vídeo |
+| `--crf 18` | qualidade do x264 (menor é melhor) |
+
+Precisa do `ffmpeg` no PATH e de um Chrome: o Google Chrome instalado, ou o executável apontado por `CHROME_PATH`. A primeira linha da saída diz qual placa de vídeo está sendo usada; se aparecer "SwiftShader", o desenho está na CPU.
+

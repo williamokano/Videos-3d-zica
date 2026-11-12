@@ -12,7 +12,7 @@ import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
-import type { Episode } from '../engine/timeline/episode';
+import { frameCount, type Episode } from '../engine/timeline/episode';
 import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
@@ -38,13 +38,22 @@ const location = inSeries(locations).find((l) => !source || l.id === source.loca
 if (!location) throw new Error(`A série "${bible.series}" ainda não tem nenhum cenário em world/.`);
 const episodeNumber = source?.episode ?? 1;
 
+// ?render[=scale] turns the page into a frame source for scripts/render.mjs: only the episode camera, at the final size.
+const rendering = query.has('render');
+const renderScale = Number(query.get('render')) || 1;
+if (rendering) {
+  document.body.classList.add('render');
+  document.body.style.setProperty('--frame-w', `${Math.round(bible.format.width * renderScale)}px`);
+  document.body.style.setProperty('--frame-h', `${Math.round(bible.format.height * renderScale)}px`);
+}
+
 const stage = document.getElementById('stage')!;
 const hint = document.getElementById('hint')!;
 const panel = document.getElementById('panel')!;
 const previewLabel = document.getElementById('preview-label')!;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(rendering ? 1 : Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -455,7 +464,32 @@ applyEnvironment();
 setMode('orbit');
 
 const clock = new THREE.Timer();
-renderer.setAnimationLoop(() => {
+if (rendering) {
+  // Frames are drawn one by one, on request, so what is captured never depends on the clock.
+  const frames = episode ? frameCount(episode, bible.format.fps) : 0;
+  const settle = () => new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
+  const info = renderer.getContext().getExtension('WEBGL_debug_renderer_info');
+  Object.assign(window, {
+    __render: {
+      frames,
+      fps: bible.format.fps,
+      width,
+      height,
+      series: bible.series,
+      episode: episodeNumber,
+      error: actionsError,
+      gpu: info ? String(renderer.getContext().getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'desconhecida',
+      async frame(n: number): Promise<void> {
+        timeline!.seek(n);
+        renderer.setScissorTest(false);
+        renderer.clear();
+        draw(shotCamera, [0, 0, width, height], true);
+        await settle();
+      },
+    },
+  });
+}
+renderer.setAnimationLoop(rendering ? null : () => {
   clock.update();
   const dt = Math.min(clock.getDelta(), 0.1);
   timeline?.update(dt);
