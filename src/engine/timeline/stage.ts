@@ -1,6 +1,6 @@
 import '../actions/builtin';
 import '../actions/character';
-import { channelAt, compileActions, evaluateActions, evaluateLinks, placementAt, type CompiledActions } from '../actions/catalog';
+import { channelAt, compileActions, evaluateActions, evaluateLinks, gazeAt, placementAt, type CompiledActions } from '../actions/catalog';
 import { buildCharacter } from '../character/cast';
 import type { CharacterDef, CharacterRig } from '../character/types';
 import { clearFraction, type BuiltLocation, type InteractiveObject } from '../world/build';
@@ -35,7 +35,7 @@ export function cameraStage(compiled: CompiledActions, built: BuiltLocation, cas
       const { pos, yaw } = placementAt(compiled, id, t);
       // Seated, the eyes come down with the hips.
       const seated = 0.8 * (character.traits.bodyScale ?? 1) * channelAt(compiled, id, 'sit', t);
-      return { pos, yaw, eyeHeight: (character.traits.eyeHeight ?? 1.6) - seated };
+      return { pos, yaw, eyeHeight: (character.traits.eyeHeight ?? 1.6) - seated, head: gazeAt(compiled, id, t) };
     },
     clear: (from, to) => clearFraction(built.colliders, from, to),
   };
@@ -58,6 +58,11 @@ export function applyStage(compiled: CompiledActions, objects: Map<string, Inter
     rider.set('y', pos[1]);
     rider.set('z', pos[2]);
     rider.set('yaw', yaw);
+  }
+  for (const id of new Set(compiled.gazes.map((g) => g.target))) {
+    const { yaw, pitch } = gazeAt(compiled, id, t);
+    objects.get(id)!.set('look.yaw', yaw);
+    objects.get(id)!.set('look.pitch', pitch);
   }
   for (const object of objects.values()) object.tick?.(t);
   // Hands move with the pose, so what they hold is placed after the bodies.

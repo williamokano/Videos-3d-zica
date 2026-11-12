@@ -114,6 +114,16 @@ export interface Link {
   t1: number;
 }
 
+/** A character keeping its head turned to something, from t0 until the next gaze of the same character. */
+export interface Gaze {
+  target: string;
+  /** Id of an object to follow, a fixed point of the location, or null to look ahead again. */
+  at: string | [number, number, number] | null;
+  t0: number;
+  /** Seconds the head takes to get there. */
+  fade: number;
+}
+
 export interface ActionContext {
   services: ActionServices;
   target: ActionTarget;
@@ -136,6 +146,8 @@ export interface ActionResult {
   duration?: number;
   /** Attach an object (default: the target) to a socket of another, from the start of the clip or from its end. */
   attach?: { target?: string; to: string; socket: string; weight?: string; at?: 'start' | 'end' };
+  /** Turn the target's head to an object (by id) or a point; null looks ahead again. */
+  gaze?: { at: string | [number, number, number] | null };
   /** Let an object (default: the target) go, at the end of the clip or at its start. */
   detach?: { target?: string; at?: 'start' | 'end' };
   validate?(ctx: ValidateContext): void;
@@ -193,6 +205,9 @@ export interface CompiledActions {
   /** Clips in time order with their final durations, for timeline markers. */
   clips: CompiledClip[];
   links: Link[];
+  gazes: Gaze[];
+  /** Where to look to look at each object: a fixed place for doors, and how far above its position otherwise. */
+  focus: Record<string, { base?: [number, number, number]; up: number }>;
   /** Channel values before any action, by object. */
   initial: Record<string, Record<string, number>>;
   sockets: Record<string, Record<string, [number, number, number]>>;
@@ -230,6 +245,8 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
     tracks: [],
     clips: compiled,
     links,
+    gazes: [],
+    focus: Object.fromEntries(targets.map((t) => [t.id, { base: t.traits.door?.handle, up: t.traits.door ? 0 : (t.traits.eyeHeight ?? (t.traits.size ? t.traits.size[1] / 2 : 0.8)) }])),
     initial: Object.fromEntries(targets.map((t) => [t.id, t.channels])),
     sockets: Object.fromEntries(targets.filter((t) => t.traits.sockets).map((t) => [t.id, t.traits.sockets!])),
   };
@@ -314,6 +331,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
       if (taken) fail(`"${socket}" de "${to}" já está ocupado por "${taken.target}".`);
       links.push({ target: rider, to, socket, weight, t0, t1: Infinity });
     }
+    if (result.gaze) out.gazes.push({ target: target.id, at: result.gaze.at, t0: clip.t, fade: duration });
     compiled.push({ t: clip.t, duration, target: clip.target, action: clip.action });
 
     const validate = result.validate;
@@ -388,4 +406,48 @@ export function placementAt(compiled: CompiledActions, id: string, t: number, de
   for (let i = 0; i < 3; i++) pos[i] += (at[i] - pos[i]) * w;
   yaw += ((((base.yaw - yaw) % 360) + 540) % 360 - 180) * w;
   return { pos, yaw };
+}
+
+/** The point a character looks at to look at an object, at time t. */
+export function focusAt(compiled: CompiledActions, id: string, t: number): [number, number, number] {
+  const focus = compiled.focus[id];
+  if (focus?.base) return focus.base;
+  const { pos } = placementAt(compiled, id, t);
+  // Seated, a character's eyes come down with the hips.
+  const seated = 0.47 * (focus?.up ?? 0) * channelAt(compiled, id, 'sit', t);
+  return [pos[0], pos[1] + (focus?.up ?? 0) - seated, pos[2]];
+}
+
+const MAX_HEAD_TURN = 75;
+const MAX_HEAD_TILT = 40;
+
+/**
+ * How far a character's head is turned from its body at time t, in degrees: `yaw` to the left,
+ * `pitch` up. The neck has limits, so a target behind the back is looked at over the shoulder.
+ */
+export function gazeAt(compiled: CompiledActions, id: string, t: number): { yaw: number; pitch: number } {
+  let i = compiled.gazes.length - 1;
+  while (i >= 0 && (compiled.gazes[i].target !== id || compiled.gazes[i].t0 > t)) i--;
+  if (i < 0) return { yaw: 0, pitch: 0 };
+  const own = placementAt(compiled, id, t);
+  const eye = focusAt(compiled, id, t);
+  const angles = (gaze: Gaze | undefined): { yaw: number; pitch: number } => {
+    if (!gaze || gaze.at === null) return { yaw: 0, pitch: 0 };
+    const p = typeof gaze.at === 'string' ? focusAt(compiled, gaze.at, t) : gaze.at;
+    const [dx, dy, dz] = [p[0] - eye[0], p[1] - eye[1], p[2] - eye[2]];
+    const flat = Math.hypot(dx, dz);
+    if (flat < 1e-6 && Math.abs(dy) < 1e-6) return { yaw: 0, pitch: 0 };
+    const heading = (Math.atan2(-dx, -dz) * 180) / Math.PI;
+    const yaw = ((((heading - own.yaw) % 360) + 540) % 360) - 180;
+    const pitch = (Math.atan2(dy, flat) * 180) / Math.PI;
+    return { yaw: Math.max(-MAX_HEAD_TURN, Math.min(MAX_HEAD_TURN, yaw)), pitch: Math.max(-MAX_HEAD_TILT, Math.min(MAX_HEAD_TILT, pitch)) };
+  };
+  const gaze = compiled.gazes[i];
+  let k = i - 1;
+  while (k >= 0 && compiled.gazes[k].target !== id) k--;
+  const from = angles(compiled.gazes[k]);
+  const to = angles(gaze);
+  const u = gaze.fade > 0 ? Math.max(0, Math.min(1, (t - gaze.t0) / gaze.fade)) : 1;
+  const w = u * u * (3 - 2 * u);
+  return { yaw: from.yaw + (to.yaw - from.yaw) * w, pitch: from.pitch + (to.pitch - from.pitch) * w };
 }

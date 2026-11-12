@@ -147,6 +147,25 @@ registerAction({
 });
 
 registerAction({
+  id: 'lookAt',
+  description: 'O personagem vira a cabeça para um objeto (e continua acompanhando se ele se mexer) ou para um ponto. Sem parâmetros, volta a olhar para a frente.',
+  appliesTo: ['character'],
+  params: {
+    object: { type: 'string', description: 'id do que olhar: outro personagem, um item, o carro, uma porta' },
+    point: { type: 'point3', description: 'ponto [x, y, z] em coordenadas do local' },
+  },
+  duration: 0.4,
+  compile(ctx) {
+    const object = ctx.params.object as string | undefined;
+    const point = ctx.params.point as [number, number, number] | undefined;
+    if (object !== undefined && point !== undefined) ctx.fail('informe "object" ou "point", não os dois.');
+    if (object === ctx.target.id) ctx.fail('o personagem não pode olhar para si mesmo.');
+    if (object !== undefined) ctx.object(object);
+    return { writes: [], gaze: { at: object ?? point ?? null } };
+  },
+});
+
+registerAction({
   id: 'sit',
   description: 'O personagem senta num assento de um objeto (ex.: banco de um carro) e passa a ir junto com ele.',
   appliesTo: ['character'],

@@ -73,7 +73,7 @@ scene.add(gizmos);
 
 // ---- Episode cast and actions ----
 
-let actions: CompiledActions = { tracks: [], clips: [], links: [], initial: {}, sockets: {} };
+let actions: CompiledActions = { tracks: [], clips: [], links: [], gazes: [], focus: {}, initial: {}, sockets: {} };
 let actionsError = '';
 let cast: InteractiveObject[] = [];
 /** False when the camera track has an error; the shot view then stays where it is. */

@@ -6,13 +6,13 @@ Estado em 2026-11-12. Plano geral em [PLAN.md](PLAN.md).
 
 ```sh
 npm install
-npm run typecheck && npm test   # 55 testes
+npm run typecheck && npm test   # 58 testes
 npm run dev                     # estúdio em http://localhost:5173
 ```
 
 Leia antes: `README.md`, `docs/PLAN.md`, as skills em `.claude/skills/` (`build-location`, `direct-actions`, `create-character`), `src/engine/world/types.ts` (mundo), `src/engine/actions/catalog.ts` (ações) e `src/engine/character/types.ts` (personagem).
 
-A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tipos de porta, carro, item pegável, dois personagens paramétricos e um GLB, câmera em primeira e terceira pessoa, porta aberta com a mão, caixa carregada até o banco do carro e personagem dirigindo.
+A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tipos de porta, carro, item pegável, dois personagens paramétricos e um GLB, câmera em primeira e terceira pessoa, porta aberta com a mão, cabeça acompanhando o carro que chega, caixa carregada até o banco do carro e personagem dirigindo.
 
 ## Feito
 
@@ -34,10 +34,11 @@ A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tip
   - IK de dois ossos no braço (`src/engine/character/ik.ts`), com o tronco ajudando quando o braço não chega; poses de agachar, sentar e carregar (`motion.ts`).
   - `pickUp` / `putDown` com a mão, `open` / `close` com `by`, `walkTo` com `door`, `sit` / `standUp`. O carro ganhou altura para caber a cabeça de quem senta.
 
+  - Olhar: `lookAt` vira a cabeça para um objeto (acompanhando) ou um ponto; `gazeAt` em `catalog.ts` dá o ângulo em qualquer instante, e a câmera `fpv` segue a cabeça.
+
 ## Próximo: Fase 3b
 
-1. **Olhar**: cabeça acompanhando um alvo (ponto ou outro objeto), e a câmera `fpv` olhando para onde a cabeça aponta. O alvo móvel pode sair de `placementAt`, como os vínculos.
-2. **API de direção em código** (`ana.walkTo(...)`, `ana.say(...)`) que gera `cast`, `actions` e `camera`, com tempos encadeados em vez de `t` escrito à mão. Montar o episódio de demonstração mostrou o custo do `t` manual: cada ajuste de posição desloca tudo o que vem depois. Decisão que falta do autor: episódio escrito em TypeScript, ou JSON com `after: <id da ação anterior>` no lugar de `t`.
+**API de direção em código** (`ana.walkTo(...)`, `ana.say(...)`) que gera `cast`, `actions` e `camera`, com tempos encadeados em vez de `t` escrito à mão. Montar o episódio de demonstração mostrou o custo do `t` manual: cada ajuste de posição desloca tudo o que vem depois. Decisão que falta do autor: episódio escrito em TypeScript, ou JSON com `after: <id da ação anterior>` no lugar de `t`.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
 
@@ -49,6 +50,7 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - O braço do GLB erra o alvo por alguns centímetros quando as proporções do modelo diferem do esqueleto padrão; o item segue a mão de verdade.
 - A mão vai até onde a maçaneta fica com a porta fechada e não acompanha a folha enquanto ela gira. Porta de carro não tem maçaneta conhecida: a mão vai para a frente do corpo.
 - `sit` não confere se a porta do carro está aberta, e o personagem atravessa a lataria se ela estiver fechada.
+- O olhar move só a cabeça e o pescoço; os olhos não se mexem dentro do rosto.
 - Sentado, os braços ficam ao lado do corpo (não seguram o volante).
 - Pés podem afundar ou flutuar um pouco em escadas: a altura segue o degrau, mas não há IK nos pés.
 - O rosto do GLB depende de morph targets; o modelo de teste (`robo.glb`) não tem.

@@ -24,7 +24,7 @@ Um objeto precisa de `id` no arquivo do local (único no local). Cada um expõe 
 | Carro | prop `vehicle.car` com `id` | `vehicle` | `frontLeft.open`, `frontRight.open`, `rearLeft.open`, `rearRight.open`, `travel`, `x`, `y`, `z`, `yaw` |
 | Item pegável | prop com `id` e `"pickable": true` | `item` | `x`, `y`, `z`, `yaw`, `held` |
 | Qualquer prop com `id` | — | `prop` | `x`, `y`, `z`, `yaw` |
-| Personagem | entrada em `cast` no episódio (skill `create-character`) | `character` | `x`, `y`, `z`, `yaw`, `stride`, `gait`, `talk`, `expr.<nome>`, `crouch`, `sit`, `attached`, `carryL`/`carryR`, `reachL`/`reachR` (+ `.x`, `.y`, `.z`) |
+| Personagem | entrada em `cast` no episódio (skill `create-character`) | `character` | `x`, `y`, `z`, `yaw`, `stride`, `gait`, `talk`, `expr.<nome>`, `look.yaw`, `look.pitch`, `crouch`, `sit`, `attached`, `carryL`/`carryR`, `reachL`/`reachR` (+ `.x`, `.y`, `.z`) |
 
 `x`, `y`, `z` são coordenadas do local (não da área). `yaw` é em graus, igual ao `rot`. O carro olha para -z com `rot: 0`; o motorista fica à esquerda.
 
@@ -43,6 +43,7 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 | `set` | qualquer | `channel`, `value` |
 | `walkTo` | personagem | `to` (`[x, z]`) ou `door` (id de uma porta: para diante dela, ao alcance da maçaneta), `elevation` (piso de destino, se mudar de nível), `speed` (m/s, padrão 1.4; a partir de 3 corre) |
 | `turnTo` | personagem | `to` (`[x, z]` para onde virar) ou `yaw` |
+| `lookAt` | personagem | `object` (id do que olhar; acompanha se ele se mexer) ou `point` (`[x, y, z]`); sem parâmetros volta a olhar para a frente |
 | `sit` | personagem | `on` (id do objeto com assentos, ex.: o carro), `seat` (`driver`, `passenger`, `rearLeft`, `rearRight`; padrão `driver`) |
 | `standUp` | personagem | `to` (`[x, z]` ao lado, onde fica de pé), `yaw` |
 | `express` | personagem | `expression` (`neutral`, `happy`, `sad`, `angry`, `surprised`, `scared`), `amount` |
@@ -60,6 +61,7 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 - Sequência para passar por uma porta fechada: `walkTo` com `door`, `open` com `by`, `walkTo` até o outro lado. Com `by`, o lado (`from`) sai de onde o personagem está.
 - Item pego com `by` fica na mão até um `putDown`, e a mão que segura não balança ao andar. Com a direita ocupada, a próxima ação com a mão usa a esquerda.
 - `sit` prende o personagem ao assento: ele vai junto quando o carro anda, e `walkTo` é recusado até um `standUp`. O personagem precisa estar a até 2,5 m do objeto; abra a porta do carro antes (`open` com `part` e `by`), parado atrás da borda traseira da porta para ela não bater nele.
+- `lookAt` vira só a cabeça, até 75° para os lados e 40° para cima ou para baixo; para olhar o que está atrás, vire o corpo com `turnTo`. O olhar vale até o próximo `lookAt` do mesmo personagem, e `duration` é o tempo que a cabeça leva para chegar.
 - Ações com `by` usam canais do personagem (`reachR`, `crouch`...): duas ao mesmo tempo com a mesma mão dão erro de canal em uso.
 
 ## Câmera
@@ -69,7 +71,7 @@ A trilha `camera` do episódio é uma lista de keyframes. Um plano vai de um key
 | `mode` | O que faz | Campos |
 |---|---|---|
 | `cinematic` (padrão) | câmera posta à mão; entre keyframes do mesmo plano ela se move em curva suave | `pos`, `lookAt`, `fov` em cada keyframe |
-| `fpv` | nos olhos do personagem, olhando para onde o corpo aponta; a cabeça dele some da imagem | `follow` (id no elenco), `fov` (padrão 70), `pitch` |
+| `fpv` | nos olhos do personagem, olhando para onde a cabeça aponta (segue o `lookAt`); a cabeça dele some da imagem | `follow` (id no elenco), `fov` (padrão 70), `pitch` |
 | `third_person` | atrás e acima do personagem, acompanhando; chega mais perto em vez de atravessar parede | `follow`, `distance` (padrão 3 m), `height` (padrão 0.5 m acima dos olhos), `pitch`, `fov` |
 
 ```json

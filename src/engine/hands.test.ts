@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
-import { placementAt, type ActionClip } from './actions/catalog';
+import { gazeAt, placementAt, type ActionClip } from './actions/catalog';
 import './assets/building';
 import './assets/vehicles';
 import { buildBody } from './character/body';
@@ -181,5 +181,49 @@ describe('sitting in a car', () => {
     expect(() => stage([{ t: 1, target: 'ana', action: 'sit', params: { on: 'carro', seat: 'teto' } }], [13.6, 12.7])).toThrow(/não tem o assento "teto". Assentos: driver, passenger, rearLeft, rearRight/);
     expect(() => stage([{ t: 1, target: 'ana', action: 'standUp', params: { to: [9, 9] } }])).toThrow(/não está sentado/);
     expect(() => stage([ride[1], { t: 5, target: 'ana', action: 'walkTo', params: { to: [9, 9] } }], [13.6, 12.7])).toThrow(/use standUp antes/);
+  });
+});
+
+describe('looking at things', () => {
+  it('turns the head to a point, within what a neck can do, and back', () => {
+    // Facing north at [9.4, 8]; the point is to the west (left), a little above the eyes.
+    const s = stage([
+      { t: 1, duration: 1, target: 'ana', action: 'lookAt', params: { point: [7.4, 2.6, 8] } },
+      { t: 4, target: 'ana', action: 'lookAt', params: { point: [9.4, 1.6, 12] } },
+      { t: 6, duration: 1, target: 'ana', action: 'lookAt' },
+    ]);
+    expect(gazeAt(s.compiled, 'ana', 0.5)).toEqual({ yaw: 0, pitch: 0 });
+    const half = gazeAt(s.compiled, 'ana', 1.5);
+    expect(half.yaw).toBeCloseTo(37.5);
+    const left = gazeAt(s.compiled, 'ana', 3);
+    expect(left.yaw).toBe(75);
+    expect(left.pitch).toBeGreaterThan(20);
+    // Straight behind: as far as the neck goes.
+    expect(Math.abs(gazeAt(s.compiled, 'ana', 5).yaw)).toBe(75);
+    expect(gazeAt(s.compiled, 'ana', 8)).toEqual({ yaw: 0, pitch: 0 });
+    // The head really turns: the face points west.
+    s.at(3);
+    const head = s.objects.get('ana')!.socket!('head')!;
+    const facing = new THREE.Vector3(0, 0, -1).applyQuaternion(head.getWorldQuaternion(new THREE.Quaternion()));
+    expect(facing.x).toBeLessThan(-0.8);
+  });
+
+  it('keeps following something that moves, and the camera in the eyes goes with the head', () => {
+    const s = stage([
+      { t: 0, duration: 0, target: 'ana', action: 'lookAt', params: { object: 'carro' } },
+      { t: 1, duration: 4, target: 'carro', action: 'drive', ease: 'linear', params: { path: [[20, 14], [24, 14]] } },
+    ], [18, 10], 180);
+    // Facing south; the car goes from her right (west) to her left (east).
+    expect(gazeAt(s.compiled, 'ana', 0.5).yaw).toBeLessThan(-20);
+    expect(gazeAt(s.compiled, 'ana', 6).yaw).toBeGreaterThan(20);
+    expect(gazeAt(s.compiled, 'ana', 6).pitch).toBeLessThan(0);
+    const view = evaluateCamera(s.episode.camera, 6, s.camera);
+    expect(view.lookAt[0]).toBeGreaterThan(view.pos[0] + 0.3);
+    expect(view.lookAt[1]).toBeLessThan(view.pos[1]);
+  });
+
+  it('refuses a target that does not exist', () => {
+    expect(() => stage([{ t: 0, target: 'ana', action: 'lookAt', params: { object: 'bia' } }])).toThrow(/objeto "bia" não encontrado/);
+    expect(() => stage([{ t: 0, target: 'ana', action: 'lookAt', params: { object: 'ana' } }])).toThrow(/não pode olhar para si mesmo/);
   });
 });

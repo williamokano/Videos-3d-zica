@@ -49,6 +49,8 @@ export interface CameraSubject {
   /** Heading in degrees: 0 faces north (-z), 90 west (-x). */
   yaw: number;
   eyeHeight: number;
+  /** How far the head is turned from the body, in degrees: `yaw` to the left, `pitch` up. */
+  head?: { yaw: number; pitch: number };
 }
 
 /** What attached shots need to know about the scene. */
@@ -137,7 +139,7 @@ function attached(shot: CameraKey, a: CameraKey, b: CameraKey | undefined, t: nu
   const eye: Vec3 = [subject.pos[0], subject.pos[1] + subject.eyeHeight, subject.pos[2]];
 
   if (mode === 'fpv') {
-    const f = forward(subject.yaw, pitch);
+    const f = forward(subject.yaw + (subject.head?.yaw ?? 0), pitch + (subject.head?.pitch ?? 0));
     return { pos: eye, lookAt: [eye[0] + f[0], eye[1] + f[1], eye[2] + f[2]], fov: mix((k) => k.fov, FPV_FOV), mode, follow: id };
   }
 
