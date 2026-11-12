@@ -70,6 +70,9 @@ export interface HandShape {
   spread: number;
 }
 
+export const HAIR_STYLES = ['short', 'buzz', 'fringe', 'mohawk', 'curly', 'curlyLong', 'afro', 'puffs', 'bob', 'long', 'ponytail', 'pigtails', 'bun', 'none'] as const;
+export type HairStyle = (typeof HAIR_STYLES)[number];
+
 /** Character file in series/<series>/characters/<id>.json. */
 export interface CharacterDef {
   id: string;
@@ -82,7 +85,28 @@ export interface CharacterDef {
   build?: number;
   skin?: string;
   hair?: string;
-  hairStyle?: 'short' | 'long' | 'bun' | 'none';
+  /**
+   * "short" (default), "buzz" (shaved close), "fringe" (short with a fringe swept to one side), "mohawk",
+   * "curly" (short curls), "curlyLong" (curls down to the shoulders), "afro" (round and full), "puffs" (two round
+   * puffs), "bob" (down to the chin), "long", "ponytail", "pigtails", "bun" or "none".
+   */
+  hairStyle?: HairStyle;
+  /** Color of a streak: a lock on one side of the top (a few curls, in curly styles; the front of a mohawk). */
+  hairStreak?: string;
+  /** Shape of the head: "round" (default), "oval" (longer) or "wide". */
+  headShape?: 'round' | 'oval' | 'wide';
+  /** Size of the eyes, about 0.8 to 1.2 (default 1). */
+  eyeSize?: number;
+  /** "round" (default), "small", "long" or "wide". */
+  nose?: 'round' | 'small' | 'long' | 'wide';
+  /** Color of the lips (default: the skin, a little redder). */
+  lips?: string;
+  /** Facial hair, in the color of the hair: "none" (default), "stubble", "mustache", "goatee" or "full". */
+  beard?: 'none' | 'stubble' | 'mustache' | 'goatee' | 'full';
+  /** "none" (default), "round" or "square". */
+  glasses?: 'none' | 'round' | 'square';
+  /** Color of the glasses' frame (default dark gray). */
+  glassesColor?: string;
   /** Color of the eyes (default dark brown). */
   eyes?: string;
   /**

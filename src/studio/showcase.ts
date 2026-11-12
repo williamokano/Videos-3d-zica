@@ -7,11 +7,11 @@ import { compileActions, headAngles, type CompiledActions } from '../engine/acti
 import { mat, rbox } from '../engine/assets/registry';
 import { resolveEnvironment, resolveStyle, type Bible } from '../engine/bible';
 import { buildCharacter } from '../engine/character/cast';
-import { extraLook } from '../engine/character/extras';
+import { HAIR_COLORS, extraLook } from '../engine/character/extras';
 import { loadGlbCharacter } from '../engine/character/glb';
 import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES } from '../engine/character/motion';
 import { SHOWCASE_BEHAVIOURS, SHOWCASE_POSES, SHOWCASE_YAW, STOOL, phoneOf, poseChannels, showcaseLayout, stageTrack } from '../engine/character/showcase';
-import type { CharacterDef } from '../engine/character/types';
+import { HAIR_STYLES, type CharacterDef } from '../engine/character/types';
 import { EnvironmentRig } from '../engine/environment';
 import { applyStyle } from '../engine/style';
 import { applyStage } from '../engine/timeline/stage';
@@ -53,6 +53,11 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.enableDamping = true;
 
 // ---- The stage ----
+
+const HAIR_NAMES: Record<keyof typeof HAIR_COLORS, string> = {
+  black: 'preto', darkBrown: 'castanho-escuro', brown: 'castanho', chestnut: 'castanho-médio', lightBrown: 'castanho-claro', blond: 'loiro', lightBlond: 'loiro-claro',
+  red: 'ruivo', auburn: 'ruivo-escuro', gray: 'grisalho', blue: 'azul', green: 'verde', purple: 'roxo', pink: 'rosa',
+};
 
 type Look = 'free' | 'camera' | 'selected' | 'ahead';
 const LOOKS: [Look, string][] = [['free', 'Livre'], ['camera', 'Para a câmera'], ['selected', 'Para o selecionado'], ['ahead', 'Para um ponto à frente']];
@@ -371,13 +376,27 @@ function renderPanel(): void {
     } else {
       const def = slot.def;
       const live = (change: Partial<CharacterDef>) => void restyle(slot, change);
+      /** A field of the character file with a fixed list of values. */
+      const choice = <K extends 'hairStyle' | 'headShape' | 'nose' | 'beard' | 'glasses'>(title: string, values: readonly string[], key: K, fallback: string) =>
+        select(title, values.map((value): [string, string] => [value, value]), def[key] ?? fallback, (v) => {
+          void restyle(slot, { [key]: v } as Partial<CharacterDef>).then(renderPanel);
+        });
       panel.append(
         color('Pele', def.skin ?? '#e8b88f', (v) => live({ skin: v }), renderPanel),
         color('Olhos', def.eyes ?? '#4a2f1d', (v) => live({ eyes: v }), renderPanel),
         color('Cabelo', def.hair ?? '#3b2a20', (v) => live({ hair: v }), renderPanel),
-        select('Corte', [['short', 'curto'], ['long', 'comprido'], ['bun', 'coque'], ['none', 'sem cabelo']], def.hairStyle ?? 'short', (v) => {
-          void restyle(slot, { hairStyle: v as CharacterDef['hairStyle'] }).then(renderPanel);
+        select('Cor pronta', [['', '(escolher)'], ...Object.entries(HAIR_NAMES).map(([key, name]): [string, string] => [HAIR_COLORS[key as keyof typeof HAIR_COLORS], name])], '', (v) => {
+          if (v) void restyle(slot, { hair: v }).then(renderPanel);
         }),
+        select('Mecha', [['', 'sem mecha'], ...Object.entries(HAIR_NAMES).map(([key, name]): [string, string] => [HAIR_COLORS[key as keyof typeof HAIR_COLORS], name])], def.hairStreak ?? '', (v) => {
+          void restyle(slot, { hairStreak: v || undefined }).then(renderPanel);
+        }),
+        choice('Corte', HAIR_STYLES, 'hairStyle', 'short'),
+        choice('Cabeça', ['round', 'oval', 'wide'], 'headShape', 'round'),
+        choice('Nariz', ['round', 'small', 'long', 'wide'], 'nose', 'round'),
+        choice('Barba', ['none', 'stubble', 'mustache', 'goatee', 'full'], 'beard', 'none'),
+        choice('Óculos', ['none', 'round', 'square'], 'glasses', 'none'),
+        slider('Olhos', [0.8, 1.2, 0.01], def.eyeSize ?? 1, (v) => live({ eyeSize: v }), renderPanel),
         select('Mãos', [['mitten', 'luva'], ['fingers', 'dedos']], def.hands ?? 'mitten', (v) => {
           void restyle(slot, { hands: v as CharacterDef['hands'] }).then(renderPanel);
         }),
@@ -385,7 +404,7 @@ function renderPanel(): void {
         color('Calça', def.pants ?? '#34405a', (v) => live({ pants: v }), renderPanel),
         slider('Altura', [1.1, 2, 0.01], def.height ?? 1.7, (v) => live({ height: v }), renderPanel),
         slider('Corpo', [0.8, 1.3, 0.01], def.build ?? 1, (v) => live({ build: v }), renderPanel),
-        slider('Cabeça', [1, 1.6, 0.01], def.headScale ?? 1.3, (v) => live({ headScale: v }), renderPanel),
+        slider('Tam. cabeça', [1, 1.6, 0.01], def.headScale ?? 1.3, (v) => live({ headScale: v }), renderPanel),
       );
       const looks = el('div', '', 'row');
       looks.append(

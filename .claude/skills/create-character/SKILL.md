@@ -21,7 +21,12 @@ Um personagem é dado da série: `series/<série>/characters/<id>.json`, no form
 - `height` em metros: adulto 1.6 a 1.85, criança 1.1 a 1.4. A cabeça não encolhe junto, o que faz a criança parecer criança.
 - `hands`: `mitten` (padrão, polegar e um bloco de dedos) ou `fingers` (cinco dedos). Use `fingers` em quem aparece com a mão em close, como o personagem da câmera em primeira pessoa.
 - `eyes`: cor dos olhos (padrão castanho-escuro). As sobrancelhas saem da cor do cabelo.
-- `hairStyle`: `short`, `long`, `bun`, `none`. `build` alarga ou afina o corpo (padrão 1). `headScale` muda o tamanho da cabeça (padrão 1.3).
+- `hairStyle`: `short`, `buzz` (raspado), `fringe` (franja de lado), `mohawk` (moicano), `curly` (cacheado curto), `curlyLong` (cachos até o ombro), `afro`, `puffs` (dois pompons), `bob` (até o queixo), `long`, `ponytail` (rabo de cavalo), `pigtails` (maria-chiquinha), `bun` (coque), `none`.
+- `hair`: qualquer cor; as prontas estão em `HAIR_COLORS` (`src/engine/character/extras.ts`): loiro `#d9b25f`, ruivo `#b5471f`, castanho `#4a3020`, azul `#2f6fd6`, verde `#2f9e5b`, roxo `#8a4fc7`, rosa `#e86aa6`. `hairStreak`: cor de uma mecha.
+- Rosto: `headShape` (`round`, `oval`, `wide`), `eyeSize` (0.8 a 1.2), `nose` (`round`, `small`, `long`, `wide`), `lips` (cor).
+- `beard`: `none`, `stubble`, `mustache`, `goatee`, `full`, na cor do cabelo. `glasses`: `none`, `round`, `square`, com `glassesColor`.
+- Figurantes: `extraLook(semente)` em `src/engine/character/extras.ts` sorteia pele, cabelo, rosto, altura e óculos; `{ adult: true }` permite barba.
+- `build` alarga ou afina o corpo (padrão 1). `headScale` muda o tamanho da cabeça (padrão 1.3).
 - Dê a cada personagem uma cor de roupa própria; é o que o distingue de longe num vídeo vertical.
 
 ## Modelo GLB

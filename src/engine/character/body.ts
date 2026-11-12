@@ -83,7 +83,7 @@ function browGeometry(r: number, side: number): THREE.BufferGeometry {
  * Face on a head of radius r centered on the group, looking at -z: eyes with a white, an iris that moves and
  * lids that close, thick brows, a nose, ears and a mouth with teeth and a tongue. All of it follows FaceParams.
  */
-function buildFace(r: number, colors: { skin: string; hair: string; eyes: string }): { group: THREE.Group; set(face: FaceParams): void } {
+function buildFace(r: number, colors: { skin: string; hair: string; eyes: string; lips?: string }, def: Pick<CharacterDef, 'eyeSize' | 'nose' | 'beard' | 'glasses' | 'glassesColor'> = {}): { group: THREE.Group; set(face: FaceParams): void } {
   const group = new THREE.Group();
   // Point on the front of the head for a given x and y, `out` meters off the skin.
   const on = (x: number, y: number, out = 0): THREE.Vector3 => {
@@ -101,8 +101,9 @@ function buildFace(r: number, colors: { skin: string; hair: string; eyes: string
   const eyeX = r * 0.37;
   const eyeY = r * 0.1;
   // Half width and half height of the white, how far it is sunk into the head, and how thick it is.
-  const [ex, ey, sunk, deep] = [r * 0.2, r * 0.23, r * 0.03, r * 0.075];
-  const irisR = r * 0.118;
+  const big = THREE.MathUtils.clamp(def.eyeSize ?? 1, 0.7, 1.3);
+  const [ex, ey, sunk, deep] = [r * 0.2 * big, r * 0.23 * big, r * 0.03, r * 0.075];
+  const irisR = r * 0.118 * big;
   const eyes = [-1, 1].map((side) => {
     const eye = new THREE.Group();
     seat(eye, side * eyeX, eyeY);
@@ -136,15 +137,20 @@ function buildFace(r: number, colors: { skin: string; hair: string; eyes: string
   });
 
   // ---- Brows, nose, ears ----
-  const browColor = shade(colors.hair, 0.55);
+  // Dyed hair (blue, green, purple, pink) leaves the brows their natural dark color.
+  const hsl = new THREE.Color(colors.hair).getHSL({ h: 0, s: 0, l: 0 });
+  const browColor = hsl.s > 0.4 && hsl.h > 0.2 && hsl.h < 0.98 ? '#2b1d16' : shade(colors.hair, 0.55);
   const brows = [-1, 1].map((side) => {
     const brow = new THREE.Mesh(browGeometry(r, side), mat(browColor));
     brow.userData.noOutline = true;
     group.add(brow);
     return { brow, side };
   });
-  const nose = ball(r * 0.09, shade(colors.skin, 0.9), 0, 0, 0, [1, 0.85, 1]);
-  nose.position.copy(on(0, -r * 0.17));
+  const [noseSize, noseScale, noseY] = ({
+    round: [0.09, [1, 0.85, 1], -0.17], small: [0.065, [1, 0.85, 1], -0.17], long: [0.08, [0.85, 1.7, 1.15], -0.12], wide: [0.095, [1.45, 0.8, 0.9], -0.18],
+  } as Record<string, [number, [number, number, number], number]>)[def.nose ?? 'round'];
+  const nose = ball(r * noseSize, shade(colors.skin, 0.9), 0, 0, 0, noseScale);
+  nose.position.copy(on(0, r * noseY));
   // A small bump: outlined, it would read as a ring in the middle of the face.
   nose.userData.noOutline = true;
   group.add(nose);
@@ -156,13 +162,53 @@ function buildFace(r: number, colors: { skin: string; hair: string; eyes: string
   const teeth = band('#f4f0e8');
   // Teeth sit in the shade of the face; a little light of their own keeps them white.
   teeth.mesh.material = new THREE.MeshStandardMaterial({ color: '#f4f0e8', emissive: '#f4f0e8', emissiveIntensity: 0.3, roughness: 0.6 });
-  const lipColor = blend(colors.skin, '#93323c', 0.6);
+  const lipColor = colors.lips ?? blend(colors.skin, '#93323c', 0.6);
   const [upperLip, lowerLip] = [band(lipColor), band(lipColor)];
   for (const part of [inside, tongue, teeth, upperLip, lowerLip]) {
     part.mesh.userData.noOutline = true;
     group.add(part.mesh);
   }
   let drawn = '';
+
+  // ---- Beard and glasses ----
+  /** Part of a shell over the lower face, from `top` (y, in head radii) down, `wide` of the way around. Under the lips. */
+  const jaw = (color: string, top: number, wide: number, out: number): THREE.Mesh => {
+    const from = Math.acos(THREE.MathUtils.clamp(top, -1, 1));
+    const shell = new THREE.Mesh(new THREE.SphereGeometry(r * out, 24, 10, Math.PI * (1.5 - wide / 2), Math.PI * wide, from, Math.PI - from), mat(color));
+    shell.userData.noOutline = true;
+    return shell;
+  };
+  const beard = def.beard ?? 'none';
+  if (beard === 'stubble') group.add(jaw(blend(colors.skin, colors.hair, 0.4), -0.3, 0.95, 1.004));
+  if (beard === 'full') // Around the jaw, with sideburns going up to meet the hair.
+  if (beard === 'full') group.add(jaw(colors.hair, -0.44, 1, 1.012), jaw(colors.hair, 0.3, 0.08, 1.012).rotateY(-1.36), jaw(colors.hair, 0.3, 0.08, 1.012).rotateY(1.36));
+  if (beard === 'goatee') group.add(jaw(colors.hair, -0.62, 0.3, 1.012));
+  if (beard === 'full' || beard === 'goatee' || beard === 'mustache') {
+    for (const side of [-1, 1]) {
+      const half = new THREE.Mesh(browGeometry(r * 0.85, side), mat(colors.hair));
+      seat(half, side * r * 0.15, -r * 0.335);
+      half.rotateZ(-side * 0.22);
+      half.userData.noOutline = true;
+      group.add(half);
+    }
+  }
+  if (def.glasses && def.glasses !== 'none') {
+    const frame = mat(def.glassesColor ?? '#2b2d33');
+    const glasses = new THREE.Group();
+    const z = -r * 1.05;
+    const ring = r * 0.29 * Math.max(1, big);
+    for (const side of [-1, 1]) {
+      const rim = new THREE.Mesh(def.glasses === 'square' ? new THREE.TorusGeometry(ring * 1.25, r * 0.036, 6, 4).rotateZ(Math.PI / 4) : new THREE.TorusGeometry(ring, r * 0.036, 6, 24), frame);
+      rim.position.set(side * eyeX, eyeY, z);
+      // Arms going back to the ears.
+      const arm = rbox(r * 0.04, r * 0.04, r * 0.95, def.glassesColor ?? '#2b2d33', [side * (eyeX + ring + r) / 2, eyeY + r * 0.02, z + r * 0.47], r * 0.012);
+      arm.rotation.y = side * 0.3;
+      glasses.add(rim, arm);
+    }
+    glasses.add(rbox(Math.max(r * 0.06, eyeX * 2 - ring * 1.9), r * 0.045, r * 0.045, def.glassesColor ?? '#2b2d33', [0, eyeY + r * 0.03, z], r * 0.01));
+    glasses.userData.noOutline = true;
+    group.add(glasses);
+  }
 
   return {
     group,
@@ -302,15 +348,83 @@ function buildHand(side: number, skin: string, kind: 'mitten' | 'fingers'): { gr
   };
 }
 
-function buildHair(style: CharacterDef['hairStyle'], color: string, r: number): THREE.Object3D {
+/**
+ * Hair on a head of radius r that looks at -z: rounded volumes, so that it has a silhouette of its own. Curls
+ * are balls set over the top and the back of the head, leaving the forehead and the brows free.
+ */
+function buildHair(style: CharacterDef['hairStyle'], color: string, r: number, skin: string, streak?: string): THREE.Object3D {
   const g = new THREE.Group();
   if (style === 'none') return g;
-  // A cap over the top and back of the head, tipped back to leave the face free.
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(r * 1.06, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.42), mat(color));
-  cap.rotation.x = 0.55;
-  g.add(cap);
+  /** A cap over the top and back of the head, tipped back to leave the face free. */
+  const cap = (size: number, capColor = color): THREE.Mesh => {
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(r * size, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.42), mat(capColor));
+    mesh.rotation.x = 0.55;
+    return mesh;
+  };
+  /** A lock of another color on a cap of `size`: a strip from the crown down to the front, to one side. */
+  const lock = (size: number): void => {
+    if (!streak) return;
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(r * (size + 0.012), 8, 12, Math.PI * 1.56, Math.PI * 0.2, 0, Math.PI * 0.42), mat(streak));
+    mesh.rotation.x = 0.55;
+    mesh.userData.noOutline = true;
+    g.add(mesh);
+  };
+  /**
+   * Balls of `size` at `far` from the center of the head, in rings: [elevation in degrees, how many, share of the
+   * circle left open at the face]. With a streak, a few curls on one side of the top take its color.
+   */
+  const curls = (size: number, far: number, rings: [number, number, number][]): void => {
+    for (const [elevation, count, open] of rings) {
+      for (let i = 0; i < count; i++) {
+        // Around the head starting from the back, so that an open ring is open at the face.
+        const around = count === 1 ? 0 : ((i + (open > 0 ? 0 : 0.5)) / (count - (open > 0 ? 1 : 0)) - 0.5) * Math.PI * 2 * (1 - open);
+        const [e, lump] = [(elevation * Math.PI) / 180, 1 + 0.07 * Math.sin(i * 2.4 + elevation)];
+        const dyed = streak && elevation > 20 && around > 1.3 && around < 2.7;
+        g.add(ball(r * size * lump, dyed ? streak : color, Math.sin(around) * Math.cos(e) * r * far, Math.sin(e) * r * far, Math.cos(around) * Math.cos(e) * r * far));
+      }
+    }
+  };
+  if (style === 'buzz') return g.add(cap(1.025, `#${new THREE.Color(skin).lerp(new THREE.Color(color), 0.75).getHexString()}`));
+  // Curls sit on a cap, so no skin shows between them.
+  if (style === 'curly') {
+    curls(0.3, 0.86, [[80, 1, 0], [55, 7, 0.1], [30, 9, 0.3], [5, 8, 0.46]]);
+    return g.add(cap(1.03));
+  }
+  if (style === 'curlyLong') {
+    // Down to the shoulders, fuller toward the ends.
+    curls(0.38, 0.9, [[82, 1, 0], [54, 7, 0.1], [26, 9, 0.3], [-2, 9, 0.42]]);
+    curls(0.42, 1.0, [[-30, 8, 0.5], [-56, 7, 0.56]]);
+    return g.add(cap(1.03));
+  }
+  if (style === 'afro') {
+    curls(0.5, 0.95, [[86, 1, 0], [58, 7, 0.08], [30, 10, 0.28], [4, 10, 0.42], [-20, 7, 0.56]]);
+    return g.add(cap(1.03));
+  }
+  if (style === 'mohawk') {
+    g.add(cap(1.025, `#${new THREE.Color(skin).lerp(new THREE.Color(color), 0.75).getHexString()}`));
+    // A crest from the forehead to the nape.
+    for (let i = 0; i < 7; i++) {
+      const a = ((34 - i * 24) * Math.PI) / 180;
+      g.add(ball(r * 0.24, streak && i < 3 ? streak : color, 0, Math.cos(a) * r * 1.02, -Math.sin(a) * r * 1.02, [0.75, 1, 1]));
+    }
+    return g;
+  }
+  g.add(cap(1.06));
+  lock(1.06);
   if (style === 'long') g.add(rbox(r * 1.8, r * 1.7, r * 0.6, color, [0, -r * 0.5, r * 0.78], r * 0.28));
   if (style === 'bun') g.add(ball(r * 0.36, color, 0, r * 0.95, r * 0.45));
+  if (style === 'bob') g.add(rbox(r * 2.2, r * 1.45, r * 1.5, color, [0, -r * 0.22, r * 0.36], r * 0.68));
+  if (style === 'ponytail') g.add(ball(r * 0.3, color, 0, r * 0.42, r * 1.02), ball(r * 0.27, color, 0, -r * 0.2, r * 1.2, [1, 2.3, 1]));
+  // Two round puffs, high on the sides.
+  if (style === 'puffs') for (const side of [-1, 1]) g.add(ball(r * 0.5, color, side * r * 0.82, r * 0.72, r * 0.2), ball(r * 0.3, color, side * r * 1.1, r * 0.95, r * 0.25), ball(r * 0.3, color, side * r * 0.75, r * 1.08, r * 0.3));
+  // Two tails hanging behind the ears.
+  if (style === 'pigtails') for (const side of [-1, 1]) g.add(ball(r * 0.2, color, side * r * 0.98, r * 0.05, r * 0.42), ball(r * 0.23, color, side * r * 1.06, -r * 0.55, r * 0.46, [1, 2.5, 1]));
+  if (style === 'fringe') {
+    // Lying on the forehead, swept to one side, above the brows.
+    const fringe = ball(r * 0.6, color, r * 0.16, r * 0.66, -r * 0.6, [1.3, 0.36, 0.8]);
+    fringe.rotation.set(-0.75, 0, -0.18);
+    g.add(fringe);
+  }
   return g;
 }
 
@@ -351,9 +465,10 @@ export function buildBody(def: CharacterDef): CharacterRig {
   // The head keeps its size when the body is scaled down, which is what makes a child read as a child.
   const r = (0.115 * (def.headScale ?? 1.3)) / Math.sqrt(scale);
   const head = new THREE.Group();
+  head.scale.set(...({ round: [1, 1, 1], oval: [0.9, 1.08, 0.95], wide: [1.1, 0.96, 1] } as Record<string, [number, number, number]>)[def.headShape ?? 'round']);
   head.position.y = r * 0.9;
-  const face = buildFace(r, { skin, hair: def.hair ?? '#3b2a20', eyes: def.eyes ?? '#4a2f1d' });
-  head.add(ball(r, skin, 0, 0, 0), face.group, buildHair(def.hairStyle ?? 'short', def.hair ?? '#3b2a20', r));
+  const face = buildFace(r, { skin, hair: def.hair ?? '#3b2a20', eyes: def.eyes ?? '#4a2f1d', lips: def.lips }, def);
+  head.add(ball(r, skin, 0, 0, 0), face.group, buildHair(def.hairStyle ?? 'short', def.hair ?? '#3b2a20', r, skin, def.hairStreak));
   joints.head.add(head);
 
   root.traverse((o) => {

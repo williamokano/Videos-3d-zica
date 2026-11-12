@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 112 testes
+npm run typecheck && npm test   # 120 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine em http://localhost:5173/?vitrine=personagens
 ```
@@ -88,15 +88,23 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Ações novas: `pointAt` (aponta para objeto ou ponto, olha e recolhe) e `hand` (pose por nome). No roteiro: `ana.pointAt(alvo)`, `ana.hand('fist')`.
   - Vitrine: menu "Mãos", pose "Apontar", tipo de mão na aparência.
 
+- Cabelo com volume e ficha mais configurável (tarefa 5), em `character/body.ts` e `character/types.ts`:
+  - `hairStyle`: `short`, `buzz`, `fringe`, `mohawk`, `curly`, `curlyLong`, `afro`, `puffs`, `bob`, `long`, `ponytail`, `pigtails`, `bun`, `none` (lista em `HAIR_STYLES`). Os cacheados são bolas em anéis sobre o topo e a nuca, deixando testa e sobrancelhas livres.
+  - Ficha: `headShape` (`round`, `oval`, `wide`), `eyeSize`, `nose` (`round`, `small`, `long`, `wide`), `lips` (cor), `beard` (`stubble`, `mustache`, `goatee`, `full`), `glasses` (`round`, `square`) e `glassesColor`.
+  - Cores de cabelo com nome em `HAIR_COLORS` (`character/extras.ts`): pretos, castanhos, loiros, ruivos, grisalho, azul, verde, roxo, rosa. `hairStreak` põe uma mecha de outra cor: uma faixa do topo à frente, alguns cachos nos crespos, a frente do moicano. Cabelo tingido mantém a sobrancelha escura.
+  - `extraLook` sorteia tudo isso, com cabelo tingido em cerca de 7% e mecha em cerca de 8%. Barba só com `{ adult: true }`; óculos em cerca de 16% das pessoas.
+  - Barba e óculos ficam sem contorno no cel.
+  - Vitrine: todos os campos novos na aparência.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 4 estão feitas. A próxima é a 5. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 5 estão feitas. A próxima é a 6. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
 3. ~~Contorno grosso e luz em faixas~~: feito.
 4. ~~Mãos com dedos~~: feito.
-5. **Cabelo com volume e ficha mais configurável**: mais estilos de cabelo, formato de cabeça, olhos, nariz, boca, barba, óculos; `extraLook` sorteando tudo.
+5. ~~Cabelo com volume e ficha mais configurável~~: feito.
 6. **Cor do mundo por regra da bíblia**: o céu vermelho tingindo a cena inteira.
 7. **Tela final interativa**: "O que você faria?" com opções, configurável no roteiro.
 8. **Grande-angular como opção de câmera** e **granulado leve opcional**.
@@ -179,6 +187,9 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - Em `cel`, o casco do cenário não tem contorno. Um contorno por pós-processamento (detecção de bordas) resolveria as quinas vivas, se fizer falta.
 - Em `cel`, num ambiente com várias lâmpadas, cada uma desenha as suas faixas, e num rosto em close elas se cruzam.
 - Em `cel`, o modelo GLB de teste (`robo.glb`) recebe as faixas mas o contorno não aparece; a causa não foi investigada.
+- Os figurantes do episódio 1 mudaram de cara: `extraLook` passou a sortear mais coisas, então a mesma semente dá outro visual.
+- A costeleta da barba cheia é uma faixa reta, e a barba por fazer (`stubble`) quase não aparece em pele escura.
+- Os óculos não têm lente; em `cel` a armação fica sem contorno.
 - Modelos GLB não têm dedos e seguram pelo pulso.
 - O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
 - Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.
