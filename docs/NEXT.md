@@ -2,6 +2,15 @@
 
 Estado em 2026-11-12. Plano geral em [PLAN.md](PLAN.md).
 
+## Objetivo
+
+Deixar o motor pronto antes de produzir episódios. Só depois disso a série começa a ser gerada, e o primeiro episódio é o roteiro do autor em [`series/ceu-vermelho/roteiros/001.md`](../series/ceu-vermelho/roteiros/001.md), guardado como ele escreveu, com as indicações de direção.
+
+- `series/ceu-vermelho/episodes/001.ts` é a implementação atual desse roteiro e serve de teste do motor. O autor deu play no estúdio e aprovou o que viu, com algumas poucas melhorias que ainda não detalhou (perguntar quando for a hora; não são o foco agora).
+- Conforme o motor melhora (tarefas abaixo), o episódio 1 é refeito a partir do roteiro, não remendado.
+- O papel do motor, nas palavras do autor: "auxiliar o usuário como se ele fosse o diretor". O mundo tem que ser vivo mesmo onde o roteiro não descreve ações (direção de figurantes).
+- "Pronto" inclui o que um episódio publicável precisa: visual (tarefas 1 a 8), voz e sons (tarefa 10).
+
 ## Para retomar
 
 ```sh

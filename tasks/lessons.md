@@ -1,0 +1,5 @@
+# Lições
+
+- **Não presumir o cronograma de produção do autor.** Sugeri começar a produzir episódios antes do motor estar pronto; o objetivo dele é o contrário: motor pronto primeiro, episódios depois. Antes de recomendar uma ordem de trabalho, conferir o objetivo registrado em `docs/NEXT.md` ("Objetivo") e, se não houver, perguntar.
+- **Guardar o texto original de quem pede, não só a implementação.** O roteiro do episódio 1 ficou só na conversa; a versão em código perdia as indicações de direção. Roteiros e pedidos longos do autor vão para o repositório como ele escreveu (ex.: `series/<série>/roteiros/`).
+- **Nunca editar código servido pelo Vite durante um render.** A edição recarregou a página e cortou o vídeo. O render agora ignora mudanças de arquivo, mas a regra vale para qualquer processo que esteja usando o servidor de desenvolvimento.
