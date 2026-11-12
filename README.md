@@ -24,6 +24,16 @@ npm run build
 - **Bíblia**: liga e desliga cada regra ativa para comparar o cenário com e sem ela.
 - **Áreas**: leva a câmera até cada área do local.
 
+## Vitrine de personagens
+
+`http://localhost:5173/?vitrine=personagens&series=<id>` (ou o botão "Vitrine de personagens" no estúdio) mostra os personagens de uma série lado a lado, fora de qualquer episódio. `series=*` mostra os de todas as séries.
+
+- Clique num personagem para selecionar; "Todos" aplica o menu a todos de uma vez. "Corpo", "Rosto" e "Palco" enquadram.
+- **O que faz**: expressão e intensidade, pose em loop (parado, andar, correr, sentar, agachar, falar, cruzar os braços, gesticular, levantar o celular), comportamento de figurante (`behave`) e para onde olha.
+- **Aparência** (corpo paramétrico): pele, cabelo, corte, roupa, altura, corpo e cabeça mudam na hora. "Variar" sorteia um visual de figurante e "Adicionar 6 figurantes" põe variações ao lado. A vitrine não grava: o JSON resultante aparece para copiar para o arquivo do personagem.
+- **Tempo**: corre de verdade (respira, pisca, anda); dá para pausar e voltar ao início.
+- **Bíblia**: liga cada regra para ver os personagens sob ela (o céu vermelho).
+
 ## Onde fica cada coisa
 
 | Caminho | Conteúdo |
@@ -37,6 +47,7 @@ npm run build
 | `src/engine/actions` | Catálogo de ações e compilação da trilha de ações |
 | `src/engine/character` | Esqueleto padrão, corpo cartoon, rosto, movimentos, importação de GLB |
 | `src/engine/timeline` | Trilha de câmera e tempo por frame |
+| `src/studio` | Estúdio (`main.ts`) e vitrine (`showcase.ts`); `entry.ts` escolhe pelo endereço |
 | `.claude/skills` | Skills que ensinam a LLM a usar o motor |
 | `src/studio` | Página 3D |
 

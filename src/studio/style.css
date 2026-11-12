@@ -146,3 +146,33 @@ body.render #stage { width: var(--frame-w); height: var(--frame-h); flex: none; 
   pointer-events: none;
 }
 #subtitle b { color: #ffd166; }
+
+/* Showcase */
+#panel label.field { display: grid; grid-template-columns: 84px 1fr auto; gap: 8px; align-items: center; cursor: default; }
+#panel label.field > span { color: var(--muted); font-size: 12px; }
+#panel label.field small { min-width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+#panel select, #panel input[type='range'] { width: 100%; min-width: 0; accent-color: var(--accent); }
+#panel select {
+  padding: 5px 6px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+#panel input[type='color'] { width: 100%; height: 26px; padding: 0; background: none; border: 1px solid var(--line); border-radius: 6px; }
+#panel p.note { margin-bottom: 8px; font-size: 12px; }
+.nameplate {
+  position: absolute;
+  transform: translate(-50%, 4px);
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.nameplate.selected { border-color: var(--accent); color: var(--accent); }

@@ -13,6 +13,7 @@ import { frameCount, type Episode } from '../engine/timeline/episode';
 import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
+import { button, checkbox, el } from './ui';
 import { WalkControls } from './walk';
 
 // Series data lives in /series as plain files; the studio only reads it.
@@ -326,31 +327,6 @@ function captureKeyframe(): void {
 
 // ---- Panel ----
 
-function el<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', className = ''): HTMLElementTagNameMap[K] {
-  const node = document.createElement(tag);
-  node.textContent = text;
-  if (className) node.className = className;
-  return node;
-}
-
-function button(label: string, active: boolean, onClick: () => void): HTMLButtonElement {
-  const b = el('button', label, active ? 'active' : '');
-  b.onclick = onClick;
-  return b;
-}
-
-function checkbox(title: string, detail: string, checked: boolean, onChange: (checked: boolean) => void): HTMLLabelElement {
-  const label = el('label');
-  const box = el('input');
-  box.type = 'checkbox';
-  box.checked = checked;
-  box.onchange = () => onChange(box.checked);
-  const text = el('span', title);
-  if (detail) text.append(el('small', detail));
-  label.append(box, text);
-  return label;
-}
-
 function renderPanel(): void {
   panel.replaceChildren();
   const subtitle = episode ? `Episódio ${episode.episode}: ${episode.title}` : 'Sem episódio';
@@ -366,6 +342,10 @@ function renderPanel(): void {
       for (const e of seriesEpisodes) panel.append(button(`Episódio ${e.episode}: ${e.title}`, e === source, () => open(bible.series, e.episode)));
     }
   }
+
+  panel.append(el('h2', 'Assets'), button('Vitrine de personagens', false, () => {
+    window.location.search = `?vitrine=personagens&series=${bible.series}`;
+  }));
 
   panel.append(el('h2', 'Visão'));
   const modes = el('div', '', 'row');

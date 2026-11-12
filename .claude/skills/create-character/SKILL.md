@@ -48,10 +48,12 @@ No arquivo do episódio, `cast` diz quem aparece e onde começa:
 ## Movimentos e expressões novos
 
 - Movimentos são funções puras em `src/engine/character/motion.ts`: recebem tempo ou distância e devolvem uma pose (rotação de cada junta a partir da T-pose). Um movimento novo entra ali e serve a todos os personagens.
-- Expressões ficam em `EXPRESSIONS`, no mesmo arquivo. Existem: `happy`, `sad`, `angry`, `surprised`, `scared`. Confira antes de criar outra.
+- Poses em loop da vitrine ficam em `SHOWCASE_POSES` (`src/engine/character/showcase.ts`). Um movimento novo ganha uma entrada ali para poder ser conferido.
+- Expressões ficam em `EXPRESSIONS`, no mesmo arquivo de movimentos. Existem: `happy`, `sad`, `angry`, `surprised`, `scared`. Confira antes de criar outra.
 
 ## Conferir
 
 1. `npm test` e `npm run typecheck`.
-2. No estúdio, o painel lista o elenco; clicar leva a câmera até o personagem. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada.
-3. Olhe as imagens: pés no chão, braços para baixo, rosto visível sob o cabelo, personagem olhando para onde anda.
+2. Abra a vitrine, `?vitrine=personagens&series=<série>`: todos os personagens da série lado a lado, sem precisar de episódio. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada. Pelo console: `window.__vitrine.select('<id>', 'body' | 'face')`, `setPose('walk')`, `setExpression('happy')`, `setBehaviour('chat')`, `setLook('camera')`, `restyle('<id>', { hairStyle: 'bun' })`, `addExtras('<id>', 6)`, `pause(<segundos>)`. `select(null)` volta a todos.
+3. Para ver o personagem dentro de um episódio, o painel do estúdio lista o elenco; clicar leva a câmera até ele.
+4. Olhe as imagens: pés no chão, braços para baixo, rosto visível sob o cabelo, personagem olhando para onde anda.

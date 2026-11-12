@@ -15,8 +15,9 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 68 testes
+npm run typecheck && npm test   # 83 testes
 npm run dev                     # estúdio em http://localhost:5173
+                                # vitrine em http://localhost:5173/?vitrine=personagens
 ```
 
 Leia antes: `README.md`, `docs/PLAN.md`, as skills em `.claude/skills/` (`build-location`, `direct-actions`, `create-character`), `src/engine/world/types.ts` (mundo), `src/engine/actions/catalog.ts` (ações) e `src/engine/character/types.ts` (personagem).
@@ -57,9 +58,15 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Móveis bloqueiam o caminho a pé. Elenco com `look` (uma ficha, várias aparências) e `seated`.
   - Episódio 1 de `ceu-vermelho` (`series/ceu-vermelho/episodes/001.ts`): 2 min 15 s em primeira pessoa, 15 personagens.
 
+- Vitrine de personagens (tarefa 1): `?vitrine=personagens&series=<id>`, na mesma aplicação do estúdio (`src/studio/entry.ts` escolhe entre `main.ts` e `showcase.ts`).
+  - É um palco sem cenário que usa o mesmo caminho do episódio (`buildCharacter`, `compileActions`, `applyStage`), então o que se vê nela é o que sai no vídeo.
+  - `src/engine/character/showcase.ts`: disposição em fileiras (`showcaseLayout`), poses em loop (`SHOWCASE_POSES`) e a trilha do palco (`stageTrack`: um `behave` por personagem e o celular na mão).
+  - `headAngles` (`src/engine/actions/catalog.ts`) é a conta do olhar, agora usada pelo `gazeAt` e pela vitrine.
+  - Menu: expressão e intensidade, pose, comportamento de figurante, olhar, aparência na hora, figurantes por `extraLook`, regras da bíblia. A aparência ajustada não é gravada; o JSON aparece para copiar.
+
 ## Próximas tarefas, em ordem
 
-1. **Vitrine de personagens** (versão básica): ver todos lado a lado, câmera livre, menu de expressão e pose. Vem primeiro porque é onde as tarefas 2 a 6 vão ser ajustadas e conferidas.
+1. ~~Vitrine de personagens~~: feita. As tarefas 2 a 6 são ajustadas e conferidas nela.
 2. **Rosto expressivo**: olhos com branco, íris, brilho e pálpebra, olhos que se mexem dentro do rosto, sobrancelhas grossas, nariz, orelhas, boca com formas de fala.
 3. **Contorno grosso e luz em faixas**: o estilo da série passa a ser escolhido na bíblia (atual ou cell shading).
 4. **Mãos com dedos**: poses de mão, mão que fecha no que segura, ação de apontar.
@@ -95,7 +102,7 @@ Puxar com moderação (tarefa 8):
 
 ## Vitrine de assets (tarefas 1 e 9)
 
-Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. Começa pelos personagens; depois os outros grupos.
+Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. A de personagens está feita; faltam os outros grupos (tarefa 9). O que segue é o pedido completo.
 
 - Abre por grupo: todos os personagens de uma série (ou de todas) lado a lado, cada um com o nome embaixo.
 - Câmera livre pelo mouse (girar, aproximar, deslocar), e um clique num personagem para focar nele.
@@ -140,6 +147,8 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - A mão vai até onde a maçaneta fica com a porta fechada e não acompanha a folha enquanto ela gira. Porta de carro não tem maçaneta conhecida: a mão vai para a frente do corpo.
 - `sit` não confere se a porta do carro está aberta, e o personagem atravessa a lataria se ela estiver fechada.
 - O olhar move só a cabeça e o pescoço; os olhos não se mexem dentro do rosto.
+- Na vitrine, com um comportamento de figurante ligado, as poses "cruzar os braços" e "gesticular" não aparecem: as mãos livres são do comportamento.
+- Na vitrine, a pose "sentar" usa um banco de 0,46 m para todos; personagens baixos ficam com os pés fora do chão.
 - Sentado, os braços ficam ao lado do corpo (não seguram o volante).
 - Pés podem afundar ou flutuar um pouco em escadas: a altura segue o degrau, mas não há IK nos pés.
 - O rosto do GLB depende de morph targets; o modelo de teste (`robo.glb`) não tem.
@@ -152,3 +161,5 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 ## Como conferir mudanças visuais
 
 O Chromium headless já vem instalado (`require('playwright')`, lançar com `--use-gl=swiftshader --enable-unsafe-swiftshader`). `window.__studio` expõe `setMode`, `setLevel`, `focusRoom`, `walk.placeAt(x, z, elevation, yaw)`, `camera`, `orbit`, `timeline.seek(frame)`, `interactives`, `cast`, `actionsError` (ações e câmera) e `toggleNearestDoor()`. Para um close de um personagem: `orbit.target` na posição dele, `camera.position` à frente, `orbit.update()`.
+
+Na vitrine (`?vitrine=personagens&series=<id>`), `window.__vitrine` expõe `ids()`, `select(id | null, 'body' | 'face')`, `frame('all' | 'body' | 'face')`, `setPose`, `setBehaviour`, `setLook('free' | 'camera' | 'selected' | 'ahead')`, `setExpression(nome, intensidade)`, `restyle(id, mudanças)`, `addExtras(id, n)`, `setRule(id, ligada)`, `pause(segundos)`, `play()`, `camera`, `orbit`, `cast()` e `error`. Pause num instante fixo antes de cada screenshot, para a imagem não depender do relógio.

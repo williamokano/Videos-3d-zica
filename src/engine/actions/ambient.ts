@@ -52,7 +52,8 @@ export interface Ambient {
   gaze: { from: GazeSpec; to: GazeSpec; blend: number };
 }
 
-const NONE: Ambient = { talk: 0, cross: 0, gestureL: 0, gestureR: 0, write: 0, nod: 0, sway: 0, expressions: {}, gaze: { from: null, to: null, blend: 1 } };
+/** A body doing nothing by itself. */
+export const NO_AMBIENT: Ambient = { talk: 0, cross: 0, gestureL: 0, gestureR: 0, write: 0, nod: 0, sway: 0, expressions: {}, gaze: { from: null, to: null, blend: 1 } };
 
 const hash = (a: number, b: number): number => {
   const v = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
@@ -99,9 +100,9 @@ export function behaviourAt(behaviours: Behaviour[], id: string, t: number): Beh
 /** What a character does by itself at time t. */
 export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambient {
   const mine = behaviourAt(behaviours, id, t);
-  if (!mine) return NONE;
+  if (!mine) return NO_AMBIENT;
   const seed = seedOf(id);
-  const out: Ambient = { ...NONE, expressions: {}, sway: Math.sin(t * 0.45 + seed) * 0.7 + Math.sin(t * 0.17 + seed * 2) * 0.3 };
+  const out: Ambient = { ...NO_AMBIENT, expressions: {}, sway: Math.sin(t * 0.45 + seed) * 0.7 + Math.sin(t * 0.17 + seed * 2) * 0.3 };
   // Coming into a behaviour, things start gently.
   const settle = smooth((t - mine.t0) / 0.6);
 

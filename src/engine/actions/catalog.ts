@@ -468,6 +468,17 @@ export function focusAt(compiled: CompiledActions, id: string, t: number): [numb
 const MAX_HEAD_TURN = 75;
 const MAX_HEAD_TILT = 40;
 
+/** Head turn that points the eyes at `point`, for a body heading `bodyYaw`: degrees, `yaw` to the left, `pitch` up, within what a neck can do. */
+export function headAngles(eye: [number, number, number], bodyYaw: number, point: [number, number, number]): { yaw: number; pitch: number } {
+  const [dx, dy, dz] = [point[0] - eye[0], point[1] - eye[1], point[2] - eye[2]];
+  const flat = Math.hypot(dx, dz);
+  if (flat < 1e-6 && Math.abs(dy) < 1e-6) return { yaw: 0, pitch: 0 };
+  const heading = (Math.atan2(-dx, -dz) * 180) / Math.PI;
+  const yaw = ((((heading - bodyYaw) % 360) + 540) % 360) - 180;
+  const pitch = (Math.atan2(dy, flat) * 180) / Math.PI;
+  return { yaw: Math.max(-MAX_HEAD_TURN, Math.min(MAX_HEAD_TURN, yaw)), pitch: Math.max(-MAX_HEAD_TILT, Math.min(MAX_HEAD_TILT, pitch)) };
+}
+
 /**
  * How far a character's head is turned from its body at time t, in degrees: `yaw` to the left,
  * `pitch` up. The neck has limits, so a target behind the back is looked at over the shoulder.
@@ -477,16 +488,7 @@ export function gazeAt(compiled: CompiledActions, id: string, t: number): { yaw:
   while (i >= 0 && (compiled.gazes[i].target !== id || compiled.gazes[i].t0 > t)) i--;
   const own = placementAt(compiled, id, t);
   const eye = focusAt(compiled, id, t);
-  const toward = (at: string | [number, number, number]): { yaw: number; pitch: number } => {
-    const p = typeof at === 'string' ? focusAt(compiled, at, t) : at;
-    const [dx, dy, dz] = [p[0] - eye[0], p[1] - eye[1], p[2] - eye[2]];
-    const flat = Math.hypot(dx, dz);
-    if (flat < 1e-6 && Math.abs(dy) < 1e-6) return { yaw: 0, pitch: 0 };
-    const heading = (Math.atan2(-dx, -dz) * 180) / Math.PI;
-    const yaw = ((((heading - own.yaw) % 360) + 540) % 360) - 180;
-    const pitch = (Math.atan2(dy, flat) * 180) / Math.PI;
-    return { yaw: Math.max(-MAX_HEAD_TURN, Math.min(MAX_HEAD_TURN, yaw)), pitch: Math.max(-MAX_HEAD_TILT, Math.min(MAX_HEAD_TILT, pitch)) };
-  };
+  const toward = (at: string | [number, number, number]): { yaw: number; pitch: number } => headAngles(eye, own.yaw, typeof at === 'string' ? focusAt(compiled, at, t) : at);
   const mix = (from: { yaw: number; pitch: number }, to: { yaw: number; pitch: number }, w: number) => ({
     yaw: from.yaw + (to.yaw - from.yaw) * w,
     pitch: from.pitch + (to.pitch - from.pitch) * w,
