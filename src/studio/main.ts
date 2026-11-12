@@ -4,13 +4,15 @@ import '../engine/assets/school';
 import '../engine/assets/nature';
 import '../engine/assets/building';
 import '../engine/assets/vehicles';
-import '../engine/actions/builtin';
-import { compileActions, evaluateActions, type CompiledActions } from '../engine/actions/catalog';
+import { evaluateActions, type CompiledActions } from '../engine/actions/catalog';
+import { loadGlbCharacter } from '../engine/character/glb';
+import type { CharacterDef, CharacterRig } from '../engine/character/types';
+import { buildCast, compileEpisode } from '../engine/timeline/stage';
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { evaluateCamera } from '../engine/timeline/camera';
 import type { Episode } from '../engine/timeline/episode';
-import { buildLocation } from '../engine/world/build';
+import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
 import { WalkControls } from './walk';
@@ -19,6 +21,8 @@ import { WalkControls } from './walk';
 const bibles = import.meta.glob<Bible>('/series/*/bible.json', { eager: true, import: 'default' });
 const locations = import.meta.glob<Location>('/series/*/world/*.json', { eager: true, import: 'default' });
 const episodes = import.meta.glob<Episode>('/series/*/episodes/*.json', { eager: true, import: 'default' });
+const characters = import.meta.glob<CharacterDef>('/series/*/characters/*.json', { eager: true, import: 'default' });
+const models = import.meta.glob<string>('/series/*/characters/*.glb', { eager: true, import: 'default', query: '?url' });
 
 // Which series and episode to open comes from the address: ?series=<id>&ep=<number>.
 const query = new URLSearchParams(window.location.search);
@@ -40,7 +44,7 @@ const previewLabel = document.getElementById('preview-label')!;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.autoClear = false;
 stage.prepend(renderer.domElement);
@@ -67,16 +71,29 @@ const gizmoCamera = new THREE.PerspectiveCamera(50, frameAspect, 0.2, 1.6);
 const gizmos = new THREE.Group();
 scene.add(gizmos);
 
-// ---- Episode actions ----
+// ---- Episode cast and actions ----
 
 let actions: CompiledActions = { tracks: [], clips: [] };
 let actionsError = '';
-try {
-  actions = compileActions(episode?.actions ?? [], built.interactives);
-} catch (error) {
-  actionsError = error instanceof Error ? error.message : String(error);
+let cast: InteractiveObject[] = [];
+if (episode) {
+  try {
+    const defs = inSeries(characters);
+    const rigs: Record<string, CharacterRig> = {};
+    for (const def of defs) {
+      if (!def.glb || !episode.cast?.some((m) => m.character === def.id)) continue;
+      const url = models[`/series/${bible.series}/characters/${def.glb}`];
+      if (!url) throw new Error(`Personagem "${def.id}": arquivo "${def.glb}" não encontrado em series/${bible.series}/characters.`);
+      rigs[def.id] = await loadGlbCharacter(def, url);
+    }
+    cast = buildCast(episode, defs, rigs);
+    for (const character of cast) scene.add(character.object);
+    actions = compileEpisode(episode, built, cast);
+  } catch (error) {
+    actionsError = error instanceof Error ? error.message : String(error);
+  }
 }
-const interactiveById = new Map(built.interactives.map((o) => [o.id, o]));
+const interactiveById = new Map([...built.interactives, ...cast].map((o) => [o.id, o]));
 /** Doors opened or closed by hand in walk mode, until the timeline moves again. */
 const handOverrides = new Map<string, number>();
 
@@ -86,6 +103,7 @@ function applyActions(t: number): void {
     const object = interactiveById.get(id)!;
     for (const [channel, value] of Object.entries(channels)) object.set(channel, value);
   }
+  for (const character of cast) character.tick?.(t);
 }
 
 /** Walk mode: open or close the nearest door within reach, ignoring which side it opens from. */
@@ -182,6 +200,7 @@ function applyVisibility(): void {
   }
   built.exterior.visible = cut === null || cut >= 0;
   for (const s of built.stairs) s.group.visible = cut === null || s.bottom <= cut;
+  for (const c of cast) c.object.visible = cut === null || c.position()[1] <= cut + 0.5;
 }
 
 function setLevel(next: number | null): void {
@@ -316,6 +335,17 @@ function renderPanel(): void {
     if (snippet) panel.append(el('div', snippet, 'snippet'));
   }
 
+  if (cast.length) {
+    panel.append(el('h2', 'Elenco'));
+    for (const c of cast) {
+      panel.append(button(c.id, false, () => {
+        if (mode !== 'orbit') setMode('orbit');
+        const [x, y, z] = c.position();
+        frameOrbit(x, y + 1, z, 5);
+      }));
+    }
+  }
+
   if (actionsError || actions.clips.length) {
     panel.append(el('h2', 'Ações do episódio'));
     if (actionsError) panel.append(el('div', actionsError, 'error'));
@@ -378,6 +408,7 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
     for (const r of built.rooms) r.group.visible = r.ceiling.visible = true;
     built.exterior.visible = true;
     for (const s of built.stairs) s.group.visible = true;
+    for (const c of cast) c.object.visible = true;
   }
   const [x, y, w, h] = rect ?? [0, 0, width, height];
   renderer.setViewport(x, y, w, h);
@@ -391,8 +422,9 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
 applyEnvironment();
 setMode('orbit');
 
-const clock = new THREE.Clock();
+const clock = new THREE.Timer();
 renderer.setAnimationLoop(() => {
+  clock.update();
   const dt = Math.min(clock.getDelta(), 0.1);
   timeline?.update(dt);
   if (mode === 'walk') walk.update(dt);
@@ -420,7 +452,7 @@ renderer.setAnimationLoop(() => {
 // Handle for automated checks and debugging from the console.
 Object.assign(window, {
   __studio: {
-    setMode, setLevel, focusRoom: (id: string) => focusRoom(location!.rooms.find((r) => r.id === id)!), walk, camera, timeline,
-    interactives: built.interactives, actionsError, toggleNearestDoor,
+    setMode, setLevel, orbit, focusRoom: (id: string) => focusRoom(location!.rooms.find((r) => r.id === id)!), walk, camera, timeline,
+    interactives: built.interactives, cast, actionsError, toggleNearestDoor,
   },
 });

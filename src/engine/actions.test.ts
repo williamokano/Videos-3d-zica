@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import './actions/builtin';
 import { compileActions, evaluateActions, type ActionClip, type ActionTarget } from './actions/catalog';
@@ -6,7 +6,9 @@ import './assets/building';
 import './assets/nature';
 import './assets/school';
 import './assets/vehicles';
+import type { CharacterDef } from './character/types';
 import type { Episode } from './timeline/episode';
+import { buildCast, compileEpisode } from './timeline/stage';
 import { buildLocation, resolveCollisions } from './world/build';
 import type { Location } from './world/types';
 
@@ -138,7 +140,9 @@ describe('series data', () => {
       it(`compiles the actions of ${series} episode ${file}`, () => {
         const episode = json<Episode>(`${dir}/${file}`);
         const built = buildLocation(json<Location>(`series/${series}/world/${episode.location}.json`));
-        const compiled = compileActions(episode.actions ?? [], built.interactives);
+        const folder = `series/${series}/characters`;
+        const defs = existsSync(folder) ? readdirSync(folder).filter((f) => f.endsWith('.json')).map((f) => json<CharacterDef>(`${folder}/${f}`)) : [];
+        const compiled = compileEpisode(episode, built, buildCast(episode, defs));
         for (const clip of compiled.clips) expect(clip.t + clip.duration).toBeLessThanOrEqual(episode.duration);
       });
     }

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { ActionTarget } from '../actions/catalog';
 import { assetKind, createAsset, mat, type AssetChannels } from '../assets/registry';
 import { buildDoor } from './doors';
-import { contains, subtractRects, type Rect } from './rect';
+import { contains, subtractRects, union, type Rect } from './rect';
 import { layoutStairs, partHeight, type StairLayout } from './stairs';
 import type { Location, Prop } from './types';
 import { DEFAULT_ROOM_H, DOOR_H, WALL_T, roomOpenings, roomWalls, sideGeometry, type WallPiece } from './walls';
@@ -13,6 +13,8 @@ export interface Collider extends Rect {
   y1: number;
   /** Lets walkers through for now (an open door). */
   disabled?: boolean;
+  /** Id of the door this collider belongs to. */
+  door?: string;
 }
 
 /** An object that episode actions can animate: a door leaf or a prop with an id. */
@@ -22,6 +24,8 @@ export interface InteractiveObject extends ActionTarget {
   set(channel: string, value: number): void;
   /** Where it is, for finding the nearest one: [x, y, z]. */
   position(): [number, number, number];
+  /** Things that move by themselves with the clock (blinking, breathing). Called after the channels are set. */
+  tick?(t: number): void;
 }
 
 /** Something to stand on: a floor, the ground, a landing or a flight of stairs. */
@@ -48,10 +52,12 @@ export interface BuiltLocation {
   surfaces: Surface[];
   /** Doors and props with an id, for the action track. */
   interactives: InteractiveObject[];
+  /** Footprint of all areas. */
+  bounds: Rect;
 }
 
-const WALKER_HEIGHT = 1.7;
-const STEP_UP = 0.5;
+export const WALKER_HEIGHT = 1.7;
+export const STEP_UP = 0.5;
 const RAIL_H = 0.95;
 
 const glass = new THREE.MeshStandardMaterial({ color: '#bfe6ff', transparent: true, opacity: 0.35, roughness: 0.1 });
@@ -249,7 +255,8 @@ export function buildLocation(loc: Location): BuiltLocation {
       // A closed door blocks the doorway; the collider follows the `open` channel.
       const side = sideGeometry(room, o.wall);
       const from = side.from + o.at - o.width / 2;
-      const collider: Collider = { ...pieceRect({ ...side, from, to: from + o.width, y0: 0, y1: 0, kind: 'wall' }), y0: elevation, y1: elevation + DOOR_H };
+      const id = o.id ?? `${room.id}.${o.wall}${index}`;
+      const collider: Collider = { door: id, ...pieceRect({ ...side, from, to: from + o.width, y0: 0, y1: 0, kind: 'wall' }), y0: elevation, y1: elevation + DOOR_H };
       colliders.push(collider);
       const set = (open: number) => {
         door.setOpen(open);
@@ -257,10 +264,10 @@ export function buildLocation(loc: Location): BuiltLocation {
       };
       set(o.leaf.open ?? 0);
       interactives.push({
-        id: o.id ?? `${room.id}.${o.wall}${index}`,
+        id,
         kind: 'door',
         channels: { open: o.leaf.open ?? 0 },
-        traits: { opensFrom: o.leaf.opensFrom ?? 'both', doorKind: o.leaf.kind ?? 'swing' },
+        traits: { opensFrom: o.leaf.opensFrom ?? 'both', doorKind: o.leaf.kind ?? 'swing', passableAt: door.passableAt },
         object: door.object,
         set: (channel, value) => {
           if (channel === 'open') set(value);
@@ -291,7 +298,8 @@ export function buildLocation(loc: Location): BuiltLocation {
     if (seen.has(id)) throw new Error(`Id repetido no local "${loc.id}": "${id}".`);
     seen.add(id);
   }
-  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives };
+  const bounds = union(loc.rooms.map((r) => ({ minX: r.origin[0], maxX: r.origin[0] + r.size[0], minZ: r.origin[1], maxZ: r.origin[1] + r.size[1] })));
+  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives, bounds };
 }
 
 /** Floor height under a walker whose feet are at `feetY`: the highest surface they can stand on or step up to. */

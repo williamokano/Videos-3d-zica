@@ -1,4 +1,5 @@
 import type { ActionClip } from '../actions/catalog';
+import type { CastMember } from '../character/cast';
 import type { CameraKey } from './camera';
 
 /** An episode: which location it plays in and its timeline tracks. Lives in series/<series>/episodes. */
@@ -10,6 +11,8 @@ export interface Episode {
   /** Length in seconds. */
   duration: number;
   camera: CameraKey[];
+  /** Characters in the episode and where each one starts. */
+  cast?: CastMember[];
   /** What happens to interactive objects: doors opening, cars driving, items picked up. */
   actions?: ActionClip[];
 }

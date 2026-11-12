@@ -29,6 +29,12 @@ export interface TargetTraits {
   /** Doors: how the leaf moves. */
   doorKind?: 'swing' | 'sliding' | 'rollup';
   pickable?: boolean;
+  /** Doors: from this much open, a person can walk through. */
+  passableAt?: number;
+  /** Characters: meters covered by one full walk cycle (two steps). */
+  strideLength?: number;
+  /** Characters: names of the expressions the face can show. */
+  expressions?: string[];
 }
 
 /** What the compiler needs to know about an interactive object. */
@@ -56,7 +62,34 @@ export interface ChannelWrite {
   at?: (u: number) => number;
 }
 
+/** A route on foot: points every few centimeters and the doors it goes through. */
+export interface WalkPath {
+  /** [x, y, z] along the way. */
+  points: [number, number, number][];
+  /** Distance travelled at each point. */
+  distances: number[];
+  length: number;
+  doors: { id: string; distance: number }[];
+}
+
+/** What the world offers to actions that need more than their target. */
+export interface ActionServices {
+  /** Route on foot between two places, or null when there is none. */
+  findPath?(from: [number, number, number], to: [number, number], toElevation: number): WalkPath | null;
+}
+
+/** Checks that need the whole track compiled, e.g. "is that door open by the time I get there?". */
+export interface ValidateContext {
+  /** Clock time at which the clip reaches `progress` (0 to 1) of its way. */
+  timeAt(progress: number): number;
+  /** Value of another object's channel at a time. */
+  valueAt(target: string, channel: string, time: number): number;
+  target(id: string): ActionTarget | undefined;
+  fail(message: string): never;
+}
+
 export interface ActionContext {
+  services: ActionServices;
   target: ActionTarget;
   params: Record<string, unknown>;
   /** Value of a channel when the clip starts. */
@@ -72,7 +105,7 @@ export interface ActionDef {
   params: Record<string, ParamSpec>;
   /** Default length in seconds. */
   duration: number;
-  compile(ctx: ActionContext): { writes: ChannelWrite[]; duration?: number };
+  compile(ctx: ActionContext): { writes: ChannelWrite[]; duration?: number; validate?(ctx: ValidateContext): void };
 }
 
 const actions = new Map<string, ActionDef>();
@@ -140,10 +173,11 @@ const PARAM_CHECKS: Record<ParamType, (v: unknown) => boolean> = {
  * Turn the episode's action clips into channel tracks. Throws with a message that names the clip
  * when an action does not exist, does not fit its target, has bad params or overlaps another one.
  */
-export function compileActions(clips: ActionClip[], targets: ActionTarget[]): CompiledActions {
+export function compileActions(clips: ActionClip[], targets: ActionTarget[], services: ActionServices = {}): CompiledActions {
   const byId = new Map(targets.map((t) => [t.id, t]));
   const tracks = new Map<string, ChannelTrack>();
   const compiled: CompiledClip[] = [];
+  const checks: (() => void)[] = [];
   const ordered = clips.map((clip, index) => ({ clip, index })).sort((a, b) => a.clip.t - b.clip.t || a.index - b.index);
 
   for (const { clip, index } of ordered) {
@@ -188,7 +222,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[]): Co
       return track.segments.at(-1)?.end ?? track.initial;
     };
 
-    const result = def.compile({ target, params, current, fail });
+    const result = def.compile({ services, target, params, current, fail });
     const duration = clip.duration ?? result.duration ?? def.duration;
     if (!isNumber(duration) || duration < 0) fail('"duration" precisa ser um número de segundos maior ou igual a zero.');
     const ease = EASES[clip.ease ?? 'inOut'];
@@ -205,7 +239,28 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[]): Co
       track.segments.push({ t0: clip.t, t1: clip.t + duration, at: (u) => at(ease(u)), end: at(1) });
     }
     compiled.push({ t: clip.t, duration, target: clip.target, action: clip.action });
+
+    const validate = result.validate;
+    if (validate) {
+      const timeAt = (progress: number): number => {
+        // Invert the easing by bisection: it only ever grows.
+        let lo = 0;
+        let hi = 1;
+        for (let i = 0; i < 24; i++) {
+          const mid = (lo + hi) / 2;
+          if (ease(mid) < progress) lo = mid;
+          else hi = mid;
+        }
+        return clip.t + duration * hi;
+      };
+      const valueAt = (id: string, channel: string, time: number): number => {
+        const track = tracks.get(`${id}\n${channel}`);
+        return track ? evaluateTrack(track, time) : (byId.get(id)?.channels[channel] ?? 0);
+      };
+      checks.push(() => validate({ timeAt, valueAt, target: (id) => byId.get(id), fail }));
+    }
   }
+  for (const check of checks) check();
   return { tracks: [...tracks.values()], clips: compiled };
 }
 

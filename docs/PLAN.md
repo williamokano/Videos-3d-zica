@@ -40,7 +40,7 @@ O vídeo é uma função determinística: **(mundo + roteiro + tempo t) → fram
 | 1 | Formato do mundo, kit básico, bíblia com regras de ambiente, estúdio navegável, escola de exemplo | feito |
 | 1b | Níveis, escadas (reta, em U, em L), folhas de porta, luz interna; trilha de câmera com timeline por frame e visão no formato final; skill `build-location` | feito |
 | 1c | Sistema de ações: objetos com canais, catálogo de ações, trilha no episódio; portas de abrir, de correr e de enrolar que bloqueiam a passagem; carro com portas e rodas; itens pegáveis; skill `direct-actions` | feito |
-| 2 | Personagem: rig, locomoção no navmesh, rosto com piscar e expressões; importação de GLB | |
+| 2 | Personagem: esqueleto padrão, corpo cartoon, andar e correr pelo mapa de caminhada (portas e escadas), rosto com piscar e expressões; importação de GLB; skill `create-character` | feito |
 | 3 | API de direção em código, trilhas de personagem na timeline, câmeras FPV / terceira pessoa presas ao personagem; personagem abrindo porta, sentando no carro e pegando item com a mão | |
 | 4 | Fala: TTS e STS, alinhamento, lip-sync, dublagem, render para MP4 | |
 | 5 | Demais skills e catálogo de reuso; episódio piloto de ponta a ponta | |

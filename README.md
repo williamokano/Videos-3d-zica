@@ -19,6 +19,7 @@ npm run build
 - **Timeline**: espaço toca e pausa, `,` e `.` andam um frame, a barra leva a qualquer frame. Nas visões Geral e Andar, o trajeto da câmera aparece no cenário e a prévia fica no canto.
 - **Copiar minha visão como keyframe**: gera o keyframe da visão atual, no tempo atual, para colar no arquivo do episódio.
 - **Ações**: portas, carros e itens se movem conforme a trilha `actions` do episódio. Aparecem como barras azuis na timeline e em lista no painel; clicar leva ao instante da ação.
+- **Personagens**: o elenco do episódio aparece no painel; clicar leva a câmera até a pessoa. Eles andam, correm, viram e mudam de expressão pelas ações do episódio.
 - **Série e episódio**: escolha no painel ou pelo endereço, `?series=<id>&ep=<número>`. A série `demo-acoes` mostra todas as ações.
 - **Bíblia**: liga e desliga cada regra ativa para comparar o cenário com e sem ela.
 - **Áreas**: leva a câmera até cada área do local.
@@ -29,10 +30,12 @@ npm run build
 |---|---|
 | `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio |
 | `series/<série>/world/*.json` | Locais (formato em `src/engine/world/types.ts`) |
-| `series/<série>/episodes/*.json` | Episódios: local, duração, trilha de câmera e trilha de ações |
+| `series/<série>/characters/*.json` | Personagens (formato em `src/engine/character/types.ts`), com GLB opcional ao lado |
+| `series/<série>/episodes/*.json` | Episódios: local, duração, elenco, trilha de câmera e trilha de ações |
 | `src/engine/assets` | Catálogo de assets paramétricos |
-| `src/engine/world` | Construção do local: paredes, aberturas, níveis, escadas, colisão |
+| `src/engine/world` | Construção do local: paredes, aberturas, níveis, escadas, colisão, mapa de caminhada |
 | `src/engine/actions` | Catálogo de ações e compilação da trilha de ações |
+| `src/engine/character` | Esqueleto padrão, corpo cartoon, rosto, movimentos, importação de GLB |
 | `src/engine/timeline` | Trilha de câmera e tempo por frame |
 | `.claude/skills` | Skills que ensinam a LLM a usar o motor |
 | `src/studio` | Página 3D |
@@ -43,4 +46,5 @@ npm run build
 - Móveis usados por uma pessoa olham para -z; assets de parede têm as costas em z = 0 e olham para +z.
 - Uma porta declarada numa parede também abre a parede da área vizinha na mesma linha e no mesmo nível.
 - Objetos animáveis têm `id` e canais numéricos (uma porta tem `open` de 0 a 1). Ações do catálogo movem os canais; o estado em qualquer instante é função pura do tempo.
+- Personagens olham para -z; `yaw` 0 é norte e 90 é oeste. Todos usam o mesmo esqueleto padrão em T-pose.
 - Escadas são descritas de cima para baixo; o motor fura os pisos que elas atravessam.
