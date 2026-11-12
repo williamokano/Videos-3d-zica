@@ -35,6 +35,14 @@ export interface TargetTraits {
   strideLength?: number;
   /** Characters: height of the eyes above the feet, in meters. */
   eyeHeight?: number;
+  /** Characters: size relative to the standard 1.7 m body. */
+  bodyScale?: number;
+  /** Fixed places on the object where something can be attached (car seats): name → [x, y, z] in the object's own frame. */
+  sockets?: Record<string, [number, number, number]>;
+  /** Items: [width, height, depth] in meters. */
+  size?: [number, number, number];
+  /** Doors: where the handle is when the door is closed, and the direction that points into the room that declares it. */
+  door?: { handle: [number, number, number]; center: [number, number, number]; inside: [number, number]; width: number };
   /** Characters: names of the expressions the face can show. */
   expressions?: string[];
 }
@@ -59,6 +67,8 @@ export interface ParamSpec {
 
 /** Move a channel during the clip: straight to `to`, or along `at(u)` with u from 0 to 1. */
 export interface ChannelWrite {
+  /** Object whose channel moves. Defaults to the clip's target. */
+  target?: string;
   channel: string;
   to?: number;
   at?: (u: number) => number;
@@ -90,13 +100,45 @@ export interface ValidateContext {
   fail(message: string): never;
 }
 
+/** One object riding on another: a character in a car seat, an item in a hand. */
+export interface Link {
+  /** The object that rides. */
+  target: string;
+  /** The object it rides on, and the place on it. */
+  to: string;
+  socket: string;
+  /** Channel of `target` that says how attached it is, from 0 (where its own channels put it) to 1 (on the socket). Without it, fully attached. */
+  weight?: string;
+  t0: number;
+  /** When it lets go; Infinity while still attached at the end. */
+  t1: number;
+}
+
 export interface ActionContext {
   services: ActionServices;
   target: ActionTarget;
   params: Record<string, unknown>;
-  /** Value of a channel when the clip starts. */
-  current(channel: string): number;
+  /** Value of a channel when the clip starts. `of` names another object. */
+  current(channel: string, of?: string): number;
+  /** Another object of the scene; fails with a clear message when it does not exist. */
+  object(id: string): ActionTarget;
+  /** Id of what rides on a socket when the clip starts, if anything. */
+  riderOn(to: string, socket: string): string | undefined;
+  /** What the object is riding on when the clip starts, if anything. */
+  linkOf(id: string): Link | undefined;
+  /** Where the object is when the clip starts, following what it rides on: [x, y, z] and heading. */
+  placeOf(id: string): { pos: [number, number, number]; yaw: number };
   fail(message: string): never;
+}
+
+export interface ActionResult {
+  writes: ChannelWrite[];
+  duration?: number;
+  /** Attach an object (default: the target) to a socket of another, from the start of the clip or from its end. */
+  attach?: { target?: string; to: string; socket: string; weight?: string; at?: 'start' | 'end' };
+  /** Let an object (default: the target) go, at the end of the clip or at its start. */
+  detach?: { target?: string; at?: 'start' | 'end' };
+  validate?(ctx: ValidateContext): void;
 }
 
 export interface ActionDef {
@@ -107,7 +149,7 @@ export interface ActionDef {
   params: Record<string, ParamSpec>;
   /** Default length in seconds. */
   duration: number;
-  compile(ctx: ActionContext): { writes: ChannelWrite[]; duration?: number; validate?(ctx: ValidateContext): void };
+  compile(ctx: ActionContext): ActionResult;
 }
 
 const actions = new Map<string, ActionDef>();
@@ -150,6 +192,10 @@ export interface CompiledActions {
   tracks: ChannelTrack[];
   /** Clips in time order with their final durations, for timeline markers. */
   clips: CompiledClip[];
+  links: Link[];
+  /** Channel values before any action, by object. */
+  initial: Record<string, Record<string, number>>;
+  sockets: Record<string, Record<string, [number, number, number]>>;
 }
 
 const EASES: Record<Ease, (u: number) => number> = {
@@ -179,6 +225,14 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
   const byId = new Map(targets.map((t) => [t.id, t]));
   const tracks = new Map<string, ChannelTrack>();
   const compiled: CompiledClip[] = [];
+  const links: Link[] = [];
+  const out: CompiledActions = {
+    tracks: [],
+    clips: compiled,
+    links,
+    initial: Object.fromEntries(targets.map((t) => [t.id, t.channels])),
+    sockets: Object.fromEntries(targets.filter((t) => t.traits.sockets).map((t) => [t.id, t.traits.sockets!])),
+  };
   const checks: (() => void)[] = [];
   const ordered = clips.map((clip, index) => ({ clip, index })).sort((a, b) => a.clip.t - b.clip.t || a.index - b.index);
 
@@ -207,38 +261,58 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
       }
     }
 
-    const trackOf = (channel: string): ChannelTrack => {
-      const key = `${target.id}\n${channel}`;
+    const object = (id: string): ActionTarget => byId.get(id) ?? fail(`objeto "${id}" não encontrado. Objetos com id: ${[...byId.keys()].join(', ')}.`);
+    const trackOf = (channel: string, of = target.id): ChannelTrack => {
+      const key = `${of}\n${channel}`;
       let track = tracks.get(key);
       if (!track) {
-        if (!(channel in target.channels)) {
-          fail(`o objeto não tem o canal "${channel}". Canais: ${Object.keys(target.channels).join(', ')}.`);
+        const owner = object(of);
+        if (!(channel in owner.channels)) {
+          fail(`"${of}" não tem o canal "${channel}". Canais: ${Object.keys(owner.channels).join(', ')}.`);
         }
-        track = { target: target.id, channel, initial: target.channels[channel], segments: [] };
+        track = { target: of, channel, initial: owner.channels[channel], segments: [] };
         tracks.set(key, track);
+        out.tracks.push(track);
       }
       return track;
     };
-    const current = (channel: string): number => {
-      const track = trackOf(channel);
+    const current = (channel: string, of?: string): number => {
+      const track = trackOf(channel, of);
       return track.segments.at(-1)?.end ?? track.initial;
     };
+    const linkOf = (id: string): Link | undefined => links.find((l) => l.target === id && l.t1 > clip.t);
+    const riderOn = (to: string, socket: string) => links.find((l) => l.to === to && l.socket === socket && l.t1 > clip.t)?.target;
+    const placeOf = (id: string) => placementAt(out, id, clip.t);
 
-    const result = def.compile({ services, target, params, current, fail });
+    const result = def.compile({ services, target, params, current, object, linkOf, riderOn, placeOf, fail });
     const duration = clip.duration ?? result.duration ?? def.duration;
     if (!isNumber(duration) || duration < 0) fail('"duration" precisa ser um número de segundos maior ou igual a zero.');
     const ease = EASES[clip.ease ?? 'inOut'];
 
     for (const write of result.writes) {
-      const track = trackOf(write.channel);
-      const from = current(write.channel);
+      const track = trackOf(write.channel, write.target);
+      const from = current(write.channel, write.target);
       const last = track.segments.at(-1);
       if (last && clip.t < last.t1 - 1e-9) {
-        fail(`o canal "${write.channel}" ainda está em uso por outra ação até ${last.t1}s.`);
+        fail(`o canal "${write.channel}" de "${track.target}" ainda está em uso por outra ação até ${last.t1}s.`);
       }
       const to = write.to ?? from;
       const at = write.at ?? ((u: number) => from + (to - from) * u);
       track.segments.push({ t0: clip.t, t1: clip.t + duration, at: (u) => at(ease(u)), end: at(1) });
+    }
+    if (result.detach) {
+      const link = linkOf(result.detach.target ?? target.id);
+      if (link) link.t1 = result.detach.at === 'start' ? clip.t : clip.t + duration;
+    }
+    if (result.attach) {
+      const { to, socket, weight } = result.attach;
+      const rider = result.attach.target ?? target.id;
+      const t0 = result.attach.at === 'end' ? clip.t + duration : clip.t;
+      const busy = links.find((l) => l.target === rider && l.t1 > t0);
+      if (busy) fail(`"${rider}" já está preso a "${busy.to}"; solte antes.`);
+      const taken = links.find((l) => l.to === to && l.socket === socket && l.t1 > t0);
+      if (taken) fail(`"${socket}" de "${to}" já está ocupado por "${taken.target}".`);
+      links.push({ target: rider, to, socket, weight, t0, t1: Infinity });
     }
     compiled.push({ t: clip.t, duration, target: clip.target, action: clip.action });
 
@@ -263,7 +337,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
     }
   }
   for (const check of checks) check();
-  return { tracks: [...tracks.values()], clips: compiled };
+  return out;
 }
 
 function evaluateTrack(track: ChannelTrack, t: number): number {
@@ -279,4 +353,39 @@ export function evaluateActions(compiled: CompiledActions, t: number): Record<st
   const out: Record<string, Record<string, number>> = {};
   for (const track of compiled.tracks) (out[track.target] ??= {})[track.channel] = evaluateTrack(track, t);
   return out;
+}
+
+/** Value of one channel of one object at time t. */
+export function channelAt(compiled: CompiledActions, target: string, channel: string, t: number): number {
+  const track = compiled.tracks.find((k) => k.target === target && k.channel === channel);
+  return track ? evaluateTrack(track, t) : (compiled.initial[target]?.[channel] ?? 0);
+}
+
+/** What each object is riding on at time t. */
+export function evaluateLinks(compiled: CompiledActions, t: number): Link[] {
+  return compiled.links.filter((l) => t >= l.t0 && t < l.t1);
+}
+
+/**
+ * Where an object is at time t: its own x, y, z and yaw channels, pulled toward the socket it rides on
+ * by the link's weight. Only fixed sockets count here; moving ones (a hand) are followed by the scene.
+ */
+export function placementAt(compiled: CompiledActions, id: string, t: number, depth = 0): { pos: [number, number, number]; yaw: number } {
+  const own = (channel: string) => channelAt(compiled, id, channel, t);
+  const pos: [number, number, number] = [own('x'), own('y'), own('z')];
+  let yaw = own('yaw');
+  const link = evaluateLinks(compiled, t).find((l) => l.target === id);
+  const offset = link && compiled.sockets[link.to]?.[link.socket];
+  if (!link || !offset || depth > 4) return { pos, yaw };
+  const base = placementAt(compiled, link.to, t, depth + 1);
+  const a = (base.yaw * Math.PI) / 180;
+  const at = [
+    base.pos[0] + offset[0] * Math.cos(a) + offset[2] * Math.sin(a),
+    base.pos[1] + offset[1],
+    base.pos[2] - offset[0] * Math.sin(a) + offset[2] * Math.cos(a),
+  ];
+  const w = link.weight ? Math.max(0, Math.min(1, own(link.weight))) : 1;
+  for (let i = 0; i < 3; i++) pos[i] += (at[i] - pos[i]) * w;
+  yaw += ((((base.yaw - yaw) % 360) + 540) % 360 - 180) * w;
+  return { pos, yaw };
 }

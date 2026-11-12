@@ -26,15 +26,38 @@ registerAction({
   description: 'O personagem vai a pé até um ponto, desviando de paredes e usando portas e escadas. Corre a partir de 3 m/s.',
   appliesTo: ['character'],
   params: {
-    to: { type: 'point2', description: 'destino [x, z] em coordenadas do local', required: true },
+    to: { type: 'point2', description: 'destino [x, z] em coordenadas do local' },
+    door: { type: 'string', description: 'em vez de "to": id de uma porta; o personagem para diante dela, do lado em que está, ao alcance da maçaneta' },
     elevation: { type: 'number', description: 'altura do piso de destino, se for em outro nível' },
     speed: { type: 'number', description: 'velocidade em m/s quando não há "duration" (padrão 1.4)' },
   },
   duration: 2,
   compile(ctx) {
     if (!ctx.services.findPath) ctx.fail('este local não tem mapa de caminhada.');
+    if (ctx.linkOf(ctx.target.id)) ctx.fail(`o personagem está sentado em "${ctx.linkOf(ctx.target.id)!.to}"; use standUp antes.`);
     const from: [number, number, number] = [ctx.current('x'), ctx.current('y'), ctx.current('z')];
-    const to = ctx.params.to as [number, number];
+    const doorId = ctx.params.door as string | undefined;
+    if ((doorId === undefined) === (ctx.params.to === undefined)) ctx.fail('informe "to" ou "door", um dos dois.');
+    let to = ctx.params.to as [number, number];
+    /** Heading to end with, when stopping at a door. */
+    let facing: number | undefined;
+    if (doorId) {
+      const door = ctx.object(doorId).traits.door ?? ctx.fail(`"${doorId}" não é uma porta.`);
+      const side = Math.sign((from[0] - door.center[0]) * door.inside[0] + (from[2] - door.center[2]) * door.inside[1]) || 1;
+      const out = [door.inside[0] * side, door.inside[1] * side];
+      const kind = ctx.object(doorId).traits.doorKind;
+      // A swing door comes toward whoever is on the side it opens to: wait beside the handle, out of its way.
+      const swingsIn = ctx.object(doorId).traits.opensFrom !== 'inside';
+      const inTheWay = kind === 'swing' && (side > 0) === swingsIn;
+      const lateral = [door.handle[0] - door.center[0], door.handle[2] - door.center[2]];
+      const span = Math.hypot(lateral[0], lateral[1]) || 1;
+      const shift = inTheWay ? 0.35 : kind === 'rollup' ? 0 : -0.12;
+      to = [
+        door.handle[0] + (lateral[0] / span) * shift + out[0] * 0.5,
+        door.handle[2] + (lateral[1] / span) * shift + out[1] * 0.5,
+      ];
+      facing = heading(door.handle[0] - to[0], door.handle[2] - to[1]);
+    }
     const path = ctx.services.findPath!(from, to, (ctx.params.elevation as number | undefined) ?? from[1]);
     if (!path) ctx.fail(`não há caminho a pé de [${from[0]}, ${from[2]}] até [${to}]. Confira se os dois pontos estão em piso livre e o nível de destino.`);
     const route = path!;
@@ -52,7 +75,11 @@ registerAction({
     const yaws = raw.map((_, i) => {
       let sum = 0;
       for (let k = i - 4; k <= i + 4; k++) sum += k < 0 ? yaw0 : raw[Math.min(k, raw.length - 1)];
-      return sum / 9;
+      const yaw = sum / 9;
+      if (facing === undefined) return yaw;
+      // Over the last steps, turn to face the door.
+      const left = route.length - route.distances[i];
+      return yaw + (turn(yaw, facing) - yaw) * Math.max(0, 1 - left / 0.6);
     });
 
     const stride0 = ctx.current('stride');
@@ -116,5 +143,60 @@ registerAction({
     if (wanted !== 'neutral' && !names.includes(wanted)) ctx.fail(`expressão desconhecida "${wanted}". Existem: neutral, ${names.join(', ')}.`);
     const amount = (ctx.params.amount as number | undefined) ?? 1;
     return { writes: names.map((name) => ({ channel: `expr.${name}`, to: name === wanted ? amount : 0 })) };
+  },
+});
+
+registerAction({
+  id: 'sit',
+  description: 'O personagem senta num assento de um objeto (ex.: banco de um carro) e passa a ir junto com ele.',
+  appliesTo: ['character'],
+  params: {
+    on: { type: 'string', description: 'id do objeto que tem o assento, ex.: o carro', required: true },
+    seat: { type: 'string', description: 'nome do assento: driver, passenger, rearLeft, rearRight (padrão driver)' },
+  },
+  duration: 1,
+  compile(ctx) {
+    const on = ctx.params.on as string;
+    const seats = ctx.object(on).traits.sockets ?? {};
+    const asked = (ctx.params.seat as string | undefined) ?? 'driver';
+    const socket = asked in seats ? asked : `seat.${asked}`;
+    if (!(socket in seats)) ctx.fail(`"${on}" não tem o assento "${asked}". Assentos: ${Object.keys(seats).map((n) => n.replace(/^seat\./, '')).join(', ') || 'nenhum'}.`);
+    if (ctx.linkOf(ctx.target.id)) ctx.fail(`o personagem já está sentado em "${ctx.linkOf(ctx.target.id)!.to}".`);
+    const me = ctx.placeOf(ctx.target.id).pos;
+    const base = ctx.placeOf(on).pos;
+    const far = Math.hypot(me[0] - base[0], me[2] - base[2]);
+    if (far > 2.5) ctx.fail(`"${on}" está a ${far.toFixed(1)} m; leve o personagem até lá antes, com walkTo.`);
+    return {
+      writes: [{ channel: 'attached', to: 1 }, { channel: 'sit', at: (u) => Math.max(0, (u - 0.3) / 0.7) }],
+      attach: { to: on, socket, weight: 'attached' },
+    };
+  },
+});
+
+registerAction({
+  id: 'standUp',
+  description: 'O personagem levanta de onde está sentado e fica de pé num ponto ao lado.',
+  appliesTo: ['character'],
+  params: {
+    to: { type: 'point2', description: 'onde ele fica de pé, [x, z] em coordenadas do local', required: true },
+    yaw: { type: 'number', description: 'direção em que fica olhando (padrão: a de quem sai do assento)' },
+  },
+  duration: 1,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id) ?? ctx.fail('o personagem não está sentado.');
+    const seat = ctx.placeOf(ctx.target.id);
+    const to = ctx.params.to as [number, number];
+    const far = Math.hypot(to[0] - seat.pos[0], to[1] - seat.pos[2]);
+    if (far > 2.5) ctx.fail(`o ponto fica a ${far.toFixed(1)} m do assento; escolha um ao lado e depois use walkTo.`);
+    const yaw = turn(seat.yaw, (ctx.params.yaw as number | undefined) ?? heading(to[0] - seat.pos[0], to[1] - seat.pos[2]));
+    const constant = (channel: string, value: number) => ({ channel, at: () => value });
+    return {
+      writes: [
+        constant('x', to[0]), constant('z', to[1]), constant('y', ctx.placeOf(link.to).pos[1]), constant('yaw', yaw),
+        { channel: 'attached', to: 0 },
+        { channel: 'sit', at: (u: number) => 1 - Math.min(1, u / 0.7) },
+      ],
+      detach: {},
+    };
   },
 });

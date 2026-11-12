@@ -19,6 +19,15 @@ export const PARENT: Record<Joint, Joint | null> = {
   thighR: 'hips', shinR: 'thighR', footR: 'shinR',
 };
 
+/** Joint positions relative to their parent, for a 1.7 m character in a T-pose. */
+export const OFFSETS: Record<Joint, [number, number, number]> = {
+  hips: [0, 0.9, 0], spine: [0, 0.1, 0], chest: [0, 0.16, 0], neck: [0, 0.26, 0], head: [0, 0.06, 0],
+  upperArmL: [-0.19, 0.2, 0], forearmL: [-0.26, 0, 0], handL: [-0.24, 0, 0],
+  upperArmR: [0.19, 0.2, 0], forearmR: [0.26, 0, 0], handR: [0.24, 0, 0],
+  thighL: [-0.09, -0.02, 0], shinL: [0, -0.42, 0], footL: [0, -0.4, 0],
+  thighR: [0.09, -0.02, 0], shinR: [0, -0.42, 0], footR: [0, -0.4, 0],
+};
+
 /**
  * A pose: rotation of each joint from the T-pose, as [x, y, z] degrees applied in the joint's parent frame
  * (x pitches forward, y turns left, z rolls), and how far the hips rise from standing.

@@ -7,7 +7,7 @@ import '../engine/assets/vehicles';
 import { evaluateActions, type CompiledActions } from '../engine/actions/catalog';
 import { loadGlbCharacter } from '../engine/character/glb';
 import type { CharacterDef, CharacterRig } from '../engine/character/types';
-import { buildCast, cameraStage, compileEpisode } from '../engine/timeline/stage';
+import { applyStage, buildCast, cameraStage, compileEpisode } from '../engine/timeline/stage';
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
@@ -73,7 +73,7 @@ scene.add(gizmos);
 
 // ---- Episode cast and actions ----
 
-let actions: CompiledActions = { tracks: [], clips: [] };
+let actions: CompiledActions = { tracks: [], clips: [], links: [], initial: {}, sockets: {} };
 let actionsError = '';
 let cast: InteractiveObject[] = [];
 /** False when the camera track has an error; the shot view then stays where it is. */
@@ -112,11 +112,7 @@ const handOverrides = new Map<string, number>();
 
 function applyActions(t: number): void {
   handOverrides.clear();
-  for (const [id, channels] of Object.entries(evaluateActions(actions, t))) {
-    const object = interactiveById.get(id)!;
-    for (const [channel, value] of Object.entries(channels)) object.set(channel, value);
-  }
-  for (const character of cast) character.tick?.(t);
+  applyStage(actions, interactiveById, t);
 }
 
 /** Walk mode: open or close the nearest door within reach, ignoring which side it opens from. */

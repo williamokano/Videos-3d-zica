@@ -9,6 +9,8 @@ export interface BuiltDoor {
   setOpen(open: number): void;
   /** From this much open, a person can walk through. */
   passableAt: number;
+  /** Where a hand grabs the closed door, in the door's own frame. */
+  handle: [number, number, number];
 }
 
 const SLAT_H = 0.14;
@@ -30,6 +32,7 @@ export function buildDoor(room: Room, o: Opening): BuiltDoor {
   const metal = mat('#d0d4dc');
   let setOpen: (open: number) => void;
   let passableAt = 0.5;
+  let handle: [number, number, number] = [o.width - 0.14, 1.02, 0];
 
   if (kind === 'rollup') {
     // Slats ride up into the box; the ones above the opening are rolled away.
@@ -52,6 +55,7 @@ export function buildDoor(room: Room, o: Opening): BuiltDoor {
       }
     };
     passableAt = 1.75 / travel;
+    handle = [o.width / 2, 0.45, 0];
   } else {
     const moving = new THREE.Group();
     const panel = new THREE.Mesh(new THREE.BoxGeometry(o.width - 0.04, DOOR_H - 0.04, 0.05), mat(color));
@@ -75,6 +79,7 @@ export function buildDoor(room: Room, o: Opening): BuiltDoor {
         moving.position.x = dir * open * (o.width - 0.08);
       };
       passableAt = 0.6;
+      handle = [dir > 0 ? 0.12 : o.width - 0.12, 1.05, offset];
     } else {
       // Emergency doors (opensFrom "inside") swing outward and get a push bar.
       const bar = leaf.opensFrom === 'inside';
@@ -95,5 +100,5 @@ export function buildDoor(room: Room, o: Opening): BuiltDoor {
 
   root.traverse((m) => (m.castShadow = m.receiveShadow = true));
   setOpen(leaf.open ?? 0);
-  return { object: root, setOpen, passableAt };
+  return { object: root, setOpen, passableAt, handle };
 }

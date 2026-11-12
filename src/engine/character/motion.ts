@@ -75,6 +75,57 @@ export function locomotionPose(t: number, gait: number, stride: number): Pose {
   return blendPose(idlePose(t), walkPose(stride, Math.max(0, Math.min(1, gait - 1))), Math.min(1, gait));
 }
 
+const add = (pose: Pose, joint: Joint, x: number): [number, number, number] => {
+  const [a, b, c] = pose.joints[joint] ?? [0, 0, 0];
+  return [a + x, b, c];
+};
+
+/** Bend the knees and lean forward to reach something low. `amount` goes from 0 (standing) to 1 (squatting). */
+export function crouchPose(pose: Pose, amount: number): Pose {
+  if (amount <= 0.001) return pose;
+  const thigh = 75 * amount;
+  const knee = 120 * amount;
+  const rad = Math.PI / 180;
+  // Hips come down by what the folded legs lose in height, so the feet stay on the ground.
+  const lift = 0.42 * Math.cos(thigh * rad) + 0.4 * Math.cos((knee - thigh) * rad) - 0.82;
+  const joints = { ...pose.joints };
+  for (const side of ['L', 'R'] as const) {
+    joints[`thigh${side}`] = add(pose, `thigh${side}`, thigh);
+    joints[`shin${side}`] = add(pose, `shin${side}`, -knee);
+    joints[`foot${side}`] = add(pose, `foot${side}`, knee - thigh);
+  }
+  joints.spine = add(pose, 'spine', -32 * amount);
+  joints.head = add(pose, 'head', 14 * amount);
+  return { joints, lift: pose.lift + lift };
+}
+
+/** Seated, with the origin of the character on the seat: thighs forward, back a little reclined. */
+export function sitPose(pose: Pose, amount: number): Pose {
+  if (amount <= 0.001) return pose;
+  const seated: Pose = {
+    lift: -0.82,
+    joints: {
+      ...pose.joints,
+      hips: [0, 0, 0], spine: [12, 0, 0],
+      thighL: [82, 0, 0], thighR: [82, 0, 0],
+      shinL: [-70, 0, 0], shinR: [-70, 0, 0],
+      footL: [-12, 0, 0], footR: [-12, 0, 0],
+    },
+  };
+  return blendPose(pose, seated, amount);
+}
+
+/** Hold something in front of the body with one hand: elbow at the side, forearm forward. */
+export function carryPose(pose: Pose, side: 'L' | 'R', amount: number): Pose {
+  if (amount <= 0.001) return pose;
+  const sign = side === 'R' ? 1 : -1;
+  const held: Pose = {
+    lift: pose.lift,
+    joints: { ...pose.joints, [`upperArm${side}`]: [0, 0, -sign * 80], [`forearm${side}`]: [0, sign * 88, 0] },
+  };
+  return blendPose(pose, held, amount);
+}
+
 const hash = (a: number, b: number): number => {
   const v = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
   return v - Math.floor(v);

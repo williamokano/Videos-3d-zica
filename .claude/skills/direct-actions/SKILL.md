@@ -1,6 +1,6 @@
 ---
 name: direct-actions
-description: Fazer coisas acontecerem num episódio — personagem andar, correr, virar e mudar de expressão; abrir e fechar portas (de abrir, de correr, de enrolar), abrir porta de carro, andar de carro, pegar e largar objetos. Use quando o usuário pedir uma ação num objeto do cenário ou um novo tipo de ação.
+description: Fazer coisas acontecerem num episódio — personagem andar, correr, virar, mudar de expressão, abrir porta com a mão, pegar e largar objetos, sentar no carro; portas (de abrir, de correr, de enrolar), carro andando; câmera cinematográfica, em primeira pessoa ou em terceira pessoa. Use quando o usuário pedir uma ação num objeto do cenário, um plano de câmera ou um novo tipo de ação.
 ---
 
 # Dirigir ações
@@ -24,25 +24,27 @@ Um objeto precisa de `id` no arquivo do local (único no local). Cada um expõe 
 | Carro | prop `vehicle.car` com `id` | `vehicle` | `frontLeft.open`, `frontRight.open`, `rearLeft.open`, `rearRight.open`, `travel`, `x`, `y`, `z`, `yaw` |
 | Item pegável | prop com `id` e `"pickable": true` | `item` | `x`, `y`, `z`, `yaw`, `held` |
 | Qualquer prop com `id` | — | `prop` | `x`, `y`, `z`, `yaw` |
-| Personagem | entrada em `cast` no episódio (skill `create-character`) | `character` | `x`, `y`, `z`, `yaw`, `stride`, `gait`, `talk`, `expr.<nome>` |
+| Personagem | entrada em `cast` no episódio (skill `create-character`) | `character` | `x`, `y`, `z`, `yaw`, `stride`, `gait`, `talk`, `expr.<nome>`, `crouch`, `sit`, `attached`, `carryL`/`carryR`, `reachL`/`reachR` (+ `.x`, `.y`, `.z`) |
 
 `x`, `y`, `z` são coordenadas do local (não da área). `yaw` é em graus, igual ao `rot`. O carro olha para -z com `rot: 0`; o motorista fica à esquerda.
 
 ## Catálogo
 
-O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/character.ts`; leia os `registerAction(...)` antes de usar ou criar uma ação.
+O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/character.ts`; leia os `registerAction(...)` antes de usar ou criar uma ação. `by` é o id de um personagem do elenco que faz a ação com a mão.
 
 | Ação | Vale para | Parâmetros |
 |---|---|---|
-| `open` | porta, veículo | `part` (qual porta do carro), `amount` (0 a 1), `from` (`inside` ou `outside`) |
-| `close` | porta, veículo | `part` |
+| `open` | porta, veículo | `part` (qual porta do carro), `amount` (0 a 1), `from` (`inside` ou `outside`), `by`, `hand` |
+| `close` | porta, veículo | `part`, `by`, `hand` |
 | `drive` | veículo | `path` (pontos `[x, z]`), `speed` (m/s, padrão 6), `reverse` |
 | `moveTo` | prop, item, veículo | `to` (`[x, z]`), `y`, `yaw` |
-| `pickUp` | item | `to` (`[x, y, z]`, onde o item fica seguro) |
-| `putDown` | item | `at` (`[x, y, z]`) |
+| `pickUp` | item | `by` (quem pega; fica segurando) ou `to` (`[x, y, z]`, sem personagem); `hand` (`left` ou `right`) |
+| `putDown` | item | `at` (`[x, y, z]`) ou `on` + `seat` (assento de um objeto, ex.: banco do carro; o item passa a ir junto) |
 | `set` | qualquer | `channel`, `value` |
-| `walkTo` | personagem | `to` (`[x, z]`), `elevation` (piso de destino, se mudar de nível), `speed` (m/s, padrão 1.4; a partir de 3 corre) |
+| `walkTo` | personagem | `to` (`[x, z]`) ou `door` (id de uma porta: para diante dela, ao alcance da maçaneta), `elevation` (piso de destino, se mudar de nível), `speed` (m/s, padrão 1.4; a partir de 3 corre) |
 | `turnTo` | personagem | `to` (`[x, z]` para onde virar) ou `yaw` |
+| `sit` | personagem | `on` (id do objeto com assentos, ex.: o carro), `seat` (`driver`, `passenger`, `rearLeft`, `rearRight`; padrão `driver`) |
+| `standUp` | personagem | `to` (`[x, z]` ao lado, onde fica de pé), `yaw` |
 | `express` | personagem | `expression` (`neutral`, `happy`, `sad`, `angry`, `surprised`, `scared`), `amount` |
 
 ## Regras
@@ -54,7 +56,11 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 - `leaf.open` é o estado inicial da porta (0 a 1). Estado inicial diferente por episódio se faz com uma ação em `t: 0` e `duration: 0`.
 - `walkTo` acha o caminho sozinho: desvia de paredes, passa por portas e sobe ou desce escadas. Se uma porta do caminho estiver fechada no instante em que o personagem chega nela, é erro de compilação; abra a porta antes. Sem `duration`, o tempo sai da distância e da velocidade.
 - O personagem pisca e respira sozinho; não é preciso ação para isso.
-- O personagem ainda não usa as mãos: `pickUp` leva o item a um ponto dado em `to`, e ninguém aparece empurrando a porta. Isso chega com a Fase 3.
+- Com `by`, o personagem estende o braço até a maçaneta ou o item (inclina o tronco e se agacha se for preciso) e a ação passa a durar 1,2 s. Ele precisa estar a até 0,8 m (para um corpo de 1,7 m); mais longe é erro de compilação com a distância. Leve-o antes com `walkTo`.
+- Sequência para passar por uma porta fechada: `walkTo` com `door`, `open` com `by`, `walkTo` até o outro lado. Com `by`, o lado (`from`) sai de onde o personagem está.
+- Item pego com `by` fica na mão até um `putDown`, e a mão que segura não balança ao andar. Com a direita ocupada, a próxima ação com a mão usa a esquerda.
+- `sit` prende o personagem ao assento: ele vai junto quando o carro anda, e `walkTo` é recusado até um `standUp`. O personagem precisa estar a até 2,5 m do objeto; abra a porta do carro antes (`open` com `part` e `by`), parado atrás da borda traseira da porta para ela não bater nele.
+- Ações com `by` usam canais do personagem (`reachR`, `crouch`...): duas ao mesmo tempo com a mesma mão dão erro de canal em uso.
 
 ## Câmera
 
@@ -79,6 +85,8 @@ A trilha `camera` do episódio é uma lista de keyframes. Um plano vai de um key
 
 - Ação nova: `registerAction` em `src/engine/actions/`, declarando `appliesTo`, `params` e os canais que move. Ela deve servir a qualquer mapa.
 - Objeto com partes móveis: no asset, chame `setChannels(obj, { nome: { value, apply } })` e registre o `kind` (quarto argumento de `registerAsset`). Veja `src/engine/assets/vehicles.ts`.
+- Assento: um `Object3D` filho direto do asset com nome `seat.<nome>`, na altura do assento. Ele vira um lugar para `sit` e `putDown`.
+- Ação em que o personagem usa a mão: `reach(...)` e `freeHand(...)` de `src/engine/actions/hands.ts`. Uma ação pode mover canais de outro objeto (`target` no write) e prender um objeto a outro (`attach` / `detach`).
 - Tipo novo de porta: `kind` em `DoorLeaf` (`src/engine/world/types.ts`) e o desenho em `src/engine/world/doors.ts`.
 
 ## Conferir

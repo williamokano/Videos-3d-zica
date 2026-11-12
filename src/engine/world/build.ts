@@ -26,6 +26,10 @@ export interface InteractiveObject extends ActionTarget {
   position(): [number, number, number];
   /** Things that move by themselves with the clock (blinking, breathing). Called after the channels are set. */
   tick?(t: number): void;
+  /** A moving place on the object where something can ride, e.g. a character's "handR". */
+  socket?(name: string): THREE.Object3D | undefined;
+  /** Ride on a socket: `weight` 0 leaves the object where its channels put it, 1 puts it on the socket. */
+  follow?(socket: THREE.Object3D | undefined, weight: number): void;
   /** Characters: show or hide for a camera sitting in their eyes. */
   firstPerson?(on: boolean): void;
 }
@@ -117,13 +121,26 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
   // `held` is 1 while something carries the item; characters will read it to attach the item to a hand.
   const held: AssetChannels = prop.pickable ? { held: { value: 0, apply: () => {} } } : {};
   const all = { ...own, ...placement, ...held };
+  const size = new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3());
+  const sockets: Record<string, [number, number, number]> = {};
+  obj.traverse((o) => {
+    if (o !== obj && o.name.startsWith('seat.')) sockets[o.name] = o.position.toArray();
+  });
+  const grip = new THREE.Vector3();
   return {
     id: prop.id!,
     kind: prop.pickable ? 'item' : assetKind(prop.asset),
     channels: Object.fromEntries(Object.entries(all).map(([name, c]) => [name, c.value])),
-    traits: { pickable: prop.pickable },
+    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets },
     object: obj,
     set: (channel, value) => all[channel]?.apply(value),
+    // Held by its middle: the item hangs centered on the hand.
+    follow: (socket, weight) => {
+      if (!socket || weight <= 0) return;
+      socket.getWorldPosition(grip);
+      grip.y -= size.y / 2;
+      obj.position.lerp(grip, Math.min(1, weight));
+    },
     position: () => [obj.position.x, obj.position.y, obj.position.z],
   };
 }
@@ -265,16 +282,21 @@ export function buildLocation(loc: Location): BuiltLocation {
         collider.disabled = open >= door.passableAt;
       };
       set(o.leaf.open ?? 0);
+      const center: [number, number, number] = side.axis === 'x' ? [from + o.width / 2, elevation, side.center] : [side.center, elevation, from + o.width / 2];
+      const middle = [room.origin[0] + room.size[0] / 2, room.origin[1] + room.size[1] / 2];
+      const inside: [number, number] = side.axis === 'x' ? [0, Math.sign(middle[1] - side.center)] : [Math.sign(middle[0] - side.center), 0];
+      door.object.updateMatrixWorld();
+      const handle = door.object.localToWorld(new THREE.Vector3(...door.handle)).toArray();
       interactives.push({
         id,
         kind: 'door',
         channels: { open: o.leaf.open ?? 0 },
-        traits: { opensFrom: o.leaf.opensFrom ?? 'both', doorKind: o.leaf.kind ?? 'swing', passableAt: door.passableAt },
+        traits: { opensFrom: o.leaf.opensFrom ?? 'both', doorKind: o.leaf.kind ?? 'swing', passableAt: door.passableAt, door: { handle, center, inside, width: o.width } },
         object: door.object,
         set: (channel, value) => {
           if (channel === 'open') set(value);
         },
-        position: () => (side.axis === 'x' ? [from + o.width / 2, elevation, side.center] : [side.center, elevation, from + o.width / 2]),
+        position: () => center,
       });
     });
     placeProps(room.props, room.origin, elevation, g, interactives);

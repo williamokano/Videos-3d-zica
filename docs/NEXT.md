@@ -6,13 +6,13 @@ Estado em 2026-11-12. Plano geral em [PLAN.md](PLAN.md).
 
 ```sh
 npm install
-npm run typecheck && npm test   # 39 testes
+npm run typecheck && npm test   # 55 testes
 npm run dev                     # estúdio em http://localhost:5173
 ```
 
 Leia antes: `README.md`, `docs/PLAN.md`, as skills em `.claude/skills/` (`build-location`, `direct-actions`, `create-character`), `src/engine/world/types.ts` (mundo), `src/engine/actions/catalog.ts` (ações) e `src/engine/character/types.ts` (personagem).
 
-A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tipos de porta, carro, item pegável, dois personagens paramétricos e um GLB.
+A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tipos de porta, carro, item pegável, dois personagens paramétricos e um GLB, câmera em primeira e terceira pessoa, porta aberta com a mão, caixa carregada até o banco do carro e personagem dirigindo.
 
 ## Feito
 
@@ -28,18 +28,16 @@ A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tip
   - GLB (`glb.ts`, `retarget.ts`): ossos achados pelo nome, pose transferida pela rotação de cada junta, rosto por morph targets se o modelo tiver.
   - Episódio ganhou `cast`. `buildCast` e `compileEpisode` (`src/engine/timeline/stage.ts`) são usados pelo estúdio e pelos testes.
 
-## Próximo: Fase 3 (direção)
+- Fase 3 (primeira parte): direção.
+  - Câmera presa ao personagem (`src/engine/timeline/camera.ts`): `mode` no keyframe que começa o plano, `fpv` ou `third_person`, com `follow`. A terceira pessoa chega mais perto em vez de atravessar parede; em `fpv` a cabeça do personagem some da imagem.
+  - Vínculos (`Link` em `src/engine/actions/catalog.ts`): um objeto vai junto com outro. `placementAt` dá a posição de qualquer objeto em qualquer instante, seguindo o que o carrega. `applyStage` (`src/engine/timeline/stage.ts`) põe a cena inteira num instante.
+  - IK de dois ossos no braço (`src/engine/character/ik.ts`), com o tronco ajudando quando o braço não chega; poses de agachar, sentar e carregar (`motion.ts`).
+  - `pickUp` / `putDown` com a mão, `open` / `close` com `by`, `walkTo` com `door`, `sit` / `standUp`. O carro ganhou altura para caber a cabeça de quem senta.
 
-Só começa com confirmação do autor. O que falta, em ordem sugerida:
+## Próximo: Fase 3b
 
-1. **Câmera presa ao personagem**: flag por plano, `fpv` (na cabeça), `third_person` (atrás, acompanhando) e `cinematic` (a de hoje). A junta `head` e a posição do personagem já estão acessíveis.
-2. **Personagem usando as mãos e o corpo**:
-   - `pickUp` com `by: <personagem>`: prender o item à junta `handR` (`CharacterRig.joint`) enquanto `held` for 1.
-   - Abrir porta: andar até a porta (`InteractiveObject.position()`), deduzir `from` pelo lado em que o personagem está, estender o braço.
-   - Sentar no carro: âncoras `seat.driver` etc. já existem no asset; falta a pose sentada e prender o personagem à âncora.
-   - Para o braço alcançar um ponto, IK de dois ossos no braço (ombro, cotovelo, mão).
-3. **Olhar**: cabeça e olhos acompanhando um alvo (`lookAt` de personagem).
-4. **API de direção em código** (`ana.walkTo(...)`, `ana.say(...)`) que gera `cast`, `actions` e `camera`, com tempos encadeados em vez de `t` escrito à mão.
+1. **Olhar**: cabeça acompanhando um alvo (ponto ou outro objeto), e a câmera `fpv` olhando para onde a cabeça aponta. O alvo móvel pode sair de `placementAt`, como os vínculos.
+2. **API de direção em código** (`ana.walkTo(...)`, `ana.say(...)`) que gera `cast`, `actions` e `camera`, com tempos encadeados em vez de `t` escrito à mão. Montar o episódio de demonstração mostrou o custo do `t` manual: cada ajuste de posição desloca tudo o que vem depois. Decisão que falta do autor: episódio escrito em TypeScript, ou JSON com `after: <id da ação anterior>` no lugar de `t`.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
 
@@ -48,6 +46,10 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - Personagens não desviam uns dos outros, nem de móveis e carros; só de paredes, corrimãos e vãos sem piso.
 - O caminho a pé faz quinas secas (o corpo vira suave, a trajetória não).
 - O mapa de caminhada cobre a planta das áreas mais 6 m em volta; fora disso `walkTo` não acha caminho.
+- O braço do GLB erra o alvo por alguns centímetros quando as proporções do modelo diferem do esqueleto padrão; o item segue a mão de verdade.
+- A mão vai até onde a maçaneta fica com a porta fechada e não acompanha a folha enquanto ela gira. Porta de carro não tem maçaneta conhecida: a mão vai para a frente do corpo.
+- `sit` não confere se a porta do carro está aberta, e o personagem atravessa a lataria se ela estiver fechada.
+- Sentado, os braços ficam ao lado do corpo (não seguram o volante).
 - Pés podem afundar ou flutuar um pouco em escadas: a altura segue o degrau, mas não há IK nos pés.
 - O rosto do GLB depende de morph targets; o modelo de teste (`robo.glb`) não tem.
 - O carro não vira as rodas da frente nas curvas, e o porta-malas não abre. A curva do `drive` pode abrir um pouco para fora antes de uma virada fechada.
@@ -57,4 +59,4 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 
 ## Como conferir mudanças visuais
 
-O Chromium headless já vem instalado (`require('playwright')`, lançar com `--use-gl=swiftshader --enable-unsafe-swiftshader`). `window.__studio` expõe `setMode`, `setLevel`, `focusRoom`, `walk.placeAt(x, z, elevation, yaw)`, `camera`, `orbit`, `timeline.seek(frame)`, `interactives`, `cast`, `actionsError` e `toggleNearestDoor()`. Para um close de um personagem: `orbit.target` na posição dele, `camera.position` à frente, `orbit.update()`.
+O Chromium headless já vem instalado (`require('playwright')`, lançar com `--use-gl=swiftshader --enable-unsafe-swiftshader`). `window.__studio` expõe `setMode`, `setLevel`, `focusRoom`, `walk.placeAt(x, z, elevation, yaw)`, `camera`, `orbit`, `timeline.seek(frame)`, `interactives`, `cast`, `actionsError` (ações e câmera) e `toggleNearestDoor()`. Para um close de um personagem: `orbit.target` na posição dele, `camera.position` à frente, `orbit.update()`.
