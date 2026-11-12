@@ -10,7 +10,8 @@ import type { CharacterDef } from './character/types';
 import { isScript, resolveScript, type EpisodeScript } from './timeline/direct';
 import type { Episode } from './timeline/episode';
 import { evaluateCamera, validateCamera } from './timeline/camera';
-import { buildCast, cameraStage, compileEpisode } from './timeline/stage';
+import type { Bible } from './bible';
+import { buildCast, buildProps, buildWorld, cameraStage, compileEpisode } from './timeline/stage';
 import { buildLocation, resolveCollisions } from './world/build';
 import type { Location } from './world/types';
 
@@ -145,9 +146,10 @@ describe('series data', () => {
         const built = buildLocation(json<Location>(`series/${series}/world/${source.location}.json`));
         const folder = `series/${series}/characters`;
         const defs = existsSync(folder) ? readdirSync(folder).filter((f) => f.endsWith('.json')).map((f) => json<CharacterDef>(`${folder}/${f}`)) : [];
-        const episode = isScript(source) ? resolveScript(source, built, defs) : source;
+        const bible = json<Bible>(`series/${series}/bible.json`);
+        const episode = isScript(source) ? resolveScript(source, built, defs, bible) : source;
         const cast = buildCast(episode, defs);
-        const compiled = compileEpisode(episode, built, cast);
+        const compiled = compileEpisode(episode, built, cast, [buildWorld(bible, episode.episode), ...buildProps(episode)]);
         for (const clip of compiled.clips) expect(clip.t + clip.duration).toBeLessThanOrEqual(episode.duration);
         validateCamera(episode.camera, cast.map((c) => c.id));
         const stage = cameraStage(compiled, built, cast);

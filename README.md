@@ -62,6 +62,8 @@ Um Chrome sem janela desenha o episódio frame a frame e o ffmpeg junta tudo em 
 | `--series`, `--ep` | qual episódio (padrão: o primeiro) |
 | `--from`, `--to` | só um trecho, em segundos |
 | `--scale 0.5` | metade do tamanho, para uma prévia rápida |
+| `--step 15` | desenha um frame a cada 15: uma prévia em 2 quadros por segundo, para revisar o episódio inteiro em minutos |
+| `--no-subs` | sem a legenda das falas |
 | `--out arquivo.mp4` | onde gravar |
 | `--software` | desenha na CPU mesmo havendo placa de vídeo |
 | `--crf 18` | qualidade do x264 (menor é melhor) |

@@ -167,7 +167,7 @@
       "floorColor": "#8d8f94",
       "wallColor": "#b9b4aa",
       "openings": [
-        { "wall": "w", "type": "door", "at": 2.2, "width": 1.0 }
+        { "id": "porta-deposito", "wall": "w", "type": "door", "at": 2.2, "width": 1.0, "leaf": { "color": "#6b6f78" } }
       ],
       "props": [
         {

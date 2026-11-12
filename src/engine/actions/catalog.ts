@@ -411,6 +411,11 @@ export function channelAt(compiled: CompiledActions, target: string, channel: st
   return track ? evaluateTrack(track, t) : (compiled.initial[target]?.[channel] ?? 0);
 }
 
+/** How far a character's upper body comes down when it sits: the hips go from standing height to the seat. */
+export function seatedDrop(compiled: CompiledActions, id: string, t: number): number {
+  return 0.82 * (compiled.scales[id] ?? 0) * channelAt(compiled, id, 'sit', t);
+}
+
 /** What each object is riding on at time t. */
 export function evaluateLinks(compiled: CompiledActions, t: number): Link[] {
   return compiled.links.filter((l) => t >= l.t0 && t < l.t1);
@@ -436,7 +441,7 @@ export function placementAt(compiled: CompiledActions, id: string, t: number, de
     const raised = of(`reach${side}.local`) > 0.5 ? of(`reach${side}`) : 0;
     const at = side ? carried.map((v, i) => v + (of(`reach${side}.${'xyz'[i]}`) - v) * raised) : [0.17, 0.86, 0];
     const scale = compiled.scales[link.to] ?? 1;
-    offset = [at[0] * scale, at[1] * scale, at[2] * scale];
+    offset = [at[0] * scale, at[1] * scale - seatedDrop(compiled, link.to, t), at[2] * scale];
   }
   if (!offset) return { pos, yaw };
   const base = placementAt(compiled, link.to, t, depth + 1);
@@ -457,9 +462,7 @@ export function focusAt(compiled: CompiledActions, id: string, t: number): [numb
   const focus = compiled.focus[id];
   if (focus?.base) return focus.base;
   const { pos } = placementAt(compiled, id, t);
-  // Seated, a character's eyes come down with the hips.
-  const seated = 0.47 * (focus?.up ?? 0) * channelAt(compiled, id, 'sit', t);
-  return [pos[0], pos[1] + (focus?.up ?? 0) - seated, pos[2]];
+  return [pos[0], pos[1] + (focus?.up ?? 0) - seatedDrop(compiled, id, t), pos[2]];
 }
 
 const MAX_HEAD_TURN = 75;

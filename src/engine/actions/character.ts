@@ -44,25 +44,36 @@ registerAction({
     let to = ctx.params.to as [number, number];
     /** Heading to end with, when stopping at a door. */
     let facing: number | undefined;
+    const level = (ctx.params.elevation as number | undefined) ?? from[1];
+    let path = doorId ? null : ctx.services.findPath!(from, to, level);
     if (doorId) {
       const door = ctx.object(doorId).traits.door ?? ctx.fail(`"${doorId}" não é uma porta.`);
-      const side = Math.sign((from[0] - door.center[0]) * door.inside[0] + (from[2] - door.center[2]) * door.inside[1]) || 1;
-      const out = [door.inside[0] * side, door.inside[1] * side];
       const kind = ctx.object(doorId).traits.doorKind;
-      // A swing door comes toward whoever is on the side it opens to: wait beside the handle, out of its way.
       const swingsIn = ctx.object(doorId).traits.opensFrom !== 'inside';
-      const inTheWay = kind === 'swing' && (side > 0) === swingsIn;
       const lateral = [door.handle[0] - door.center[0], door.handle[2] - door.center[2]];
       const span = Math.hypot(lateral[0], lateral[1]) || 1;
-      const shift = inTheWay ? 0.35 : kind === 'rollup' ? 0 : -0.12;
-      to = [
-        door.handle[0] + (lateral[0] / span) * shift + out[0] * 0.5,
-        door.handle[2] + (lateral[1] / span) * shift + out[1] * 0.5,
-      ];
+      const standing = (side: number): [number, number] => {
+        const out = [door.inside[0] * side, door.inside[1] * side];
+        // A swing door comes toward whoever is on the side it opens to: wait beside the handle, out of its way.
+        const inTheWay = kind === 'swing' && (side > 0) === swingsIn;
+        const shift = inTheWay ? 0.35 : kind === 'rollup' ? 0 : -0.12;
+        return [door.handle[0] + (lateral[0] / span) * shift + out[0] * 0.5, door.handle[2] + (lateral[1] / span) * shift + out[1] * 0.5];
+      };
+      // The side to stop on is the one reached without going through the door itself.
+      const near = Math.sign((from[0] - door.center[0]) * door.inside[0] + (from[2] - door.center[2]) * door.inside[1]) || 1;
+      for (const side of [near, -near]) {
+        const spot = standing(side);
+        const way = ctx.services.findPath!(from, spot, (ctx.params.elevation as number | undefined) ?? door.center[1]);
+        if (!way || way.doors.some((d) => d.id === doorId)) continue;
+        if (!path || way.length < path.length) {
+          path = way;
+          to = spot;
+        }
+      }
+      if (!path) ctx.fail(`não há caminho a pé até a porta "${doorId}" sem passar por ela.`);
       facing = heading(door.handle[0] - to[0], door.handle[2] - to[1]);
     }
-    const path = ctx.services.findPath!(from, to, (ctx.params.elevation as number | undefined) ?? from[1]);
-    if (!path) ctx.fail(`não há caminho a pé de [${from[0]}, ${from[2]}] até [${to}]. Confira se os dois pontos estão em piso livre e o nível de destino.`);
+    if (!path) ctx.fail(`não há caminho a pé de [${from[0]}, ${from[2]}] até [${to}] no nível ${level}. Confira se os dois pontos estão em piso livre e o nível de destino.`);
     const route = path!;
     if (route.length < 0.05) ctx.fail('o personagem já está nesse ponto.');
     const speed = (ctx.params.speed as number | undefined) ?? 1.4;

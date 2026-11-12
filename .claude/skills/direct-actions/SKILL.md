@@ -1,6 +1,6 @@
 ---
 name: direct-actions
-description: Fazer coisas acontecerem num episódio — personagem andar, correr, virar, mudar de expressão, abrir porta com a mão, pegar e largar objetos, sentar no carro; portas (de abrir, de correr, de enrolar), carro andando; câmera cinematográfica, em primeira pessoa ou em terceira pessoa. Use quando o usuário pedir uma ação num objeto do cenário, um plano de câmera ou um novo tipo de ação.
+description: Dirigir um episódio — roteiro em código; personagem andar, falar, olhar, abrir porta com a mão, pegar e guardar objetos, sentar; figurantes com vida própria (grupos conversando, prestando atenção); celular com tela de mensagens e queda de sinal; regras do mundo mudando no meio do episódio (céu, rede); portas e carro; câmera cinematográfica, em primeira ou terceira pessoa; render para MP4. Use quando o usuário descrever uma cena, pedir uma ação, um plano de câmera, um figurante ou um novo tipo de ação.
 ---
 
 # Dirigir ações
@@ -36,6 +36,12 @@ export default direct(
 | `d.together(() => ..., () => ...)` | coisas ao mesmo tempo; o relógio vai para o fim da mais longa |
 | `d.background(() => ...)` | algo que acontece enquanto o roteiro segue; o relógio não anda. Devolve `{ start, end }` |
 | `d.waitFor(passo ou tempo)` | espera até lá, se ainda não passou |
+| `ana.say('texto', { to: beto })` | fala: a boca mexe, as mãos acompanham e a fala vira legenda (a voz vem depois). Dura conforme o texto |
+| `ana.behave(modo, opções)` | o que o personagem faz sozinho daqui em diante (figurantes); não gasta tempo. Ver "Figurantes" |
+| `ana.pickUp('celular')`, `raise('eyes' ou 'chest')`, `lower()`, `putAway('celular')` | tira do bolso (ou pega), levanta para ler, abaixa, guarda no bolso |
+| `d.phone('celular')` | a tela de um celular: `setup({...})`, `receive(texto)`, `send(texto)`, `typing(true)`, `open(chat)`, `screen(false)`, `network(false)`. Acontecem na hora |
+| `d.world.rule('id', true, { duration })` | faz uma regra da bíblia entrar (ou sair) aos poucos, ex.: o céu ficando vermelho |
+| `d.world.network(false)` | cai o sinal de todos os celulares |
 | `d.camera.cut({ pos, lookAt, fov })` | corta para uma câmera posta à mão |
 | `d.camera.moveTo({ pos, lookAt })` | dentro do plano atual: a câmera se move e chega aqui agora |
 | `d.camera.fpv(ana)`, `d.camera.thirdPerson(ana, { distance, height })` | corta para a câmera presa ao personagem |
@@ -44,7 +50,37 @@ export default direct(
 - Chamadas de câmera não andam o relógio. Para um corte no meio de uma ação longa: `d.background(() => { d.wait(1); d.camera.cut(...); })` antes da ação.
 - A duração do episódio é o fim da última coisa mais 1 s (`tail`), a não ser que o cabeçalho dê `duration`.
 - O resultado é o mesmo dado de um episódio em JSON; tudo o que vem abaixo (catálogo, regras, câmera) vale igual. Erro no roteiro aparece em vermelho no painel do estúdio e falha em `npm test`.
-- O episódio 1 de `demo-acoes` é um roteiro completo; use como exemplo.
+- O episódio 1 de `demo-acoes` mostra as ações; o episódio 1 de `ceu-vermelho` é um episódio inteiro em primeira pessoa, com turma de figurantes, celular e mudança do céu. Use como exemplo.
+
+### Elenco e objetos do episódio
+
+No cabeçalho do roteiro:
+
+- `cast`: cada entrada tem `character` (arquivo em `characters/`), `at`, `yaw` e, opcionalmente, `id` (para usar a mesma ficha várias vezes), `look` (muda a ficha só para esse membro: pele, cabelo, altura, `name`) e `seated` (começa sentado, a essa altura do chão; a cadeira da carteira é `DESK_SEAT.height`). `extraLook(semente)` de `src/engine/character/extras.ts` sorteia uma aparência para figurante.
+- `props`: objetos que o episódio traz, no formato dos props do local, com `id`. `pocketOf: 'ana'` faz o objeto começar no bolso dela, invisível até um `pickUp`.
+
+### Figurantes
+
+O mundo tem que parecer vivo mesmo sem ninguém dirigido. `behave` define o que o personagem faz sozinho até o próximo `behave`; o movimento sai do tempo e do id de cada um, então ninguém se mexe igual e o scrub continua exato.
+
+| Modo | O que faz | Opções |
+|---|---|---|
+| `chat` | conversa: quem tem o mesmo `group` se reveza falando (boca e mãos), os outros olham para quem fala, acenam, cruzam os braços, sorriem | `group` |
+| `attend` | presta atenção em alguém ou algo, desviando o olhar de vez em quando | `object` |
+| `watch` | olha fixo para um ponto, assustado | `point` |
+| `write` | escreve no quadro à frente com a mão direita | |
+| `idle` | parado e vivo: olha em volta, troca o peso de perna | |
+| `none` | para de se mexer sozinho | |
+
+- Uma ação dirigida vale mais que o comportamento: `lookAt` explícito manda no olhar, e a mão ocupada (carregando, levantada) não gesticula.
+- Para um grupo: ponha cada um no seu lugar (`walkTo`), vire para o centro (`turnTo`) e dê `behave('chat', { group })` a todos.
+- Antes de `walkTo`, quem está sentado precisa de `standUp(ponto ao lado)`.
+
+### Celular
+
+A tela é desenhada pelo motor (`src/engine/ui/phone.ts`) a partir dos eventos do roteiro: contato com nome grande e foto, mensagens recebidas à esquerda e enviadas à direita, caixa de digitar, mensagens novas empurrando as antigas para cima, três pontinhos de "digitando". Sem rede, o indicador de sinal vira "Sem rede", uma mensagem enviada fica marcada como não enviada, uma recebida não chega e o "digitando" some. Isso passa por `onNetworkError` do app: uma série pode registrar o seu app (`registerPhoneApp`) ou estender `MessengerApp` para mostrar a falha do seu jeito.
+
+Para ler em primeira pessoa: `pickUp`, `raise()`, `lookAt('celular')` e aproxime com `d.camera.moveTo({ fov: 44 })` (duas chamadas com `fov` diferente, separadas por um `wait`, fazem o zoom).
 
 ## Episódio em JSON
 
@@ -66,6 +102,8 @@ Um objeto precisa de `id` no arquivo do local (único no local). Cada um expõe 
 | Porta | `id` na abertura com `leaf`; `leaf.kind`: `swing` (padrão), `sliding`, `rollup` | `door` | `open` de 0 a 1 |
 | Carro | prop `vehicle.car` com `id` | `vehicle` | `frontLeft.open`, `frontRight.open`, `rearLeft.open`, `rearRight.open`, `travel`, `x`, `y`, `z`, `yaw` |
 | Item pegável | prop com `id` e `"pickable": true` | `item` | `x`, `y`, `z`, `yaw`, `held` |
+| Celular | prop `item.phone` em `props` do episódio | `phone` | os de item e `network` (-1 segue o mundo, 0 sem sinal, 1 com sinal) |
+| Mundo | sempre existe, id `world` | `world` | `network`, `rule.<id da regra>` (0 a 1) |
 | Qualquer prop com `id` | — | `prop` | `x`, `y`, `z`, `yaw` |
 | Personagem | entrada em `cast` no episódio (skill `create-character`) | `character` | `x`, `y`, `z`, `yaw`, `stride`, `gait`, `talk`, `expr.<nome>`, `look.yaw`, `look.pitch`, `crouch`, `sit`, `attached`, `carryL`/`carryR`, `reachL`/`reachR` (+ `.x`, `.y`, `.z`) |
 
@@ -89,6 +127,12 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 | `lookAt` | personagem | `object` (id do que olhar; acompanha se ele se mexer) ou `point` (`[x, y, z]`); sem parâmetros volta a olhar para a frente |
 | `sit` | personagem | `on` (id do objeto com assentos, ex.: o carro), `seat` (`driver`, `passenger`, `rearLeft`, `rearRight`; padrão `driver`) |
 | `standUp` | personagem | `to` (`[x, z]` ao lado, onde fica de pé), `yaw` |
+| `say` | personagem | `text`, `to` (com quem fala) |
+| `behave` | personagem | `mode`, `group`, `object`, `point` |
+| `raise` | personagem | `to` (`eyes` ou `chest`), `hand` |
+| `lower` | personagem | |
+| `putAway` | item, celular | |
+| `screen` | celular | `event` (`setup`, `open`, `message`, `typing`, `screen`), `data` |
 | `express` | personagem | `expression` (`neutral`, `happy`, `sad`, `angry`, `surprised`, `scared`), `amount` |
 
 ## Regras
@@ -105,6 +149,7 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 - Item pego com `by` fica na mão até um `putDown`, e a mão que segura não balança ao andar. Com a direita ocupada, a próxima ação com a mão usa a esquerda.
 - `sit` prende o personagem ao assento: ele vai junto quando o carro anda, e `walkTo` é recusado até um `standUp`. O personagem precisa estar a até 2,5 m do objeto; abra a porta do carro antes (`open` com `part` e `by`), parado atrás da borda traseira da porta para ela não bater nele.
 - `lookAt` vira só a cabeça, até 75° para os lados e 40° para cima ou para baixo; para olhar o que está atrás, vire o corpo com `turnTo`. O olhar vale até o próximo `lookAt` do mesmo personagem, e `duration` é o tempo que a cabeça leva para chegar.
+- Móveis bloqueiam o caminho a pé pela área que ocupam na altura do corpo; objetos com `id` (que podem se mexer) não bloqueiam.
 - Ações com `by` usam canais do personagem (`reachR`, `crouch`...): duas ao mesmo tempo com a mesma mão dão erro de canal em uso.
 
 ## Câmera
@@ -136,6 +181,7 @@ A trilha `camera` do episódio é uma lista de keyframes. Um plano vai de um key
 
 ## Conferir
 
+0. Para ver o resultado final: `npm run render -- --series <série> --ep <n> --scale 0.5` gera um MP4 de prévia em `out/` (opções no README).
 1. `npm test` e `npm run typecheck`. Os testes compilam as ações de todos os episódios de todas as séries contra o local de cada um.
 2. No estúdio (`npm run dev`), as ações aparecem como barras azuis na timeline e em "Ações do episódio" no painel; um erro de compilação aparece ali em vermelho.
 3. Tire screenshots na visão Câmera em instantes antes, durante e depois de cada ação (`window.__studio.timeline.seek(frame)`) e olhe as imagens.

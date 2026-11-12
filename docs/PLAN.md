@@ -43,6 +43,7 @@ O vídeo é uma função determinística: **(mundo + roteiro + tempo t) → fram
 | 2 | Personagem: esqueleto padrão, corpo cartoon, andar e correr pelo mapa de caminhada (portas e escadas), rosto com piscar e expressões; importação de GLB; skill `create-character` | feito |
 | 3 | Câmeras FPV / terceira pessoa presas ao personagem; personagem abrindo porta, sentando no carro e pegando item com a mão (IK no braço); cabeça seguindo um alvo | feito |
 | 3b | Direção em código: roteiro em TypeScript com tempos encadeados, que gera o mesmo dado do episódio em JSON | feito |
-| 4 | Fala: TTS e STS, alinhamento, lip-sync, dublagem, render para MP4 | |
+| 4a | Render para MP4; estado do mundo no tempo; celular com tela do motor; fala muda com legenda; figurantes com vida própria; primeiro episódio de `ceu-vermelho` | feito |
+| 4b | Voz: TTS e STS, alinhamento, lip-sync, dublagem, áudio no render | |
 | 5 | Demais skills e catálogo de reuso; episódio piloto de ponta a ponta | |
 | 6 | Mais biblioteca: mais veículos, prédios, casas, animações, pegar e segurar com IK | |

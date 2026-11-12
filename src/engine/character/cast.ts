@@ -79,7 +79,8 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       // The hand leaves from where the pose has it and goes straight to the point.
       // The point is given in the location, or on the character's own body (already in its frame and size).
       const point = new THREE.Vector3(state[`reach${side}.x`], state[`reach${side}.y`], state[`reach${side}.z`]);
-      const target = state[`reach${side}.local`] > 0.5 ? point : object.worldToLocal(point).divideScalar(scale);
+      // A place on the body goes down with it when the character sits or crouches.
+      const target = state[`reach${side}.local`] > 0.5 ? point.setY(point.y + pose.lift) : object.worldToLocal(point).divideScalar(scale);
       pose = reachPose(pose, side, wristPosition(pose, side).lerp(target, reach));
     }
     // The neck takes part of the turn and the head the rest.

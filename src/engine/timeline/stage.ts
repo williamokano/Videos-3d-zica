@@ -3,7 +3,7 @@ import { ambientAt, behaviourAt } from '../actions/ambient';
 import '../actions/character';
 import '../actions/phone';
 import '../assets';
-import { channelAt, compileActions, evaluateActions, evaluateLinks, gazeAt, placementAt, type CompiledActions, type Link } from '../actions/catalog';
+import { channelAt, compileActions, evaluateActions, evaluateLinks, gazeAt, placementAt, seatedDrop, type CompiledActions, type Link } from '../actions/catalog';
 import * as THREE from 'three';
 import { activeRules, type Bible } from '../bible';
 import { buildCharacter } from '../character/cast';
@@ -86,8 +86,7 @@ export function cameraStage(compiled: CompiledActions, built: BuiltLocation, cas
       if (!character) return undefined;
       const { pos, yaw } = placementAt(compiled, id, t);
       // Seated, the eyes come down with the hips.
-      const seated = 0.8 * (character.traits.bodyScale ?? 1) * channelAt(compiled, id, 'sit', t);
-      return { pos, yaw, eyeHeight: (character.traits.eyeHeight ?? 1.6) - seated, head: gazeAt(compiled, id, t) };
+      return { pos, yaw, eyeHeight: (character.traits.eyeHeight ?? 1.6) - seatedDrop(compiled, id, t), head: gazeAt(compiled, id, t) };
     },
     clear: (from, to) => clearFraction(built.colliders, from, to),
   };

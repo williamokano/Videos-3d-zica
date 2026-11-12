@@ -6,13 +6,13 @@ Estado em 2026-11-12. Plano geral em [PLAN.md](PLAN.md).
 
 ```sh
 npm install
-npm run typecheck && npm test   # 62 testes
+npm run typecheck && npm test   # 68 testes
 npm run dev                     # estúdio em http://localhost:5173
 ```
 
 Leia antes: `README.md`, `docs/PLAN.md`, as skills em `.claude/skills/` (`build-location`, `direct-actions`, `create-character`), `src/engine/world/types.ts` (mundo), `src/engine/actions/catalog.ts` (ações) e `src/engine/character/types.ts` (personagem).
 
-A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tipos de porta, carro, item pegável, dois personagens paramétricos e um GLB, câmera em primeira e terceira pessoa, porta aberta com a mão, cabeça acompanhando o carro que chega, caixa carregada até o banco do carro e personagem dirigindo.
+A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tipos de porta, carro, item pegável, dois personagens paramétricos e um GLB, câmera em primeira e terceira pessoa, porta aberta com a mão, cabeça acompanhando o carro que chega, caixa carregada até o banco do carro e personagem dirigindo.
 
 ## Feito
 
@@ -38,20 +38,40 @@ A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tip
 
   - Direção em código (`src/engine/timeline/direct.ts`): o episódio pode ser um roteiro `series/<série>/episodes/<n>.ts`. `resolveScript` roda o roteiro contra o local e devolve um `Episode` com todos os tempos calculados. O estúdio e os testes aceitam `.json` e `.ts`.
 
-## Próximo: Fase 4 (fala)
+- Fase 4 (parte sem voz): render e o que o primeiro episódio pediu.
+  - Render para MP4 (`scripts/render.mjs`, `npm run render`): o estúdio tem um modo `?render` que só mostra a câmera do episódio; um Chrome sem janela desenha frame a frame e o ffmpeg codifica. `--step` faz uma prévia rápida.
+  - Estado do mundo (`buildWorld` em `stage.ts`): objeto `world` com `network` e `rule.<id>`; as regras da bíblia entram aos poucos no meio do episódio.
+  - Objetos do episódio (`props` no episódio), bolso (`pocketOf`), `raise` / `lower` / `putAway`.
+  - Celular (`src/engine/assets/items.ts`, `src/engine/ui/phone.ts`): tela desenhada pelo motor a partir de eventos; mensageiro com rolagem, "digitando", sem rede e `onNetworkError`.
+  - Fala muda (`say`): boca e mãos mexem, a fala vira legenda e fica registrada para a voz.
+  - Figurantes (`src/engine/actions/ambient.ts`, ação `behave`): conversa em grupo, prestar atenção, olhar fixo, escrever, ficar parado.
+  - Móveis bloqueiam o caminho a pé. Elenco com `look` (uma ficha, várias aparências) e `seated`.
+  - Episódio 1 de `ceu-vermelho` (`series/ceu-vermelho/episodes/001.ts`): 2 min 15 s em primeira pessoa, 15 personagens.
+
+## Próximo: voz
 
 Só começa com confirmação do autor. O que falta, em ordem sugerida:
 
-1. `ana.say(...)` no roteiro: falas com id estável, texto por idioma e modo `tts` ou `sts`. A duração de cada fala vem do áudio, então `resolveScript` passa a receber o idioma e as durações.
-2. Geração e cache do áudio pela ElevenLabs (confirmar os endpoints na documentação), com tempos por palavra guardados junto.
-3. Lip-sync pelo canal `talk` e visemas; legendas.
-4. Render para MP4: Chromium headless frame a frame + ffmpeg, com o áudio mixado.
+1. Áudio de cada fala pela ElevenLabs (confirmar os endpoints na documentação), em `tts` ou `sts`, com cache em arquivo e tempos por palavra. As falas já estão no episódio compilado: eventos `line` com quem fala, o texto e a duração estimada.
+2. `resolveScript` recebendo o idioma e a duração real de cada fala, para a timeline sair do áudio.
+3. Lip-sync por visemas no lugar da boca genérica; mixagem do áudio no render.
+4. Sons do mundo (celular vibrando, burburinho da turma, passos).
+
+Ideias que o episódio 1 deixou:
+
+- Personagens não desviam uns dos outros: a fila funciona porque cada um sai na sua hora. Um desvio simples entre pessoas deixaria as cenas de grupo mais soltas.
+- Os olhos não se mexem dentro do rosto; em primeira pessoa, de perto, faz falta.
+- Mais gestos de figurante: apontar, mão na boca, mexer no próprio celular.
+- O render na CPU leva cerca de 1 s por frame com 15 personagens em um terço do tamanho; medir na placa de vídeo do autor.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
 
 ## Limitações conhecidas
 
-- Personagens não desviam uns dos outros, nem de móveis e carros; só de paredes, corrimãos e vãos sem piso.
+- Personagens não desviam uns dos outros nem de objetos com `id` (carro, itens); desviam de paredes, corrimãos, vãos sem piso e móveis.
+- Quem está sentado numa cadeira comum fica dentro da área bloqueada pelo móvel: precisa de `standUp` para um ponto livre ao lado antes de `walkTo`.
+- A legenda mostra uma fala por vez; duas falas ao mesmo tempo mostram só a primeira.
+- Com a mão levantada (`raise`), o que está nela é estimado por `placementAt` para o olhar e a câmera; o objeto em si segue a mão de verdade.
 - O caminho a pé faz quinas secas (o corpo vira suave, a trajetória não).
 - O mapa de caminhada cobre a planta das áreas mais 6 m em volta; fora disso `walkTo` não acha caminho.
 - O braço do GLB erra o alvo por alguns centímetros quando as proporções do modelo diferem do esqueleto padrão; o item segue a mão de verdade.
