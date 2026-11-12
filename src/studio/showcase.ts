@@ -9,7 +9,7 @@ import { resolveEnvironment, resolveStyle, type Bible } from '../engine/bible';
 import { buildCharacter } from '../engine/character/cast';
 import { extraLook } from '../engine/character/extras';
 import { loadGlbCharacter } from '../engine/character/glb';
-import { EXPRESSIONS, VISEME_NAMES } from '../engine/character/motion';
+import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES } from '../engine/character/motion';
 import { SHOWCASE_BEHAVIOURS, SHOWCASE_POSES, SHOWCASE_YAW, STOOL, phoneOf, poseChannels, showcaseLayout, stageTrack } from '../engine/character/showcase';
 import type { CharacterDef } from '../engine/character/types';
 import { EnvironmentRig } from '../engine/environment';
@@ -74,6 +74,8 @@ interface Slot {
   intensity: number;
   /** A mouth shape of speech held still, or '' to leave the mouth to the pose. */
   mouth: string;
+  /** A hand pose held by both hands, or '' to leave them to what the body is doing. */
+  hand: string;
   stool: THREE.Mesh;
   phone?: InteractiveObject;
   nameplate: HTMLDivElement;
@@ -114,7 +116,7 @@ async function addSlot(id: string, file: CharacterDef, def: CharacterDef, model?
   stool.castShadow = stool.receiveShadow = true;
   const nameplate = el('div', def.name, 'nameplate');
   const slot: Slot = {
-    id, file, def, model, extra, stool, nameplate, at: [0, 0], pose: 'idle', behaviour: 'none', look: 'free', expression: '', intensity: 1, mouth: '',
+    id, file, def, model, extra, stool, nameplate, at: [0, 0], pose: 'idle', behaviour: 'none', look: 'free', expression: '', intensity: 1, mouth: '', hand: '',
     object: await build({ id, def, model, at: [0, 0] }),
   };
   nameplate.onclick = () => select_(slot);
@@ -201,6 +203,7 @@ function apply(t: number): void {
     const pose = SHOWCASE_POSES[slot.pose];
     for (const [channel, value] of Object.entries(poseChannels(slot.pose, t, object.traits, seedOf(slot.id)))) object.set(channel, value);
     for (const name of Object.keys(EXPRESSIONS)) object.set(`expr.${name}`, name === slot.expression ? slot.intensity : 0);
+    if (slot.hand) for (const side of ['L', 'R']) for (const name of HAND_POSE_NAMES) object.set(`hand${side}.${name}`, name === slot.hand ? 1 : 0);
     if (slot.mouth) for (const name of VISEME_NAMES) object.set(`vis.${name}`, name === slot.mouth ? 1 : 0);
     object.set('look.yaw', 0);
     object.set('look.pitch', 0);
@@ -336,9 +339,9 @@ function renderPanel(): void {
   }
 
   const who = targets();
-  const shared = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'mouth'>(key: K): string => (who.every((s) => s[key] === who[0]?.[key]) ? (who[0]?.[key] ?? '') : '');
+  const shared = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'mouth' | 'hand'>(key: K): string => (who.every((s) => s[key] === who[0]?.[key]) ? (who[0]?.[key] ?? '') : '');
   const mixed: [string, string][] = selected ? [] : [['', '(vários)']];
-  const set = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'mouth'>(key: K, value: Slot[K]): void => {
+  const set = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'mouth' | 'hand'>(key: K, value: Slot[K]): void => {
     for (const slot of who) slot[key] = value;
     restage();
     renderPanel();
@@ -352,6 +355,7 @@ function renderPanel(): void {
       for (const slot of who) slot.intensity = v;
     }),
     select('Boca', [['', 'Da pose'], ...VISEME_NAMES.map((name): [string, string] => [name, name === 'F' ? 'F / V' : name])], shared('mouth'), (v) => set('mouth', v)),
+    select('Mãos', [['', 'Da pose'], ...HAND_POSE_NAMES.map((name): [string, string] => [name, name])], shared('hand'), (v) => set('hand', v)),
     select('Pose', [...(shared('pose') ? [] : mixed), ...Object.entries(SHOWCASE_POSES).map(([id, p]): [string, string] => [id, p.label])], shared('pose'), (v) => v && set('pose', v)),
     select('Figurante', [...(shared('behaviour') ? [] : mixed), ['none', 'Sem comportamento'], ...SHOWCASE_BEHAVIOURS.map((mode): [string, string] => [mode, mode])], shared('behaviour'), (v) => v && set('behaviour', v)),
   );
@@ -373,6 +377,9 @@ function renderPanel(): void {
         color('Cabelo', def.hair ?? '#3b2a20', (v) => live({ hair: v }), renderPanel),
         select('Corte', [['short', 'curto'], ['long', 'comprido'], ['bun', 'coque'], ['none', 'sem cabelo']], def.hairStyle ?? 'short', (v) => {
           void restyle(slot, { hairStyle: v as CharacterDef['hairStyle'] }).then(renderPanel);
+        }),
+        select('Mãos', [['mitten', 'luva'], ['fingers', 'dedos']], def.hands ?? 'mitten', (v) => {
+          void restyle(slot, { hands: v as CharacterDef['hands'] }).then(renderPanel);
         }),
         color('Camisa', def.shirt ?? '#3d7dd9', (v) => live({ shirt: v }), renderPanel),
         color('Calça', def.pants ?? '#34405a', (v) => live({ pants: v }), renderPanel),
@@ -494,7 +501,7 @@ const bySlot = (id: string): Slot => {
   if (!slot) throw new Error(`Não há "${id}" na vitrine. Existem: ${slots.map((s) => s.id).join(', ')}.`);
   return slot;
 };
-const setAll = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'intensity' | 'mouth'>(key: K, value: Slot[K]): void => {
+const setAll = <K extends 'pose' | 'behaviour' | 'look' | 'expression' | 'intensity' | 'mouth' | 'hand'>(key: K, value: Slot[K]): void => {
   for (const slot of targets()) slot[key] = value;
   restage();
   renderPanel();
@@ -515,6 +522,8 @@ Object.assign(window, {
     },
     /** Hold a mouth shape of speech ("A", "E", "O", "U", "F"), or '' to let the pose move the mouth. */
     setMouth: (shape: string) => setAll('mouth', shape),
+    /** Hold a hand pose in both hands ("grip", "point", "fist", "open", "type"), or '' to let the body decide. */
+    setHand: (pose: string) => setAll('hand', pose),
     restyle: (id: string, change: Partial<CharacterDef>) => restyle(bySlot(id), change).then(renderPanel),
     addExtras: (id: string, count = 6) => addExtras(bySlot(id), count),
     /** "soft" or "cel", and for cel the outline in meters and the number of bands of light. */

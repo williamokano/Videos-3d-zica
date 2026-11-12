@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mat, rbox } from '../assets/registry';
-import { JOINTS, OFFSETS, PARENT, type CharacterDef, type CharacterRig, type FaceParams, type Joint } from './types';
+import { JOINTS, OFFSETS, PARENT, type CharacterDef, type CharacterRig, type FaceParams, type HandShape, type Joint } from './types';
 
 const DEG = Math.PI / 180;
 
@@ -231,6 +231,77 @@ function buildFace(r: number, colors: { skin: string; hair: string; eyes: string
   };
 }
 
+/**
+ * A hand at the end of an arm: palm, thumb and fingers that bend. It lies as the arm does in the T-pose: along
+ * x away from the body (`side` 1 for the right arm, -1 for the left), palm down, thumb to the front (-z).
+ * "mitten" has one block for the four fingers; "fingers" has each of them.
+ */
+function buildHand(side: number, skin: string, kind: 'mitten' | 'fingers'): { group: THREE.Group; palm: THREE.Object3D; set(shape: HandShape): void } {
+  const group = new THREE.Group();
+  // Modelled a little large, to be easy to read; this brings it to the size of the arm.
+  group.scale.setScalar(0.84);
+  group.add(rbox(0.088, 0.034, 0.082, skin, [side * 0.05, 0, 0], 0.015));
+  // Where something held sits: under the middle of the palm.
+  const palm = new THREE.Group();
+  palm.position.set(side * 0.062, -0.022, 0);
+  group.add(palm);
+
+  /** A chain of segments, each one bending at its near end. Returns the hinges, from the base on. */
+  const chain = (parent: THREE.Object3D, lengths: number[], thick: number, wide: number): THREE.Group[] => {
+    const hinges: THREE.Group[] = [];
+    let at = parent;
+    lengths.forEach((length, i) => {
+      const hinge = new THREE.Group();
+      if (i > 0) hinge.position.x = side * lengths[i - 1];
+      hinge.add(rbox(length + thick * 0.5, thick, wide, skin, [side * length * 0.5, 0, 0], thick * 0.45));
+      at.add(hinge);
+      hinges.push(hinge);
+      at = hinge;
+    });
+    return hinges;
+  };
+  /** Where a finger starts, turned by `yaw` around the vertical. */
+  const root = (x: number, y: number, z: number): THREE.Group => {
+    const base = new THREE.Group();
+    base.position.set(side * x, y, z);
+    group.add(base);
+    return base;
+  };
+
+  // The index is the finger next to the thumb.
+  const fingers = kind === 'mitten'
+    ? [{ base: root(0.09, 0, 0), hinges: [] as THREE.Group[], lengths: [0.046, 0.04], wide: 0.078, thick: 0.027, z: 0, index: false }]
+    : [-1.5, -0.5, 0.5, 1.5].map((slot, i) => {
+        const size = [0.95, 1, 0.94, 0.8][i];
+        return { base: root(0.09, 0, slot * 0.0205), hinges: [] as THREE.Group[], lengths: [0.036 * size, 0.027 * size, 0.022 * size], wide: 0.0185, thick: 0.021, z: slot, index: i === 0 };
+      });
+  for (const finger of fingers) finger.hinges = chain(finger.base, finger.lengths, finger.thick, finger.wide);
+  // The thumb leaves the side of the palm, forward and out, and closes down and across it.
+  const thumbBase = root(0.022, -0.004, -0.036);
+  const thumb = chain(thumbBase, [0.04, 0.032], 0.024, 0.024);
+
+  return {
+    group,
+    palm,
+    set(shape) {
+      for (const finger of fingers) {
+        // A mitten bends as its fingers do on average, so pointing leaves it half open.
+        const curl = kind === 'mitten' ? (shape.index + shape.fingers * 3) / 4 : finger.index ? shape.index : shape.fingers;
+        finger.base.rotation.y = -finger.z * 0.16 * shape.spread;
+        // Bending takes the tip under the palm (-y).
+        finger.hinges.forEach((hinge, i) => {
+          hinge.rotation.z = -side * curl * [1.45, 1.6, 1.2][i];
+        });
+      }
+      // Open, the thumb sticks out to the front; closed, it lies across the palm.
+      thumbBase.rotation.set(0, side * (1.15 - 0.5 * shape.thumb), 0);
+      thumbBase.rotateX(side * (0.5 + 0.7 * shape.thumb));
+      thumb[0].rotation.z = -side * (0.15 + 0.55 * shape.thumb);
+      thumb[1].rotation.z = -side * (0.1 + 0.9 * shape.thumb);
+    },
+  };
+}
+
 function buildHair(style: CharacterDef['hairStyle'], color: string, r: number): THREE.Object3D {
   const g = new THREE.Group();
   if (style === 'none') return g;
@@ -265,11 +336,13 @@ export function buildBody(def: CharacterDef): CharacterRig {
   joints.hips.add(rbox(0.3 * wide, 0.2, 0.19 * wide, pants, [0, 0.02, 0], 0.07));
   joints.spine.add(rbox(0.29 * wide, 0.2, 0.18 * wide, shirt, [0, 0.07, 0], 0.07));
   joints.chest.add(rbox(0.36 * wide, 0.28, 0.2 * wide, shirt, [0, 0.12, 0], 0.09), limb([0, 0.07, 0], 0.045, skin).translateY(0.24));
+  const hands = {} as Record<'L' | 'R', ReturnType<typeof buildHand>>;
   for (const side of ['L', 'R'] as const) {
     const x = side === 'L' ? -1 : 1;
     joints[`upperArm${side}`].add(limb([x * 0.26, 0, 0], 0.055 * wide, shirt));
     joints[`forearm${side}`].add(limb([x * 0.24, 0, 0], 0.045 * wide, skin));
-    joints[`hand${side}`].add(ball(0.055, skin, x * 0.05, 0, 0, [1.2, 0.8, 1]));
+    hands[side] = buildHand(x, skin, def.hands ?? 'mitten');
+    joints[`hand${side}`].add(hands[side].group);
     joints[`thigh${side}`].add(limb([0, -0.42, 0], 0.075 * wide, pants));
     joints[`shin${side}`].add(limb([0, -0.4, 0], 0.06 * wide, pants));
     joints[`foot${side}`].add(rbox(0.1, 0.08, 0.24, def.shoes ?? '#2b2e36', [0, -0.02, -0.05], 0.035));
@@ -302,5 +375,10 @@ export function buildBody(def: CharacterDef): CharacterRig {
       head.visible = !hidden;
     },
     joint: (name) => joints[name],
+    setHands(left, right) {
+      hands.L.set(left);
+      hands.R.set(right);
+    },
+    palm: (side) => hands[side].palm,
   };
 }

@@ -1,7 +1,7 @@
-import { VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
+import { HAND_POSE_NAMES, VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
 import { BEHAVIOURS } from './ambient';
 import { registerAction, type WalkPath } from './catalog';
-import { BODY, reachBody } from './hands';
+import { BODY, outAndBack, reachBody, type Point3 } from './hands';
 
 const RUN_FROM = 3;
 
@@ -334,5 +334,81 @@ registerAction({
     if (mode === 'watch' && !point) ctx.fail('"watch" precisa de "point".');
     if (object !== undefined) ctx.object(object);
     return { writes: [], behaviour: { mode, group, object, point } };
+  },
+});
+
+registerAction({
+  id: 'pointAt',
+  description: 'O personagem aponta para um objeto ou um ponto: estende o braço com o indicador esticado, olha para lá, e recolhe o braço no fim. Com "duration" maior, fica apontando mais tempo.',
+  appliesTo: ['character'],
+  params: {
+    object: { type: 'string', description: 'id do que apontar: outro personagem, um item, o carro, uma porta' },
+    point: { type: 'point3', description: 'ponto [x, y, z] em coordenadas do local' },
+    hand: { type: 'string', description: '"left" ou "right" (padrão: a mão livre do lado do alvo)' },
+  },
+  duration: 1.6,
+  compile(ctx) {
+    const object = ctx.params.object as string | undefined;
+    const given = ctx.params.point as Point3 | undefined;
+    if ((object === undefined) === (given === undefined)) ctx.fail('informe "object" ou "point", um dos dois.');
+    const me = ctx.target.id;
+    if (object === me) ctx.fail('o personagem não pode apontar para si mesmo.');
+    const asked = ctx.params.hand as string | undefined;
+    if (asked !== undefined && asked !== 'left' && asked !== 'right') ctx.fail('"hand" precisa ser "left" ou "right".');
+    let target = given!;
+    if (object !== undefined) {
+      // The middle of a thing, the face of a person, the handle of a door.
+      const traits = ctx.object(object).traits;
+      const [x, y, z] = ctx.placeOf(object).pos;
+      target = traits.door?.handle ?? [x, y + (traits.eyeHeight ?? (traits.size ? traits.size[1] / 2 : 0.8)), z];
+    }
+    const place = ctx.placeOf(me);
+    const scale = ctx.target.traits.bodyScale ?? 1;
+    const yaw = (place.yaw * Math.PI) / 180;
+    const [dx, dy, dz] = [target[0] - place.pos[0], target[1] - place.pos[1], target[2] - place.pos[2]].map((v) => v / scale);
+    // In the character's own frame: x to its right, -z ahead, in meters of the standard body.
+    const local: Point3 = [dx * Math.cos(yaw) - dz * Math.sin(yaw), dy, dx * Math.sin(yaw) + dz * Math.cos(yaw)];
+    const free = (side: 'L' | 'R'): boolean => !ctx.riderOn(me, `hand${side}`) && ctx.current(`reach${side}`) < 0.01;
+    const wanted: 'L' | 'R' = asked ? (asked === 'left' ? 'L' : 'R') : local[0] >= 0 ? 'R' : 'L';
+    const side = free(wanted) ? wanted : asked ? undefined : free(wanted === 'R' ? 'L' : 'R') ? (wanted === 'R' ? 'L' : 'R') : undefined;
+    if (!side) ctx.fail(asked ? 'a mão pedida está ocupada.' : 'o personagem está com as duas mãos ocupadas.');
+    const shoulder: Point3 = [side === 'R' ? 0.19 : -0.19, 1.36, 0];
+    const to = [local[0] - shoulder[0], local[1] - shoulder[1], local[2] - shoulder[2]];
+    const far = Math.hypot(...to);
+    if (far < 0.3) ctx.fail('o alvo está perto demais para apontar.');
+    if (to[2] / far > 0.35) ctx.fail('o alvo está atrás do personagem; vire-o antes, com turnTo.');
+    // An arm does not point straight up or down.
+    const flat = Math.hypot(to[0], to[2]);
+    const rise = Math.max(-0.9, Math.min(0.9, Math.atan2(to[1], flat)));
+    const reach = 0.47;
+    const tip: Point3 = [
+      shoulder[0] + (to[0] / flat) * Math.cos(rise) * reach,
+      shoulder[1] + Math.sin(rise) * reach,
+      shoulder[2] + (to[2] / flat) * Math.cos(rise) * reach,
+    ];
+    const amount = outAndBack(0.25, 0.8);
+    return {
+      writes: [...reachBody(me, side!, tip, amount), { channel: `hand${side}.point`, at: amount }],
+      gaze: { at: object ?? given!, fade: 0.4 },
+    };
+  },
+});
+
+registerAction({
+  id: 'hand',
+  description: `O personagem põe as mãos numa pose e fica assim até outra: ${HAND_POSE_NAMES.join(', ')}, ou "relaxed" para soltar. Segurar algo e gesticular ao falar já mudam a mão sozinhos.`,
+  appliesTo: ['character'],
+  params: {
+    pose: { type: 'string', description: `uma de: relaxed, ${HAND_POSE_NAMES.join(', ')}`, required: true },
+    hand: { type: 'string', description: '"left", "right" ou "both" (padrão)' },
+  },
+  duration: 0.25,
+  compile(ctx) {
+    const pose = ctx.params.pose as string;
+    if (pose !== 'relaxed' && !HAND_POSE_NAMES.includes(pose)) ctx.fail(`pose de mão desconhecida "${pose}". Existem: relaxed, ${HAND_POSE_NAMES.join(', ')}.`);
+    const which = (ctx.params.hand as string | undefined) ?? 'both';
+    if (!['left', 'right', 'both'].includes(which)) ctx.fail('"hand" precisa ser "left", "right" ou "both".');
+    const sides = (['L', 'R'] as const).filter((side) => which === 'both' || (which === 'left') === (side === 'L'));
+    return { writes: sides.flatMap((side) => HAND_POSE_NAMES.map((name) => ({ channel: `hand${side}.${name}`, to: name === pose ? 1 : 0 }))) };
   },
 });

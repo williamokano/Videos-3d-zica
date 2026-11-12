@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import type { Ambient } from '../actions/ambient';
 import type { InteractiveObject } from '../world/build';
 import { buildBody } from './body';
-import { reachPose, wristPosition, type Side } from './ik';
-import { EXPRESSIONS, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, resolveFace, sitPose, splitGaze } from './motion';
-import type { CharacterDef, CharacterRig, Joint } from './types';
+import { palmToward, reachPose, wristPosition, type Side } from './ik';
+import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, resolveFace, resolveHand, sitPose, splitGaze } from './motion';
+import type { CharacterDef, CharacterRig, HandShape, Joint } from './types';
 
 /** A character placed in an episode. */
 export interface CastMember {
@@ -31,7 +31,7 @@ const STRIDE = 1.5;
  * Put a character in the scene as an interactive object. Its channels are x, y, z, yaw, `stride` (walk cycles
  * covered), `gait` (0 stands, 1 walks, 2 runs), `talk` (mouth held open by speech), one `vis.<shape>` weight per mouth shape of speech,
  * one `expr.<name>` weight per expression, and the body channels: `crouch`, `sit`, `attached` (how much it rides on a seat), and for each
- * hand `carryL` / `carryR` (holding something) and `reachL` / `reachR` with `.x`, `.y`, `.z` (hand going to a point
+ * hand `carryL` / `carryR` (holding something), one `handL.<pose>` / `handR.<pose>` weight per hand pose, and `reachL` / `reachR` with `.x`, `.y`, `.z` (hand going to a point
  * of the location, or of the body itself when `.local` is 1). `look.yaw` and `look.pitch` turn the head from the body, in degrees. `rig` replaces the built-in body, e.g. by a loaded GLB.
  */
 export function buildCharacter(member: CastMember, def: CharacterDef, rig: CharacterRig = buildBody(def)): InteractiveObject {
@@ -49,6 +49,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
     ...Object.fromEntries(VISEME_NAMES.map((n) => [`vis.${n}`, 0])),
+    ...Object.fromEntries((['L', 'R'] as Side[]).flatMap((side) => HAND_POSE_NAMES.map((n) => [`hand${side}.${n}`, 0]))),
   };
   const scale = (def.height ?? 1.7) / 1.7;
   // Each character blinks at its own moments.
@@ -56,13 +57,18 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
 
   let ambient: Ambient | undefined;
   const hand = new THREE.Vector3();
+  // Where a hand that holds something up to be read turns its palm: back to the face, and a little up.
+  const face = new THREE.Vector3(0, 0.25, 1).normalize();
 
   const tick = (t: number): void => {
     object.position.set(state.x, state.y, state.z);
     object.rotation.y = THREE.MathUtils.degToRad(state.yaw);
     object.updateMatrixWorld();
     let pose = sitPose(crouchPose(locomotionPose(t, state.gait, state.stride), state.crouch), state.sit);
+    // What each hand does because of what the arm is doing: open when it talks, closed on what it holds.
+    const busy = { L: { open: 0, grip: 0 }, R: { open: 0, grip: 0 } };
     for (const side of ['L', 'R'] as Side[]) {
+      busy[side].grip = state[`carry${side}`];
       pose = carryPose(pose, side, state[`carry${side}`]);
       const reach = state[`reach${side}`];
       if (reach <= 0.001 && state[`carry${side}`] <= 0.001) {
@@ -75,6 +81,9 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
         const talking = Math.max(ambient?.[`gesture${side}`] ?? 0, side === 'R' ? state.gesture : state.gesture * 0.6);
         toward(sign * 0.21, 1.07 + 0.07 * Math.sin(t * 5.5 + seed + sign), -0.28 + 0.04 * Math.cos(t * 4.1 + seed), talking);
         if (side === 'R') toward(0.1 + 0.16 * Math.sin(t * 1.2 + seed), 1.5 + 0.05 * Math.sin(t * 7.5), -0.44, ambient?.write ?? 0);
+        busy[side].open = talking;
+        // Chalk in the hand that writes.
+        if (side === 'R') busy[side].grip = Math.max(busy[side].grip, ambient?.write ?? 0);
       }
       if (reach <= 0.001) continue;
       // The hand leaves from where the pose has it and goes straight to the point.
@@ -102,7 +111,18 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       const sway = ambient.sway * 1.6 * (1 - state.sit);
       pose = { lift: pose.lift, joints: { ...pose.joints, hips: add('hips', 0, sway), spine: add('spine', 0, -sway), head: add('head', -9 * ambient.nod, 0) } };
     }
+    const shapes = {} as Record<Side, HandShape>;
+    for (const side of ['L', 'R'] as Side[]) {
+      const weights = Object.fromEntries(HAND_POSE_NAMES.map((n) => [n, state[`hand${side}.${n}`]]));
+      weights.grip = Math.max(weights.grip, busy[side].grip);
+      weights.open = Math.max(weights.open, busy[side].open * (1 - weights.grip));
+      shapes[side] = resolveHand(weights, t + seed);
+      // Raised to be read, the hand goes behind what it holds, palm to the face.
+      const raised = Math.max(weights.grip, weights.type) * state[`reach${side}`] * (state[`reach${side}.local`] > 0.5 ? 1 : 0);
+      if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
+    }
     rig.applyPose(pose);
+    rig.setHands?.(shapes.L, shapes.R);
     const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], ambient?.expressions[n] ?? 0)]));
     const closed = blink(t, seed);
     const talk = Math.max(state.talk, ambient?.talk ?? 0);
@@ -127,7 +147,8 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     ambient: (values) => {
       ambient = values;
     },
-    socket: (name) => rig.joint((name === 'pocket' ? 'thighR' : name) as Joint),
+    // A hand holds things in its palm, when the body has one.
+    socket: (name) => (name === 'handL' || name === 'handR' ? rig.palm?.(name === 'handL' ? 'L' : 'R') : undefined) ?? rig.joint((name === 'pocket' ? 'thighR' : name) as Joint),
     firstPerson: (on) => {
       if (rig.hideHead) rig.hideHead(on);
       else rig.object.visible = !on;

@@ -78,3 +78,20 @@ export function reachPose(pose: Pose, side: Side, target: THREE.Vector3): Pose {
   const fore = new THREE.Quaternion().setFromUnitVectors(axis, foreDir);
   return { lift: pose.lift, joints: { ...pose.joints, [`upperArm${side}`]: degrees(upper), [`forearm${side}`]: degrees(fore) } };
 }
+
+/**
+ * How far to turn the wrist around the forearm, in degrees, so that the palm faces `toward` (a direction in
+ * the character's frame) as well as it can. With no turn, the palm faces down in the T-pose.
+ */
+export function palmToward(pose: Pose, side: Side, toward: THREE.Vector3): number {
+  const forearm = shoulder(pose, side).chest.multiply(turn(pose, `upperArm${side}`)).multiply(turn(pose, `forearm${side}`));
+  const local = toward.clone().applyQuaternion(forearm.invert());
+  // Turned by a around the arm, the palm faces (0, -cos a, -sin a).
+  return Math.atan2(-local.z, -local.y) / DEG;
+}
+
+/** Which way the palm faces in a pose, in the character's frame. */
+export function palmNormal(pose: Pose, side: Side): THREE.Vector3 {
+  const hand = shoulder(pose, side).chest.multiply(turn(pose, `upperArm${side}`)).multiply(turn(pose, `forearm${side}`)).multiply(turn(pose, `hand${side}`));
+  return new THREE.Vector3(0, -1, 0).applyQuaternion(hand);
+}

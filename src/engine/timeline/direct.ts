@@ -85,6 +85,10 @@ export interface Actor {
   /** Lift what is in the hand to the eyes (to read a phone) or to the chest; stays up until `lower`. */
   raise(to?: 'eyes' | 'chest', options?: StepOptions): Step;
   lower(options?: StepOptions): Step;
+  /** Point at another character, an object by id, or a point: arm out, eyes on it, arm back at the end. A longer `duration` holds it. */
+  pointAt(target: Actor | string | Vec3, options?: StepOptions & { hand?: 'left' | 'right' }): Step;
+  /** Hold the hands in a pose until told otherwise: "grip", "point", "fist", "open", "type", or "relaxed". */
+  hand(pose: 'relaxed' | 'grip' | 'point' | 'fist' | 'open' | 'type', options?: StepOptions & { hand?: 'left' | 'right' | 'both' }): Step;
 }
 
 /** A phone of the episode, as the script sees it. None of these take time: they happen now. */
@@ -221,6 +225,8 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       putAway: (item, options) => run(item, 'putAway', {}, options),
       raise: (to, options) => run(id, 'raise', { to }, options),
       lower: (options) => run(id, 'lower', {}, options),
+      pointAt: (target, options) => run(id, 'pointAt', { ...(Array.isArray(target) ? { point: target } : { object: idOf(target) }), hand: options?.hand }, options),
+      hand: (pose, options) => run(id, 'hand', { pose, hand: options?.hand }, options),
     };
   };
 

@@ -61,6 +61,15 @@ export interface FaceParams {
   lidTilt: number;
 }
 
+/** How a hand is held. Each value goes from 0 (straight) to 1 (fully bent), `spread` from 0 (fingers together) to 1 (apart). */
+export interface HandShape {
+  thumb: number;
+  index: number;
+  /** The fingers other than the index. */
+  fingers: number;
+  spread: number;
+}
+
 /** Character file in series/<series>/characters/<id>.json. */
 export interface CharacterDef {
   id: string;
@@ -76,6 +85,11 @@ export interface CharacterDef {
   hairStyle?: 'short' | 'long' | 'bun' | 'none';
   /** Color of the eyes (default dark brown). */
   eyes?: string;
+  /**
+   * "mitten" (default): a thumb and one block of fingers, which reads well from far. "fingers": four separate
+   * fingers, for a hand seen up close (the one that holds the phone in first person).
+   */
+  hands?: 'mitten' | 'fingers';
   shirt?: string;
   pants?: string;
   shoes?: string;
@@ -104,4 +118,8 @@ export interface CharacterRig {
   hideHead?(hidden: boolean): void;
   /** A standard joint, e.g. to put something in a hand. */
   joint(name: Joint): import('three').Object3D | undefined;
+  /** Bodies with fingers: bend them. */
+  setHands?(left: HandShape, right: HandShape): void;
+  /** Bodies with a palm: the place in a hand where something held sits. Without it, things are held by the wrist. */
+  palm?(side: 'L' | 'R'): import('three').Object3D;
 }

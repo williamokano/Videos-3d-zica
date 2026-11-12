@@ -1,4 +1,4 @@
-import type { FaceParams, Joint, Pose } from './types';
+import type { FaceParams, HandShape, Joint, Pose } from './types';
 import { JOINTS } from './types';
 
 /** Motions are pure functions: the same inputs always give the same pose, so any frame can be drawn on its own. */
@@ -303,4 +303,34 @@ export function resolveFace(
   face.gazeX = eyes.x;
   face.gazeY = eyes.y;
   return face;
+}
+
+/** A hand nobody is using: fingers a little bent. */
+export const RELAXED_HAND: HandShape = { thumb: 0.25, index: 0.3, fingers: 0.4, spread: 0 };
+
+/** The hand pose catalog. Check here before adding one. A relaxed hand is the absence of all of them. */
+export const HAND_POSES: Record<string, HandShape> = {
+  /** Closed around something held. */
+  grip: { thumb: 0.55, index: 0.55, fingers: 0.65, spread: 0 },
+  point: { thumb: 0.85, index: 0, fingers: 1, spread: 0 },
+  fist: { thumb: 1, index: 1, fingers: 1, spread: 0 },
+  open: { thumb: 0, index: 0, fingers: 0.05, spread: 1 },
+  /** Holding a phone with the thumb tapping on it. */
+  type: { thumb: 0.55, index: 0.55, fingers: 0.65, spread: 0 },
+};
+
+export const HAND_POSE_NAMES = Object.keys(HAND_POSES);
+
+/** Hand from pose weights. In "type" the thumb taps, at a pace set by the time. */
+export function resolveHand(weights: Record<string, number>, t = 0): HandShape {
+  const hand = { ...RELAXED_HAND };
+  for (const [name, w] of Object.entries(weights)) {
+    const pose = HAND_POSES[name];
+    if (!pose || !w) continue;
+    for (const key of Object.keys(hand) as (keyof HandShape)[]) hand[key] += (pose[key] - RELAXED_HAND[key]) * w;
+  }
+  const tapping = weights.type ?? 0;
+  if (tapping > 0) hand.thumb += (0.2 * Math.sin(t * 17) - 0.15) * Math.min(1, tapping);
+  for (const key of Object.keys(hand) as (keyof HandShape)[]) hand[key] = Math.max(0, Math.min(1, hand[key]));
+  return hand;
 }

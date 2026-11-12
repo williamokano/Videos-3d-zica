@@ -1,7 +1,7 @@
 import { BEHAVIOURS, NO_AMBIENT, type Ambient } from '../actions/ambient';
 import type { ActionClip, Link, TargetTraits } from '../actions/catalog';
 import { BODY } from '../actions/hands';
-import { VISEME_NAMES, mouthOpenOf, visemeTrack } from './motion';
+import { HAND_POSE_NAMES, VISEME_NAMES, mouthOpenOf, visemeTrack } from './motion';
 
 /**
  * The showcase: characters side by side on an empty stage, each one doing a pose in a loop, to look at and
@@ -45,6 +45,7 @@ export const POSE_REST: Record<string, number> = {
   gait: 0, stride: 0, sit: 0, seat: 0, y: 0, crouch: 0, talk: 0, gesture: 0, carryR: 0,
   reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
   ...Object.fromEntries(VISEME_NAMES.map((name) => [`vis.${name}`, 0])),
+  ...Object.fromEntries(['L', 'R'].flatMap((side) => HAND_POSE_NAMES.map((name) => [`hand${side}.${name}`, 0]))),
 };
 
 /** What a character says on the stage, over and over: every mouth shape is in it. */
@@ -75,6 +76,8 @@ export const SHOWCASE_POSES: Record<string, ShowcasePose> = {
     label: 'Gesticular',
     ambient: (t, seed) => ({ ...NO_AMBIENT, gestureR: 0.75 + 0.25 * Math.sin(t * 1.3 + seed), gestureL: 0.6 + 0.4 * Math.sin(t * 0.9 + seed * 2) }),
   },
+  // What the action `pointAt` does with the arm, held: ahead and a little to the side.
+  point: { label: 'Apontar', channels: () => ({ reachR: 1, 'reachR.x': 0.32, 'reachR.y': 1.42, 'reachR.z': -0.42, 'reachR.local': 1, 'handR.point': 1 }) },
   phone: {
     label: 'Levantar o celular',
     phone: true,
