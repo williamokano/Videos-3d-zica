@@ -1,3 +1,4 @@
+import { BEHAVIOURS, mouthFlap } from './ambient';
 import { registerAction, type WalkPath } from './catalog';
 import { BODY, reachBody } from './hands';
 
@@ -36,6 +37,7 @@ registerAction({
   compile(ctx) {
     if (!ctx.services.findPath) ctx.fail('este local não tem mapa de caminhada.');
     if (ctx.linkOf(ctx.target.id)) ctx.fail(`o personagem está sentado em "${ctx.linkOf(ctx.target.id)!.to}"; use standUp antes.`);
+    if (ctx.current('sit') > 0.5) ctx.fail('o personagem está sentado; use standUp antes.');
     const from: [number, number, number] = [ctx.current('x'), ctx.current('y'), ctx.current('z')];
     const doorId = ctx.params.door as string | undefined;
     if ((doorId === undefined) === (ctx.params.to === undefined)) ctx.fail('informe "to" ou "door", um dos dois.');
@@ -203,7 +205,23 @@ registerAction({
   },
   duration: 1,
   compile(ctx) {
-    const link = ctx.linkOf(ctx.target.id) ?? ctx.fail('o personagem não está sentado.');
+    const link = ctx.linkOf(ctx.target.id);
+    if (!link) {
+      // On a plain seat (a chair): get up and step to the point.
+      if (ctx.current('sit') < 0.5) ctx.fail('o personagem não está sentado.');
+      const [x, z] = ctx.params.to as [number, number];
+      const far = Math.hypot(x - ctx.current('x'), z - ctx.current('z'));
+      if (far > 1.5) ctx.fail(`o ponto fica a ${far.toFixed(1)} m da cadeira; escolha um ao lado e depois use walkTo.`);
+      const facing = turn(ctx.current('yaw'), (ctx.params.yaw as number | undefined) ?? heading(x - ctx.current('x'), z - ctx.current('z')));
+      return {
+        writes: [
+          { channel: 'x', to: x }, { channel: 'z', to: z }, { channel: 'y', to: ctx.current('y') - ctx.current('seat') },
+          { channel: 'yaw', to: facing },
+          { channel: 'sit', at: (u: number) => 1 - Math.min(1, u / 0.6) },
+          { channel: 'seat', at: () => 0 },
+        ],
+      };
+    }
     const seat = ctx.placeOf(ctx.target.id);
     const to = ctx.params.to as [number, number];
     const far = Math.hypot(to[0] - seat.pos[0], to[1] - seat.pos[2]);
@@ -251,5 +269,56 @@ registerAction({
     const sides = (['L', 'R'] as const).filter((s) => ctx.current(`reach${s}`) > 0.01);
     if (!sides.length) ctx.fail('o personagem não está com a mão levantada.');
     return { writes: sides.map((s) => ({ channel: `reach${s}`, to: 0 })) };
+  },
+});
+
+registerAction({
+  id: 'say',
+  description: 'O personagem fala: a boca mexe e as mãos acompanham. A fala fica registrada no episódio (legenda agora, voz depois). Sem "duration", dura conforme o tamanho do texto.',
+  appliesTo: ['character'],
+  params: {
+    text: { type: 'string', description: 'o que ele diz', required: true },
+    to: { type: 'string', description: 'id de com quem fala; ele olha para essa pessoa' },
+  },
+  duration: 1,
+  compile(ctx) {
+    const text = ctx.params.text as string;
+    const to = ctx.params.to as string | undefined;
+    if (to !== undefined) ctx.object(to);
+    const duration = Math.max(1, 0.5 + text.length * 0.065);
+    const seed = text.length * 7.3;
+    return {
+      duration,
+      // The mouth follows the clock, not the easing: syllables keep their pace.
+      writes: [
+        { channel: 'talk', at: (u) => mouthFlap(u * duration, seed) * Math.min(1, u * 10, (1 - u) * 10) },
+        { channel: 'gesture', at: (u) => Math.min(1, u * 4, (1 - u) * 4) },
+      ],
+      events: [{ type: 'line', data: { text, duration } }],
+      gaze: to === undefined ? undefined : { at: to, fade: 0.4 },
+    };
+  },
+});
+
+registerAction({
+  id: 'behave',
+  description: `O que o personagem faz sozinho daqui em diante, para figurantes e para quem espera a sua vez. Modos: ${Object.entries(BEHAVIOURS).map(([k, v]) => `"${k}" (${v})`).join('; ')}.`,
+  appliesTo: ['character'],
+  params: {
+    mode: { type: 'string', description: `um de: ${Object.keys(BEHAVIOURS).join(', ')}`, required: true },
+    group: { type: 'string', description: 'chat: nome do grupo de conversa' },
+    object: { type: 'string', description: 'attend: id do que ele acompanha com os olhos' },
+    point: { type: 'point3', description: 'watch: ponto [x, y, z] para onde olha' },
+  },
+  duration: 0,
+  compile(ctx) {
+    const mode = ctx.params.mode as string;
+    if (!(mode in BEHAVIOURS)) ctx.fail(`modo desconhecido "${mode}". Existem: ${Object.keys(BEHAVIOURS).join(', ')}.`);
+    const { group, object, point } = ctx.params as { group?: string; object?: string; point?: [number, number, number] };
+    if (mode === 'chat' && !group) ctx.fail('"chat" precisa de "group".');
+    if (mode === 'attend' && !object) ctx.fail('"attend" precisa de "object".');
+    if (mode === 'watch' && !point) ctx.fail('"watch" precisa de "point".');
+    if (object !== undefined) ctx.object(object);
+    return { writes: [], behaviour: { mode, group, object, point } };
   },
 });

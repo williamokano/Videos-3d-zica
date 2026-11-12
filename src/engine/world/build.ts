@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { Ambient } from '../actions/ambient';
 import type { ActionTarget, CompiledActions } from '../actions/catalog';
 import { assetKind, createAsset, mat, type AssetChannels } from '../assets/registry';
 import { buildDoor } from './doors';
@@ -34,6 +35,8 @@ export interface InteractiveObject extends ActionTarget {
   follow?(socket: THREE.Object3D | undefined, weight: number, holder?: InteractiveObject): void;
   /** Show whatever depends on the whole track rather than on channels, e.g. a phone's screen. Called last. */
   present?(compiled: CompiledActions, t: number): void;
+  /** Characters: what the body does by itself right now (see actions/ambient.ts). */
+  ambient?(values: Ambient | undefined): void;
   /** Characters: show or hide for a camera sitting in their eyes. */
   firstPerson?(on: boolean): void;
 }
@@ -93,6 +96,7 @@ function placeProps(
   elevation: number,
   parent: THREE.Object3D,
   interactives: InteractiveObject[],
+  colliders: Collider[],
 ): void {
   for (const prop of props ?? []) {
     if (prop.repeat && prop.id) throw new Error(`Prop "${prop.id}": um prop com id não pode usar "repeat".`);
@@ -109,9 +113,31 @@ function placeProps(
         });
         parent.add(obj);
         if (prop.id) interactives.push(interactiveProp(prop, obj));
+        else {
+          const solid = footprint(obj);
+          if (solid) colliders.push(solid);
+        }
       }
     }
   }
+}
+
+/**
+ * What a piece of furniture blocks: the footprint of its parts that are at body height. A tree blocks with its
+ * trunk, not its crown; a ceiling lamp or a rug blocks nothing. Props with an id can move, so they do not count.
+ */
+function footprint(obj: THREE.Object3D): Collider | undefined {
+  obj.updateMatrixWorld(true);
+  const base = obj.position.y;
+  const box = new THREE.Box3();
+  const part = new THREE.Box3();
+  obj.traverse((o) => {
+    if (!(o instanceof THREE.Mesh)) return;
+    part.setFromObject(o);
+    if (part.min.y < base + 1.5 && part.max.y > base + 0.25) box.union(part);
+  });
+  if (box.isEmpty()) return undefined;
+  return { minX: box.min.x, maxX: box.max.x, minZ: box.min.z, maxZ: box.max.z, y0: box.min.y, y1: box.max.y };
 }
 
 /** A prop of its own, outside any room: something an episode brings in, like a phone in a pocket. */
@@ -266,7 +292,7 @@ export function buildLocation(loc: Location): BuiltLocation {
     exterior.add(ground);
     surfaces.push(flat(r, 0));
   }
-  placeProps(loc.props, [0, 0], 0, exterior, interactives);
+  placeProps(loc.props, [0, 0], 0, exterior, interactives, colliders);
   root.add(exterior);
 
   const openings = loc.rooms.flatMap(roomOpenings);
@@ -323,7 +349,7 @@ export function buildLocation(loc: Location): BuiltLocation {
         position: () => center,
       });
     });
-    placeProps(room.props, room.origin, elevation, g, interactives);
+    placeProps(room.props, room.origin, elevation, g, interactives, colliders);
     if (!room.outdoor) {
       // The ceiling hangs just under the floor of the storey above.
       const top = elevation + height - 0.06;

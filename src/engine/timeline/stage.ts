@@ -1,4 +1,5 @@
 import '../actions/builtin';
+import { ambientAt, behaviourAt } from '../actions/ambient';
 import '../actions/character';
 import '../actions/phone';
 import '../assets';
@@ -17,7 +18,8 @@ export function buildCast(episode: Episode, characters: CharacterDef[], rigs: Re
   return (episode.cast ?? []).map((member) => {
     const def = characters.find((c) => c.id === member.character);
     if (!def) throw new Error(`Personagem "${member.character}" não existe na pasta characters da série.`);
-    return buildCharacter(member, def, rigs[def.id]);
+    // A ready-made body (GLB) cannot take a different look.
+    return buildCharacter(member, { ...def, ...member.look, id: def.id }, member.look ? undefined : rigs[def.id]);
   });
 }
 
@@ -113,7 +115,9 @@ export function applyStage(compiled: CompiledActions, objects: Map<string, Inter
     rider.set('z', pos[2]);
     rider.set('yaw', yaw);
   }
-  for (const id of new Set(compiled.gazes.map((g) => g.target))) {
+  const undirected = new Set(compiled.behaviours.map((b) => b.target));
+  for (const id of undirected) objects.get(id)!.ambient?.(behaviourAt(compiled.behaviours, id, t) ? ambientAt(compiled.behaviours, id, t) : undefined);
+  for (const id of new Set([...compiled.gazes.map((g) => g.target), ...undirected])) {
     const { yaw, pitch } = gazeAt(compiled, id, t);
     objects.get(id)!.set('look.yaw', yaw);
     objects.get(id)!.set('look.pitch', pitch);

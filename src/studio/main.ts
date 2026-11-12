@@ -48,6 +48,12 @@ const stage = document.getElementById('stage')!;
 const hint = document.getElementById('hint')!;
 const panel = document.getElementById('panel')!;
 const previewLabel = document.getElementById('preview-label')!;
+// Spoken lines, shown while there is no voice. ?subs=0 leaves them out of a render.
+const subtitle = document.createElement('div');
+subtitle.id = 'subtitle';
+subtitle.hidden = true;
+stage.append(subtitle);
+const showSubtitles = query.get('subs') !== '0';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(rendering ? 1 : Math.min(window.devicePixelRatio, 2));
@@ -96,7 +102,7 @@ scene.add(gizmos);
 
 // ---- Episode cast and actions ----
 
-let actions: CompiledActions = { tracks: [], clips: [], links: [], gazes: [], events: [], focus: {}, initial: {}, sockets: {}, scales: {} };
+let actions: CompiledActions = { tracks: [], clips: [], links: [], gazes: [], events: [], behaviours: [], focus: {}, initial: {}, sockets: {}, scales: {} };
 let cast: InteractiveObject[] = [];
 const world = buildWorld(bible, episodeNumber);
 /** Things the episode adds to the location. */
@@ -174,12 +180,26 @@ function applyShot(t: number): void {
   shotCamera.fov = pose.fov;
   shotCamera.updateProjectionMatrix();
   shotCamera.updateMatrixWorld();
+  showLine(t);
   gizmoCamera.copy(shotCamera, false);
   gizmoCamera.near = 0.2;
   gizmoCamera.far = 1.6;
   gizmoCamera.updateProjectionMatrix();
   gizmoCamera.updateMatrixWorld();
   frustum?.update();
+}
+
+/** Who says what at time t, as a subtitle over the episode camera's picture. */
+function showLine(t: number): void {
+  const line = actions.events.find((e) => e.type === 'line' && t >= e.t && t < e.t + (e.data.duration as number));
+  const visible = Boolean(line) && showSubtitles && (mode === 'shot' || rendering);
+  subtitle.hidden = !visible;
+  if (!visible || !line) return;
+  const member = episode?.cast?.find((m) => (m.id ?? m.character) === line.target);
+  const name = member?.look?.name ?? inSeries(characters).find((c) => c.id === member?.character)?.name ?? line.target;
+  subtitle.replaceChildren(el('b', `${name}: `), String(line.data.text));
+  const [x, y, w, h] = fit(0, 0, width, height);
+  Object.assign(subtitle.style, { left: `${x + w * 0.06}px`, width: `${w * 0.88}px`, bottom: `${y + h * 0.1}px`, fontSize: `${h * 0.024}px` });
 }
 
 let frustum: THREE.CameraHelper | undefined;

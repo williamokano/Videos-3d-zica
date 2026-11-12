@@ -134,3 +134,15 @@ body.render { display: block; background: #000; overflow: hidden; }
 body.render #panel, body.render #hint, body.render #preview-label, body.render .timeline { display: none !important; }
 body.render #viewport { display: block; width: var(--frame-w); height: var(--frame-h); }
 body.render #stage { width: var(--frame-w); height: var(--frame-h); flex: none; }
+
+#subtitle {
+  position: absolute;
+  padding: 0.35em 0.7em;
+  border-radius: 0.4em;
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  text-align: center;
+  line-height: 1.3;
+  pointer-events: none;
+}
+#subtitle b { color: #ffd166; }

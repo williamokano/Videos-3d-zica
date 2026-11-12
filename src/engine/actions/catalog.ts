@@ -114,6 +114,8 @@ export interface Link {
   t1: number;
 }
 
+import { ambientAt, type Behaviour, type GazeSpec } from './ambient';
+
 /** Something that happened to an object at a time; the object decides how to show it. */
 export interface StageEvent {
   target: string;
@@ -156,8 +158,10 @@ export interface ActionResult {
   attach?: { target?: string; to: string; socket: string; weight?: string; at?: 'start' | 'end' | number };
   /** Things that happen to an object at the start of the clip and that it shows its own way (a message arriving on a phone). */
   events?: { target?: string; type: string; data?: Record<string, unknown> }[];
-  /** Turn the target's head to an object (by id) or a point; null looks ahead again. */
-  gaze?: { at: string | [number, number, number] | null };
+  /** What the target does by itself from now on (see ambient.ts). */
+  behaviour?: Omit<Behaviour, 'target' | 't0'>;
+  /** Turn the target's head to an object (by id) or a point; null looks ahead again. It takes the clip's length to get there, or `fade` seconds. */
+  gaze?: { at: string | [number, number, number] | null; fade?: number };
   /** Let an object (default: the target) go, at the end of the clip or at its start. */
   detach?: { target?: string; at?: 'start' | 'end' | number };
   validate?(ctx: ValidateContext): void;
@@ -218,6 +222,8 @@ export interface CompiledActions {
   clips: CompiledClip[];
   links: Link[];
   gazes: Gaze[];
+  /** What undirected characters do by themselves. */
+  behaviours: Behaviour[];
   /** Things that happened to objects, in time order. */
   events: StageEvent[];
   /** Where to look to look at each object: a fixed place for doors, and how far above its position otherwise. */
@@ -264,6 +270,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
     links,
     gazes: [],
     events: [],
+    behaviours: [],
     focus: Object.fromEntries(targets.map((t) => [t.id, { base: t.traits.door?.handle, up: t.traits.door ? 0 : (t.traits.eyeHeight ?? (t.traits.size ? t.traits.size[1] / 2 : 0.8)) }])),
     initial: Object.fromEntries(targets.map((t) => [t.id, t.channels])),
     sockets: Object.fromEntries(targets.filter((t) => t.traits.sockets).map((t) => [t.id, t.traits.sockets!])),
@@ -354,7 +361,8 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
       if (taken) fail(`"${socket}" de "${to}" já está ocupado por "${taken.target}".`);
       links.push({ target: rider, to, socket, weight, t0, t1: Infinity });
     }
-    if (result.gaze) out.gazes.push({ target: target.id, at: result.gaze.at, t0: clip.t, fade: duration });
+    if (result.behaviour) out.behaviours.push({ ...result.behaviour, target: target.id, t0: clip.t });
+    if (result.gaze) out.gazes.push({ target: target.id, at: result.gaze.at, t0: clip.t, fade: Math.min(duration, result.gaze.fade ?? duration) });
     compiled.push({ index, t: clip.t, duration, target: clip.target, action: clip.action });
 
     const validate = result.validate;
@@ -464,12 +472,10 @@ const MAX_HEAD_TILT = 40;
 export function gazeAt(compiled: CompiledActions, id: string, t: number): { yaw: number; pitch: number } {
   let i = compiled.gazes.length - 1;
   while (i >= 0 && (compiled.gazes[i].target !== id || compiled.gazes[i].t0 > t)) i--;
-  if (i < 0) return { yaw: 0, pitch: 0 };
   const own = placementAt(compiled, id, t);
   const eye = focusAt(compiled, id, t);
-  const angles = (gaze: Gaze | undefined): { yaw: number; pitch: number } => {
-    if (!gaze || gaze.at === null) return { yaw: 0, pitch: 0 };
-    const p = typeof gaze.at === 'string' ? focusAt(compiled, gaze.at, t) : gaze.at;
+  const toward = (at: string | [number, number, number]): { yaw: number; pitch: number } => {
+    const p = typeof at === 'string' ? focusAt(compiled, at, t) : at;
     const [dx, dy, dz] = [p[0] - eye[0], p[1] - eye[1], p[2] - eye[2]];
     const flat = Math.hypot(dx, dz);
     if (flat < 1e-6 && Math.abs(dy) < 1e-6) return { yaw: 0, pitch: 0 };
@@ -478,12 +484,22 @@ export function gazeAt(compiled: CompiledActions, id: string, t: number): { yaw:
     const pitch = (Math.atan2(dy, flat) * 180) / Math.PI;
     return { yaw: Math.max(-MAX_HEAD_TURN, Math.min(MAX_HEAD_TURN, yaw)), pitch: Math.max(-MAX_HEAD_TILT, Math.min(MAX_HEAD_TILT, pitch)) };
   };
+  const mix = (from: { yaw: number; pitch: number }, to: { yaw: number; pitch: number }, w: number) => ({
+    yaw: from.yaw + (to.yaw - from.yaw) * w,
+    pitch: from.pitch + (to.pitch - from.pitch) * w,
+  });
+  // With nobody directing the head, it does what the character's behaviour says.
+  const undirected = (): { yaw: number; pitch: number } => {
+    if (!compiled.behaviours.length) return { yaw: 0, pitch: 0 };
+    const { gaze } = ambientAt(compiled.behaviours, id, t);
+    const angles = (spec: GazeSpec) => (spec === null ? { yaw: 0, pitch: 0 } : 'at' in spec ? toward(spec.at) : spec);
+    return mix(angles(gaze.from), angles(gaze.to), gaze.blend);
+  };
+  const angles = (gaze: Gaze | undefined) => (!gaze || gaze.at === null ? undirected() : toward(gaze.at));
+  if (i < 0) return undirected();
   const gaze = compiled.gazes[i];
   let k = i - 1;
   while (k >= 0 && compiled.gazes[k].target !== id) k--;
-  const from = angles(compiled.gazes[k]);
-  const to = angles(gaze);
   const u = gaze.fade > 0 ? Math.max(0, Math.min(1, (t - gaze.t0) / gaze.fade)) : 1;
-  const w = u * u * (3 - 2 * u);
-  return { yaw: from.yaw + (to.yaw - from.yaw) * w, pitch: from.pitch + (to.pitch - from.pitch) * w };
+  return mix(angles(compiled.gazes[k]), angles(gaze), u * u * (3 - 2 * u));
 }

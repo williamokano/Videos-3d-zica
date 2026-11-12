@@ -73,6 +73,13 @@ export interface Actor {
   close(object: string, options?: StepOptions & { part?: string; hand?: 'left' | 'right' }): Step;
   sit(on: string, seat?: string, options?: StepOptions): Step;
   standUp(to: Point2, options?: StepOptions & { yaw?: number }): Step;
+  /** Speak a line: the mouth moves and the line is kept for subtitles and, later, voice. `to` is who it is said to. */
+  say(text: string, options?: StepOptions & { to?: Actor | string }): Step;
+  /**
+   * What the character does by itself from now on, until told otherwise. Takes no time.
+   * "chat" (with `group`), "attend" (`object`), "watch" (`point`), "write", "idle", "none".
+   */
+  behave(mode: 'chat' | 'attend' | 'watch' | 'write' | 'idle' | 'none', options?: { group?: string; object?: Actor | string; point?: Vec3 }): void;
   /** Put a held item in the pocket; `pickUp` takes it out again. */
   putAway(item: string, options?: StepOptions): Step;
   /** Lift what is in the hand to the eyes (to read a phone) or to the chest; stays up until `lower`. */
@@ -184,6 +191,13 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     return step;
   };
 
+  const idOf = (who: Actor | string): string => (typeof who === 'string' ? who : who.id);
+  /** Something that happens at this instant and does not move the clock. */
+  const instant = (target: string, action: string, params: Record<string, unknown>): void => {
+    const at = now;
+    run(target, action, params, { duration: 0 });
+    now = at;
+  };
   const actor = (id: string): Actor => {
     if (!cast.some((c) => c.id === id)) throw new Error(`"${id}" não está no elenco do episódio. Elenco: ${cast.map((c) => c.id).join(', ') || 'vazio'}.`);
     const walk = (to: Point2 | { door: string }, speed: number | undefined, options: StepOptions & { elevation?: number } = {}): Step =>
@@ -202,6 +216,8 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       close: (object, options) => run(object, 'close', { by: id, part: options?.part, hand: options?.hand }, options),
       sit: (on, seat, options) => run(id, 'sit', { on, seat }, options),
       standUp: (to, options) => run(id, 'standUp', { to, yaw: options?.yaw }, options),
+      say: (text, options) => run(id, 'say', { text, to: options?.to === undefined ? undefined : idOf(options.to) }, options),
+      behave: (mode, options) => instant(id, 'behave', { mode, group: options?.group, object: options?.object === undefined ? undefined : idOf(options.object), point: options?.point }),
       putAway: (item, options) => run(item, 'putAway', {}, options),
       raise: (to, options) => run(id, 'raise', { to }, options),
       lower: (options) => run(id, 'lower', {}, options),
@@ -212,14 +228,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     keys.push(clean({ t: round(now), ...k }));
     last = Math.max(last, now);
   };
-  const idOf = (who: Actor | string): string => (typeof who === 'string' ? who : who.id);
 
-  /** Something that happens at this instant and does not move the clock. */
-  const instant = (target: string, action: string, params: Record<string, unknown>): void => {
-    const at = now;
-    run(target, action, params, { duration: 0 });
-    now = at;
-  };
   const phone = (id: string): Phone => {
     const event = (type: string, data: object) => instant(id, 'screen', { event: type, data });
     return {
