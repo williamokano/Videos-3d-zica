@@ -48,6 +48,30 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Móveis bloqueiam o caminho a pé. Elenco com `look` (uma ficha, várias aparências) e `seated`.
   - Episódio 1 de `ceu-vermelho` (`series/ceu-vermelho/episodes/001.ts`): 2 min 15 s em primeira pessoa, 15 personagens.
 
+## Próxima sessão: personagens mais bonitos e expressivos
+
+Pedido do autor depois do episódio 1: "gostei muito, mas gostaria que fosse um pouquinho melhor, mais configurável". Referência de estilo: um reel de temática parecida (https://www.instagram.com/reel/Dffe38TqD-Q/), com arte mais para cell shading e rostos mais expressivos. O vídeo não fica no repositório; baixe de novo com `yt-dlp` se precisar.
+
+O que a referência faz e nós não:
+
+- **Contorno grosso e escuro** em tudo (personagens, carros, prédios), como desenho a nanquim. Em Three.js: casca invertida (o mesmo mesh, um pouco maior, só com as faces de trás, preto) ou um passe de pós-processamento de bordas por profundidade e normal.
+- **Cor chapada em 2 ou 3 faixas** de luz em vez de degradê (`MeshToonMaterial` com `gradientMap`), sombras como manchas escuras de borda dura, e uma textura leve de papel ou granulado por cima da imagem.
+- **Olhos grandes**: branco do olho, íris escura com brilho, contorno; a pálpebra cobre parte do olho para dar humor (cansado, desconfiado, assustado). Hoje os olhos são duas bolinhas escuras.
+- **Sobrancelhas grossas** que mudam muito de ângulo; são elas que mais carregam a emoção nos quadros da referência.
+- **Nariz** simples (uma bolinha escura) e **orelhas**, que hoje não existem.
+- **Boca que mexe bastante**: abre em formas diferentes ao falar (O, E, A, fechada), com o interior escuro e lábio. Hoje a fala só abre e fecha.
+- **Cabelo com volume**: o crespo da referência é feito de vários blocos arredondados; hoje há só uma calota com quatro estilos.
+- **Mãos com dedos**: polegar separado e os outros dedos juntos ou separados, que fecham em volta do que seguram (o rádio, em primeira pessoa, aparece com o polegar por cima e os dedos por trás). Hoje a mão é uma bola.
+- **Lente grande-angular** com distorção nas bordas em vários planos (efeito olho de peixe), que deixa a primeira pessoa mais intensa. Pode ser uma opção da câmera.
+
+Plano sugerido, nesta ordem:
+
+1. **Mãos**: juntas de dedos no esqueleto padrão (polegar e quatro dedos, ou polegar e "luva" de 3 dedos para o estilo cartoon), poses de mão nomeadas (`relaxada`, `segurando`, `apontando`, `punho`, `aberta`, `digitando`) e transição entre elas. `pickUp` e `raise` passam a fechar a mão no objeto; `say` gesticula com a mão aberta; uma ação `point` para apontar. No retarget de GLB, os dedos são opcionais.
+2. **Rosto**: olhos com branco, íris, brilho e pálpebras; sobrancelhas grossas com mais amplitude; nariz e orelhas; boca com formas de fala (visemas simples: fechada, A, E, O, U, F/V) já preparando o lip-sync da voz. As expressões do catálogo ganham pálpebra e formato de boca.
+3. **Ficha do personagem mais configurável**: formato do rosto e da cabeça, tamanho e espaçamento dos olhos, cor da íris, espessura das sobrancelhas, tipo de nariz, tamanho da boca, mais estilos de cabelo (crespo, cacheado, raspado, rabo de cavalo, franja), barba, óculos, acessórios. `extraLook` sorteia tudo isso para os figurantes.
+4. **Visual da série**: o estilo (atual ou cell shading com contorno) vira opção da bíblia, para cada série escolher o seu. Contorno, faixas de luz e granulado entram juntos.
+5. **Vitrine de assets** (abaixo), para olhar e ajustar tudo isso sem montar um episódio.
+
 ## Próximo: vitrine de assets
 
 Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. Começa pelos personagens; depois vale para os outros grupos (carros, caminhões, escavadeiras, móveis...).
