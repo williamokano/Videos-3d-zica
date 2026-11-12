@@ -19,6 +19,11 @@ export interface CameraKey {
   lookAt?: Vec3;
   /** Vertical field of view in degrees. */
   fov?: number;
+  /**
+   * Wide-angle lens, from 0 (none, the default) to 1 (strong fisheye): the middle of the picture swells and
+   * the edges curve. For moments of tension, not all the time: it bends whatever has to be read.
+   */
+  lens?: number;
   /** Hard cut: jump to this key instead of moving from the previous one. A cut starts a new shot. */
   cut?: boolean;
   /** Mode of the shot this key starts (first key or a cut). Default "cinematic". */
@@ -37,6 +42,8 @@ export interface CameraPose {
   pos: Vec3;
   lookAt: Vec3;
   fov: number;
+  /** Wide-angle distortion, 0 to 1. */
+  lens: number;
   mode: CameraMode;
   /** Cast member the camera is attached to, when the mode is not cinematic. */
   follow?: string;
@@ -102,6 +109,7 @@ export function validateCamera(keys: CameraKey[], castIds: string[] = []): void 
     const fail = (message: string): never => {
       throw new Error(`Câmera, keyframe ${i + 1} (aos ${key.t}s): ${message}`);
     };
+    if (key.lens !== undefined && !(key.lens >= 0 && key.lens <= 1)) fail('"lens" precisa ser um número de 0 a 1.');
     if (i > 0 && key.t < keys[i - 1].t) fail('os keyframes precisam estar em ordem de tempo.');
     const starts = i === 0 || key.cut;
     if (!starts && (key.mode || key.follow)) fail('"mode" e "follow" só podem mudar num corte; adicione "cut": true.');
@@ -140,7 +148,7 @@ function attached(shot: CameraKey, a: CameraKey, b: CameraKey | undefined, t: nu
 
   if (mode === 'fpv') {
     const f = forward(subject.yaw + (subject.head?.yaw ?? 0), pitch + (subject.head?.pitch ?? 0));
-    return { pos: eye, lookAt: [eye[0] + f[0], eye[1] + f[1], eye[2] + f[2]], fov: mix((k) => k.fov, FPV_FOV), mode, follow: id };
+    return { pos: eye, lookAt: [eye[0] + f[0], eye[1] + f[1], eye[2] + f[2]], fov: mix((k) => k.fov, FPV_FOV), lens: mix((k) => k.lens, 0), mode, follow: id };
   }
 
   // Average the heading over the last moments so a quick turn of the body swings the camera gently.
@@ -164,6 +172,7 @@ function attached(shot: CameraKey, a: CameraKey, b: CameraKey | undefined, t: nu
     pos,
     lookAt: [eye[0] + f[0] * ahead, eye[1] + f[1] * ahead, eye[2] + f[2] * ahead],
     fov: mix((k) => k.fov, DEFAULT_FOV),
+    lens: mix((k) => k.lens, 0),
     mode,
     follow: id,
   };
@@ -182,7 +191,7 @@ export function evaluateCamera(keys: CameraKey[], t: number, stage?: CameraStage
   if (mode !== 'cinematic') return attached(shot, a, b, t, stage);
 
   const fa = a.fov ?? DEFAULT_FOV;
-  if (!b) return { pos: a.pos!, lookAt: a.lookAt!, fov: fa, mode };
+  if (!b) return { pos: a.pos!, lookAt: a.lookAt!, fov: fa, lens: a.lens ?? 0, mode };
   const prev = i > 0 && !a.cut ? keys[i - 1] : a;
   const next = keys[i + 2] && !keys[i + 2].cut ? keys[i + 2] : b;
   const u = (t - a.t) / (b.t - a.t);
@@ -190,6 +199,7 @@ export function evaluateCamera(keys: CameraKey[], t: number, stage?: CameraStage
     pos: hermite(prev, a, b, next, t, (k) => k.pos!),
     lookAt: hermite(prev, a, b, next, t, (k) => k.lookAt!),
     fov: fa + ((b.fov ?? DEFAULT_FOV) - fa) * u,
+    lens: (a.lens ?? 0) + ((b.lens ?? 0) - (a.lens ?? 0)) * u,
     mode,
   };
 }

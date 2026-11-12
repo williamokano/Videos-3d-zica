@@ -16,7 +16,8 @@ describe('color of the picture', () => {
   });
 
   it('takes the grade of the series and what each rule changes, in order', () => {
-    expect(resolveGrade({ grade: { contrast: 1.2 } }, rules)).toEqual({ tint: '#ff0000', amount: 0.4, saturation: 0, contrast: 1.2, vignette: 0.2 });
+    expect(resolveGrade({ grade: { contrast: 1.2, grain: 0.3 } }, rules)).toEqual({ tint: '#ff0000', amount: 0.4, saturation: 0, contrast: 1.2, vignette: 0.2, grain: 0.3 });
+    expect(gradeIsNeutral(resolveGrade({ grade: { grain: 0.2 } }, []))).toBe(false);
   });
 
   it('comes in with the weight of the rule, as the sky does', () => {

@@ -51,7 +51,7 @@ export interface Step {
 }
 
 type Point2 = [number, number];
-type Shot = { pos: Vec3; lookAt: Vec3; fov?: number };
+type Shot = { pos: Vec3; lookAt: Vec3; fov?: number; lens?: number };
 
 /** A character of the cast, as the script sees it. Every method is one step: it starts now and the clock moves to its end. */
 export interface Actor {
@@ -142,12 +142,12 @@ export interface Director {
   camera: {
     /** Cut to a camera placed by hand. */
     cut(shot: Shot): void;
-    /** Within the current shot, be here by now: the camera moves from where the shot started. In a shot attached to a character, only `fov`, `distance`, `height` and `pitch` apply. */
+    /** Within the current shot, be here by now: the camera moves from where the shot started. In a shot attached to a character, only `fov`, `lens`, `distance`, `height` and `pitch` apply. `lens` (0 to 1) is a wide-angle distortion, for moments of tension. */
     moveTo(shot: Partial<Shot> & { distance?: number; height?: number; pitch?: number }): void;
     /** Cut to the eyes of a character. */
-    fpv(who: Actor | string, options?: { fov?: number; pitch?: number }): void;
+    fpv(who: Actor | string, options?: { fov?: number; pitch?: number; lens?: number }): void;
     /** Cut to behind and above a character, following them. */
-    thirdPerson(who: Actor | string, options?: { distance?: number; height?: number; pitch?: number; fov?: number }): void;
+    thirdPerson(who: Actor | string, options?: { distance?: number; height?: number; pitch?: number; fov?: number; lens?: number }): void;
   };
 }
 

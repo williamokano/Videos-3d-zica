@@ -35,9 +35,11 @@ export interface Grade {
   contrast: number;
   /** Darkening toward the corners, from 0 (none) to 1 (strong). */
   vignette: number;
+  /** Film grain, from 0 (none) to 1 (strong). Keep it light: video platforms compress grain into noise. */
+  grain: number;
 }
 
-export const NEUTRAL_GRADE: Grade = { tint: '#ffffff', amount: 0, saturation: 1, contrast: 1, vignette: 0 };
+export const NEUTRAL_GRADE: Grade = { tint: '#ffffff', amount: 0, saturation: 1, contrast: 1, vignette: 0, grain: 0 };
 
 export interface BibleRule {
   id: string;
@@ -117,7 +119,7 @@ export function resolveGrade(bible: Pick<Bible, 'grade'>, rules: BibleRule[], we
 
 /** Whether a grade changes the picture at all. */
 export function gradeIsNeutral(grade: Grade): boolean {
-  return grade.amount <= 0.001 && Math.abs(grade.saturation - 1) < 0.001 && Math.abs(grade.contrast - 1) < 0.001 && grade.vignette <= 0.001;
+  return grade.amount <= 0.001 && Math.abs(grade.saturation - 1) < 0.001 && Math.abs(grade.contrast - 1) < 0.001 && grade.vignette <= 0.001 && grade.grain <= 0.001;
 }
 
 /** Values overridden by what each rule changes, each rule by its weight: numbers and colors are mixed. */

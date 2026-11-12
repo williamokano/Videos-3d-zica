@@ -205,3 +205,7 @@ d.endCard({
 ```
 
 De 2 a 6 opções. Cada uma pode ter `icon` (letra, número ou emoji; padrão A, B, C...) e `color`. A tela aparece por cima da imagem, que continua por trás. O texto das opções é do autor: pergunte antes de inventar.
+
+## Lente grande-angular
+
+`lens` (0 a 1) em qualquer chamada de câmera distorce a imagem como uma grande-angular: `d.camera.moveTo({ fov: 76, lens: 0.7 })`. Varia entre keyframes, como o `fov`. Use em momentos de tensão (fuga, corrida), não o tempo todo: deforma o que precisa ser lido, como a tela do celular. Um `moveTo` que não repete `fov` ou `pitch` leva esses valores ao padrão; repita os do plano.

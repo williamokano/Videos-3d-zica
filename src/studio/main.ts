@@ -153,6 +153,8 @@ applyStyle(scene, style);
 const shotStage: CameraStage = cameraStage(actions, built, cast);
 /** Character whose eyes the episode camera is in right now, if any. */
 let firstPerson: InteractiveObject | undefined;
+/** Wide-angle distortion of the episode camera right now, 0 to 1. */
+let shotLens = 0;
 const interactiveById = new Map([...built.interactives, ...cast, world, ...props].map((o) => [o.id, o]));
 /** Doors opened or closed by hand in walk mode, until the timeline moves again. */
 const handOverrides = new Map<string, number>();
@@ -189,6 +191,7 @@ function applyShot(t: number): void {
   if (!cameraOk) return;
   const pose: CameraPose = evaluateCamera(episode.camera, t, shotStage);
   firstPerson = pose.mode === 'fpv' ? interactiveById.get(pose.follow!) : undefined;
+  shotLens = pose.lens;
   shotCamera.position.set(...pose.pos);
   shotCamera.lookAt(...pose.lookAt);
   shotCamera.fov = pose.fov;
@@ -517,7 +520,7 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
   renderer.clear();
   renderer.render(scene, cam);
   if (asShot) {
-    grade.apply(renderer, [x, y, w, h]);
+    grade.apply(renderer, [x, y, w, h], shotLens, timeline?.time ?? 0);
     firstPerson?.firstPerson?.(false);
     applyVisibility();
   }

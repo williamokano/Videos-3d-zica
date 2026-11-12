@@ -508,7 +508,7 @@ renderer.setAnimationLoop(() => {
   apply(time);
   orbit.update();
   renderer.render(scene, camera);
-  grade.apply(renderer, [0, 0, width, height]);
+  grade.apply(renderer, [0, 0, width, height], 0, time);
   for (const slot of slots) {
     feet.set(slot.at[0], 0, slot.at[1]).project(camera);
     slot.nameplate.hidden = feet.z > 1;

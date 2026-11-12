@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 129 testes
+npm run typecheck && npm test   # 132 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine em http://localhost:5173/?vitrine=personagens
 ```
@@ -108,9 +108,14 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Desenhada em HTML por cima do quadro da câmera do episódio (`showEndCard` em `src/studio/main.ts`), como as legendas; o render captura junto.
   - O episódio 1 termina com uma, de exemplo. O texto das opções é meu, não do roteiro do autor: trocar ou apagar em `series/ceu-vermelho/episodes/001.ts`.
 
+- Grande-angular e granulado (tarefa 8), no mesmo passe da cor da imagem (`src/engine/grade.ts`):
+  - Lente: `lens` de 0 a 1 num keyframe de câmera, interpolada entre keyframes como o `fov`. No roteiro: `d.camera.moveTo({ fov: 76, lens: 0.7 })`, e também em `cut`, `fpv` e `thirdPerson`. O meio da imagem incha e as bordas curvam; os cantos ficam onde estão, então não sobra borda preta.
+  - Granulado: `grain` de 0 a 1 no `grade` da série ou de uma regra. Muda a cada frame e é o mesmo para o mesmo frame. Nenhuma série usa por padrão.
+  - No episódio 1, a lente abre de 0 a 0,7 durante a corrida final, como exemplo.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 7 estão feitas. A próxima é a 8. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 8 estão feitas. A próxima é a 9. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
@@ -119,7 +124,7 @@ As tarefas 1 a 7 estão feitas. A próxima é a 8. O autor viu o rosto novo ("ac
 5. ~~Cabelo com volume e ficha mais configurável~~: feito.
 6. ~~Cor da imagem por regra da bíblia ou por série~~: feito, como efeito genérico.
 7. ~~Tela final interativa~~: feita.
-8. **Grande-angular como opção de câmera** e **granulado leve opcional**.
+8. ~~Grande-angular por plano e granulado opcional~~: feito.
 9. **Vitrine para os outros assets**: carros, caminhões, escavadeiras, móveis.
 10. **Voz**: só com confirmação do autor.
 
@@ -207,6 +212,8 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - A vitrine não tem controles para a cor da imagem; ela só aparece ao ligar uma regra que a tenha.
 - O texto da tela final quebra de linha um pouco diferente no estúdio e no vídeo renderizado (tamanhos de fonte arredondados em tela pequena). O que vale é o vídeo.
 - A tela final não tem ícones desenhados: `icon` aceita texto ou emoji, e emoji depende da fonte da máquina que renderiza.
+- Um keyframe de câmera que não repete `fov`, `pitch` ou `lens` leva esse valor de volta ao padrão: ao abrir a lente com `moveTo`, repita o `fov` do plano.
+- A lente amplia o meio da imagem, que perde um pouco de nitidez com `lens` alto.
 - Modelos GLB não têm dedos e seguram pelo pulso.
 - O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
 - Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.

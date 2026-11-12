@@ -342,7 +342,10 @@ export default direct(
       professor.lookAt(heroi, { duration: 0.3 });
       professor.say('Ei! Volta aqui!', { to: heroi });
     });
+    // A fuga: a lente abre enquanto ele corre.
+    d.camera.moveTo({ fov: 64, lens: 0 });
     heroi.runTo([20, 1.5], { elevation: 0, speed: 3.6 });
+    d.camera.moveTo({ fov: 76, lens: 0.7 });
     // Tela final: a pergunta para quem assiste.
     d.endCard({
       title: 'O que você faria?',
