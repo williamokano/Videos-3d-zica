@@ -1,4 +1,5 @@
 import { registerAction, type WalkPath } from './catalog';
+import { BODY, reachBody } from './hands';
 
 const RUN_FROM = 3;
 
@@ -217,5 +218,38 @@ registerAction({
       ],
       detach: {},
     };
+  },
+});
+
+registerAction({
+  id: 'raise',
+  description: 'O personagem levanta o que tem na mão até a frente do rosto (para ler um celular) ou do peito, e fica assim até um "lower".',
+  appliesTo: ['character'],
+  params: {
+    to: { type: 'string', description: '"eyes" (padrão) ou "chest"' },
+    hand: { type: 'string', description: '"left" ou "right" (padrão: a mão que segura algo)' },
+  },
+  duration: 0.6,
+  compile(ctx) {
+    const to = (ctx.params.to as string | undefined) ?? 'eyes';
+    if (to !== 'eyes' && to !== 'chest') ctx.fail('"to" precisa ser "eyes" ou "chest".');
+    const asked = ctx.params.hand as string | undefined;
+    if (asked !== undefined && asked !== 'left' && asked !== 'right') ctx.fail('"hand" precisa ser "left" ou "right".');
+    const me = ctx.target.id;
+    const side = asked ? (asked === 'left' ? 'L' : 'R') : ctx.riderOn(me, 'handR') || !ctx.riderOn(me, 'handL') ? 'R' : 'L';
+    return { writes: reachBody(me, side, BODY[to as 'eyes' | 'chest'](side), 1) };
+  },
+});
+
+registerAction({
+  id: 'lower',
+  description: 'O personagem abaixa a mão que tinha levantado com "raise".',
+  appliesTo: ['character'],
+  params: {},
+  duration: 0.5,
+  compile(ctx) {
+    const sides = (['L', 'R'] as const).filter((s) => ctx.current(`reach${s}`) > 0.01);
+    if (!sides.length) ctx.fail('o personagem não está com a mão levantada.');
+    return { writes: sides.map((s) => ({ channel: `reach${s}`, to: 0 })) };
   },
 });

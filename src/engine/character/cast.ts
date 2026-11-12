@@ -27,7 +27,7 @@ const STRIDE = 1.5;
  * covered), `gait` (0 stands, 1 walks, 2 runs), `talk` (mouth held open by speech), one `expr.<name>` weight
  * per expression, and the body channels: `crouch`, `sit`, `attached` (how much it rides on a seat), and for each
  * hand `carryL` / `carryR` (holding something) and `reachL` / `reachR` with `.x`, `.y`, `.z` (hand going to a point
- * of the location). `look.yaw` and `look.pitch` turn the head from the body, in degrees. `rig` replaces the built-in body, e.g. by a loaded GLB.
+ * of the location, or of the body itself when `.local` is 1). `look.yaw` and `look.pitch` turn the head from the body, in degrees. `rig` replaces the built-in body, e.g. by a loaded GLB.
  */
 export function buildCharacter(member: CastMember, def: CharacterDef, rig: CharacterRig = buildBody(def)): InteractiveObject {
   const id = member.id ?? member.character;
@@ -39,8 +39,8 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     x: member.at[0], y: member.elevation ?? 0, z: member.at[1], yaw: member.yaw ?? 0,
     stride: 0, gait: 0, talk: 0, crouch: 0, sit: 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0,
     carryL: 0, carryR: 0,
-    reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0,
-    reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0,
+    reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
+    reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
   };
   const scale = (def.height ?? 1.7) / 1.7;
@@ -57,7 +57,9 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       const reach = state[`reach${side}`];
       if (reach <= 0.001) continue;
       // The hand leaves from where the pose has it and goes straight to the point.
-      const target = object.worldToLocal(new THREE.Vector3(state[`reach${side}.x`], state[`reach${side}.y`], state[`reach${side}.z`])).divideScalar(scale);
+      // The point is given in the location, or on the character's own body (already in its frame and size).
+      const point = new THREE.Vector3(state[`reach${side}.x`], state[`reach${side}.y`], state[`reach${side}.z`]);
+      const target = state[`reach${side}.local`] > 0.5 ? point : object.worldToLocal(point).divideScalar(scale);
       pose = reachPose(pose, side, wristPosition(pose, side).lerp(target, reach));
     }
     // The neck takes part of the turn and the head the rest.
@@ -87,7 +89,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     },
     position: () => [state.x, state.y, state.z],
     tick,
-    socket: (name) => rig.joint(name as Joint),
+    socket: (name) => rig.joint((name === 'pocket' ? 'thighR' : name) as Joint),
     firstPerson: (on) => {
       if (rig.hideHead) rig.hideHead(on);
       else rig.object.visible = !on;

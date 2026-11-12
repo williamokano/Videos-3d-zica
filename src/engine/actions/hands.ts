@@ -36,6 +36,7 @@ export function freeHand(ctx: ActionContext, by: string): 'L' | 'R' {
  */
 export function reach(ctx: ActionContext, by: string, side: 'L' | 'R', point: Point3, amount: (u: number) => number, what: string): ChannelWrite[] {
   const who = actor(ctx, by);
+  if (ctx.current(`reach${side}`, by) > 0.01) ctx.fail(`a mão de "${by}" está levantada segurando algo; use "lower" antes.`);
   const scale = who.traits.bodyScale ?? 1;
   const place = ctx.placeOf(by);
   const far = Math.hypot(point[0] - place.pos[0], point[2] - place.pos[2]);
@@ -51,6 +52,7 @@ export function reach(ctx: ActionContext, by: string, side: 'L' | 'R', point: Po
     constant(`reach${side}.x`, point[0]),
     constant(`reach${side}.y`, point[1]),
     constant(`reach${side}.z`, point[2]),
+    constant(`reach${side}.local`, 0),
     { target: by, channel: `reach${side}`, at: amount },
   ];
   if (squat > 0.02) writes.push({ target: by, channel: 'crouch', at: (u) => squat * amount(u) });
@@ -59,3 +61,23 @@ export function reach(ctx: ActionContext, by: string, side: 'L' | 'R', point: Po
 
 /** Hand goes out during the first part of the clip, stays, and comes back at the end. */
 export const outAndBack = (out: number, back: number) => (u: number): number => Math.min(ramp(u, 0, out), 1 - ramp(u, back, 1));
+
+/** Places on the body, in meters of the standard 1.7 m body: x to the character's right, y up from the feet, -z ahead. */
+export const BODY = {
+  pocket: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.17 : -0.17, 0.86, -0.02],
+  /** Where a hand holds something to be read. */
+  eyes: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.05 : -0.05, 1.4, -0.36],
+  chest: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.08 : -0.08, 1.2, -0.3],
+};
+
+/** Channel writes that take a hand of `by` to a place on its own body, following `amount(u)`. */
+export function reachBody(by: string, side: 'L' | 'R', point: Point3, amount: ChannelWrite['at'] | number): ChannelWrite[] {
+  const constant = (channel: string, value: number): ChannelWrite => ({ target: by, channel, at: () => value });
+  return [
+    constant(`reach${side}.x`, point[0]),
+    constant(`reach${side}.y`, point[1]),
+    constant(`reach${side}.z`, point[2]),
+    constant(`reach${side}.local`, 1),
+    typeof amount === 'number' ? { target: by, channel: `reach${side}`, to: amount } : { target: by, channel: `reach${side}`, at: amount },
+  ];
+}

@@ -1,13 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import '../engine/assets/school';
-import '../engine/assets/nature';
-import '../engine/assets/building';
-import '../engine/assets/vehicles';
+import '../engine/assets';
 import { evaluateActions, type CompiledActions } from '../engine/actions/catalog';
 import { loadGlbCharacter } from '../engine/character/glb';
 import type { CharacterDef, CharacterRig } from '../engine/character/types';
-import { applyStage, buildCast, cameraStage, compileEpisode } from '../engine/timeline/stage';
+import { applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpisode } from '../engine/timeline/stage';
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
@@ -72,7 +69,7 @@ let actionsError = '';
 let episode: Episode | undefined;
 if (source && isScript(source)) {
   try {
-    episode = resolveScript(source, built, inSeries(characters));
+    episode = resolveScript(source, built, inSeries(characters), bible);
   } catch (error) {
     // Show the location anyway, with the error in the panel.
     actionsError = `Roteiro do episódio ${source.episode}: ${error instanceof Error ? error.message : String(error)}`;
@@ -99,8 +96,11 @@ scene.add(gizmos);
 
 // ---- Episode cast and actions ----
 
-let actions: CompiledActions = { tracks: [], clips: [], links: [], gazes: [], focus: {}, initial: {}, sockets: {} };
+let actions: CompiledActions = { tracks: [], clips: [], links: [], gazes: [], events: [], focus: {}, initial: {}, sockets: {}, scales: {} };
 let cast: InteractiveObject[] = [];
+const world = buildWorld(bible, episodeNumber);
+/** Things the episode adds to the location. */
+let props: InteractiveObject[] = [];
 /** False when the camera track has an error; the shot view then stays where it is. */
 let cameraOk = false;
 if (episode) {
@@ -115,7 +115,9 @@ if (episode) {
     }
     cast = buildCast(episode, defs, rigs);
     for (const character of cast) scene.add(character.object);
-    actions = compileEpisode(episode, built, cast);
+    props = buildProps(episode);
+    for (const prop of props) scene.add(prop.object);
+    actions = compileEpisode(episode, built, cast, [world, ...props]);
   } catch (error) {
     actionsError = [actionsError, error instanceof Error ? error.message : String(error)].filter(Boolean).join('\n');
   }
@@ -131,13 +133,14 @@ if (episode) {
 const shotStage: CameraStage = cameraStage(actions, built, cast);
 /** Character whose eyes the episode camera is in right now, if any. */
 let firstPerson: InteractiveObject | undefined;
-const interactiveById = new Map([...built.interactives, ...cast].map((o) => [o.id, o]));
+const interactiveById = new Map([...built.interactives, ...cast, world, ...props].map((o) => [o.id, o]));
 /** Doors opened or closed by hand in walk mode, until the timeline moves again. */
 const handOverrides = new Map<string, number>();
 
 function applyActions(t: number): void {
   handOverrides.clear();
   applyStage(actions, interactiveById, t);
+  applyEnvironment();
 }
 
 /** Walk mode: open or close the nearest door within reach, ignoring which side it opens from. */
@@ -282,8 +285,9 @@ function focusRoom(room: Room): void {
 }
 
 function applyEnvironment(): void {
-  const rules = activeRules(bible, episodeNumber).filter((r) => !disabledRules.has(r.id));
-  environment.apply(resolveEnvironment(rules));
+  // Every rule of the bible counts, by how much the world has it in effect right now.
+  const rules = bible.rules.filter((r) => !disabledRules.has(r.id));
+  environment.apply(resolveEnvironment(rules, Object.fromEntries(rules.map((r) => [r.id, world.get!(`rule.${r.id}`) ?? 0]))));
 }
 
 /** Current free-view pose as a camera keyframe at the current time, ready to paste into the episode file. */

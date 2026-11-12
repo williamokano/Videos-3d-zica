@@ -57,7 +57,7 @@ export interface ActionTarget {
   traits: TargetTraits;
 }
 
-export type ParamType = 'number' | 'string' | 'boolean' | 'point2' | 'point3' | 'path';
+export type ParamType = 'number' | 'string' | 'boolean' | 'point2' | 'point3' | 'path' | 'data';
 
 export interface ParamSpec {
   type: ParamType;
@@ -114,6 +114,14 @@ export interface Link {
   t1: number;
 }
 
+/** Something that happened to an object at a time; the object decides how to show it. */
+export interface StageEvent {
+  target: string;
+  t: number;
+  type: string;
+  data: Record<string, unknown>;
+}
+
 /** A character keeping its head turned to something, from t0 until the next gaze of the same character. */
 export interface Gaze {
   target: string;
@@ -144,12 +152,14 @@ export interface ActionContext {
 export interface ActionResult {
   writes: ChannelWrite[];
   duration?: number;
-  /** Attach an object (default: the target) to a socket of another, from the start of the clip or from its end. */
-  attach?: { target?: string; to: string; socket: string; weight?: string; at?: 'start' | 'end' };
+  /** Attach an object (default: the target) to a socket of another, from the start of the clip, its end, or a point of its progress (0 to 1). */
+  attach?: { target?: string; to: string; socket: string; weight?: string; at?: 'start' | 'end' | number };
+  /** Things that happen to an object at the start of the clip and that it shows its own way (a message arriving on a phone). */
+  events?: { target?: string; type: string; data?: Record<string, unknown> }[];
   /** Turn the target's head to an object (by id) or a point; null looks ahead again. */
   gaze?: { at: string | [number, number, number] | null };
   /** Let an object (default: the target) go, at the end of the clip or at its start. */
-  detach?: { target?: string; at?: 'start' | 'end' };
+  detach?: { target?: string; at?: 'start' | 'end' | number };
   validate?(ctx: ValidateContext): void;
 }
 
@@ -208,11 +218,15 @@ export interface CompiledActions {
   clips: CompiledClip[];
   links: Link[];
   gazes: Gaze[];
+  /** Things that happened to objects, in time order. */
+  events: StageEvent[];
   /** Where to look to look at each object: a fixed place for doors, and how far above its position otherwise. */
   focus: Record<string, { base?: [number, number, number]; up: number }>;
   /** Channel values before any action, by object. */
   initial: Record<string, Record<string, number>>;
   sockets: Record<string, Record<string, [number, number, number]>>;
+  /** Body size of each character, relative to the standard one. */
+  scales: Record<string, number>;
 }
 
 const EASES: Record<Ease, (u: number) => number> = {
@@ -232,25 +246,28 @@ const PARAM_CHECKS: Record<ParamType, (v: unknown) => boolean> = {
   point2: (v) => isPoint(v, 2),
   point3: (v) => isPoint(v, 3),
   path: (v) => Array.isArray(v) && v.length > 0 && v.every((p) => isPoint(p, 2)),
+  data: (v) => typeof v === 'object' && v !== null && !Array.isArray(v),
 };
 
 /**
  * Turn the episode's action clips into channel tracks. Throws with a message that names the clip
  * when an action does not exist, does not fit its target, has bad params or overlaps another one.
  */
-export function compileActions(clips: ActionClip[], targets: ActionTarget[], services: ActionServices = {}): CompiledActions {
+export function compileActions(clips: ActionClip[], targets: ActionTarget[], services: ActionServices = {}, initial: { links?: Link[] } = {}): CompiledActions {
   const byId = new Map(targets.map((t) => [t.id, t]));
   const tracks = new Map<string, ChannelTrack>();
   const compiled: CompiledClip[] = [];
-  const links: Link[] = [];
+  const links: Link[] = (initial.links ?? []).map((l) => ({ ...l }));
   const out: CompiledActions = {
     tracks: [],
     clips: compiled,
     links,
     gazes: [],
+    events: [],
     focus: Object.fromEntries(targets.map((t) => [t.id, { base: t.traits.door?.handle, up: t.traits.door ? 0 : (t.traits.eyeHeight ?? (t.traits.size ? t.traits.size[1] / 2 : 0.8)) }])),
     initial: Object.fromEntries(targets.map((t) => [t.id, t.channels])),
     sockets: Object.fromEntries(targets.filter((t) => t.traits.sockets).map((t) => [t.id, t.traits.sockets!])),
+    scales: Object.fromEntries(targets.filter((t) => t.traits.bodyScale).map((t) => [t.id, t.traits.bodyScale!])),
   };
   const checks: (() => void)[] = [];
   const ordered = clips.map((clip, index) => ({ clip, index })).sort((a, b) => a.clip.t - b.clip.t || a.index - b.index);
@@ -319,14 +336,18 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
       const at = write.at ?? ((u: number) => from + (to - from) * u);
       track.segments.push({ t0: clip.t, t1: clip.t + duration, at: (u) => at(ease(u)), end: at(1) });
     }
+    const moment = (at: 'start' | 'end' | number): number => clip.t + duration * (at === 'start' ? 0 : at === 'end' ? 1 : at);
     if (result.detach) {
       const link = linkOf(result.detach.target ?? target.id);
-      if (link) link.t1 = result.detach.at === 'start' ? clip.t : clip.t + duration;
+      if (link) link.t1 = moment(result.detach.at ?? 'end');
+    }
+    for (const event of result.events ?? []) {
+      out.events.push({ target: event.target ?? target.id, t: clip.t, type: event.type, data: event.data ?? {} });
     }
     if (result.attach) {
       const { to, socket, weight } = result.attach;
       const rider = result.attach.target ?? target.id;
-      const t0 = result.attach.at === 'end' ? clip.t + duration : clip.t;
+      const t0 = moment(result.attach.at ?? 'start');
       const busy = links.find((l) => l.target === rider && l.t1 > t0);
       if (busy) fail(`"${rider}" já está preso a "${busy.to}"; solte antes.`);
       const taken = links.find((l) => l.to === to && l.socket === socket && l.t1 > t0);
@@ -357,6 +378,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
     }
   }
   for (const check of checks) check();
+  out.events.sort((a, b) => a.t - b.t);
   return out;
 }
 
@@ -395,8 +417,20 @@ export function placementAt(compiled: CompiledActions, id: string, t: number, de
   const pos: [number, number, number] = [own('x'), own('y'), own('z')];
   let yaw = own('yaw');
   const link = evaluateLinks(compiled, t).find((l) => l.target === id);
-  const offset = link && compiled.sockets[link.to]?.[link.socket];
-  if (!link || !offset || depth > 4) return { pos, yaw };
+  if (!link || depth > 4) return { pos, yaw };
+  let offset = compiled.sockets[link.to]?.[link.socket];
+  const side = link.socket.match(/^hand([LR])$/)?.[1];
+  if (!offset && (side || link.socket === 'pocket')) {
+    // In a hand or a pocket: about where that is on the body. The scene puts it exactly on the hand.
+    const of = (channel: string) => channelAt(compiled, link.to, channel, t);
+    const sign = side === 'L' ? -1 : 1;
+    const carried = [sign * 0.2, 1.0, -0.25];
+    const raised = of(`reach${side}.local`) > 0.5 ? of(`reach${side}`) : 0;
+    const at = side ? carried.map((v, i) => v + (of(`reach${side}.${'xyz'[i]}`) - v) * raised) : [0.17, 0.86, 0];
+    const scale = compiled.scales[link.to] ?? 1;
+    offset = [at[0] * scale, at[1] * scale, at[2] * scale];
+  }
+  if (!offset) return { pos, yaw };
   const base = placementAt(compiled, link.to, t, depth + 1);
   const a = (base.yaw * Math.PI) / 180;
   const at = [

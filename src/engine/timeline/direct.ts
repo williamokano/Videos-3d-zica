@@ -6,14 +6,17 @@
  */
 import '../actions/builtin';
 import '../actions/character';
+import '../actions/phone';
 import { compileActions, type ActionClip, type Ease, type WalkPath } from '../actions/catalog';
 import type { CastMember } from '../character/cast';
+import type { Bible } from '../bible';
 import type { CharacterDef } from '../character/types';
+import type { ChatMessage, PhoneSetup } from '../ui/phone';
 import type { BuiltLocation } from '../world/build';
 import { buildNav, findPath } from '../world/nav';
 import { validateCamera, type CameraKey, type Vec3 } from './camera';
-import type { Episode } from './episode';
-import { buildCast } from './stage';
+import type { Episode, EpisodeProp } from './episode';
+import { WORLD, buildCast, buildProps, buildWorld, initialLinks } from './stage';
 
 export interface ScriptHeader {
   episode: number;
@@ -21,6 +24,8 @@ export interface ScriptHeader {
   /** Location id (file name in world/). */
   location: string;
   cast: CastMember[];
+  /** Things this episode adds to the location, e.g. a phone that starts in a pocket. */
+  props?: EpisodeProp[];
   /** Length in seconds. Default: when the last thing ends, plus `tail`. */
   duration?: number;
   /** Seconds kept after the last thing ends (default 1). */
@@ -68,12 +73,38 @@ export interface Actor {
   close(object: string, options?: StepOptions & { part?: string; hand?: 'left' | 'right' }): Step;
   sit(on: string, seat?: string, options?: StepOptions): Step;
   standUp(to: Point2, options?: StepOptions & { yaw?: number }): Step;
+  /** Put a held item in the pocket; `pickUp` takes it out again. */
+  putAway(item: string, options?: StepOptions): Step;
+  /** Lift what is in the hand to the eyes (to read a phone) or to the chest; stays up until `lower`. */
+  raise(to?: 'eyes' | 'chest', options?: StepOptions): Step;
+  lower(options?: StepOptions): Step;
+}
+
+/** A phone of the episode, as the script sees it. None of these take time: they happen now. */
+export interface Phone {
+  readonly id: string;
+  /** Contacts, history and clock. Call once, before anything else happens on the phone. */
+  setup(setup: PhoneSetup): void;
+  /** A message arrives in the open chat. */
+  receive(text: string, options?: Omit<ChatMessage, 'from' | 'text'>): void;
+  /** The owner's message goes out. */
+  send(text: string, options?: Omit<ChatMessage, 'from' | 'text'>): void;
+  /** The other side starts or stops typing ("…"). A message arriving also ends it. */
+  typing(on: boolean): void;
+  /** Show another chat. */
+  open(chat: string): void;
+  /** Light the screen up or turn it off. */
+  screen(on: boolean): void;
+  /** Force this phone on or off the network, whatever the world's signal is; null follows the world again. */
+  network(on: boolean | null): void;
 }
 
 export interface Director {
   /** The clock: seconds from the start of the episode where the next step begins. */
   readonly now: number;
   actor(id: string): Actor;
+  /** A phone declared in the episode's `props`. */
+  phone(id: string): Phone;
   /** Any action of the catalog on any object, e.g. `d.do('carro', 'drive', { path })`. */
   do(target: string, action: string, params?: Record<string, unknown>, options?: StepOptions): Step;
   wait(seconds: number): void;
@@ -85,6 +116,12 @@ export interface Director {
   together(...branches: (() => void)[]): Step;
   /** Something that goes on while the script carries on: the clock stays where it was. */
   background(branch: () => void): Step;
+  world: {
+    /** Bring a rule of the bible into effect (true or 1), or out of it; with `duration`, gradually. */
+    rule(id: string, on: boolean | number, options?: StepOptions): Step;
+    /** Phones get or lose signal everywhere. */
+    network(on: boolean, options?: StepOptions): Step;
+  };
   camera: {
     /** Cut to a camera placed by hand. */
     cut(shot: Shot): void;
@@ -110,10 +147,11 @@ const clean = <T extends object>(o: T): T => Object.fromEntries(Object.entries(o
 const round = (t: number): number => Math.round(t * 1000) / 1000;
 
 /** Run a script against its location and turn it into an Episode with every time worked out. */
-export function resolveScript(source: EpisodeScript, built: BuiltLocation, characters: CharacterDef[]): Episode {
+export function resolveScript(source: EpisodeScript, built: BuiltLocation, characters: CharacterDef[], bible?: Bible): Episode {
   const { script, tail, duration, ...header } = source;
   const cast = buildCast({ ...header, duration: 0, camera: [] }, characters);
-  const targets = [...built.interactives, ...cast];
+  const targets = [...built.interactives, ...cast, buildWorld(bible, header.episode), ...buildProps(header)];
+  const initial = { links: initialLinks(header) };
   const nav = cast.length ? buildNav(built) : undefined;
   // Every step compiles the track again to learn its length; routes are worked out once.
   const routes = new Map<string, WalkPath | null>();
@@ -134,7 +172,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     const clip: ActionClip = clean({ t: round(now), target, action, params: clean(params), duration: options.duration, ease: options.ease });
     clips.push(clip);
     try {
-      const compiled = compileActions(clips, targets, services);
+      const compiled = compileActions(clips, targets, services, initial);
       clip.duration = round(compiled.clips.find((c) => c.index === clips.length - 1)!.duration);
     } catch (error) {
       clips.pop();
@@ -164,6 +202,9 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       close: (object, options) => run(object, 'close', { by: id, part: options?.part, hand: options?.hand }, options),
       sit: (on, seat, options) => run(id, 'sit', { on, seat }, options),
       standUp: (to, options) => run(id, 'standUp', { to, yaw: options?.yaw }, options),
+      putAway: (item, options) => run(item, 'putAway', {}, options),
+      raise: (to, options) => run(id, 'raise', { to }, options),
+      lower: (options) => run(id, 'lower', {}, options),
     };
   };
 
@@ -173,11 +214,32 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   };
   const idOf = (who: Actor | string): string => (typeof who === 'string' ? who : who.id);
 
+  /** Something that happens at this instant and does not move the clock. */
+  const instant = (target: string, action: string, params: Record<string, unknown>): void => {
+    const at = now;
+    run(target, action, params, { duration: 0 });
+    now = at;
+  };
+  const phone = (id: string): Phone => {
+    const event = (type: string, data: object) => instant(id, 'screen', { event: type, data });
+    return {
+      id,
+      setup: (setup) => event('setup', setup),
+      receive: (text, options) => event('message', { ...options, from: 'them', text }),
+      send: (text, options) => event('message', { ...options, from: 'me', text }),
+      typing: (on) => event('typing', { on }),
+      open: (chat) => event('open', { chat }),
+      screen: (on) => event('screen', { on }),
+      network: (on) => instant(id, 'set', { channel: 'network', value: on === null ? -1 : Number(on) }),
+    };
+  };
+
   const director: Director = {
     get now() {
       return now;
     },
     actor,
+    phone,
     do: run,
     wait(seconds) {
       if (!(seconds >= 0)) throw new Error(`wait: os segundos precisam ser zero ou mais, e veio ${seconds}.`);
@@ -209,6 +271,10 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       const end = now;
       now = start;
       return { start, end };
+    },
+    world: {
+      rule: (id, on, options) => run(WORLD, 'set', { channel: `rule.${id}`, value: Number(on) }, { duration: 0, ...options }),
+      network: (on, options) => run(WORLD, 'set', { channel: 'network', value: Number(on) }, { duration: 0, ...options }),
     },
     camera: {
       cut: (shot) => key({ ...shot, cut: keys.length > 0 || undefined }),

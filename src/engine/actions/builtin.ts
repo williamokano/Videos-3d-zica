@@ -1,5 +1,5 @@
 import { registerAction, type ActionContext, type ActionResult, type ChannelWrite } from './catalog';
-import { actor, freeHand, outAndBack, ramp, reach, type Point3 } from './hands';
+import { BODY, actor, freeHand, outAndBack, ramp, reach, reachBody, type Point3 } from './hands';
 
 /** Channel that holds how open something is: the object itself, or one named part of it (a car door). */
 function openChannel(ctx: ActionContext): string {
@@ -101,7 +101,7 @@ registerAction({
 registerAction({
   id: 'moveTo',
   description: 'Desliza um objeto com id em linha reta até um ponto do local.',
-  appliesTo: ['prop', 'item', 'vehicle'],
+  appliesTo: ['prop', 'item', 'phone', 'vehicle'],
   params: {
     to: { type: 'point2', description: 'destino [x, z] em coordenadas do local', required: true },
     y: { type: 'number', description: 'altura final' },
@@ -208,7 +208,7 @@ const middle = (ctx: ActionContext, base: Point3): Point3 => [base[0], base[1] +
 registerAction({
   id: 'pickUp',
   description: 'Pega um item. Com "by", o personagem estende a mão (e se agacha, se preciso), pega e fica segurando; sem "by", o item vai até o ponto "to".',
-  appliesTo: ['item'],
+  appliesTo: ['item', 'phone'],
   params: {
     by: { type: 'string', description: 'personagem que pega; ele precisa estar a um braço do item' },
     hand: HAND,
@@ -224,6 +224,21 @@ registerAction({
     const link = ctx.linkOf(ctx.target.id);
     if (link?.socket.startsWith('hand')) ctx.fail(`o item já está com "${link.to}".`);
     const side = freeHand(ctx, by);
+    if (link?.socket === 'pocket') {
+      // Out of the pocket: the hand goes to the hip and comes back holding it.
+      if (link.to !== by) ctx.fail(`o item está no bolso de "${link.to}"; só ele pode tirar.`);
+      actor(ctx, by);
+      return {
+        duration: 0.9,
+        writes: [
+          ...reachBody(by, side, BODY.pocket(side), outAndBack(0.45, 0.55)),
+          { target: by, channel: `carry${side}`, at: (u) => ramp(u, 0.5, 1) },
+          { channel: 'held', at: () => 1 },
+        ],
+        detach: { at: 0.5 },
+        attach: { to: by, socket: `hand${side}`, weight: 'held', at: 0.5 },
+      };
+    }
     const base = ctx.placeOf(ctx.target.id).pos;
     const constant = (channel: string, value: number): ChannelWrite => ({ channel, at: () => value });
     return {
@@ -244,7 +259,7 @@ registerAction({
 registerAction({
   id: 'putDown',
   description: 'Larga um item num ponto do local. Se um personagem o segura, é ele quem põe o item lá.',
-  appliesTo: ['item'],
+  appliesTo: ['item', 'phone'],
   params: {
     at: { type: 'point3', description: 'onde o item fica, [x, y, z] em coordenadas do local' },
     on: { type: 'string', description: 'em vez de "at": id de um objeto com assentos (ex.: o carro); o item fica nele e vai junto' },
@@ -282,5 +297,28 @@ registerAction({
           detach: {},
         };
     return on ? { ...result, attach: { to: on, socket, at: 'end' } } : result;
+  },
+});
+
+registerAction({
+  id: 'putAway',
+  description: 'Quem segura o item guarda no bolso. Ele some até ser tirado de novo com pickUp.',
+  appliesTo: ['item', 'phone'],
+  params: {},
+  duration: 0.9,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id);
+    const hand = link?.socket.match(/^hand([LR])$/)?.[1] as 'L' | 'R' | undefined;
+    if (!link || !hand) ctx.fail('ninguém está segurando o item.');
+    const by = link!.to;
+    if (ctx.current(`reach${hand}`, by) > 0.01) ctx.fail(`a mão de "${by}" está levantada; use "lower" antes de guardar.`);
+    return {
+      writes: [
+        ...reachBody(by, hand!, BODY.pocket(hand!), outAndBack(0.45, 0.55)),
+        { target: by, channel: `carry${hand}`, at: (u) => 1 - ramp(u, 0, 0.5) },
+      ],
+      detach: { at: 0.5 },
+      attach: { to: by, socket: 'pocket', at: 0.5 },
+    };
   },
 });

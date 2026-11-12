@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { ActionTarget } from '../actions/catalog';
+import type { ActionTarget, CompiledActions } from '../actions/catalog';
 import { assetKind, createAsset, mat, type AssetChannels } from '../assets/registry';
 import { buildDoor } from './doors';
 import { contains, subtractRects, union, type Rect } from './rect';
@@ -22,6 +22,8 @@ export interface InteractiveObject extends ActionTarget {
   object: THREE.Object3D;
   /** Show a channel at a value. */
   set(channel: string, value: number): void;
+  /** Current value of a channel, for objects that keep state others read (the world). */
+  get?(channel: string): number | undefined;
   /** Where it is, for finding the nearest one: [x, y, z]. */
   position(): [number, number, number];
   /** Things that move by themselves with the clock (blinking, breathing). Called after the channels are set. */
@@ -29,7 +31,9 @@ export interface InteractiveObject extends ActionTarget {
   /** A moving place on the object where something can ride, e.g. a character's "handR". */
   socket?(name: string): THREE.Object3D | undefined;
   /** Ride on a socket: `weight` 0 leaves the object where its channels put it, 1 puts it on the socket. */
-  follow?(socket: THREE.Object3D | undefined, weight: number): void;
+  follow?(socket: THREE.Object3D | undefined, weight: number, holder?: InteractiveObject): void;
+  /** Show whatever depends on the whole track rather than on channels, e.g. a phone's screen. Called last. */
+  present?(compiled: CompiledActions, t: number): void;
   /** Characters: show or hide for a camera sitting in their eyes. */
   firstPerson?(on: boolean): void;
 }
@@ -110,13 +114,25 @@ function placeProps(
   }
 }
 
+/** A prop of its own, outside any room: something an episode brings in, like a phone in a pocket. */
+export function buildProp(prop: Prop): InteractiveObject {
+  if (!prop.id) throw new Error(`Prop "${prop.asset}" de episódio precisa de "id".`);
+  const obj = createAsset(prop.asset, prop.params);
+  obj.position.set(prop.pos[0], prop.y ?? 0, prop.pos[1]);
+  obj.rotation.y = THREE.MathUtils.degToRad(prop.rot ?? 0);
+  obj.traverse((o) => {
+    if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
+  });
+  return interactiveProp(prop, obj);
+}
+
 function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
   const own = (obj.userData.channels ?? {}) as AssetChannels;
   const placement: AssetChannels = {
     x: { value: obj.position.x, apply: (v) => (obj.position.x = v) },
     y: { value: obj.position.y, apply: (v) => (obj.position.y = v) },
     z: { value: obj.position.z, apply: (v) => (obj.position.z = v) },
-    yaw: { value: prop.rot ?? 0, apply: (v) => (obj.rotation.y = THREE.MathUtils.degToRad(v)) },
+    yaw: { value: prop.rot ?? 0, apply: (v) => obj.rotation.set(0, THREE.MathUtils.degToRad(v), 0) },
   };
   // `held` is 1 while something carries the item; characters will read it to attach the item to a hand.
   const held: AssetChannels = prop.pickable ? { held: { value: 0, apply: () => {} } } : {};
@@ -129,18 +145,26 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
   const grip = new THREE.Vector3();
   return {
     id: prop.id!,
-    kind: prop.pickable ? 'item' : assetKind(prop.asset),
+    kind: prop.pickable && assetKind(prop.asset) === 'prop' ? 'item' : assetKind(prop.asset),
     channels: Object.fromEntries(Object.entries(all).map(([name, c]) => [name, c.value])),
     traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets },
     object: obj,
     set: (channel, value) => all[channel]?.apply(value),
-    // Held by its middle: the item hangs centered on the hand.
-    follow: (socket, weight) => {
+    // Held by its middle and hanging centered on the hand, unless the asset says where it is gripped
+    // (`userData.grip`, a point of its own frame); then it also turns to face whoever holds it.
+    follow: (socket, weight, holder) => {
       if (!socket || weight <= 0) return;
       socket.getWorldPosition(grip);
-      grip.y -= size.y / 2;
+      const at = obj.userData.grip as [number, number, number] | undefined;
+      if (at && holder) {
+        obj.rotation.set(obj.userData.tilt ?? 0, holder.object.rotation.y, 0, 'YXZ');
+        grip.sub(new THREE.Vector3(...at).applyEuler(obj.rotation));
+      } else {
+        grip.y -= size.y / 2;
+      }
       obj.position.lerp(grip, Math.min(1, weight));
     },
+    present: obj.userData.present && ((compiled, t) => obj.userData.present(compiled, t, prop.id)),
     position: () => [obj.position.x, obj.position.y, obj.position.z],
   };
 }
