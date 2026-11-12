@@ -21,7 +21,8 @@
           "ambientIntensity": 1.0,
           "fogNear": 40,
           "fogFar": 200
-        }
+        },
+        "grade": { "tint": "#ff7a55", "amount": 0.3, "saturation": 1.1, "contrast": 1.08, "vignette": 0.3 }
       }
     }
   ]

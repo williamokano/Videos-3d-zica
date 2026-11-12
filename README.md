@@ -39,7 +39,7 @@ npm run build
 
 | Caminho | Conteúdo |
 |---|---|
-| `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio e estilo (`style`: `soft` ou `cel`, com contorno e faixas de luz) |
+| `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio, estilo (`style`: `soft` ou `cel`) e cor da imagem (`grade`: `tint`, `amount`, `saturation`, `contrast`, `vignette`; também dentro de `effects` de uma regra) |
 | `series/<série>/world/*.json` | Locais (formato em `src/engine/world/types.ts`) |
 | `series/<série>/characters/*.json` | Personagens (formato em `src/engine/character/types.ts`), com GLB opcional ao lado |
 | `series/<série>/episodes/*.ts` ou `*.json` | Episódios: roteiro em código (os tempos saem sozinhos) ou dado com os tempos escritos à mão |

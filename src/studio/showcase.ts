@@ -5,7 +5,7 @@ import '../engine/assets';
 import { BEHAVIOURS } from '../engine/actions/ambient';
 import { compileActions, headAngles, type CompiledActions } from '../engine/actions/catalog';
 import { mat, rbox } from '../engine/assets/registry';
-import { resolveEnvironment, resolveStyle, type Bible } from '../engine/bible';
+import { resolveEnvironment, resolveGrade, resolveStyle, type Bible } from '../engine/bible';
 import { buildCharacter } from '../engine/character/cast';
 import { HAIR_COLORS, extraLook } from '../engine/character/extras';
 import { loadGlbCharacter } from '../engine/character/glb';
@@ -13,6 +13,7 @@ import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES } from '../engine/character/
 import { SHOWCASE_BEHAVIOURS, SHOWCASE_POSES, SHOWCASE_YAW, STOOL, phoneOf, poseChannels, showcaseLayout, stageTrack } from '../engine/character/showcase';
 import { HAIR_STYLES, type CharacterDef } from '../engine/character/types';
 import { EnvironmentRig } from '../engine/environment';
+import { GradePass } from '../engine/grade';
 import { applyStyle } from '../engine/style';
 import { applyStage } from '../engine/timeline/stage';
 import { buildProp, type InteractiveObject } from '../engine/world/build';
@@ -45,6 +46,7 @@ stage.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 1000);
 const environment = new EnvironmentRig(scene);
+const grade = new GradePass();
 const floor = new THREE.Mesh(new THREE.CircleGeometry(60, 64), mat('#9aa0a8'));
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
@@ -301,7 +303,9 @@ async function addExtras(from: Slot, count: number): Promise<void> {
 }
 
 function applyEnvironment(): void {
-  environment.apply(resolveEnvironment(everySeries ? [] : bible.rules.filter((r) => rulesOn.has(r.id))));
+  const rules = everySeries ? [] : bible.rules.filter((r) => rulesOn.has(r.id));
+  environment.apply(resolveEnvironment(rules));
+  grade.set(resolveGrade(everySeries ? {} : bible, rules));
 }
 
 // ---- Panel ----
@@ -504,6 +508,7 @@ renderer.setAnimationLoop(() => {
   apply(time);
   orbit.update();
   renderer.render(scene, camera);
+  grade.apply(renderer, [0, 0, width, height]);
   for (const slot of slots) {
     feet.set(slot.at[0], 0, slot.at[1]).project(camera);
     slot.nameplate.hidden = feet.z > 1;

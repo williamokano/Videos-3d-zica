@@ -5,8 +5,9 @@ import { evaluateActions, type CompiledActions } from '../engine/actions/catalog
 import { loadGlbCharacter } from '../engine/character/glb';
 import type { CharacterDef, CharacterRig } from '../engine/character/types';
 import { applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpisode } from '../engine/timeline/stage';
-import { activeRules, resolveEnvironment, resolveStyle, type Bible } from '../engine/bible';
+import { activeRules, resolveEnvironment, resolveGrade, resolveStyle, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
+import { GradePass } from '../engine/grade';
 import { applyStyle } from '../engine/style';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
@@ -68,6 +69,8 @@ stage.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
 const environment = new EnvironmentRig(scene);
+/** Color of the finished picture, on the episode camera's view only. */
+const grade = new GradePass();
 scene.add(environment.group);
 
 const built = buildLocation(location);
@@ -312,7 +315,9 @@ function focusRoom(room: Room): void {
 function applyEnvironment(): void {
   // Every rule of the bible counts, by how much the world has it in effect right now.
   const rules = bible.rules.filter((r) => !disabledRules.has(r.id));
-  environment.apply(resolveEnvironment(rules, Object.fromEntries(rules.map((r) => [r.id, world.get!(`rule.${r.id}`) ?? 0]))));
+  const weights = Object.fromEntries(rules.map((r) => [r.id, world.get!(`rule.${r.id}`) ?? 0]));
+  environment.apply(resolveEnvironment(rules, weights));
+  grade.set(resolveGrade(bible, rules, weights));
 }
 
 /** Current free-view pose as a camera keyframe at the current time, ready to paste into the episode file. */
@@ -474,6 +479,7 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
   renderer.clear();
   renderer.render(scene, cam);
   if (asShot) {
+    grade.apply(renderer, [x, y, w, h]);
     firstPerson?.firstPerson?.(false);
     applyVisibility();
   }

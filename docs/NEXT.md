@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 120 testes
+npm run typecheck && npm test   # 124 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine em http://localhost:5173/?vitrine=personagens
 ```
@@ -96,16 +96,22 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Barba e óculos ficam sem contorno no cel.
   - Vitrine: todos os campos novos na aparência.
 
+- Cor da imagem (tarefa 6), como efeito genérico do motor:
+  - `Grade` em `src/engine/bible.ts`: `tint`, `amount`, `saturation`, `contrast`, `vignette`. Neutro por padrão.
+  - Pode vir da série inteira (`"grade"` na bíblia) ou de uma regra (`effects.grade`). Numa regra, entra aos poucos junto com ela, como o céu (`resolveGrade`).
+  - `GradePass` (`src/engine/grade.ts`) copia o que foi desenhado no quadro da câmera do episódio e redesenha com a correção. Com a cor neutra não faz nada, e o quadro sai idêntico ao de antes. As visões livres do estúdio não são corrigidas.
+  - O autor disse (2026-11-12) que o céu vermelho foi só uma referência e que talvez não siga nessa linha: o efeito não depende dessa história. A regra `ceu-vermelho` usa o efeito como exemplo; apagar o `grade` dela desliga.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 5 estão feitas. A próxima é a 6. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 6 estão feitas. A próxima é a 7. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
 3. ~~Contorno grosso e luz em faixas~~: feito.
 4. ~~Mãos com dedos~~: feito.
 5. ~~Cabelo com volume e ficha mais configurável~~: feito.
-6. **Cor do mundo por regra da bíblia**: o céu vermelho tingindo a cena inteira.
+6. ~~Cor da imagem por regra da bíblia ou por série~~: feito, como efeito genérico.
 7. **Tela final interativa**: "O que você faria?" com opções, configurável no roteiro.
 8. **Grande-angular como opção de câmera** e **granulado leve opcional**.
 9. **Vitrine para os outros assets**: carros, caminhões, escavadeiras, móveis.
@@ -190,6 +196,9 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - Os figurantes do episódio 1 mudaram de cara: `extraLook` passou a sortear mais coisas, então a mesma semente dá outro visual.
 - A costeleta da barba cheia é uma faixa reta, e a barba por fazer (`stubble`) quase não aparece em pele escura.
 - Os óculos não têm lente; em `cel` a armação fica sem contorno.
+- A cor da imagem tinge tudo o que é desenhado, inclusive a tela do celular. As legendas ficam de fora, porque são HTML por cima.
+- Com a cor da imagem ligada, o render completo do episódio 1 levou 44 s (38 s antes).
+- A vitrine não tem controles para a cor da imagem; ela só aparece ao ligar uma regra que a tenha.
 - Modelos GLB não têm dedos e seguram pelo pulso.
 - O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
 - Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.
