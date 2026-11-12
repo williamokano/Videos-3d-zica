@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 124 testes
+npm run typecheck && npm test   # 129 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine em http://localhost:5173/?vitrine=personagens
 ```
@@ -102,9 +102,15 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - `GradePass` (`src/engine/grade.ts`) copia o que foi desenhado no quadro da câmera do episódio e redesenha com a correção. Com a cor neutra não faz nada, e o quadro sai idêntico ao de antes. As visões livres do estúdio não são corrigidas.
   - O autor disse (2026-11-12) que o céu vermelho foi só uma referência e que talvez não siga nessa linha: o efeito não depende dessa história. A regra `ceu-vermelho` usa o efeito como exemplo; apagar o `grade` dela desliga.
 
+- Tela final interativa (tarefa 7):
+  - No roteiro: `d.endCard({ title, options: [{ label, icon?, color? }], cta? }, { duration })`. De 2 a 6 opções; sem `icon` e `color`, cada uma ganha uma letra (A, B, C...) e uma cor de `END_CARD_COLORS`. Fica 6 s por padrão, e o episódio continua por trás.
+  - É a ação `endCard` do objeto `world` (`src/engine/actions/endcard.ts`). O que aparece em cada instante sai de `endCardAt` (`src/engine/ui/endcard.ts`): a imagem escurece, entra o título, depois cada opção, depois a chamada.
+  - Desenhada em HTML por cima do quadro da câmera do episódio (`showEndCard` em `src/studio/main.ts`), como as legendas; o render captura junto.
+  - O episódio 1 termina com uma, de exemplo. O texto das opções é meu, não do roteiro do autor: trocar ou apagar em `series/ceu-vermelho/episodes/001.ts`.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 6 estão feitas. A próxima é a 7. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 7 estão feitas. A próxima é a 8. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
@@ -112,7 +118,7 @@ As tarefas 1 a 6 estão feitas. A próxima é a 7. O autor viu o rosto novo ("ac
 4. ~~Mãos com dedos~~: feito.
 5. ~~Cabelo com volume e ficha mais configurável~~: feito.
 6. ~~Cor da imagem por regra da bíblia ou por série~~: feito, como efeito genérico.
-7. **Tela final interativa**: "O que você faria?" com opções, configurável no roteiro.
+7. ~~Tela final interativa~~: feita.
 8. **Grande-angular como opção de câmera** e **granulado leve opcional**.
 9. **Vitrine para os outros assets**: carros, caminhões, escavadeiras, móveis.
 10. **Voz**: só com confirmação do autor.
@@ -199,6 +205,8 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - A cor da imagem tinge tudo o que é desenhado, inclusive a tela do celular. As legendas ficam de fora, porque são HTML por cima.
 - Com a cor da imagem ligada, o render completo do episódio 1 levou 44 s (38 s antes).
 - A vitrine não tem controles para a cor da imagem; ela só aparece ao ligar uma regra que a tenha.
+- O texto da tela final quebra de linha um pouco diferente no estúdio e no vídeo renderizado (tamanhos de fonte arredondados em tela pequena). O que vale é o vídeo.
+- A tela final não tem ícones desenhados: `icon` aceita texto ou emoji, e emoji depende da fonte da máquina que renderiza.
 - Modelos GLB não têm dedos e seguram pelo pulso.
 - O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
 - Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.

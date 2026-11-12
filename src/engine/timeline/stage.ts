@@ -1,6 +1,7 @@
 import '../actions/builtin';
 import { ambientAt, behaviourAt } from '../actions/ambient';
 import '../actions/character';
+import '../actions/endcard';
 import '../actions/phone';
 import '../assets';
 import { channelAt, compileActions, evaluateActions, evaluateLinks, gazeAt, placementAt, seatedDrop, type CompiledActions, type Link } from '../actions/catalog';

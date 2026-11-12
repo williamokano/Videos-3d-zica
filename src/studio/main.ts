@@ -8,6 +8,7 @@ import { applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpis
 import { activeRules, resolveEnvironment, resolveGrade, resolveStyle, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { GradePass } from '../engine/grade';
+import { endCardAt } from '../engine/ui/endcard';
 import { applyStyle } from '../engine/style';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
@@ -57,6 +58,11 @@ subtitle.id = 'subtitle';
 subtitle.hidden = true;
 stage.append(subtitle);
 const showSubtitles = query.get('subs') !== '0';
+// The card that closes an episode, over the episode camera's picture.
+const endCard = document.createElement('div');
+endCard.id = 'endcard';
+endCard.hidden = true;
+stage.append(endCard);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(rendering ? 1 : Math.min(window.devicePixelRatio, 2));
@@ -189,6 +195,7 @@ function applyShot(t: number): void {
   shotCamera.updateProjectionMatrix();
   shotCamera.updateMatrixWorld();
   showLine(t);
+  showEndCard(t);
   gizmoCamera.copy(shotCamera, false);
   gizmoCamera.near = 0.2;
   gizmoCamera.far = 1.6;
@@ -208,6 +215,32 @@ function showLine(t: number): void {
   subtitle.replaceChildren(el('b', `${name}: `), String(line.data.text));
   const [x, y, w, h] = fit(0, 0, width, height);
   Object.assign(subtitle.style, { left: `${x + w * 0.06}px`, width: `${w * 0.88}px`, bottom: `${y + h * 0.1}px`, fontSize: `${h * 0.024}px` });
+}
+
+/** The end card at time t, drawn over the episode camera's picture. Sizes follow the height of the frame. */
+function showEndCard(t: number): void {
+  const view = (mode === 'shot' || rendering) ? endCardAt(actions, t) : undefined;
+  endCard.hidden = !view;
+  if (!view) return;
+  const [x, y, w, h] = fit(0, 0, width, height);
+  Object.assign(endCard.style, { left: `${x}px`, bottom: `${y}px`, width: `${w}px`, height: `${h}px`, fontSize: `${h * 0.023}px`, background: `rgba(8, 9, 14, ${0.72 * view.dim})` });
+  /** A part coming in: fading in while it rises into place. */
+  const enter = (node: HTMLElement, amount: number): HTMLElement => {
+    node.style.opacity = String(amount);
+    node.style.transform = `translateY(${(1 - amount) * 1.2}em)`;
+    return node;
+  };
+  const options = el('div', '', 'options');
+  view.card.options.forEach((option, i) => {
+    const row = el('div', '', 'option');
+    const badge = el('span', view.badges[i].icon, 'badge');
+    badge.style.background = view.badges[i].color;
+    row.style.borderColor = view.badges[i].color;
+    row.append(badge, el('span', option.label));
+    options.append(enter(row, view.options[i]));
+  });
+  endCard.replaceChildren(enter(el('h3', view.card.title), view.title), options);
+  if (view.card.cta) endCard.append(enter(el('p', view.card.cta, 'cta'), view.cta));
 }
 
 let frustum: THREE.CameraHelper | undefined;
@@ -294,6 +327,11 @@ function setMode(next: Mode): void {
     hint.textContent = 'Arraste para girar · roda do mouse aproxima · botão direito desloca';
   } else {
     hint.textContent = 'Visão da câmera do episódio no formato final · espaço toca · , e . andam um frame';
+  }
+  // Subtitles and the end card belong to the episode camera's view only.
+  if (timeline) {
+    showLine(timeline.time);
+    showEndCard(timeline.time);
   }
   renderPanel();
 }

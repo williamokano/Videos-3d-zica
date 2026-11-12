@@ -131,6 +131,7 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 | `standUp` | personagem | `to` (`[x, z]` ao lado, onde fica de pé), `yaw` |
 | `pointAt` | personagem | `object` ou `point`, `hand` |
 | `hand` | personagem | `pose`, `hand` |
+| `endCard` | `world` | `card` (`title`, `options`, `cta`) |
 | `say` | personagem | `text`, `to` (com quem fala) |
 | `behave` | personagem | `mode`, `group`, `object`, `point` |
 | `raise` | personagem | `to` (`eyes` ou `chest`), `hand` |
@@ -190,3 +191,17 @@ A trilha `camera` do episódio é uma lista de keyframes. Um plano vai de um key
 2. No estúdio (`npm run dev`), as ações aparecem como barras azuis na timeline e em "Ações do episódio" no painel; um erro de compilação aparece ali em vermelho.
 3. Tire screenshots na visão Câmera em instantes antes, durante e depois de cada ação (`window.__studio.timeline.seek(frame)`) e olhe as imagens.
 4. A série `demo-acoes` (`?series=demo-acoes`) mostra todas as ações do catálogo; use como exemplo.
+
+## Tela final
+
+Para fechar o episódio com uma pergunta para quem assiste:
+
+```ts
+d.endCard({
+  title: 'O que você faria?',
+  options: [{ label: 'Ficava no abrigo' }, { label: 'Saía para ver o céu' }],
+  cta: 'Comenta aí',
+}, { duration: 6 });
+```
+
+De 2 a 6 opções. Cada uma pode ter `icon` (letra, número ou emoji; padrão A, B, C...) e `color`. A tela aparece por cima da imagem, que continua por trás. O texto das opções é do autor: pergunte antes de inventar.

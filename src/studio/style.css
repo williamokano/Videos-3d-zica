@@ -176,3 +176,42 @@ body.render #stage { width: var(--frame-w); height: var(--frame-h); flex: none; 
   user-select: none;
 }
 .nameplate.selected { border-color: var(--accent); color: var(--accent); }
+
+/* End card: a question for the viewer over the last picture. Sizes are in em of the frame height. */
+#endcard {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.6em;
+  padding: 0 7% 4%;
+  color: #fff;
+  pointer-events: none;
+  overflow: hidden;
+}
+#endcard[hidden] { display: none; }
+#endcard h3 { margin: 0; font-size: 2.4em; line-height: 1.12; font-weight: 800; text-align: center; text-shadow: 0 0.06em 0.3em rgba(0, 0, 0, 0.6); }
+#endcard .options { display: flex; flex-direction: column; gap: 0.7em; }
+#endcard .option {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.55em 0.8em;
+  border: 0.12em solid;
+  border-radius: 0.9em;
+  background: rgba(20, 22, 30, 0.82);
+  font-size: 1.15em;
+  font-weight: 600;
+  line-height: 1.2;
+}
+#endcard .badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.9em;
+  height: 1.9em;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 800;
+}
+#endcard .cta { margin: 0; text-align: center; font-size: 1.05em; font-weight: 600; color: #ffd166; }

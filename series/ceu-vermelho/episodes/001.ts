@@ -343,5 +343,11 @@ export default direct(
       professor.say('Ei! Volta aqui!', { to: heroi });
     });
     heroi.runTo([20, 1.5], { elevation: 0, speed: 3.6 });
+    // Tela final: a pergunta para quem assiste.
+    d.endCard({
+      title: 'O que você faria?',
+      options: [{ label: 'Ficava no abrigo esperando ajuda' }, { label: 'Saía para ver o céu' }, { label: 'Ia atrás da minha família' }],
+      cta: 'Comenta aí o que você faria',
+    });
   },
 );

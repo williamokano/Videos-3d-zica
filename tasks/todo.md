@@ -1,18 +1,20 @@
-# Tarefa 6 do motor: cor da imagem
+# Tarefa 7 do motor: tela final interativa
 
-O autor pediu como efeito (2026-11-12): "essa parte do céu vermelho eu usei apenas como referência, não sei se vou continuar nessa linha". Feito genérico, sem depender dessa história. Ainda sem commit. A tarefa 5 está no commit `1c76b8d` (local, sem push).
+Pedido do autor em 2026-11-12 ("sim, pode fazer"). A tarefa 6 está no commit `4247244`, enviado. Esta ainda não foi commitada.
 
-- [x] `Grade` na bíblia: da série (`grade`) ou de uma regra (`effects.grade`), com `resolveGrade`
-- [x] `GradePass` (`src/engine/grade.ts`), aplicado no quadro da câmera do episódio e na vitrine
-- [x] Regra `ceu-vermelho` usando o efeito, como exemplo
-- [x] Testes: `src/engine/grade.test.ts`
-- [x] Registro: `docs/NEXT.md`, `README.md`
+- [x] Modelo e animação: `src/engine/ui/endcard.ts` (`endCardAt`, `endCardProblem`)
+- [x] Ação `endCard` do `world` e `d.endCard(...)` no roteiro
+- [x] Desenho por cima do quadro da câmera do episódio (`showEndCard` em `src/studio/main.ts`, CSS em `style.css`)
+- [x] Exemplo no fim do episódio 1
+- [x] Testes: `src/engine/endcard.test.ts`
+- [x] Registro: `docs/NEXT.md`, skill `direct-actions`
 
 ## Revisão
 
-- `npm run typecheck` limpo; `npm test` com 124 testes (120 de antes mais 4).
-- Episódio 1 pela câmera em oito instantes: neutro antes da regra, tingindo junto com o céu, e tingido depois. Na visão geral do estúdio, só o quadro da câmera do episódio é corrigido.
-- Render completo: 44 s (38 s antes). Dois quadros tirados do vídeo conferidos, um antes e um depois da regra.
-- Não conferido: a vitrine com a regra ligada (capturada, não olhada); `grade` no nível da série (só nos testes).
+- `npm run typecheck` limpo; `npm test` com 129 testes (124 de antes mais 5).
+- Estúdio, visão Câmera: a tela entrando em cinco instantes. Na primeira versão o conteúdo passava do quadro; reduzi os tamanhos.
+- Render dos últimos 9 s do episódio 1: um quadro do meio da tela final conferido.
+- Corrigido de passagem: legenda e tela final continuavam visíveis ao sair da visão Câmera para a Geral; agora somem na troca.
+- Não conferido: tela com 2 e com 6 opções; `icon` com emoji; render completo e o seu tempo.
 
-Próxima: tarefa 7, tela final interativa (ver `docs/NEXT.md`).
+Próxima: tarefa 8, grande-angular por plano e granulado leve opcional (ver `docs/NEXT.md`).

@@ -12,6 +12,7 @@ import type { CastMember } from '../character/cast';
 import type { Bible } from '../bible';
 import type { CharacterDef } from '../character/types';
 import type { ChatMessage, PhoneSetup } from '../ui/phone';
+import type { EndCard } from '../ui/endcard';
 import type { BuiltLocation } from '../world/build';
 import { buildNav, findPath } from '../world/nav';
 import { validateCamera, type CameraKey, type Vec3 } from './camera';
@@ -127,6 +128,11 @@ export interface Director {
   together(...branches: (() => void)[]): Step;
   /** Something that goes on while the script carries on: the clock stays where it was. */
   background(branch: () => void): Step;
+  /**
+   * Close with a question for the viewer, over the picture: a title, 2 to 6 options and a call to comment.
+   * Stays for 6 seconds unless `duration` says otherwise; the episode goes on behind it.
+   */
+  endCard(card: EndCard, options?: StepOptions): Step;
   world: {
     /** Bring a rule of the bible into effect (true or 1), or out of it; with `duration`, gradually. */
     rule(id: string, on: boolean | number, options?: StepOptions): Step;
@@ -287,6 +293,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       now = start;
       return { start, end };
     },
+    endCard: (card, options) => run(WORLD, 'endCard', { card }, options),
     world: {
       rule: (id, on, options) => run(WORLD, 'set', { channel: `rule.${id}`, value: Number(on) }, { duration: 0, ...options }),
       network: (on, options) => run(WORLD, 'set', { channel: 'network', value: Number(on) }, { duration: 0, ...options }),
