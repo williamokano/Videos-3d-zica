@@ -55,7 +55,7 @@ npm run build
 npm run render -- --series ceu-vermelho --ep 1
 ```
 
-Um Chrome sem janela desenha o episódio frame a frame e o ffmpeg junta tudo em `out/<série>-ep<n>.mp4`. O vídeo sai mudo.
+Navegadores Chrome sem janela desenham o episódio frame a frame, cada um um trecho, e o ffmpeg junta tudo em `out/<série>-ep<n>.mp4`. O vídeo sai mudo. Se o render falhar, nenhum arquivo é gravado; um vídeo em `out/` está sempre completo.
 
 | Opção | O que faz |
 |---|---|
@@ -65,6 +65,7 @@ Um Chrome sem janela desenha o episódio frame a frame e o ffmpeg junta tudo em 
 | `--step 15` | desenha um frame a cada 15: uma prévia em 2 quadros por segundo, para revisar o episódio inteiro em minutos |
 | `--no-subs` | sem a legenda das falas |
 | `--out arquivo.mp4` | onde gravar |
+| `--workers 8` | quantos navegadores desenham ao mesmo tempo, cada um um trecho do episódio (padrão: metade dos núcleos da CPU, no máximo 8) |
 | `--software` | desenha na CPU mesmo havendo placa de vídeo |
 | `--crf 18` | qualidade do x264 (menor é melhor) |
 

@@ -62,7 +62,7 @@ Ideias que o episódio 1 deixou:
 - Personagens não desviam uns dos outros: a fila funciona porque cada um sai na sua hora. Um desvio simples entre pessoas deixaria as cenas de grupo mais soltas.
 - Os olhos não se mexem dentro do rosto; em primeira pessoa, de perto, faz falta.
 - Mais gestos de figurante: apontar, mão na boca, mexer no próprio celular.
-- O render na CPU leva cerca de 1 s por frame com 15 personagens em um terço do tamanho; medir na placa de vídeo do autor.
+- Render medido numa RTX 5090: o episódio 1 (4317 frames em 1080×1920) sai em ~34 s com 8 navegadores em paralelo. Desenhar um frame leva ~3 ms; o resto do tempo é a captura em PNG e o x264. Para ir além: ler os pixels direto do WebGL em vez de capturar a tela, e codificar com NVENC.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
 

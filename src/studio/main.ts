@@ -503,12 +503,12 @@ if (rendering) {
       episode: episodeNumber,
       error: actionsError,
       gpu: info ? String(renderer.getContext().getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'desconhecida',
-      async frame(n: number): Promise<void> {
+      async frame(n: number, wait = true): Promise<void> {
         timeline!.seek(n);
         renderer.setScissorTest(false);
         renderer.clear();
         draw(shotCamera, [0, 0, width, height], true);
-        await settle();
+        if (wait) await settle();
       },
     },
   });
