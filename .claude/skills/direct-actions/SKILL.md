@@ -5,7 +5,50 @@ description: Fazer coisas acontecerem num episódio — personagem andar, correr
 
 # Dirigir ações
 
-Uma ação é dado do episódio, não código de um mapa. O episódio (`series/<série>/episodes/<n>.json`) tem uma trilha `actions`; cada item aponta para um objeto do local pelo id e para uma ação do catálogo:
+Uma ação é dado do episódio, não código de um mapa.
+
+## Roteiro em código (o jeito preferido)
+
+Escreva o episódio como roteiro em `series/<série>/episodes/<n>.ts`. O roteiro diz o que acontece, em ordem; os tempos saem sozinhos, porque cada passo começa onde o anterior terminou e a duração de cada um vem do mundo (uma caminhada dura o que o caminho pede).
+
+```ts
+import { direct } from '../../../src/engine/timeline/direct';
+
+export default direct(
+  { episode: 2, title: 'Ana sai de casa', location: 'rua', cast: [{ character: 'ana', at: [12.6, 1.2], yaw: 180 }] },
+  (d) => {
+    const ana = d.actor('ana');
+    d.camera.cut({ pos: [13.4, 1.6, 7], lookAt: [12.4, 1.1, 3] });
+    ana.walkTo({ door: 'porta-casa' });
+    ana.open('porta-casa');
+    d.camera.thirdPerson(ana);
+    ana.walkTo([17.75, 4.7]);
+    ana.pickUp('caixa');
+  },
+);
+```
+
+| Chamada | O que faz |
+|---|---|
+| `ana.walkTo`, `runTo`, `turnTo`, `express`, `lookAt`, `lookAhead`, `pickUp`, `putDown`, `open`, `close`, `sit`, `standUp` | um passo do personagem: começa agora e o relógio vai para o fim dele. Devolve `{ start, end }` |
+| `d.do(alvo, ação, params, { duration, ease })` | qualquer ação do catálogo em qualquer objeto, ex.: `d.do('carro', 'drive', { path })` |
+| `d.wait(s)`, `d.at(t)`, `d.now` | espera, leva o relógio a um tempo, lê o relógio |
+| `d.together(() => ..., () => ...)` | coisas ao mesmo tempo; o relógio vai para o fim da mais longa |
+| `d.background(() => ...)` | algo que acontece enquanto o roteiro segue; o relógio não anda. Devolve `{ start, end }` |
+| `d.waitFor(passo ou tempo)` | espera até lá, se ainda não passou |
+| `d.camera.cut({ pos, lookAt, fov })` | corta para uma câmera posta à mão |
+| `d.camera.moveTo({ pos, lookAt })` | dentro do plano atual: a câmera se move e chega aqui agora |
+| `d.camera.fpv(ana)`, `d.camera.thirdPerson(ana, { distance, height })` | corta para a câmera presa ao personagem |
+
+- Os passos de um mesmo personagem são um depois do outro; para dois personagens ao mesmo tempo use `together` ou `background`.
+- Chamadas de câmera não andam o relógio. Para um corte no meio de uma ação longa: `d.background(() => { d.wait(1); d.camera.cut(...); })` antes da ação.
+- A duração do episódio é o fim da última coisa mais 1 s (`tail`), a não ser que o cabeçalho dê `duration`.
+- O resultado é o mesmo dado de um episódio em JSON; tudo o que vem abaixo (catálogo, regras, câmera) vale igual. Erro no roteiro aparece em vermelho no painel do estúdio e falha em `npm test`.
+- O episódio 1 de `demo-acoes` é um roteiro completo; use como exemplo.
+
+## Episódio em JSON
+
+Um episódio também pode ser um arquivo `<n>.json` com todos os tempos escritos à mão. O episódio tem uma trilha `actions`; cada item aponta para um objeto do local pelo id e para uma ação do catálogo:
 
 ```json
 { "t": 4.6, "duration": 1.2, "target": "porta-casa", "action": "open", "params": { "from": "inside" } }

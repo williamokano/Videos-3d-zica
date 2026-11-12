@@ -7,6 +7,7 @@ import './assets/nature';
 import './assets/school';
 import './assets/vehicles';
 import type { CharacterDef } from './character/types';
+import { isScript, resolveScript, type EpisodeScript } from './timeline/direct';
 import type { Episode } from './timeline/episode';
 import { evaluateCamera, validateCamera } from './timeline/camera';
 import { buildCast, cameraStage, compileEpisode } from './timeline/stage';
@@ -134,15 +135,17 @@ describe('interactive objects', () => {
 
 describe('series data', () => {
   const json = <T>(path: string): T => JSON.parse(readFileSync(path, 'utf8')) as T;
+  const scripts = import.meta.glob<EpisodeScript>('/series/*/episodes/*.ts', { eager: true, import: 'default' });
 
   for (const series of readdirSync('series')) {
     const dir = `series/${series}/episodes`;
     for (const file of readdirSync(dir)) {
       it(`compiles the actions and camera of ${series} episode ${file}`, () => {
-        const episode = json<Episode>(`${dir}/${file}`);
-        const built = buildLocation(json<Location>(`series/${series}/world/${episode.location}.json`));
+        const source = file.endsWith('.ts') ? scripts[`/${dir}/${file}`] : json<Episode>(`${dir}/${file}`);
+        const built = buildLocation(json<Location>(`series/${series}/world/${source.location}.json`));
         const folder = `series/${series}/characters`;
         const defs = existsSync(folder) ? readdirSync(folder).filter((f) => f.endsWith('.json')).map((f) => json<CharacterDef>(`${folder}/${f}`)) : [];
+        const episode = isScript(source) ? resolveScript(source, built, defs) : source;
         const cast = buildCast(episode, defs);
         const compiled = compileEpisode(episode, built, cast);
         for (const clip of compiled.clips) expect(clip.t + clip.duration).toBeLessThanOrEqual(episode.duration);

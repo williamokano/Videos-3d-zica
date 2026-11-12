@@ -6,7 +6,7 @@ Estado em 2026-11-12. Plano geral em [PLAN.md](PLAN.md).
 
 ```sh
 npm install
-npm run typecheck && npm test   # 58 testes
+npm run typecheck && npm test   # 62 testes
 npm run dev                     # estúdio em http://localhost:5173
 ```
 
@@ -36,9 +36,16 @@ A série `demo-acoes` (`?series=demo-acoes`) usa tudo o que existe: os três tip
 
   - Olhar: `lookAt` vira a cabeça para um objeto (acompanhando) ou um ponto; `gazeAt` em `catalog.ts` dá o ângulo em qualquer instante, e a câmera `fpv` segue a cabeça.
 
-## Próximo: Fase 3b
+  - Direção em código (`src/engine/timeline/direct.ts`): o episódio pode ser um roteiro `series/<série>/episodes/<n>.ts`. `resolveScript` roda o roteiro contra o local e devolve um `Episode` com todos os tempos calculados. O estúdio e os testes aceitam `.json` e `.ts`.
 
-**API de direção em código** (`ana.walkTo(...)`, `ana.say(...)`) que gera `cast`, `actions` e `camera`, com tempos encadeados em vez de `t` escrito à mão. Montar o episódio de demonstração mostrou o custo do `t` manual: cada ajuste de posição desloca tudo o que vem depois. Decisão que falta do autor: episódio escrito em TypeScript, ou JSON com `after: <id da ação anterior>` no lugar de `t`.
+## Próximo: Fase 4 (fala)
+
+Só começa com confirmação do autor. O que falta, em ordem sugerida:
+
+1. `ana.say(...)` no roteiro: falas com id estável, texto por idioma e modo `tts` ou `sts`. A duração de cada fala vem do áudio, então `resolveScript` passa a receber o idioma e as durações.
+2. Geração e cache do áudio pela ElevenLabs (confirmar os endpoints na documentação), com tempos por palavra guardados junto.
+3. Lip-sync pelo canal `talk` e visemas; legendas.
+4. Render para MP4: Chromium headless frame a frame + ffmpeg, com o áudio mixado.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
 
@@ -55,7 +62,8 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - Pés podem afundar ou flutuar um pouco em escadas: a altura segue o degrau, mas não há IK nos pés.
 - O rosto do GLB depende de morph targets; o modelo de teste (`robo.glb`) não tem.
 - O carro não vira as rodas da frente nas curvas, e o porta-malas não abre. A curva do `drive` pode abrir um pouco para fora antes de uma virada fechada.
-- "Copiar minha visão como keyframe" não grava no arquivo; é preciso colar no JSON do episódio.
+- "Copiar minha visão como keyframe" não grava no arquivo; é preciso colar no episódio (num roteiro, como `d.camera.cut({...})`).
+- Erro num roteiro não diz a linha do arquivo, só a ação e o motivo.
 - Na visão geral do subsolo o fundo fica laranja chapado (céu sem o chão).
 - O formato 9:16 está como padrão na bíblia e não foi confirmado pelo autor.
 

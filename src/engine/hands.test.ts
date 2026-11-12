@@ -8,6 +8,7 @@ import { reachPose, wristPosition } from './character/ik';
 import { crouchPose, idlePose } from './character/motion';
 import type { CharacterDef } from './character/types';
 import { evaluateCamera } from './timeline/camera';
+import { direct, resolveScript } from './timeline/direct';
 import type { Episode } from './timeline/episode';
 import { applyStage, buildCast, cameraStage, compileEpisode } from './timeline/stage';
 import { buildLocation } from './world/build';
@@ -225,5 +226,85 @@ describe('looking at things', () => {
   it('refuses a target that does not exist', () => {
     expect(() => stage([{ t: 0, target: 'ana', action: 'lookAt', params: { object: 'bia' } }])).toThrow(/objeto "bia" não encontrado/);
     expect(() => stage([{ t: 0, target: 'ana', action: 'lookAt', params: { object: 'ana' } }])).toThrow(/não pode olhar para si mesmo/);
+  });
+});
+
+describe('direction in code', () => {
+  const header = { episode: 1, title: 't', location: 't', cast: [{ character: 'ana', at: [3, 2] as [number, number] }] };
+  const resolve = (script: Parameters<typeof direct>[1]) => resolveScript(direct(header, script), buildLocation(location), [ana]);
+
+  it('chains steps: each one starts where the one before ended', () => {
+    const episode = resolve((d) => {
+      const a = d.actor('ana');
+      d.camera.thirdPerson(a);
+      const walk = a.walkTo({ door: 'porta' });
+      const open = a.open('porta');
+      d.wait(0.5);
+      const out = a.walkTo([3, 9]);
+      expect(walk.start).toBe(0);
+      expect(walk.end).toBeGreaterThan(1);
+      expect(open.start).toBe(walk.end);
+      expect(open.end).toBeCloseTo(walk.end + 1.2);
+      expect(out.start).toBeCloseTo(open.end + 0.5);
+      expect(d.now).toBe(out.end);
+    });
+    expect(episode.actions!.map((c) => c.action)).toEqual(['walkTo', 'open', 'walkTo']);
+    expect(episode.actions![1]).toMatchObject({ target: 'porta', params: { by: 'ana' }, duration: 1.2 });
+    expect(episode.duration).toBeCloseTo(episode.actions![2].t + episode.actions![2].duration! + 1);
+    // The result is plain data: it survives a trip through JSON and compiles like any episode.
+    const copy = JSON.parse(JSON.stringify(episode)) as Episode;
+    const built = buildLocation(location);
+    expect(() => compileEpisode(copy, built, buildCast(copy, [ana]))).not.toThrow();
+  });
+
+  it('runs things side by side and in the background', () => {
+    resolve((d) => {
+      const a = d.actor('ana');
+      d.camera.cut({ pos: [0, 2, 0], lookAt: [3, 1, 3] });
+      d.at(2);
+      const both = d.together(
+        () => a.turnTo(90, { duration: 1 }),
+        () => a.express('happy', { duration: 3 }),
+      );
+      expect(both).toEqual({ start: 2, end: 5 });
+      expect(d.now).toBe(5);
+      const side = d.background(() => {
+        d.wait(1);
+        a.lookAt([0, 1, 0], { duration: 2 });
+      });
+      expect(side).toEqual({ start: 5, end: 8 });
+      expect(d.now).toBe(5);
+      d.waitFor(side);
+      expect(d.now).toBe(8);
+      d.waitFor(3);
+      expect(d.now).toBe(8);
+    });
+  });
+
+  it('places camera keys at the clock and cuts between shots', () => {
+    const episode = resolve((d) => {
+      const a = d.actor('ana');
+      d.camera.cut({ pos: [0, 2, 0], lookAt: [3, 1, 3] });
+      d.wait(2);
+      d.camera.moveTo({ pos: [1, 2, 0], lookAt: [3, 1, 3] });
+      d.camera.fpv(a, { fov: 80 });
+    });
+    expect(episode.camera).toEqual([
+      { t: 0, pos: [0, 2, 0], lookAt: [3, 1, 3] },
+      { t: 2, pos: [1, 2, 0], lookAt: [3, 1, 3] },
+      { t: 2, fov: 80, cut: true, mode: 'fpv', follow: 'ana' },
+    ]);
+  });
+
+  it('explains what is wrong with a script', () => {
+    expect(() => resolve((d) => d.actor('bia'))).toThrow(/"bia" não está no elenco do episódio. Elenco: ana/);
+    expect(() => resolve((d) => void d.actor('ana').walkTo([3, 9]))).toThrow(/a porta "porta" está fechada/);
+    expect(() => resolve((d) => void d.actor('ana').turnTo(90))).toThrow(/O roteiro não tem câmera/);
+    expect(() => resolve((d) => {
+      d.camera.cut({ pos: [0, 2, 0], lookAt: [3, 1, 3] });
+      d.actor('ana').turnTo(90, { duration: 2 });
+      d.at(1);
+      d.actor('ana').turnTo(0);
+    })).toThrow(/o canal "yaw" de "ana" ainda está em uso por outra ação até 2s/);
   });
 });

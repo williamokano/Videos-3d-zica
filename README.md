@@ -31,7 +31,7 @@ npm run build
 | `series/<série>/bible.json` | Bíblia: regras de mundo, idiomas, formato, áudio |
 | `series/<série>/world/*.json` | Locais (formato em `src/engine/world/types.ts`) |
 | `series/<série>/characters/*.json` | Personagens (formato em `src/engine/character/types.ts`), com GLB opcional ao lado |
-| `series/<série>/episodes/*.json` | Episódios: local, duração, elenco, trilha de câmera e trilha de ações |
+| `series/<série>/episodes/*.ts` ou `*.json` | Episódios: roteiro em código (os tempos saem sozinhos) ou dado com os tempos escritos à mão |
 | `src/engine/assets` | Catálogo de assets paramétricos |
 | `src/engine/world` | Construção do local: paredes, aberturas, níveis, escadas, colisão, mapa de caminhada |
 | `src/engine/actions` | Catálogo de ações e compilação da trilha de ações |

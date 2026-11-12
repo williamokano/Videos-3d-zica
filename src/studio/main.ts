@@ -11,6 +11,7 @@ import { applyStage, buildCast, cameraStage, compileEpisode } from '../engine/ti
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
+import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
 import type { Episode } from '../engine/timeline/episode';
 import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
@@ -20,7 +21,8 @@ import { WalkControls } from './walk';
 // Series data lives in /series as plain files; the studio only reads it.
 const bibles = import.meta.glob<Bible>('/series/*/bible.json', { eager: true, import: 'default' });
 const locations = import.meta.glob<Location>('/series/*/world/*.json', { eager: true, import: 'default' });
-const episodes = import.meta.glob<Episode>('/series/*/episodes/*.json', { eager: true, import: 'default' });
+// An episode is a JSON file with every time written out, or a script (.ts) that works the times out.
+const episodes = import.meta.glob<Episode | EpisodeScript>('/series/*/episodes/*.{json,ts}', { eager: true, import: 'default' });
 const characters = import.meta.glob<CharacterDef>('/series/*/characters/*.json', { eager: true, import: 'default' });
 const models = import.meta.glob<string>('/series/*/characters/*.glb', { eager: true, import: 'default', query: '?url' });
 
@@ -31,10 +33,10 @@ const bible = allBibles.find((b) => b.series === query.get('series')) ?? allBibl
 const inSeries = <T>(files: Record<string, T>) =>
   Object.entries(files).filter(([path]) => path.includes(`/series/${bible.series}/`)).map(([, v]) => v);
 const seriesEpisodes = inSeries(episodes).sort((a, b) => a.episode - b.episode);
-const episode: Episode | undefined = seriesEpisodes.find((e) => e.episode === Number(query.get('ep'))) ?? seriesEpisodes[0];
-const location = inSeries(locations).find((l) => !episode || l.id === episode.location);
+const source: Episode | EpisodeScript | undefined = seriesEpisodes.find((e) => e.episode === Number(query.get('ep'))) ?? seriesEpisodes[0];
+const location = inSeries(locations).find((l) => !source || l.id === source.location);
 if (!location) throw new Error(`A série "${bible.series}" ainda não tem nenhum cenário em world/.`);
-const episodeNumber = episode?.episode ?? 1;
+const episodeNumber = source?.episode ?? 1;
 
 const stage = document.getElementById('stage')!;
 const hint = document.getElementById('hint')!;
@@ -57,6 +59,21 @@ scene.add(environment.group);
 const built = buildLocation(location);
 scene.add(built.group);
 
+let actionsError = '';
+let episode: Episode | undefined;
+if (source && isScript(source)) {
+  try {
+    episode = resolveScript(source, built, inSeries(characters));
+  } catch (error) {
+    // Show the location anyway, with the error in the panel.
+    actionsError = `Roteiro do episódio ${source.episode}: ${error instanceof Error ? error.message : String(error)}`;
+    const [x, z] = location.spawn?.pos ?? [0, 0];
+    episode = { episode: source.episode, title: source.title, location: source.location, duration: 1, camera: [{ t: 0, pos: [x, 6, z + 12], lookAt: [x, 1, z] }] };
+  }
+} else {
+  episode = source;
+}
+
 const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.enableDamping = true;
 const walk = new WalkControls(camera, renderer.domElement, built.colliders, built.surfaces);
@@ -74,7 +91,6 @@ scene.add(gizmos);
 // ---- Episode cast and actions ----
 
 let actions: CompiledActions = { tracks: [], clips: [], links: [], gazes: [], focus: {}, initial: {}, sockets: {} };
-let actionsError = '';
 let cast: InteractiveObject[] = [];
 /** False when the camera track has an error; the shot view then stays where it is. */
 let cameraOk = false;
@@ -92,7 +108,7 @@ if (episode) {
     for (const character of cast) scene.add(character.object);
     actions = compileEpisode(episode, built, cast);
   } catch (error) {
-    actionsError = error instanceof Error ? error.message : String(error);
+    actionsError = [actionsError, error instanceof Error ? error.message : String(error)].filter(Boolean).join('\n');
   }
 }
 if (episode) {
@@ -314,7 +330,7 @@ function renderPanel(): void {
     };
     if (allBibles.length > 1) for (const b of allBibles) panel.append(button(b.title, b === bible, () => open(b.series)));
     if (seriesEpisodes.length > 1) {
-      for (const e of seriesEpisodes) panel.append(button(`Episódio ${e.episode}: ${e.title}`, e === episode, () => open(bible.series, e.episode)));
+      for (const e of seriesEpisodes) panel.append(button(`Episódio ${e.episode}: ${e.title}`, e === source, () => open(bible.series, e.episode)));
     }
   }
 

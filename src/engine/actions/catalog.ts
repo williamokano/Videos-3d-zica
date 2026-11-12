@@ -194,6 +194,8 @@ export interface ChannelTrack {
 }
 
 export interface CompiledClip {
+  /** Position of the clip in the list that was compiled. */
+  index: number;
   t: number;
   duration: number;
   target: string;
@@ -332,7 +334,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
       links.push({ target: rider, to, socket, weight, t0, t1: Infinity });
     }
     if (result.gaze) out.gazes.push({ target: target.id, at: result.gaze.at, t0: clip.t, fade: duration });
-    compiled.push({ t: clip.t, duration, target: clip.target, action: clip.action });
+    compiled.push({ index, t: clip.t, duration, target: clip.target, action: clip.action });
 
     const validate = result.validate;
     if (validate) {
