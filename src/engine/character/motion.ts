@@ -315,8 +315,10 @@ export const HAND_POSES: Record<string, HandShape> = {
   point: { thumb: 0.85, index: 0, fingers: 1, spread: 0 },
   fist: { thumb: 1, index: 1, fingers: 1, spread: 0 },
   open: { thumb: 0, index: 0, fingers: 0.05, spread: 1 },
+  /** Flat behind something thin held up to be read, the thumb over its edge. */
+  hold: { thumb: 0.7, index: 0.1, fingers: 0.14, spread: 0.2 },
   /** Holding a phone with the thumb tapping on it. */
-  type: { thumb: 0.55, index: 0.55, fingers: 0.65, spread: 0 },
+  type: { thumb: 0.8, index: 0.1, fingers: 0.14, spread: 0.2 },
 };
 
 export const HAND_POSE_NAMES = Object.keys(HAND_POSES);

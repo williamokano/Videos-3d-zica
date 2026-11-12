@@ -295,7 +295,7 @@ function buildHand(side: number, skin: string, kind: 'mitten' | 'fingers'): { gr
       }
       // Open, the thumb sticks out to the front; closed, it lies across the palm.
       thumbBase.rotation.set(0, side * (1.15 - 0.5 * shape.thumb), 0);
-      thumbBase.rotateX(side * (0.5 + 0.7 * shape.thumb));
+      thumbBase.rotateX(side * 0.3);
       thumb[0].rotation.z = -side * (0.15 + 0.55 * shape.thumb);
       thumb[1].rotation.z = -side * (0.1 + 0.9 * shape.thumb);
     },

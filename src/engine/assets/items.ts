@@ -15,8 +15,8 @@ registerAsset('item.phone', 'Celular com tela que mostra um app (mensageiro); pe
   const body = rbox(0.074, 0.154, 0.009, String(p.color ?? '#1c1f26'), [0, 0.077, 0], 0.004);
   const phone = new THREE.Group();
   phone.add(body);
-  // Where a hand holds it: low, behind the screen. Tilted back a little, like something being read.
-  phone.userData.grip = [0.012, 0.02, -0.065];
+  // Where the palm of a hand holds it: low, against its back. Tilted back a little, like something being read.
+  phone.userData.grip = [0, 0, -0.012];
   phone.userData.tilt = -0.3;
 
   // Without a browser (tests) there is no picture, only the state.

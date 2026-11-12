@@ -19,6 +19,7 @@ Um personagem é dado da série: `series/<série>/characters/<id>.json`, no form
 ```
 
 - `height` em metros: adulto 1.6 a 1.85, criança 1.1 a 1.4. A cabeça não encolhe junto, o que faz a criança parecer criança.
+- `hands`: `mitten` (padrão, polegar e um bloco de dedos) ou `fingers` (cinco dedos). Use `fingers` em quem aparece com a mão em close, como o personagem da câmera em primeira pessoa.
 - `eyes`: cor dos olhos (padrão castanho-escuro). As sobrancelhas saem da cor do cabelo.
 - `hairStyle`: `short`, `long`, `bun`, `none`. `build` alarga ou afina o corpo (padrão 1). `headScale` muda o tamanho da cabeça (padrão 1.3).
 - Dê a cada personagem uma cor de roupa própria; é o que o distingue de longe num vídeo vertical.
@@ -52,6 +53,7 @@ No arquivo do episódio, `cast` diz quem aparece e onde começa:
 - Poses em loop da vitrine ficam em `SHOWCASE_POSES` (`src/engine/character/showcase.ts`). Um movimento novo ganha uma entrada ali para poder ser conferido.
 - Expressões ficam em `EXPRESSIONS`, no mesmo arquivo de movimentos. Existem: `happy`, `sad`, `angry`, `surprised`, `scared`. Confira antes de criar outra. Uma expressão diz só o que muda do rosto neutro (`FaceParams` em `types.ts`): olhos, sobrancelhas, pálpebras, boca e dentes.
 - Formas de boca da fala ficam em `VISEMES`, também em `motion.ts`.
+- Poses de mão ficam em `HAND_POSES`, no mesmo arquivo: `grip`, `point`, `fist`, `open`, `hold`, `type`.
 
 ## Estilo da série
 

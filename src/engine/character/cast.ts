@@ -116,9 +116,11 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       const weights = Object.fromEntries(HAND_POSE_NAMES.map((n) => [n, state[`hand${side}.${n}`]]));
       weights.grip = Math.max(weights.grip, busy[side].grip);
       weights.open = Math.max(weights.open, busy[side].open * (1 - weights.grip));
-      shapes[side] = resolveHand(weights, t + seed);
-      // Raised to be read, the hand goes behind what it holds, palm to the face.
+      // Raised to be read, the hand goes behind what it holds, palm to the face, fingers flat against its back.
       const raised = Math.max(weights.grip, weights.type) * state[`reach${side}`] * (state[`reach${side}.local`] > 0.5 ? 1 : 0);
+      weights.hold = Math.max(weights.hold, raised * (1 - weights.type));
+      weights.grip *= 1 - raised;
+      shapes[side] = resolveHand(weights, t + seed);
       if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
     }
     rig.applyPose(pose);

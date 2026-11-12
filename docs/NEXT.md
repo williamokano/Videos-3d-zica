@@ -15,7 +15,7 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 
 ```sh
 npm install
-npm run typecheck && npm test   # 101 testes
+npm run typecheck && npm test   # 112 testes
 npm run dev                     # estúdio em http://localhost:5173
                                 # vitrine em http://localhost:5173/?vitrine=personagens
 ```
@@ -80,14 +80,22 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Sem contorno: vidros, telas (`MeshBasicMaterial`), e o que tiver `userData.noOutline` nele ou acima (olhos, sobrancelhas, nariz e boca).
   - O estúdio e a vitrine têm "Estilo" no painel para comparar; a vitrine ajusta espessura e faixas e mostra o trecho para colar na bíblia.
 
+- Mãos com dedos (tarefa 4):
+  - `buildHand` em `character/body.ts`: palma, polegar e dedos que dobram. A ficha escolhe `hands`: `mitten` (padrão: polegar e um bloco de dedos, para ler de longe) ou `fingers` (cinco dedos, para a mão em close). O `heroi` usa `fingers`.
+  - Poses em `HAND_POSES` (`character/motion.ts`): `grip`, `point`, `fist`, `open`, `hold` (espalmada atrás de algo fino, polegar na borda) e `type`. Mão relaxada é a ausência delas. Canais `handL.<pose>` / `handR.<pose>`.
+  - Sozinha, a mão fecha no que carrega, abre ao gesticular na fala, e com algo levantado (`raise`) vira a palma para o rosto (`palmToward` em `character/ik.ts`) e passa a `hold`.
+  - O que a mão segura fica na palma (`rig.palm`), não no pulso. O celular é segurado pela base (`userData.grip` em `assets/items.ts`), para o polegar não cobrir as mensagens em primeira pessoa.
+  - Ações novas: `pointAt` (aponta para objeto ou ponto, olha e recolhe) e `hand` (pose por nome). No roteiro: `ana.pointAt(alvo)`, `ana.hand('fist')`.
+  - Vitrine: menu "Mãos", pose "Apontar", tipo de mão na aparência.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 3 estão feitas. A próxima é a 4. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 4 estão feitas. A próxima é a 5. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
 3. ~~Contorno grosso e luz em faixas~~: feito.
-4. **Mãos com dedos**: poses de mão, mão que fecha no que segura, ação de apontar.
+4. ~~Mãos com dedos~~: feito.
 5. **Cabelo com volume e ficha mais configurável**: mais estilos de cabelo, formato de cabeça, olhos, nariz, boca, barba, óculos; `extraLook` sorteando tudo.
 6. **Cor do mundo por regra da bíblia**: o céu vermelho tingindo a cena inteira.
 7. **Tela final interativa**: "O que você faria?" com opções, configurável no roteiro.
@@ -148,7 +156,8 @@ Só começa com confirmação do autor. O que falta, em ordem sugerida:
 ## Ideias soltas, sem ordem
 
 - Personagens não desviam uns dos outros: a fila do episódio 1 funciona porque cada um sai na sua hora. Um desvio simples entre pessoas deixaria as cenas de grupo mais soltas.
-- Mais gestos de figurante: apontar, mão na boca, mexer no próprio celular (depende das mãos, tarefa 4).
+- Mais gestos de figurante: apontar sozinho, mão na boca, mexer no próprio celular. As mãos já permitem.
+- Ligar a pose `type` sozinha quando o dono do celular envia uma mensagem (hoje o diretor usa `hand('type')`).
 - Render medido numa RTX 5090: o episódio 1 (4317 frames em 1080×1920) sai em ~34 s com 8 navegadores em paralelo. Desenhar um frame leva ~3 ms; o resto do tempo é a captura em PNG e o x264. Para ir além: ler os pixels direto do WebGL em vez de capturar a tela, e codificar com NVENC.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
@@ -170,6 +179,9 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - Em `cel`, o casco do cenário não tem contorno. Um contorno por pós-processamento (detecção de bordas) resolveria as quinas vivas, se fizer falta.
 - Em `cel`, num ambiente com várias lâmpadas, cada uma desenha as suas faixas, e num rosto em close elas se cruzam.
 - Em `cel`, o modelo GLB de teste (`robo.glb`) recebe as faixas mas o contorno não aparece; a causa não foi investigada.
+- Modelos GLB não têm dedos e seguram pelo pulso.
+- O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
+- Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.
 - Cilindros (pés de carteira, postes) têm quina viva nas tampas, e o contorno abre ali.
 - Na vitrine, com um comportamento de figurante ligado, as poses "cruzar os braços" e "gesticular" não aparecem: as mãos livres são do comportamento.
 - Na vitrine, a pose "sentar" usa um banco de 0,46 m para todos; personagens baixos ficam com os pés fora do chão.
@@ -186,4 +198,4 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 
 O Chromium headless já vem instalado (`require('playwright')`, lançar com `--use-gl=swiftshader --enable-unsafe-swiftshader`). `window.__studio` expõe `setMode`, `setLevel`, `focusRoom`, `walk.placeAt(x, z, elevation, yaw)`, `camera`, `orbit`, `timeline.seek(frame)`, `interactives`, `cast`, `actionsError` (ações e câmera) e `toggleNearestDoor()`. Para um close de um personagem: `orbit.target` na posição dele, `camera.position` à frente, `orbit.update()`.
 
-Na vitrine (`?vitrine=personagens&series=<id>`), `window.__vitrine` expõe `ids()`, `select(id | null, 'body' | 'face')`, `frame('all' | 'body' | 'face')`, `setPose`, `setBehaviour`, `setLook('free' | 'camera' | 'selected' | 'ahead')`, `setExpression(nome, intensidade)`, `setMouth('A' | 'E' | 'O' | 'U' | 'F' | '')`, `restyle(id, mudanças)`, `addExtras(id, n)`, `setStyle('soft' | 'cel', contorno, faixas)`, `setRule(id, ligada)`, `pause(segundos)`, `play()`, `camera`, `orbit`, `cast()` e `error`. Pause num instante fixo antes de cada screenshot, para a imagem não depender do relógio.
+Na vitrine (`?vitrine=personagens&series=<id>`), `window.__vitrine` expõe `ids()`, `select(id | null, 'body' | 'face')`, `frame('all' | 'body' | 'face')`, `setPose`, `setBehaviour`, `setLook('free' | 'camera' | 'selected' | 'ahead')`, `setExpression(nome, intensidade)`, `setMouth('A' | 'E' | 'O' | 'U' | 'F' | '')`, `setHand('grip' | 'point' | 'fist' | 'open' | 'hold' | 'type' | '')`, `restyle(id, mudanças)`, `addExtras(id, n)`, `setStyle('soft' | 'cel', contorno, faixas)`, `setRule(id, ligada)`, `pause(segundos)`, `play()`, `camera`, `orbit`, `cast()` e `error`. Pause num instante fixo antes de cada screenshot, para a imagem não depender do relógio.

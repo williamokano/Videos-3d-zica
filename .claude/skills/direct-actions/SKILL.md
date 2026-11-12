@@ -36,6 +36,8 @@ export default direct(
 | `d.together(() => ..., () => ...)` | coisas ao mesmo tempo; o relógio vai para o fim da mais longa |
 | `d.background(() => ...)` | algo que acontece enquanto o roteiro segue; o relógio não anda. Devolve `{ start, end }` |
 | `d.waitFor(passo ou tempo)` | espera até lá, se ainda não passou |
+| `ana.pointAt(beto)` | aponta para um personagem, um objeto por id ou um ponto: braço estendido, indicador esticado, olha para lá e recolhe. `{ hand, duration }`; o alvo precisa estar à frente |
+| `ana.hand('fist')` | pose de mão até outra: `grip`, `point`, `fist`, `open`, `hold`, `type` (polegar digitando no celular) ou `relaxed`. `{ hand: 'left' \| 'right' \| 'both' }`. Segurar algo e gesticular ao falar já mudam a mão sozinhos |
 | `ana.say('texto', { to: beto })` | fala: a boca faz as formas das letras do texto (A, E, O, U, F/V, fechada em M, B, P e nas pausas), as mãos acompanham e a fala vira legenda (a voz vem depois). Dura conforme o texto |
 | `ana.behave(modo, opções)` | o que o personagem faz sozinho daqui em diante (figurantes); não gasta tempo. Ver "Figurantes" |
 | `ana.pickUp('celular')`, `raise('eyes' ou 'chest')`, `lower()`, `putAway('celular')` | tira do bolso (ou pega), levanta para ler, abaixa, guarda no bolso |
@@ -127,6 +129,8 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 | `lookAt` | personagem | `object` (id do que olhar; acompanha se ele se mexer) ou `point` (`[x, y, z]`); sem parâmetros volta a olhar para a frente |
 | `sit` | personagem | `on` (id do objeto com assentos, ex.: o carro), `seat` (`driver`, `passenger`, `rearLeft`, `rearRight`; padrão `driver`) |
 | `standUp` | personagem | `to` (`[x, z]` ao lado, onde fica de pé), `yaw` |
+| `pointAt` | personagem | `object` ou `point`, `hand` |
+| `hand` | personagem | `pose`, `hand` |
 | `say` | personagem | `text`, `to` (com quem fala) |
 | `behave` | personagem | `mode`, `group`, `object`, `point` |
 | `raise` | personagem | `to` (`eyes` ou `chest`), `hand` |
