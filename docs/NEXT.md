@@ -48,6 +48,24 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Móveis bloqueiam o caminho a pé. Elenco com `look` (uma ficha, várias aparências) e `seated`.
   - Episódio 1 de `ceu-vermelho` (`series/ceu-vermelho/episodes/001.ts`): 2 min 15 s em primeira pessoa, 15 personagens.
 
+## Próximo: vitrine de assets
+
+Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. Começa pelos personagens; depois vale para os outros grupos (carros, caminhões, escavadeiras, móveis...).
+
+- Abre por grupo: todos os personagens de uma série (ou de todas) lado a lado, cada um com o nome embaixo.
+- Câmera livre pelo mouse (girar, aproximar, deslocar), e um clique num personagem para focar nele.
+- Menu para configurar o que está selecionado (ou todos de uma vez):
+  - expressão e intensidade;
+  - ação ou pose em loop: parado, andar, correr, sentar, agachar, falar, cruzar os braços, gesticular, levantar o celular;
+  - comportamento de figurante (`behave`) para ver como fica com o tempo correndo;
+  - para onde olha (`lookAt`): a câmera, outro personagem, um ponto;
+  - aparência: variar com `extraLook` e trocar pele, cabelo e altura na hora.
+- Tempo correndo de verdade (respira, pisca, anda) e pausável.
+- Para outros grupos, o menu mostra os canais do asset (portas, rodas, caçamba, braço da escavadeira) e as ações do catálogo que valem para ele.
+- Endereço sugerido: `?vitrine=personagens` (ou `?vitrine=veiculos`), na mesma aplicação do estúdio.
+
+Pela arquitetura atual, a página pode montar personagens com `buildCharacter` e mexer nos canais direto, sem episódio; as ações em loop saem de clipes compilados contra um mundo vazio.
+
 ## Próximo: voz
 
 Só começa com confirmação do autor. O que falta, em ordem sugerida:
