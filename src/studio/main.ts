@@ -393,9 +393,15 @@ function renderPanel(): void {
     }
   }
 
-  panel.append(el('h2', 'Assets'), button('Vitrine de personagens', false, () => {
-    window.location.search = `?vitrine=personagens&series=${bible.series}`;
-  }));
+  panel.append(
+    el('h2', 'Assets'),
+    button('Vitrine de personagens', false, () => {
+      window.location.search = `?vitrine=personagens&series=${bible.series}`;
+    }),
+    button('Vitrine de assets', false, () => {
+      window.location.search = `?vitrine=assets&series=${bible.series}`;
+    }),
+  );
 
   panel.append(el('h2', 'Estilo'));
   const looks = el('div', '', 'row');

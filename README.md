@@ -35,6 +35,10 @@ npm run build
 - **Tempo**: corre de verdade (respira, pisca, anda); dá para pausar e voltar ao início.
 - **Bíblia**: liga cada regra para ver os personagens sob ela (o céu vermelho).
 
+## Vitrine de assets
+
+`http://localhost:5173/?vitrine=assets` (ou o botão "Vitrine de assets" no estúdio) mostra o kit por grupo: veículos, escola, itens, depósito, natureza, estrutura, luzes. Uma pessoa de 1,70 m fica ao lado para dar a escala. Clique num asset para ver a descrição, as medidas, um controle para cada parte que se move (portas, rodas) e as ações do catálogo que valem para ele.
+
 ## Onde fica cada coisa
 
 | Caminho | Conteúdo |
@@ -48,7 +52,7 @@ npm run build
 | `src/engine/actions` | Catálogo de ações e compilação da trilha de ações |
 | `src/engine/character` | Esqueleto padrão, corpo cartoon, rosto, movimentos, importação de GLB |
 | `src/engine/timeline` | Trilha de câmera e tempo por frame |
-| `src/studio` | Estúdio (`main.ts`) e vitrine (`showcase.ts`); `entry.ts` escolhe pelo endereço |
+| `src/studio` | Estúdio (`main.ts`), vitrine de personagens (`showcase.ts`) e de assets (`assets-showcase.ts`); `entry.ts` escolhe pelo endereço |
 | `.claude/skills` | Skills que ensinam a LLM a usar o motor |
 | `src/studio` | Página 3D |
 

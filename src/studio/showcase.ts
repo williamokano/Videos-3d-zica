@@ -321,6 +321,9 @@ function renderPanel(): void {
   };
   for (const b of bibles) panel.append(button(b.title, !everySeries && b === bible, () => open(b.series)));
   if (bibles.length > 1) panel.append(button('Todas as séries', everySeries, () => open('*')));
+  panel.append(button('Vitrine de assets', false, () => {
+    window.location.search = `?vitrine=assets&series=${bible.series}`;
+  }));
   panel.append(button('Voltar ao estúdio', false, () => {
     window.location.search = `?series=${bible.series}`;
   }));

@@ -1,19 +1,20 @@
-# Tarefa 8 do motor: grande-angular e granulado
+# Tarefa 9 do motor: vitrine de assets
 
-Pedido do autor em 2026-11-12 ("próxima"). A tarefa 7 está no commit `f2eda3d`, enviado. Esta ainda não foi commitada.
+Pedido do autor em 2026-11-12. A tarefa 8 está no commit `6b962fd`, enviado. Esta ainda não foi commitada.
 
-- [x] `lens` nos keyframes de câmera e nas chamadas do roteiro (`timeline/camera.ts`, `timeline/direct.ts`)
-- [x] `grain` no `grade` da bíblia
-- [x] Os dois no passe de imagem (`src/engine/grade.ts`)
-- [x] Exemplo no episódio 1: a lente abre na corrida final
-- [x] Testes: `src/engine/lens.test.ts`, `grade.test.ts`
-- [x] Registro: `docs/NEXT.md`, `README.md`, skill `direct-actions`
+- [x] `src/engine/assets/showcase.ts`: grupos, disposição em fila, ações por tipo, faixa de cada canal
+- [x] `src/studio/assets-showcase.ts`: página `?vitrine=assets`, com seleção, canais, ações, estilo, pessoa de escala
+- [x] Navegação entre estúdio e as duas vitrines
+- [x] Testes: `src/engine/assets-showcase.test.ts`
+- [x] Registro: `docs/NEXT.md`, `README.md`, skill `build-location`
+- [x] Tarefa nova registrada: carros melhores (tarefa 10 em `docs/NEXT.md`, com as palavras do autor); voz virou a 11
 
 ## Revisão
 
-- `npm run typecheck` limpo; `npm test` com 132 testes (129 de antes mais 3).
-- Episódio 1 pela câmera: quatro instantes da corrida final com a lente abrindo (os armários curvam), e dois instantes sem lente, iguais a antes.
-- Granulado conferido com `grain: 0.5` posto na bíblia só para a captura e retirado depois.
-- Não conferido: render em vídeo com lente ou granulado, e o tempo de render; lente em plano `cinematic` e `third_person` (só nos testes).
+- `npm run typecheck` limpo; `npm test` com 136 testes (132 de antes mais 4).
+- Olhado em imagem: o carro selecionado com o painel (canais, lugares, ação escolhida) e o grupo Escola inteiro.
+- Testado pela página: seleção por clique (armários), controle de porta pelo painel, e o controle acompanhando um valor posto por fora.
+- Capturados mas não olhados: grupos Depósito, Itens e Natureza; o carro só com as portas abertas.
+- Não conferido: "Animar os canais"; estilo suave nesta página.
 
-Próxima: tarefa 9, vitrine para os outros assets (ver `docs/NEXT.md`).
+Próxima: tarefa 10, carros melhores (ver `docs/NEXT.md`).

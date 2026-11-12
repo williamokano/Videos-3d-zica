@@ -45,3 +45,7 @@ Consulte o catálogo antes de criar: os ids e descrições estão nos `registerA
 ## Estilo da série
 
 Com `"style": { "look": "cel" }` na bíblia (`src/engine/style.ts`), os assets arredondados do kit ganham luz em faixas e contorno; paredes, pisos e tetos ficam como estão. Um asset novo deve usar `mat()` e `rbox()` de `src/engine/assets/registry.ts`: uma caixa de quina viva (`BoxGeometry`) é tratada como casco e fica sem contorno. Confira o local nos dois estilos pelo "Estilo" do painel do estúdio.
+
+## Ver os assets fora de um local
+
+`?vitrine=assets&grupo=<grupo>` mostra cada asset do kit sozinho, com uma pessoa de 1,70 m ao lado e um controle para cada canal. Confira ali um asset novo (escala, partes que se movem, os dois estilos) antes de colocá-lo num local. Pelo console: `window.__assets.select('<id>')`, `set('<id>', '<canal>', valor)`, `setStyle('cel')`.

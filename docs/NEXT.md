@@ -9,15 +9,16 @@ Deixar o motor pronto antes de produzir episódios. Só depois disso a série co
 - `series/ceu-vermelho/episodes/001.ts` é a implementação atual desse roteiro e serve de teste do motor. O autor deu play no estúdio e aprovou o que viu, com algumas poucas melhorias que ainda não detalhou (perguntar quando for a hora; não são o foco agora).
 - Conforme o motor melhora (tarefas abaixo), o episódio 1 é refeito a partir do roteiro, não remendado.
 - O papel do motor, nas palavras do autor: "auxiliar o usuário como se ele fosse o diretor". O mundo tem que ser vivo mesmo onde o roteiro não descreve ações (direção de figurantes).
-- "Pronto" inclui o que um episódio publicável precisa: visual (tarefas 1 a 8), voz e sons (tarefa 10).
+- "Pronto" inclui o que um episódio publicável precisa: visual (tarefas 1 a 10), voz e sons (tarefa 11).
 
 ## Para retomar
 
 ```sh
 npm install
-npm run typecheck && npm test   # 132 testes
+npm run typecheck && npm test   # 136 testes
 npm run dev                     # estúdio em http://localhost:5173
-                                # vitrine em http://localhost:5173/?vitrine=personagens
+                                # vitrine de personagens em http://localhost:5173/?vitrine=personagens
+                                # vitrine de assets em http://localhost:5173/?vitrine=assets
 ```
 
 Leia antes: `README.md`, `docs/PLAN.md`, as skills em `.claude/skills/` (`build-location`, `direct-actions`, `create-character`), `src/engine/world/types.ts` (mundo), `src/engine/actions/catalog.ts` (ações) e `src/engine/character/types.ts` (personagem).
@@ -113,9 +114,15 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Granulado: `grain` de 0 a 1 no `grade` da série ou de uma regra. Muda a cada frame e é o mesmo para o mesmo frame. Nenhuma série usa por padrão.
   - No episódio 1, a lente abre de 0 a 0,7 durante a corrida final, como exemplo.
 
+- Vitrine de assets (tarefa 9): `?vitrine=assets&grupo=<grupo>&series=<id>` (`src/studio/assets-showcase.ts`; `entry.ts` escolhe a página).
+  - Os grupos saem do início do id do asset (`vehicle`, `school`, `item`, `storage`, `nature`, `structure`, `light`). Os assets do grupo ficam em fila, com uma pessoa de 1,70 m ao lado para dar a escala.
+  - Selecionado um asset: descrição, tipo, medidas, um controle para cada canal (portas, rodas), os lugares (assentos) e as ações do catálogo que valem para o tipo dele. "Animar os canais" abre e fecha tudo.
+  - Parte pura em `src/engine/assets/showcase.ts`: `assetGroups`, `rowLayout`, `actionsFor`, `channelRange`.
+  - `window.__assets` expõe `ids()`, `select(id | null)`, `channels(id)`, `set(id, canal, valor)`, `actions(id)`, `setStyle`, `animate`, `camera`, `orbit`.
+
 ## Próximas tarefas, em ordem
 
-As tarefas 1 a 8 estão feitas. A próxima é a 9. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
+As tarefas 1 a 9 estão feitas. A próxima é a 10, carros melhores. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
 
 1. ~~Vitrine de personagens~~: feita. As tarefas 4 a 6 são ajustadas e conferidas nela.
 2. ~~Rosto expressivo~~: feito.
@@ -125,8 +132,9 @@ As tarefas 1 a 8 estão feitas. A próxima é a 9. O autor viu o rosto novo ("ac
 6. ~~Cor da imagem por regra da bíblia ou por série~~: feito, como efeito genérico.
 7. ~~Tela final interativa~~: feita.
 8. ~~Grande-angular por plano e granulado opcional~~: feito.
-9. **Vitrine para os outros assets**: carros, caminhões, escavadeiras, móveis.
-10. **Voz**: só com confirmação do autor.
+9. ~~Vitrine para os outros assets~~: feita. Só existe um veículo (`vehicle.car`); caminhão e escavadeira ainda não existem.
+10. **Carros melhores** (pedido do autor em 2026-11-12, ver a seção abaixo).
+11. **Voz**: só com confirmação do autor.
 
 Os itens 2 a 8 vêm de uma referência de estilo que o autor mostrou; as decisões sobre o que puxar dela estão na seção seguinte.
 
@@ -151,6 +159,18 @@ Puxar com moderação (tarefa 8):
 - **Grande-angular / olho de peixe**: opção por plano, para momentos de tensão (a fuga, a corrida), não o tempo todo. Constante, cansa e deforma o celular, cuja tela precisa ser lida.
 - **Granulado de papel**: leve ou desligado. Granulado vira chuvisco quando Instagram e TikTok recomprimem o vídeo.
 
+## Carros melhores (tarefa 10)
+
+Nas palavras do autor: "O que tem funciona relativamente bem, mas ele é todo quadrado, não precisa modelar com curvas, mas geralmente os vidros são angulados. As portas não estão muito bem alinhadas e na animação de teste a porta do carro fecha com a mulher e passa por ela, ela teria que ter saído da frente."
+
+O que fazer, em `src/engine/assets/vehicles.ts` e nas ações de porta:
+
+- **Forma**: continuar em blocos, sem curvas, mas com para-brisa e vidro traseiro inclinados, e colunas acompanhando. Hoje a cabine é uma caixa reta.
+- **Portas**: alinhar as folhas com a lataria (altura, espessura e vãos) e com os vidros das portas.
+- **Porta que atravessa a pessoa**: na `demo-acoes`, a porta fecha passando por quem está ao lado. `close` (e `open`) com `by` precisa conferir se há um personagem no arco da folha e recusar com mensagem clara, ou o personagem precisa dar um passo para fora do arco antes. Vale também para as portas do cenário se o problema existir lá.
+- Conferir na vitrine de assets (`?vitrine=assets`, grupo Veículos) e nos dois episódios da `demo-acoes`.
+- Já anotado em "Limitações conhecidas": as rodas da frente não viram nas curvas, o porta-malas não abre, `sit` não confere se a porta está aberta, e sentado os braços não seguram o volante. Decidir com o autor o que disso entra.
+
 ## Vitrine de assets (tarefas 1 e 9)
 
 Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. A de personagens está feita; faltam os outros grupos (tarefa 9). O que segue é o pedido completo.
@@ -169,7 +189,7 @@ Pedido do autor: uma página para ver e testar os assets fora de um episódio, p
 
 Pela arquitetura atual, a página pode montar personagens com `buildCharacter` e mexer nos canais direto, sem episódio; as ações em loop saem de clipes compilados contra um mundo vazio.
 
-## Voz (tarefa 10)
+## Voz (tarefa 11)
 
 Só começa com confirmação do autor. O que falta, em ordem sugerida:
 
@@ -214,6 +234,7 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 - A tela final não tem ícones desenhados: `icon` aceita texto ou emoji, e emoji depende da fonte da máquina que renderiza.
 - Um keyframe de câmera que não repete `fov`, `pitch` ou `lens` leva esse valor de volta ao padrão: ao abrir a lente com `moveTo`, repita o `fov` do plano.
 - A lente amplia o meio da imagem, que perde um pouco de nitidez com `lens` alto.
+- A vitrine de assets não mostra as portas do cenário (são vãos de sala, não assets) nem deixa mudar os parâmetros de um asset (cor, tamanho).
 - Modelos GLB não têm dedos e seguram pelo pulso.
 - O giro do pulso só roda em torno do antebraço: a palma chega perto da direção pedida, não exatamente nela.
 - Em `cel`, os cinco dedos fechados em punho ficam carregados de contorno.

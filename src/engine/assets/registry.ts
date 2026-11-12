@@ -44,8 +44,8 @@ export function createAsset(id: string, params: AssetParams = {}): THREE.Object3
   return obj;
 }
 
-export function listAssets(): { id: string; description: string }[] {
-  return [...assets.values()].map(({ id, description }) => ({ id, description }));
+export function listAssets(): { id: string; description: string; kind: string }[] {
+  return [...assets.values()].map(({ id, description, kind }) => ({ id, description, kind }));
 }
 
 // ---- Building blocks shared by all assets (the "soft low poly" look) ----
