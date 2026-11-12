@@ -1,6 +1,9 @@
 {
   "id": "maria",
   "name": "Maria",
+  "voice": {
+    "id": "33B4UnXyTNbgLmdEDh5P"
+  },
   "height": 1.63,
   "skin": "#e8b88f",
   "hair": "#5a3a26",

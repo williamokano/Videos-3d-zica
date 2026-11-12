@@ -8,7 +8,12 @@
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "render": "node scripts/render.mjs"
+    "render": "node scripts/render.mjs",
+    "previa": "node scripts/render.mjs --scale 0.5",
+    "animatic": "node scripts/render.mjs --scale 0.5 --step 15",
+    "look": "node scripts/look.mjs",
+    "voz": "node scripts/voz.mjs",
+    "roteiro": "node scripts/roteiro.mjs"
   },
   "dependencies": {
     "three": "^0.187.0"

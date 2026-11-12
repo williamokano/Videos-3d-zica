@@ -68,10 +68,34 @@ npm run build
 ## Renderizar para MP4
 
 ```sh
-npm run render -- --series ceu-vermelho --ep 1
+npm run voz      -- --series ceu-vermelho --ep 1    # gera as falas e os sons que faltam (ElevenLabs); --dry só lista
+npm run render   -- --series ceu-vermelho --ep 1    # vídeo final, com som
+npm run previa   -- --series ceu-vermelho --ep 1    # metade do tamanho, para conferir rápido
+npm run animatic -- --series ceu-vermelho --ep 1    # 2 quadros por segundo, mudo: o episódio inteiro em segundos
+npm run look     -- --series ceu-vermelho --ep 1 --t 12,30   # quadros desses instantes, em PNG
+npm run roteiro  -- --series ceu-vermelho --ep 1    # roteiro marcado: falas, ações e pausas com os tempos
 ```
 
-Navegadores Chrome sem janela desenham o episódio frame a frame, cada um um trecho, e o ffmpeg junta tudo em `out/<série>-ep<n>.mp4`. O vídeo sai mudo. Se o render falhar, nenhum arquivo é gravado; um vídeo em `out/` está sempre completo.
+Navegadores Chrome sem janela desenham o episódio frame a frame, cada um um trecho, e o ffmpeg junta tudo. As falas e os sons entram nos seus tempos, mixados a −14 LUFS. Se o render falhar, nenhum arquivo é gravado; um vídeo gravado está sempre completo.
+
+### Onde os arquivos ficam
+
+Cada episódio tem a sua pasta, e nada fica solto em `out/`:
+
+```
+out/ceu-vermelho/ep001/ceu-vermelho-ep001.mp4          vídeo final
+out/ceu-vermelho/ep001/ceu-vermelho-ep001-previa.mp4   prévias (previa, animatic, --from/--to): nunca substituem o final
+out/ceu-vermelho/ep001/ceu-vermelho-ep001.wav          só o som (node scripts/mix.mjs)
+out/ceu-vermelho/ep001/quadros/                        imagens do npm run look
+```
+
+Para gravar em outro lugar, a pasta base (no lugar de `out/`) vem, nesta ordem, de:
+
+1. `--dir <pasta>` no comando: `npm run render -- --series ceu-vermelho --ep 1 --dir ~/Videos/series`
+2. a variável de ambiente `VIDEOS_OUT`
+3. `"output": "~/Videos/series"` no `bible.json` da série (vale para todos os comandos daquela série)
+
+`--out <arquivo>` (render, mix) ou `--out <pasta>` (look) dá o caminho exato e ignora as pastas acima. As gravações de voz e os sons não são saída: ficam em `series/<série>/audio/`, junto da série, porque custam para gerar.
 
 | Opção | O que faz |
 |---|---|
@@ -80,7 +104,9 @@ Navegadores Chrome sem janela desenham o episódio frame a frame, cada um um tre
 | `--scale 0.5` | metade do tamanho, para uma prévia rápida |
 | `--step 15` | desenha um frame a cada 15: uma prévia em 2 quadros por segundo, para revisar o episódio inteiro em minutos |
 | `--no-subs` | sem a legenda das falas |
-| `--out arquivo.mp4` | onde gravar |
+| `--dir pasta` | pasta base das saídas (ver acima) |
+| `--out arquivo.mp4` | caminho exato do vídeo |
+| `--no-audio` | sem som |
 | `--workers 8` | quantos navegadores desenham ao mesmo tempo, cada um um trecho do episódio (padrão: metade dos núcleos da CPU, no máximo 8) |
 | `--software` | desenha na CPU mesmo havendo placa de vídeo |
 | `--crf 18` | qualidade do x264 (menor é melhor) |

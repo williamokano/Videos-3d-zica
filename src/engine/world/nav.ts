@@ -135,6 +135,56 @@ function clear(nav: Nav, a: number[], b: number[]): boolean {
   return Math.abs(y - b[1]) <= MAX_STEP;
 }
 
+/** Radius people take around a corner at walking pace, in meters (measured: about 0.5 to 1). */
+const CORNER_RADIUS = 0.7;
+const MIN_CORNER_RADIUS = 0.2;
+
+/**
+ * Round each corner of a straight-line route with an arc, as people do: they cut the corner on a curve instead of
+ * stopping to turn. Each arc starts and ends R·tan(θ/2) from the corner, at most a little under half of each side;
+ * an arc that would run into something gets a smaller radius, and a corner with no room keeps its point.
+ */
+function roundCorners(nav: Nav, corners: number[][]): number[][] {
+  const out: number[][] = [corners[0]];
+  for (let c = 1; c < corners.length - 1; c++) {
+    const [a, p, b] = [corners[c - 1], corners[c], corners[c + 1]];
+    const into = [p[0] - a[0], p[2] - a[2]];
+    const away = [b[0] - p[0], b[2] - p[2]];
+    const [lenIn, lenOut] = [Math.hypot(into[0], into[1]), Math.hypot(away[0], away[1])];
+    const cos = (into[0] * away[0] + into[1] * away[1]) / (lenIn * lenOut || 1);
+    const theta = Math.acos(Math.max(-1, Math.min(1, cos)));
+    // On stairs and landings (a change of level), and for almost straight corners, keep the point.
+    if (lenIn < 1e-6 || lenOut < 1e-6 || theta < 0.05 || Math.abs(a[1] - p[1]) > 0.05 || Math.abs(b[1] - p[1]) > 0.05) {
+      out.push(p);
+      continue;
+    }
+    // The previous arc may have used part of the side coming in.
+    const before = out[out.length - 1];
+    const room = Math.min(Math.hypot(p[0] - before[0], p[2] - before[2]), lenOut / 2) * 0.95;
+    let radius = Math.min(CORNER_RADIUS, room / Math.tan(theta / 2));
+    let arc: number[][] | null = null;
+    while (radius >= MIN_CORNER_RADIUS && !arc) {
+      const d = radius * Math.tan(theta / 2);
+      const start = [p[0] - (into[0] / lenIn) * d, p[1], p[2] - (into[1] / lenIn) * d];
+      const end = [p[0] + (away[0] / lenOut) * d, p[1], p[2] + (away[1] / lenOut) * d];
+      // A quadratic curve with the corner as its control point: tangent to both sides, close to a circle.
+      const steps = Math.max(3, Math.ceil((theta * radius) / 0.1));
+      const samples: number[][] = [];
+      for (let k = 0; k <= steps; k++) {
+        const u = k / steps;
+        const [w0, w1, w2] = [(1 - u) ** 2, 2 * u * (1 - u), u * u];
+        samples.push([start[0] * w0 + p[0] * w1 + end[0] * w2, p[1], start[2] * w0 + p[2] * w1 + end[2] * w2]);
+      }
+      const ok = clear(nav, before, samples[0]) && samples.every((q, k) => k === 0 || clear(nav, samples[k - 1], q));
+      if (ok) arc = samples;
+      else radius /= 2;
+    }
+    out.push(...(arc ?? [p]));
+  }
+  out.push(corners[corners.length - 1]);
+  return out;
+}
+
 function shortest(nav: Nav, start: number, goal: number): number[] | null {
   const count = nav.edges.length;
   const cost = new Float32Array(count).fill(Infinity);
@@ -212,11 +262,12 @@ export function findPath(nav: Nav, from: [number, number, number], to: [number, 
     i = j;
   }
 
-  const points: [number, number, number][] = [[corners[0][0], corners[0][1], corners[0][2]]];
+  const route = roundCorners(nav, corners);
+  const points: [number, number, number][] = [[route[0][0], route[0][1], route[0][2]]];
   const distances = [0];
-  let y = corners[0][1];
-  for (let c = 1; c < corners.length; c++) {
-    const [a, b] = [corners[c - 1], corners[c]];
+  let y = route[0][1];
+  for (let c = 1; c < route.length; c++) {
+    const [a, b] = [route[c - 1], route[c]];
     const span = Math.hypot(b[0] - a[0], b[2] - a[2]);
     const steps = Math.max(1, Math.ceil(span / SAMPLE));
     for (let k = 1; k <= steps; k++) {

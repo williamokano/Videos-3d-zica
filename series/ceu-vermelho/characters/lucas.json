@@ -1,6 +1,9 @@
 {
   "id": "lucas",
   "name": "Lucas",
+  "voice": {
+    "id": "4dlXQwYXFHlCAUmQAu9j"
+  },
   "height": 1.76,
   "skin": "#a86f48",
   "hair": "#1c1512",

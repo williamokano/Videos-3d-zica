@@ -1,0 +1,15 @@
+{
+  "id": "professora",
+  "name": "Professora",
+  "voice": {
+    "id": "fUAUU80st9SqdYx319Zk"
+  },
+  "height": 1.66,
+  "skin": "#b97a52",
+  "hair": "#2a1d17",
+  "hairStyle": "bun",
+  "glasses": "round",
+  "shirt": "#a8546a",
+  "pants": "#2f2f38",
+  "shoes": "#2a2224"
+}

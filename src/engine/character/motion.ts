@@ -142,7 +142,7 @@ export function blink(t: number, seed: number): number {
 }
 
 export const NEUTRAL_FACE: FaceParams = {
-  eyeOpen: 1, browLift: 0, browTilt: 0, mouthCurve: 0.15, mouthOpen: 0, mouthWidth: 1, mouthRound: 0, teeth: 0, gazeX: 0, gazeY: 0, lidTilt: 0,
+  eyeOpen: 1, browLift: 0, browTilt: 0, mouthCurve: 0, mouthOpen: 0, mouthWidth: 1, mouthRound: 0, teeth: 0, gazeX: 0, gazeY: 0, lidTilt: 0,
 };
 
 const face = (changes: Partial<FaceParams>): FaceParams => ({ ...NEUTRAL_FACE, ...changes });
@@ -154,6 +154,8 @@ export const EXPRESSIONS: Record<string, FaceParams> = {
   angry: face({ eyeOpen: 0.72, browLift: -0.5, browTilt: 0.9, lidTilt: 0.9, mouthCurve: -0.5, mouthWidth: 0.95 }),
   surprised: face({ eyeOpen: 1.3, browLift: 0.9, mouthCurve: 0, mouthOpen: 0.8, mouthWidth: 0.7, mouthRound: 0.6, teeth: 0.2 }),
   scared: face({ eyeOpen: 1.35, browLift: 0.7, browTilt: -0.6, lidTilt: -0.3, mouthCurve: -0.4, mouthOpen: 0.5, mouthWidth: 0.85, teeth: 0.6 }),
+  // Hypnotized: eyes a little too open, nothing else on the face, the jaw let go a little.
+  trance: face({ eyeOpen: 1.22, browLift: 0.12, mouthCurve: -0.05, mouthOpen: 0.06, mouthWidth: 0.92 }),
 };
 
 /** Mouth shapes of speech. A closed mouth (rest, and the sounds M, B, P) is the absence of all of them. */
@@ -193,28 +195,45 @@ interface Phone {
 
 const VOWELS: Record<string, Viseme> = { a: 'A', e: 'E', i: 'E', y: 'E', o: 'O', u: 'U' };
 
-/** The sounds of a text, one per letter: vowels open the mouth, F and V bite the lip, M, B and P close it. */
-function phonesOf(text: string): Phone[] {
-  const plain = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const closed = (length: number): Phone => ({ shape: null, weight: 0, length });
-  const phones: Phone[] = [closed(0.6)];
-  /** Consonants that take the shape of the vowel next to them, found once all the letters are known. */
-  const borrowed: number[] = [];
-  for (const ch of plain) {
-    if (VOWELS[ch]) phones.push({ shape: VOWELS[ch], weight: 1, length: 1 });
-    else if (ch === 'f' || ch === 'v') phones.push({ shape: 'F', weight: 1, length: 0.7 });
-    else if (ch === 'm' || ch === 'b' || ch === 'p') phones.push(closed(0.6));
-    else if (/[a-z0-9]/.test(ch)) borrowed.push(phones.push({ shape: null, weight: 0.45, length: 0.45 }) - 1);
-    // Words run into each other; punctuation is a breath.
-    else if (/[.,;:!?…—-]/.test(ch)) phones.push(closed(1.6));
-  }
+const plainLetter = (ch: string): string => ch.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+/**
+ * The mouth for one letter: vowels open it, F and V bite the lip, M, B and P close it, other consonants take the
+ * shape of a vowel next to them ("borrowed"), punctuation is a breath. Spaces and the rest make no sound.
+ */
+export function letterSound(ch: string): { shape: Viseme | null; weight: number; length: number; borrowed?: true } | null {
+  const c = plainLetter(ch);
+  if (VOWELS[c]) return { shape: VOWELS[c], weight: 1, length: 1 };
+  if (c === 'f' || c === 'v') return { shape: 'F', weight: 1, length: 0.7 };
+  if (c === 'm' || c === 'b' || c === 'p') return { shape: null, weight: 0, length: 0.6 };
+  if (/[a-z0-9]/.test(c)) return { shape: null, weight: 0.45, length: 0.45, borrowed: true };
+  if (/[.,;:!?…—-]/.test(c)) return { shape: null, weight: 0, length: 1.6 };
+  return null;
+}
+
+/** Give each borrowed consonant the shape of the nearest open vowel. */
+export function lendShapes<T extends { shape: Viseme | null; weight: number; borrowed?: true }>(phones: T[]): T[] {
   const vowelNear = (i: number): Viseme => {
     for (const k of [i + 1, i + 2, i - 1, i - 2]) if (phones[k]?.weight === 1 && phones[k].shape && phones[k].shape !== 'F') return phones[k].shape!;
     return 'E';
   };
-  for (const i of borrowed) phones[i].shape = vowelNear(i);
-  phones.push(closed(0.8));
+  phones.forEach((p, i) => {
+    if (p.borrowed) p.shape = vowelNear(i);
+  });
   return phones;
+}
+
+/** The sounds of a text, one per letter. */
+function phonesOf(text: string): Phone[] {
+  const closed = (length: number): Phone => ({ shape: null, weight: 0, length });
+  const sounds: (Phone & { borrowed?: true })[] = [closed(0.6)];
+  // Words run into each other.
+  for (const ch of text) {
+    const sound = letterSound(ch);
+    if (sound) sounds.push({ ...sound });
+  }
+  sounds.push(closed(0.8));
+  return lendShapes(sounds);
 }
 
 const tracks = new Map<string, (u: number) => VisemeWeights>();

@@ -75,7 +75,9 @@ describe('phone', () => {
     expect(phone.position.z).toBeLessThan(3.75);
     expect(phone.position.y).toBeGreaterThan(1.3);
     expect(phone.position.y).toBeLessThan(1.55);
-    expect(placementAt(s.compiled, 'celular', 3).pos[2]).toBeCloseTo(3.64);
+    // The estimate (for the eyes and the camera) is where the phone really is, within a couple of centimeters.
+    expect(placementAt(s.compiled, 'celular', 3).pos[2]).toBeCloseTo(3.612);
+    expect(Math.abs(placementAt(s.compiled, 'celular', 3).pos[1] + 0.077 - (phone.position.y + 0.077))).toBeLessThan(0.06);
     s.screen(20);
     expect(phone.visible).toBe(false);
     expect(() => play((d) => void d.actor('ana').putAway('celular'))).toThrow(/ninguém está segurando/);

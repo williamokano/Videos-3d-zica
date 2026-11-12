@@ -12,12 +12,15 @@ import { endCardAt } from '../engine/ui/endcard';
 import { applyStyle } from '../engine/style';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
-import { frameCount, type Episode } from '../engine/timeline/episode';
+import { cutAt, frameCount, type Episode } from '../engine/timeline/episode';
 import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
 import { button, checkbox, el } from './ui';
 import { WalkControls } from './walk';
+import { StudioSound } from './sound';
+import { NARRATOR, type Take } from '../engine/audio/voice';
+import { soundFile } from '../engine/audio/sound';
 
 // Series data lives in /series as plain files; the studio only reads it.
 const bibles = import.meta.glob<Bible>('/series/*/bible.json', { eager: true, import: 'default' });
@@ -26,6 +29,9 @@ const locations = import.meta.glob<Location>('/series/*/world/*.json', { eager: 
 const episodes = import.meta.glob<Episode | EpisodeScript>('/series/*/episodes/*.{json,ts}', { eager: true, import: 'default' });
 const characters = import.meta.glob<CharacterDef>('/series/*/characters/*.json', { eager: true, import: 'default' });
 const models = import.meta.glob<string>('/series/*/characters/*.glb', { eager: true, import: 'default', query: '?url' });
+// Voice takes (npm run voz) and sounds.
+const takeFiles = import.meta.glob<Take>('/series/*/audio/voz/*.json', { eager: true, import: 'default' });
+const audioFiles = import.meta.glob<string>('/series/*/audio/{voz,sons}/*.{mp3,ogg,wav}', { eager: true, import: 'default', query: '?url' });
 
 // Which series and episode to open comes from the address: ?series=<id>&ep=<number>.
 const query = new URLSearchParams(window.location.search);
@@ -86,7 +92,7 @@ let actionsError = '';
 let episode: Episode | undefined;
 if (source && isScript(source)) {
   try {
-    episode = resolveScript(source, built, inSeries(characters), bible);
+    episode = resolveScript(source, built, inSeries(characters), bible, Object.fromEntries(inSeries(takeFiles).map((t) => [t.key, t])));
   } catch (error) {
     // Show the location anyway, with the error in the panel.
     actionsError = `Roteiro do episódio ${source.episode}: ${error instanceof Error ? error.message : String(error)}`;
@@ -161,7 +167,7 @@ const handOverrides = new Map<string, number>();
 
 function applyActions(t: number): void {
   handOverrides.clear();
-  applyStage(actions, interactiveById, t);
+  applyStage(actions, interactiveById, t, built.colliders);
   applyEnvironment();
 }
 
@@ -215,7 +221,8 @@ function showLine(t: number): void {
   if (!visible || !line) return;
   const member = episode?.cast?.find((m) => (m.id ?? m.character) === line.target);
   const name = member?.look?.name ?? inSeries(characters).find((c) => c.id === member?.character)?.name ?? line.target;
-  subtitle.replaceChildren(el('b', `${name}: `), String(line.data.text));
+  // The narrator has no name on screen.
+  subtitle.replaceChildren(...(line.data.speaker === NARRATOR ? [] : [el('b', `${name}: `)]), String(line.data.text));
   const [x, y, w, h] = fit(0, 0, width, height);
   Object.assign(subtitle.style, { left: `${x + w * 0.06}px`, width: `${w * 0.88}px`, bottom: `${y + h * 0.1}px`, fontSize: `${h * 0.024}px` });
 }
@@ -457,6 +464,7 @@ function renderPanel(): void {
   if (actionsError || actions.clips.length) {
     panel.append(el('h2', 'Ações do episódio'));
     if (actionsError) panel.append(el('div', actionsError, 'error'));
+    for (const warning of episode?.warnings ?? []) panel.append(el('div', `Aviso: ${warning}`, 'error'));
     for (const clip of actions.clips) {
       panel.append(button(`${clip.t}s · ${clip.action} · ${clip.target}`, false, () => timeline?.seek(Math.round(clip.t * bible.format.fps))));
     }
@@ -487,6 +495,22 @@ if (episode) {
   document.getElementById('viewport')!.append(timeline.element);
   applyShot(0);
 }
+
+/** The episode's voices and sounds, played along with the timeline (not while rendering: the render mixes its own). */
+const audioUrl = (path: string): string | undefined => audioFiles[`/series/${bible.series}/audio/${path}`];
+const studioSound = new StudioSound(rendering ? [] : (episode?.actions ?? []).flatMap((clip) => {
+  const take = clip.params?.take as Take | undefined;
+  if ((clip.action === 'say' || clip.action === 'narrate') && take) {
+    const url = audioUrl(`voz/${take.key}.mp3`);
+    return url ? [{ url, t: clip.t, volume: 1 }] : [];
+  }
+  const def = clip.action === 'sound' ? bible.audio?.sounds?.[clip.params?.name as string] : undefined;
+  if (!def) return [];
+  const params = clip.params ?? {};
+  const url = audioUrl(`sons/${soundFile(params.name as string, def)}`);
+  const volume = (params.volume as number | undefined) ?? def.volume ?? 1;
+  return url ? [{ url, t: clip.t, volume, length: params.length as number | undefined, loop: def.loop }] : [];
+}));
 
 // ---- Loop ----
 
@@ -550,12 +574,38 @@ if (rendering) {
       series: bible.series,
       episode: episodeNumber,
       error: actionsError,
+      cuts: episode?.cuts ?? [],
+      output: bible.output,
       gpu: info ? String(renderer.getContext().getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'desconhecida',
-      async frame(n: number, wait = true): Promise<void> {
+      /**
+       * Draw frame n. With `view`, from a free camera placed there instead of the episode's (to look around a
+       * scene while writing it: scripts/look.mjs); the picture then has no subtitles and no end card.
+       */
+      async frame(n: number, wait = true, view?: { pos: [number, number, number]; lookAt: [number, number, number]; fov?: number; level?: number }): Promise<void> {
         timeline!.seek(n);
         renderer.setScissorTest(false);
         renderer.clear();
-        draw(shotCamera, [0, 0, width, height], true);
+        if (view) {
+          const free = new THREE.PerspectiveCamera(view.fov ?? 60, width / height, 0.05, 1000);
+          free.position.set(...view.pos);
+          free.lookAt(...view.lookAt);
+          free.updateMatrixWorld();
+          subtitle.hidden = true;
+          endCard.hidden = true;
+          // With `level`, a dollhouse view: what is above that floor and the ceilings at it are hidden.
+          const cut = view.level ?? null;
+          for (const room of built.rooms) {
+            room.group.visible = cut === null || room.elevation <= cut;
+            room.ceiling.visible = cut === null || room.elevation < cut;
+          }
+          built.exterior.visible = cut === null || cut >= 0;
+          for (const s of built.stairs) s.group.visible = cut === null || s.bottom <= cut;
+          for (const c of cast) c.object.visible = cut === null || c.position()[1] <= cut + 0.5;
+          draw(free, [0, 0, width, height], false);
+          applyVisibility();
+        } else {
+          draw(shotCamera, [0, 0, width, height], true);
+        }
         if (wait) await settle();
       },
     },
@@ -565,6 +615,10 @@ renderer.setAnimationLoop(rendering ? null : () => {
   clock.update();
   const dt = Math.min(clock.getDelta(), 0.1);
   timeline?.update(dt);
+  // Playing, a jump cut is skipped as in the finished video.
+  const cut = timeline?.playing && episode ? cutAt(episode, timeline.time) : undefined;
+  if (cut) timeline!.seek(Math.ceil(cut[1] * bible.format.fps));
+  if (timeline) studioSound.sync(timeline.time, timeline.playing);
   if (mode === 'walk') walk.update(dt);
   else if (mode === 'orbit') orbit.update();
 
@@ -592,5 +646,6 @@ Object.assign(window, {
   __studio: {
     setMode, setLevel, orbit, focusRoom: (id: string) => focusRoom(location!.rooms.find((r) => r.id === id)!), walk, camera, timeline,
     interactives: built.interactives, cast, actionsError, toggleNearestDoor,
+    get props() { return props; }, get actions() { return actions; },
   },
 });

@@ -243,7 +243,9 @@
           "asset": "storage.crates",
           "pos": [1, 8.2],
           "params": { "seed": 4 }
-        }
+        },
+        { "id": "banco", "asset": "school.bench", "pos": [21.4, 9.6] },
+        { "asset": "school.bench", "pos": [18.2, 9.6] }
       ]
     },
     {

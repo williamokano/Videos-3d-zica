@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { group, post, rbox, registerAsset } from './registry';
 
 /*
@@ -89,13 +90,20 @@ registerAsset('school.lockers', 'Fileira de armários de corredor (params: count
   return g;
 });
 
-registerAsset('school.bench', 'Banco de pátio', () =>
-  group(
+registerAsset('school.bench', 'Banco de pátio, com três lugares para sentar (left, middle, right); quem senta fica de frente para -z', () => {
+  const bench = group(
     rbox(1.6, 0.06, 0.42, WOOD, [0, 0.45, 0]),
     rbox(1.6, 0.3, 0.05, WOOD, [0, 0.78, 0.2]),
     rbox(0.08, 0.45, 0.4, '#5a5f6b', [-0.65, 0.225, 0]),
     rbox(0.08, 0.45, 0.4, '#5a5f6b', [0.65, 0.225, 0]),
     rbox(0.06, 0.4, 0.06, '#5a5f6b', [-0.65, 0.62, 0.2]),
     rbox(0.06, 0.4, 0.06, '#5a5f6b', [0.65, 0.62, 0.2]),
-  ),
-);
+  );
+  for (const [name, x] of [['left', -0.5], ['middle', 0], ['right', 0.5]] as const) {
+    const anchor = new THREE.Object3D();
+    anchor.name = `seat.${name}`;
+    anchor.position.set(x, 0.48, 0);
+    bench.add(anchor);
+  }
+  return bench;
+});

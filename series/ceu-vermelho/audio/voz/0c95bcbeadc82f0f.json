@@ -1,0 +1,23 @@
+{
+ "key": "0c95bcbeadc82f0f",
+ "duration": 1.881,
+ "text": "Pedro!",
+ "starts": [
+  1.03,
+  1.08,
+  1.13,
+  1.18,
+  1.23,
+  1.28
+ ],
+ "ends": [
+  1.08,
+  1.13,
+  1.18,
+  1.23,
+  1.28,
+  1.84
+ ],
+ "speaker": "lucas",
+ "spoken": "[nervous] Pedro!"
+}

@@ -1,5 +1,6 @@
 import { HAND_POSE_NAMES, VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
-import { BEHAVIOURS } from './ambient';
+import { takeVisemes, type Take } from '../audio/voice';
+import { BEHAVIOURS, MOODS, type Mood } from './ambient';
 import { registerAction, type WalkPath } from './catalog';
 import { BODY, outAndBack, reachBody, type Point3 } from './hands';
 
@@ -12,6 +13,25 @@ function turn(from: number, to: number): number {
 
 /** Heading that looks along (dx, dz): 0 faces north, 90 west. */
 const heading = (dx: number, dz: number): number => (Math.atan2(-dx, -dz) * 180) / Math.PI;
+
+/** One walk through several stops: the path to each, end to end. Null if any stretch has no way. */
+function joinPaths(find: NonNullable<import('./catalog').ActionServices['findPath']>, from: [number, number, number], stops: ([number, number] | [number, number, number])[]): WalkPath | null {
+  const out: WalkPath = { points: [from], distances: [0], length: 0, doors: [] };
+  let at = from;
+  for (const stop of stops) {
+    const part = find(at, [stop[0], stop[1]], stop[2] ?? at[1]);
+    if (!part) return null;
+    for (const door of part.doors) out.doors.push({ id: door.id, distance: out.length + door.distance });
+    part.points.forEach((p, i) => {
+      if (i === 0) return;
+      out.points.push(p);
+      out.distances.push(out.length + part.distances[i]);
+    });
+    out.length += part.length;
+    at = out.points[out.points.length - 1];
+  }
+  return out;
+}
 
 function sampler(path: WalkPath, values: number[]): (distance: number) => number {
   return (distance) => {
@@ -33,6 +53,7 @@ registerAction({
     door: { type: 'string', description: 'em vez de "to": id de uma porta; o personagem para diante dela, do lado em que está, ao alcance da maçaneta' },
     elevation: { type: 'number', description: 'altura do piso de destino, se for em outro nível' },
     speed: { type: 'number', description: 'velocidade em m/s quando não há "duration" (padrão 1.4)' },
+    via: { type: 'points', description: 'pontos [x, z] (ou [x, z, nível]) por onde passar no caminho, sem parar, ex.: para descer pela escada certa' },
   },
   duration: 2,
   compile(ctx) {
@@ -46,7 +67,8 @@ registerAction({
     /** Heading to end with, when stopping at a door. */
     let facing: number | undefined;
     const level = (ctx.params.elevation as number | undefined) ?? from[1];
-    let path = doorId ? null : ctx.services.findPath!(from, to, level);
+    const via = (ctx.params.via as ([number, number] | [number, number, number])[] | undefined) ?? [];
+    let path = doorId ? null : via.length ? joinPaths(ctx.services.findPath!, from, [...via, [to[0], to[1], level]]) : ctx.services.findPath!(from, to, level);
     if (doorId) {
       const door = ctx.object(doorId).traits.door ?? ctx.fail(`"${doorId}" não é uma porta.`);
       const kind = ctx.object(doorId).traits.doorKind;
@@ -101,9 +123,17 @@ registerAction({
     const cycle = (ctx.target.traits.strideLength ?? 1.5) * (speed >= RUN_FROM ? 1.75 : 1);
     const along = (index: number) => sampler(route, route.points.map((p) => p[index]));
     const [x, y, z, yaw] = [along(0), along(1), along(2), sampler(route, yaws)];
+    // The head leads into a turn: it looks where the path goes about two steps ahead (people turn the head
+    // 0.2 to 0.6 s before the body, up to about 25°), easing in and out with the walk.
+    const LOOK_AHEAD = 1.6;
+    const lead = (s: number): number => {
+      const ahead = Math.max(-25, Math.min(25, turn(yaw(s), yaw(Math.min(route.length, s + LOOK_AHEAD))) - yaw(s)));
+      return ahead * Math.max(0, Math.min(1, s / 0.5, (route.length - s) / 0.8));
+    };
     return {
       duration: route.length / speed,
       writes: [
+        { channel: 'lead', at: (u) => lead(u * route.length) },
         { channel: 'x', at: (u) => x(u * route.length) },
         { channel: 'y', at: (u) => y(u * route.length) },
         { channel: 'z', at: (u) => z(u * route.length) },
@@ -291,28 +321,41 @@ registerAction({
   params: {
     text: { type: 'string', description: 'o que ele diz', required: true },
     to: { type: 'string', description: 'id de com quem fala; ele olha para essa pessoa' },
+    tone: { type: 'string', description: 'tom da voz: sussurro, nervoso, grito, transe... (não aparece na legenda)' },
+    take: { type: 'data', description: 'a gravação da fala (posta pelo roteiro): duração e tempos de cada letra' },
+    gesture: { type: 'number', description: 'quanto as mãos acompanham, 0 a 1 (padrão 1)' },
   },
   duration: 1,
   compile(ctx) {
     const text = ctx.params.text as string;
     const to = ctx.params.to as string | undefined;
+    const take = ctx.params.take as Take | undefined;
     if (to !== undefined) ctx.object(to);
-    const duration = Math.max(1, 0.5 + text.length * 0.065);
-    const shapes = visemeTrack(text);
+    const gesture = (ctx.params.gesture as number | undefined) ?? 1;
+    const { duration, shapes } = lineMouth(text, take);
     return {
       duration,
-      // The mouth follows the letters of the line at an even pace, not the easing.
+      // The mouth follows the voice (or the letters, at an even pace), not the easing.
       writes: [
         ...VISEME_NAMES.map((name) => ({ channel: `vis.${name}`, at: (u: number) => shapes(u)[name] })),
         // For faces with a single control for the mouth.
         { channel: 'talk', at: (u: number) => mouthOpenOf(shapes(u)) },
-        { channel: 'gesture', at: (u) => Math.min(1, u * 4, (1 - u) * 4) },
+        ...(gesture > 0 ? [{ channel: 'gesture', at: (u: number) => gesture * Math.min(1, u * 4, (1 - u) * 4) }] : []),
       ],
-      events: [{ type: 'line', data: { text, duration } }],
+      events: [{ type: 'line', data: { text, duration, take: take?.key } }],
       gaze: to === undefined ? undefined : { at: to, fade: 0.4 },
     };
   },
 });
+
+/** Length of a line and its mouth shapes by progress (0 to 1): from its take if there is one, else from the letters. */
+export function lineMouth(text: string, take?: Take): { duration: number; shapes: (u: number) => Record<string, number> } {
+  if (take) {
+    const timed = takeVisemes(take);
+    return { duration: take.duration, shapes: (u) => timed(u * take.duration) };
+  }
+  return { duration: Math.max(1, 0.5 + text.length * 0.065), shapes: visemeTrack(text) };
+}
 
 registerAction({
   id: 'behave',
@@ -322,18 +365,20 @@ registerAction({
     mode: { type: 'string', description: `um de: ${Object.keys(BEHAVIOURS).join(', ')}`, required: true },
     group: { type: 'string', description: 'chat: nome do grupo de conversa' },
     object: { type: 'string', description: 'attend: id do que ele acompanha com os olhos' },
-    point: { type: 'point3', description: 'watch: ponto [x, y, z] para onde olha' },
+    point: { type: 'point3', description: 'watch, trance: ponto [x, y, z] para onde olha' },
+    mood: { type: 'string', description: `humor: ${Object.entries(MOODS).map(([k, v]) => `"${k}" (${v})`).join('; ')}` },
   },
   duration: 0,
   compile(ctx) {
     const mode = ctx.params.mode as string;
     if (!(mode in BEHAVIOURS)) ctx.fail(`modo desconhecido "${mode}". Existem: ${Object.keys(BEHAVIOURS).join(', ')}.`);
-    const { group, object, point } = ctx.params as { group?: string; object?: string; point?: [number, number, number] };
+    const { group, object, point, mood } = ctx.params as { group?: string; object?: string; point?: [number, number, number]; mood?: Mood };
+    if (mood !== undefined && !(mood in MOODS)) ctx.fail(`humor desconhecido "${mood}". Existem: ${Object.keys(MOODS).join(', ')}.`);
     if (mode === 'chat' && !group) ctx.fail('"chat" precisa de "group".');
     if (mode === 'attend' && !object) ctx.fail('"attend" precisa de "object".');
-    if (mode === 'watch' && !point) ctx.fail('"watch" precisa de "point".');
+    if ((mode === 'watch' || mode === 'trance') && !point) ctx.fail(`"${mode}" precisa de "point".`);
     if (object !== undefined) ctx.object(object);
-    return { writes: [], behaviour: { mode, group, object, point } };
+    return { writes: [], behaviour: { mode, group, object, point, mood } };
   },
 });
 

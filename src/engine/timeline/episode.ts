@@ -1,4 +1,5 @@
 import type { ActionClip } from '../actions/catalog';
+import type { LineVoice } from '../audio/voice';
 import type { CastMember } from '../character/cast';
 import type { Prop } from '../world/types';
 import type { CameraKey } from './camera';
@@ -27,6 +28,30 @@ export interface Episode {
   props?: EpisodeProp[];
   /** What happens to interactive objects: doors opening, cars driving, items picked up. */
   actions?: ActionClip[];
+  /**
+   * Stretches taken out of the finished video, [from, to] in seconds: jump cuts, e.g. over a long walk. The
+   * episode still happens in full (everything stays continuous), only the picture and sound skip them.
+   */
+  cuts?: [number, number][];
+  /**
+   * Things that compile but look wrong, found by the director: someone standing still for a while with nothing to
+   * do. Shown in the studio and in `npm run roteiro`.
+   */
+  warnings?: string[];
+  /** Spoken lines with their voices, for making the takes (`npm run voz`). Filled in by scripts. */
+  lines?: LineVoice[];
+}
+
+/** Whether a time falls in a jump cut, and where the cut ends. */
+export function cutAt(episode: Pick<Episode, 'cuts'>, t: number): [number, number] | undefined {
+  return episode.cuts?.find(([from, to]) => t >= from && t < to);
+}
+
+/** Time in the finished video for a time of the episode (a time inside a cut goes to where the cut is). */
+export function finalTime(episode: Pick<Episode, 'cuts'>, t: number): number {
+  let out = t;
+  for (const [from, to] of episode.cuts ?? []) if (t > from) out -= Math.min(t, to) - from;
+  return out;
 }
 
 export function frameCount(episode: Episode, fps: number): number {

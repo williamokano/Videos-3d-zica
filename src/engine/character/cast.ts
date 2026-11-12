@@ -43,7 +43,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const state: Record<string, number> = {
     x: member.at[0], y: (member.elevation ?? 0) + (member.seated ?? 0), z: member.at[1], yaw: member.yaw ?? 0,
     // `seat` is how far above the floor the seat under the character is.
-    stride: 0, gait: 0, talk: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0,
+    stride: 0, gait: 0, talk: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0,
     carryL: 0, carryR: 0,
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
@@ -74,8 +74,9 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       if (reach <= 0.001 && state[`carry${side}`] <= 0.001) {
         // A free hand does what the body does by itself: arms crossed, a hand that talks, writing on the board.
         const sign = side === 'R' ? 1 : -1;
+        // Places on the body, given standing: they go down with it when the character sits or crouches.
         const toward = (x: number, y: number, z: number, weight: number): void => {
-          if (weight > 0.001) pose = reachPose(pose, side, wristPosition(pose, side).lerp(hand.set(x, y, z), weight));
+          if (weight > 0.001) pose = reachPose(pose, side, wristPosition(pose, side).lerp(hand.set(x, y + pose.lift, z), weight));
         };
         toward(-sign * 0.1, side === 'R' ? 1.15 : 1.1, side === 'R' ? -0.16 : -0.2, ambient?.cross ?? 0);
         const talking = Math.max(ambient?.[`gesture${side}`] ?? 0, side === 'R' ? state.gesture : state.gesture * 0.6);
@@ -126,7 +127,9 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     rig.applyPose(pose);
     rig.setHands?.(shapes.L, shapes.R);
     const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], ambient?.expressions[n] ?? 0)]));
-    const closed = blink(t, seed);
+    // A fixed stare blinks only now and then.
+    const stare = ambient?.stare ?? 0;
+    const closed = blink(t, seed) * (stare > 0 && Math.floor(t / 3.4) % 4 !== 0 ? 1 - stare : 1);
     const talk = Math.max(state.talk, ambient?.talk ?? 0);
     const visemes = Object.fromEntries(VISEME_NAMES.map((n) => [n, Math.max(state[`vis.${n}`], ambient?.visemes[n] ?? 0)]));
     // Eyes nobody directs wander a little by themselves.

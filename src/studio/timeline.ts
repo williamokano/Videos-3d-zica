@@ -43,6 +43,14 @@ export class TimelineBar {
       this.seek(Number(this.slider.value));
     };
     track.append(this.slider);
+    for (const [from, to] of episode.cuts ?? []) {
+      const cut = document.createElement('i');
+      cut.className = 'jump-cut';
+      cut.title = `Corte seco: ${from}s a ${to}s não entram no vídeo`;
+      cut.style.left = `${(from / episode.duration) * 100}%`;
+      cut.style.width = `${((to - from) / episode.duration) * 100}%`;
+      track.append(cut);
+    }
     for (const key of episode.camera) {
       const mark = document.createElement('i');
       mark.title = `Keyframe de câmera em ${key.t}s${key.cut ? ' (corte)' : ''}`;

@@ -126,6 +126,19 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - `userData.parts` (e `traits.parts`) diz onde cada porta tem a dobradiça, o comprimento da folha, o lado e o ângulo.
   - `open` e `close` com `by`: se o personagem está no arco que a folha vai varrer, ele dá um passo para fora antes (`outOfTheWay`), andando, e só então a porta se move. Quem está sentado dentro não se mexe.
 
+- Voz e som (tarefa 11, pedida pelo autor em 2026-11-12):
+  - Ficha com `voice`, bíblia com `audio.model`, `audio.narrator` e `audio.sounds`. Módulos puros em `src/engine/audio/` (`voice.ts`: chaves, tons, visemas pelos tempos da voz; `sound.ts`).
+  - `npm run voz` (`scripts/voz.mjs`): gera pela ElevenLabs (`eleven_v3`, com tempos por letra) o que falta, com cache pelo conteúdo em `series/<s>/audio/voz/`. Sons gerados ou baixados de banco CC0 (Kenney), com `audio/sons/CREDITOS.md`.
+  - `say` dura o que a gravação dura e a boca segue a voz; `tone` vira tag do v3. `d.narrate`, `d.sound`.
+  - `npm run render` mistura e normaliza (−14 LUFS, sons abaixam sob as falas; `scripts/mix.mjs`). O estúdio toca as falas e os sons com a timeline.
+  - Carregador de séries para os scripts de Node: `src/tools/library.ts` (Vite SSR).
+- Ferramentas para enxergar e ler o episódio: `npm run look` (quadros pela câmera do episódio ou por uma câmera livre, com visão de cima por andar) e `npm run roteiro` (roteiro marcado com tempos, ações e pausas).
+- Movimento, a partir de pesquisa (biomecânica e prática de jogos): cantos do caminho em arco (`roundCorners` em `world/nav.ts`), cabeça antecipando a curva (canal `lead`), balanço da câmera em primeira pessoa (`stepBob` em `timeline/camera.ts`). `walkTo` com `via`.
+- Figurantes: `mood` (`calm`, `worried`, `scared`, `happy`), comportamento `trance`, rosto neutro sem sorriso. Braços de quem está sentado não atravessam mais a cabeça (alvos das mãos acompanham o corpo).
+- Corte seco (`d.cutOut`), no motor, para quando o autor pedir.
+- Desvio entre pessoas (`actions/crowd.ts`), corpo que vira quando o olhar passa do pescoço (`faceFor` em `timeline/direct.ts`), item na mão levantada estimado onde ele realmente está (para a câmera ler o celular).
+- Episódio 1 refeito com o roteiro novo (`roteiros/001-roteiro.md`), bíblia da história em `series/ceu-vermelho/biblia.md`, skill `write-episode`.
+
 ## Próximas tarefas, em ordem
 
 As tarefas 1 a 10 estão feitas. Falta a 11, voz, que só começa com a confirmação do autor. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
@@ -206,6 +219,9 @@ Só começa com confirmação do autor. O que falta, em ordem sugerida:
 
 ## Ideias soltas, sem ordem
 
+- Fala por speech-to-speech: o autor grava a fala com a própria entonação e a ElevenLabs troca a voz (`/v1/speech-to-speech/{voz}`, modelo `eleven_multilingual_sts_v2`). Os tempos por letra viriam do alinhamento forçado (`/v1/forced-alignment`). `defaultMode: "sts"` já existe na bíblia.
+- No estúdio, clicar na timeline e escrever uma fala: o estúdio grava num arquivo de falas do episódio (precisa de um endpoint de escrita no servidor de desenvolvimento) e o roteiro encaixa os tempos.
+
 - Personagens não desviam uns dos outros: a fila do episódio 1 funciona porque cada um sai na sua hora. Um desvio simples entre pessoas deixaria as cenas de grupo mais soltas.
 - Mais gestos de figurante: apontar sozinho, mão na boca, mexer no próprio celular. As mãos já permitem.
 - Ligar a pose `type` sozinha quando o dono do celular envia uma mensagem (hoje o diretor usa `hand('type')`).
@@ -215,7 +231,7 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 
 ## Limitações conhecidas
 
-- Personagens não desviam uns dos outros nem de objetos com `id` (carro, itens); desviam de paredes, corrimãos, vãos sem piso e móveis.
+- Personagens desviam uns dos outros só no instante (afastamento lateral), sem planejar o caminho em volta de quem está parado; não desviam de objetos com `id` (carro, itens, o banco do depósito).
 - Quem está sentado numa cadeira comum fica dentro da área bloqueada pelo móvel: precisa de `standUp` para um ponto livre ao lado antes de `walkTo`.
 - A legenda mostra uma fala por vez; duas falas ao mesmo tempo mostram só a primeira.
 - Com a mão levantada (`raise`), o que está nela é estimado por `placementAt` para o olhar e a câmera; o objeto em si segue a mão de verdade.

@@ -62,7 +62,7 @@ export interface ActionTarget {
   traits: TargetTraits;
 }
 
-export type ParamType = 'number' | 'string' | 'boolean' | 'point2' | 'point3' | 'path' | 'data';
+export type ParamType = 'number' | 'string' | 'boolean' | 'point2' | 'point3' | 'path' | 'points' | 'data';
 
 export interface ParamSpec {
   type: ParamType;
@@ -257,6 +257,8 @@ const PARAM_CHECKS: Record<ParamType, (v: unknown) => boolean> = {
   point2: (v) => isPoint(v, 2),
   point3: (v) => isPoint(v, 3),
   path: (v) => Array.isArray(v) && v.length > 0 && v.every((p) => isPoint(p, 2)),
+  /** Points [x, z] or [x, z, level]. */
+  points: (v) => Array.isArray(v) && v.every((p) => isPoint(p, 2) || isPoint(p, 3)),
   data: (v) => typeof v === 'object' && v !== null && !Array.isArray(v),
 };
 
@@ -444,7 +446,10 @@ export function placementAt(compiled: CompiledActions, id: string, t: number, de
     const sign = side === 'L' ? -1 : 1;
     const carried = [sign * 0.2, 1.0, -0.25];
     const raised = of(`reach${side}.local`) > 0.5 ? of(`reach${side}`) : 0;
-    const at = side ? carried.map((v, i) => v + (of(`reach${side}.${'xyz'[i]}`) - v) * raised) : [0.17, 0.86, 0];
+    // Raised to be read, the hand turns its palm to the face and holds the thing a little above and in front
+    // of the wrist (measured on the built body: 2 cm toward the middle, 5 cm up, 3 cm forward).
+    const held = [-sign * 0.022, 0.049, -0.028];
+    const at = side ? carried.map((v, i) => v + (of(`reach${side}.${'xyz'[i]}`) + held[i] - v) * raised) : [0.17, 0.86, 0];
     const scale = compiled.scales[link.to] ?? 1;
     offset = [at[0] * scale, at[1] * scale - seatedDrop(compiled, link.to, t), at[2] * scale];
   }
@@ -499,10 +504,12 @@ export function gazeAt(compiled: CompiledActions, id: string, t: number): { yaw:
     pitch: from.pitch + (to.pitch - from.pitch) * w,
   });
   // With nobody directing the head, it does what the character's behaviour says.
+  // Walking, a head nobody directs leads into the turns of the path.
+  const lead = channelAt(compiled, id, 'lead', t);
   const undirected = (): { yaw: number; pitch: number } => {
-    if (!compiled.behaviours.length) return { yaw: 0, pitch: 0 };
+    if (!compiled.behaviours.length) return { yaw: lead, pitch: 0 };
     const { gaze } = ambientAt(compiled.behaviours, id, t);
-    const angles = (spec: GazeSpec) => (spec === null ? { yaw: 0, pitch: 0 } : 'at' in spec ? toward(spec.at) : spec);
+    const angles = (spec: GazeSpec) => (spec === null ? { yaw: lead, pitch: 0 } : 'at' in spec ? toward(spec.at) : { yaw: spec.yaw + lead, pitch: spec.pitch });
     return mix(angles(gaze.from), angles(gaze.to), gaze.blend);
   };
   const angles = (gaze: Gaze | undefined) => (!gaze || gaze.at === null ? undirected() : toward(gaze.at));

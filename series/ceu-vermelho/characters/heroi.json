@@ -1,6 +1,9 @@
 {
   "id": "heroi",
-  "name": "Você",
+  "name": "Fernando",
+  "voice": {
+    "id": "tS45q0QcrDHqHoaWdCDR"
+  },
   "height": 1.72,
   "skin": "#d9a27c",
   "hair": "#2c1d18",

@@ -3,6 +3,8 @@
  * skeleton: the joints below, at rest in a T-pose, facing -z with the left arm along -x.
  */
 
+import type { VoiceSpec } from '../audio/voice';
+
 export const JOINTS = [
   'hips', 'spine', 'chest', 'neck', 'head',
   'upperArmL', 'forearmL', 'handL', 'upperArmR', 'forearmR', 'handR',
@@ -77,6 +79,8 @@ export type HairStyle = (typeof HAIR_STYLES)[number];
 export interface CharacterDef {
   id: string;
   name: string;
+  /** The voice that says this character's lines. */
+  voice?: VoiceSpec;
   /** Height in meters (default 1.7). */
   height?: number;
   /** Head size relative to a realistic one (default 1.3, the cartoon look). */

@@ -1,6 +1,9 @@
 {
   "id": "professor",
   "name": "Professor",
+  "voice": {
+    "id": "Dps47AVoFamqqkDShRDS"
+  },
   "height": 1.78,
   "build": 1.08,
   "skin": "#c68a5e",

@@ -120,6 +120,7 @@ body {
   user-select: all;
 }
 .timeline .track i.action { top: auto; bottom: -6px; height: 4px; background: #4fb3ff; border-radius: 2px; opacity: 0.85; }
+.timeline .track i.jump-cut { top: 0; bottom: 0; height: auto; background: repeating-linear-gradient(45deg, rgba(255, 90, 90, 0.35) 0 4px, transparent 4px 8px); pointer-events: auto; }
 #panel .error {
   margin-bottom: 8px;
   padding: 8px;

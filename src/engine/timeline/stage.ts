@@ -1,7 +1,9 @@
 import '../actions/builtin';
+import { charactersOf, crowdAt } from '../actions/crowd';
 import { ambientAt, behaviourAt } from '../actions/ambient';
 import '../actions/character';
 import '../actions/endcard';
+import '../actions/audio';
 import '../actions/phone';
 import '../assets';
 import { channelAt, compileActions, evaluateActions, evaluateLinks, gazeAt, placementAt, seatedDrop, type CompiledActions, type Link } from '../actions/catalog';
@@ -9,7 +11,7 @@ import * as THREE from 'three';
 import { activeRules, type Bible } from '../bible';
 import { buildCharacter } from '../character/cast';
 import type { CharacterDef, CharacterRig } from '../character/types';
-import { buildProp, clearFraction, type BuiltLocation, type InteractiveObject } from '../world/build';
+import { buildProp, clearFraction, type BuiltLocation, type Collider, type InteractiveObject } from '../world/build';
 import { buildNav, findPath } from '../world/nav';
 import type { CameraStage } from './camera';
 import type { Episode } from './episode';
@@ -81,13 +83,25 @@ export function compileEpisode(episode: Episode, built: BuiltLocation, cast: Int
 /** What fpv and third_person shots need: where each character is at any time, and what blocks the view. */
 export function cameraStage(compiled: CompiledActions, built: BuiltLocation, cast: InteractiveObject[]): CameraStage {
   const byId = new Map(cast.map((c) => [c.id, c]));
+  const people = charactersOf(compiled);
+  // The camera asks for the same instant several times; the crowd is worked out once per instant.
+  let crowd: { t: number; moved: Map<string, [number, number]> } | undefined;
+  const asideAt = (id: string, t: number): [number, number] => {
+    if (crowd?.t !== t) crowd = { t, moved: crowdAt(compiled, people, t, built.colliders) };
+    return crowd.moved.get(id) ?? [0, 0];
+  };
   return {
     subject(id, t) {
       const character = byId.get(id);
       if (!character) return undefined;
-      const { pos, yaw } = placementAt(compiled, id, t);
+      const { pos: at, yaw } = placementAt(compiled, id, t);
+      const [dx, dz] = asideAt(id, t);
+      const pos: [number, number, number] = [at[0] + dx, at[1], at[2] + dz];
       // Seated, the eyes come down with the hips.
-      return { pos, yaw, eyeHeight: (character.traits.eyeHeight ?? 1.6) - seatedDrop(compiled, id, t), head: gazeAt(compiled, id, t) };
+      return {
+        pos, yaw, eyeHeight: (character.traits.eyeHeight ?? 1.6) - seatedDrop(compiled, id, t), head: gazeAt(compiled, id, t),
+        step: { strides: channelAt(compiled, id, 'stride', t), gait: channelAt(compiled, id, 'gait', t) },
+      };
     },
     clear: (from, to) => clearFraction(built.colliders, from, to),
   };
@@ -97,7 +111,7 @@ export function cameraStage(compiled: CompiledActions, built: BuiltLocation, cas
  * Put every object of the scene where the action track has it at time t: channels first, then whatever
  * rides on something (a character on a car seat, an item in a hand).
  */
-export function applyStage(compiled: CompiledActions, objects: Map<string, InteractiveObject>, t: number): void {
+export function applyStage(compiled: CompiledActions, objects: Map<string, InteractiveObject>, t: number, walls: Collider[] = []): void {
   for (const [id, channels] of Object.entries(evaluateActions(compiled, t))) {
     const object = objects.get(id);
     if (!object) continue;
@@ -114,6 +128,12 @@ export function applyStage(compiled: CompiledActions, objects: Map<string, Inter
     rider.set('y', pos[1]);
     rider.set('z', pos[2]);
     rider.set('yaw', yaw);
+  }
+  // Nobody walks through anybody.
+  for (const [id, [dx, dz]] of crowdAt(compiled, charactersOf(compiled).filter((id) => objects.has(id)), t, walls)) {
+    const { pos } = placementAt(compiled, id, t);
+    objects.get(id)!.set('x', pos[0] + dx);
+    objects.get(id)!.set('z', pos[2] + dz);
   }
   const undirected = new Set(compiled.behaviours.map((b) => b.target));
   for (const id of undirected) objects.get(id)!.ambient?.(behaviourAt(compiled.behaviours, id, t) ? ambientAt(compiled.behaviours, id, t) : undefined);

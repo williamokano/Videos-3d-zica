@@ -154,6 +154,8 @@ describe('series data', () => {
         validateCamera(episode.camera, cast.map((c) => c.id));
         const stage = cameraStage(compiled, built, cast);
         for (let t = 0; t <= episode.duration; t += 0.5) expect(evaluateCamera(episode.camera, t, stage).pos.every(Number.isFinite)).toBe(true);
+        // Nobody stands frozen with nothing to do (scripts only: the director finds it).
+        expect(episode.warnings ?? []).toEqual([]);
       });
     }
   }

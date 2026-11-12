@@ -123,7 +123,7 @@ export function stageTrack(entries: StageEntry[], focus?: string): { clips: Acti
     if (mode === 'chat') params.group = 'vitrine';
     if (mode === 'attend') params.object = other;
     // Up and ahead, like a sky seen through a window.
-    if (mode === 'watch') params.point = [entry.at[0], 4, entry.at[1] + 6];
+    if (mode === 'watch' || mode === 'trance') params.point = [entry.at[0], 4, entry.at[1] + 6];
     clips.push({ t: 0, target: entry.id, action: 'behave', params });
   }
   const holders = entries.filter((e) => SHOWCASE_POSES[e.pose]?.phone);

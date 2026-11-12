@@ -1,0 +1,113 @@
+# Episódio 1 — Não olhe pro céu (marcado)
+
+Gerado por `npm run roteiro` a partir de `series/ceu-vermelho/episodes/`. Duração: 3:09.9. Tempos já sem os cortes secos.
+
+Pausas sem fala de 3 s ou mais aparecem como ⏸.
+
+- `0:00.0` 🌍 rule.ceu-vermelho → 0
+- `0:00.0` 🔊 burburinho-sala (46 s)
+- `0:00.0` 🔊 zumbido-ceu (400 s)
+- `0:00.0` 🌍 rule.ceu-vermelho → 1 em 5 s
+- `0:00.0` 🎥  fov 64
+- `0:01.1` **FERNANDO** (assustado): Mano... o céu ficou vermelho. Tu viu?
+- `0:03.1` **LUCAS**: Pode crê, mano. Que bagulho bizarro... que que será que tá rolando?
+- `0:07.0` **MARIA** (preocupada): Olha... eu não tô gostando nada dessa situação, não.
+- `0:11.7` **PROFESSOR** (firme): Atenção, alunos. Alguma coisa está acontecendo. Fiquem todos juntos e me obedeçam. Não saiam sozinhos.
+- `0:20.6` **PEDRO** (transe): Ele tá olhando pra gente.
+- ⏸ **5.6 s sem fala**
+- `0:28.7` **LUCAS**: Pedro?
+- `0:30.6` **LUCAS** (nervoso): Pedro!
+- `0:33.5` **LUCAS** (assustado): Mano... ele nem pisca.
+- `0:35.5` **PROFESSOR** (grito): Ninguém chega perto das janelas!
+- `0:40.8` **PROFESSOR** (nervoso): Acho melhor a gente se abrigar no porão. Vai ser mais seguro lá. Vamos, vamos!
+- `0:45.9` 🔊 corredor-passos (40 s)
+- `0:47.1` **MARIA** (preocupada): A gente vai deixar eles aí?
+- `0:49.1` **PROFESSOR** (nervoso): Depois eu volto pra buscar eles. Anda, anda!
+- `0:51.0` *FERNANDO levanta*
+- `0:52.0` *FERNANDO vira*
+- `0:54.0` *FERNANDO anda até [21.5,1.3]*
+- ⏸ **5.1 s sem fala**
+- `0:57.5` **PEDRO** (transe): Ele tá vindo...
+- `0:59.4` **ANA** (transe): Tá tão perto...
+- `1:03.5` *FERNANDO vira*
+- `1:03.8` **PROFESSORA** (preocupada): Roberto?
+- `1:05.6` **PROFESSORA** (nervoso): Roberto, me ajuda aqui!
+- `1:08.2` **PROFESSOR ROBERTO** (transe): Tá tão bonito...
+- `1:11.6` 🔊 celular-vibra
+- `1:11.6` 📱 chega: "Permaneça na escola. Fique escondido e não saia."
+- `1:11.9` *FERNANDO pega celular*
+- `1:12.8` *FERNANDO levanta o celular para ler*
+- `1:13.4` 🎥  fov 64
+- `1:14.1` 🎥  fov 38
+- `1:16.7` *FERNANDO abaixa o celular*
+- `1:16.7` *FERNANDO vira*
+- `1:16.7` 🎥  fov 38
+- `1:17.3` *guarda celular*
+- `1:17.3` 🎥  fov 64
+- ⏸ **8.5 s sem fala**
+- `1:18.2` **FERNANDO** (nervoso): Caralho... meu pai me mandou mensagem. Mandou eu ficar escondido na escola.
+- `1:22.0` **LUCAS**: Mano, teu pai é polícia. Ele sabe o que tá falando.
+- `1:25.0` **MARIA** (preocupada): Olha, Fer... teu pai sabe do que ele tá falando. Melhor ficar por aqui.
+- `1:31.9` *FERNANDO vira*
+- `1:31.9` **PROFESSOR** (nervoso): Vocês três, vamos!
+- `1:36.3` *FERNANDO anda até [20.3,1.4]*
+- ⏸ **6.9 s sem fala**
+- `1:41.2` **LUCAS** (sussurro): Fer... e o Pedro? Ele vai ficar lá olhando pro céu até quando?
+- `1:46.6` **MARIA** (sussurro): Para, Lucas. Ninguém sabe.
+- `1:47.3` *FERNANDO vira*
+- `1:47.7` 🔊 porao-ambiente (400 s)
+- `1:48.5` 🔊 porta-fecha
+- `1:49.7` **LUCAS** (sussurro): E se ele não voltar mais?
+- `1:50.7` **PROFESSOR** (cansado): Aqui ninguém vê o céu. A gente espera aqui.
+- `1:55.9` 🔊 celular-vibra
+- `1:55.9` 📱 chega: "CADÊ VOCÊ"
+- `1:55.9` *FERNANDO pega celular*
+- `1:56.8` *FERNANDO levanta o celular para ler*
+- `1:57.4` 🎥  fov 64
+- `1:58.1` 🎥  fov 38
+- `1:58.9` 🔊 notificacao
+- `1:58.9` 📱 chega: "VEM PRA DELEGACIA AGORA"
+- `1:59.7` 🔊 notificacao
+- `1:59.7` 📱 chega: "NÃO ACREDITE EM NINGUÉM"
+- `2:00.5` 🔊 notificacao
+- `2:00.5` 📱 chega: "ACIMA DE TUDO"
+- `2:01.3` 🔊 notificacao
+- `2:01.3` 📱 chega: "NÃO OLHE PRO CÉU"
+- `2:03.1` *FERNANDO mão: type*
+- `2:03.3` 🌍 network → 0
+- `2:03.3` 🔊 toque-tela
+- `2:03.5` 🔊 toque-tela
+- `2:03.8` 🔊 toque-tela
+- `2:04.0` 🔊 toque-tela
+- `2:04.2` 🔊 toque-tela
+- `2:04.4` 🔊 toque-tela
+- `2:04.6` 📱 Fernando envia: "pai vc mandou eu ficar na escola??"
+- `2:04.6` 🔊 mensagem-erro
+- `2:06.4` *FERNANDO mão: relaxed*
+- `2:06.7` *FERNANDO abaixa o celular*
+- `2:06.7` *FERNANDO vira*
+- `2:06.7` 🎥  fov 38
+- `2:07.3` *guarda celular*
+- `2:07.3` 🎥  fov 64
+- ⏸ **13.1 s sem fala**
+- `2:08.2` **FERNANDO** (decidido): Véi, eu vou colar lá com meu pai mesmo. A delegacia é só três quilômetros daqui, dá pra ir correndo.
+- `2:13.0` *FERNANDO vira*
+- `2:13.0` **PROFESSOR** (grito): Ninguém vai sair sozinho, não!
+- `2:15.1` **FERNANDO** (bravo): Mano, meu pai tá mandando eu ir embora, e ele é polícia. Cê tá me tirando? Quero ver quem vai me segurar aqui!
+- `2:21.4` **PROFESSOR** (firme): Não vai passar ninguém dessa porta.
+- `2:24.2` *FERNANDO vira*
+- `2:24.6` *FERNANDO anda até [19.3,0.9]*
+- `2:25.6` *FERNANDO vira*
+- `2:26.4` **FERNANDO** (sussurro): Mano, preciso dar o fora daqui. Meu pai tá me procurando.
+- `2:29.3` **LUCAS** (sussurro): Cara, eu não sairia, não... mas você que sabe. Eu te ajudo.
+- `2:33.8` **MARIA** (sussurro): Fer, não. Lá fora tá todo mundo olhando pro céu. E se você olhar também?
+- `2:39.3` **FERNANDO** (sussurro): Eu não vou olhar.
+- `2:40.4` **LUCAS** (sussurro): Então senta ali perto da porta, de boa. A gente chama ele lá no fundo.
+- `2:47.0` *FERNANDO anda até [21.9,2.0]*
+- `2:49.8` *FERNANDO senta em banco*
+- ⏸ **5.3 s sem fala**
+- `2:51.9` **MARIA** (grito): Professor! Vem cá, rápido!
+- `2:58.9` 🔊 tensao-fim
+- `2:58.9` 🟥 cartão final: "Você ficava ou ia atrás do seu pai?" — FICO / VOU — Comenta FICO ou VOU 👇 e marca o amigo que ia te ajudar a fugir
+- ⏸ **5.1 s sem fala**
+- `2:59.5` **Narrador**: E aí? Você ficava na escola... ou ia atrás do seu pai? Comenta aí. E marca aquele amigo que ia ser o seu Lucas.

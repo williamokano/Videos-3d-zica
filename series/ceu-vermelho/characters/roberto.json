@@ -1,0 +1,16 @@
+{
+  "id": "roberto",
+  "name": "Professor Roberto",
+  "voice": {
+    "id": "362PVGN0qz9gh4Hb4qdA"
+  },
+  "height": 1.74,
+  "build": 1.12,
+  "skin": "#e0b48f",
+  "hair": "#9a9a9a",
+  "hairStyle": "short",
+  "beard": "mustache",
+  "shirt": "#5d6f8f",
+  "pants": "#3a3a40",
+  "shoes": "#2a2420"
+}

@@ -14,6 +14,8 @@ export default direct(
   },
   (d) => {
     const ana = d.actor('ana');
+    // Beto, ao fundo, só está por ali.
+    d.actor('beto').behave('idle');
     const celular = d.phone('celular');
     celular.setup({
       clock: '10:42',

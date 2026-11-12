@@ -13,7 +13,7 @@ import { NO_VISEMES, VISEMES, VISEME_NAMES, blink, locomotionPose, mouthOpenOf, 
 import { mapBones, retarget } from './character/retarget';
 import { JOINTS, PARENT, type CharacterDef, type Joint } from './character/types';
 import { buildLocation } from './world/build';
-import { evaluateCamera, validateCamera, type CameraKey } from './timeline/camera';
+import { stepBob, evaluateCamera, validateCamera, type CameraKey } from './timeline/camera';
 import { buildCast, cameraStage, compileEpisode } from './timeline/stage';
 import type { Episode } from './timeline/episode';
 import { buildNav, findPath } from './world/nav';
@@ -46,7 +46,7 @@ describe('motion', () => {
   it('mixes expressions over the neutral face', () => {
     expect(resolveFace({}, 0, 0).eyeOpen).toBe(1);
     expect(resolveFace({ happy: 1 }, 0, 0).mouthCurve).toBe(1);
-    expect(resolveFace({ happy: 0.5 }, 0, 0).mouthCurve).toBeCloseTo(0.575);
+    expect(resolveFace({ happy: 0.5 }, 0, 0).mouthCurve).toBeCloseTo(0.5);
     expect(resolveFace({ happy: 1 }, 1, 0).eyeOpen).toBe(0);
     expect(resolveFace({}, 0, 0.6).mouthOpen).toBe(0.6);
   });
@@ -348,11 +348,25 @@ describe('camera attached to a character', () => {
     expect(before.pos[0]).toBe(3);
     expect(before.pos[1]).toBeCloseTo(cast[0].traits.eyeHeight!);
     expect(before.pos[1]).toBeGreaterThan(1.5);
-    expect(before.lookAt[2]).toBeCloseTo(2);
+    // It aims at a point 6 m ahead.
+    expect(before.lookAt[2]).toBeCloseTo(-3);
     // After turning west, it looks along -x.
     const after = evaluateCamera(ep.camera, 5, stage);
-    expect(after.lookAt[0]).toBeCloseTo(2);
+    expect(after.lookAt[0]).toBeCloseTo(-3);
     expect(after.lookAt[2]).toBeCloseTo(3);
+  });
+
+  it('fpv bobs with the steps while walking, and keeps its aim', () => {
+    const ep = episode([{ t: 0, mode: 'fpv', follow: 'ana' }], [{ t: 1, target: 'ana', action: 'walkTo', ease: 'linear', params: { to: [3, 1.5] } }], [3, 3.5]);
+    const { cast, stage } = stageOf(ep);
+    const heights: number[] = [];
+    for (let t = 1.6; t < 2.6; t += 0.05) heights.push(evaluateCamera(ep.camera, t, stage).pos[1] - cast[0].traits.eyeHeight!);
+    const range = Math.max(...heights) - Math.min(...heights);
+    expect(range).toBeGreaterThan(0.015);
+    expect(range).toBeLessThan(0.03);
+    // Standing still, no bob.
+    expect(evaluateCamera(ep.camera, 0.5, stage).pos[1]).toBeCloseTo(cast[0].traits.eyeHeight!);
+    expect(stepBob({ strides: 0.3, gait: 0 })).toEqual([0, 0]);
   });
 
   it('third person stays behind and above, and follows the walk', () => {

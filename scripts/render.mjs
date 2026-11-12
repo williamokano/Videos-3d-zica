@@ -13,12 +13,16 @@
  *   --from <s>      start at this second (default 0)
  *   --to <s>        stop at this second (default: the end)
  *   --scale <k>     picture size relative to the bible's format, e.g. 0.5 for a quick preview (default 1)
- *   --out <file>    output file (default out/<series>-ep<n>.mp4)
+ *   --dir <folder>  base folder for the outputs (default: VIDEOS_OUT, the bible's "output", or out/); the video
+ *                   goes to <folder>/<series>/ep001/<series>-ep001.mp4, and a preview (--scale, --step,
+ *                   --from, --to) to ...-previa.mp4 next to it, so it never replaces the finished video
+ *   --out <file>    exact output file, instead of the folders above
  *   --workers <n>   browsers drawing at the same time (default: half the CPU cores, at most 8)
  *   --software      draw on the CPU even if there is a GPU
  *   --step <n>      draw one frame in every n and slow the video down to match: a quick animatic (default 1)
  *   --no-subs       leave the subtitles of spoken lines out
  *   --crf <n>       x264 quality, lower is better (default 18)
+ *   --no-audio      picture only (by default the voice takes and sounds are mixed in; see scripts/mix.mjs)
  *
  * Needs ffmpeg on the PATH and a Chrome: CHROME_PATH, an installed Google Chrome, or Playwright's Chromium.
  */
@@ -28,6 +32,8 @@ import { createRequire } from 'node:module';
 import { availableParallelism } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { createServer } from 'vite';
+import { cuesOf, episodeAudio, mix, mux } from './mix.mjs';
+import { episodeFile, episodeFolder } from './paths.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -162,9 +168,12 @@ try {
   const last = Math.min(info.frames, option('to') ? Math.round(Number(option('to')) * info.fps) : info.frames);
   if (last <= first) throw new Error('"--to" precisa ser maior que "--from".');
   const frames = [];
-  for (let n = first; n < last; n += step) frames.push(n);
+  // Frames in a jump cut stay out of the video.
+  const inCut = (n) => info.cuts.some(([a, b]) => n / info.fps >= a && n / info.fps < b);
+  for (let n = first; n < last; n += step) if (!inCut(n)) frames.push(n);
   const workers = Math.min(workersWanted, frames.length);
-  const out = resolve(option('out', `out/${info.series}-ep${info.episode}.mp4`));
+  const preview = scale !== 1 || step > 1 || option('from') !== undefined || option('to') !== undefined;
+  const out = resolve(option('out', join(episodeFolder(info.series, info.episode, { dir: option('dir'), output: info.output }), episodeFile(info.series, info.episode, 'mp4', preview ? '-previa' : ''))));
   mkdirSync(dirname(out), { recursive: true });
   // Next to the output, so the finished video moves into place in one step.
   scratch = mkdtempSync(join(dirname(out), '.render-'));
@@ -211,6 +220,19 @@ try {
     ffmpeg.on('close', ok);
   });
   if (code !== 0) throw new Error('O ffmpeg não conseguiu juntar as partes do vídeo.');
+  // The sound: takes and sounds at their times. Slowed-down previews (--step) stay silent.
+  if (!flag('no-audio') && step === 1) {
+    const data = await episodeAudio(server, info.series, info.episode);
+    const { cues, silent } = cuesOf(data, first / info.fps, last / info.fps);
+    if (silent.length) console.log(`\n${silent.length} falas sem gravação (rode "npm run voz"); ficam mudas.`);
+    if (cues.length) {
+      const wav = join(scratch, 'som.wav');
+      await mix(cues, frames.length / info.fps, wav);
+      const withSound = join(scratch, 'com-som.mp4');
+      await mux(joined, wav, withSound);
+      renameSync(withSound, joined);
+    }
+  }
   renameSync(joined, out);
   const minutes = (Date.now() - started) / 60000;
   console.log(`\nPronto em ${minutes >= 1 ? `${minutes.toFixed(1)} min` : `${Math.round(minutes * 60)} s`}: ${out}`);

@@ -2,10 +2,95 @@
   "series": "ceu-vermelho",
   "title": "De repente o céu ficou vermelho",
   "language": "pt-BR",
-  "dubbing": ["en", "de"],
-  "format": { "width": 1080, "height": 1920, "fps": 30 },
-  "audio": { "provider": "elevenlabs", "defaultMode": "sts" },
-  "style": { "look": "cel" },
+  "dubbing": [
+    "en",
+    "de"
+  ],
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "audio": {
+    "provider": "elevenlabs",
+    "defaultMode": "tts",
+    "model": "eleven_v3",
+    "narrator": {
+      "id": "NFmEzNOony1UsEJGXLth"
+    },
+    "sounds": {
+      "celular-vibra": {
+        "prompt": "smartphone vibrating twice in a pants pocket, short buzz buzz, close",
+        "duration": 1.2,
+        "volume": 0.8
+      },
+      "notificacao": {
+        "prompt": "single short soft smartphone message notification chime, modern, clean",
+        "duration": 0.6,
+        "volume": 0.6
+      },
+      "zumbido-ceu": {
+        "prompt": "deep ominous low drone, distant sky rumble, eerie sustained tone, no music",
+        "duration": 12,
+        "loop": true,
+        "volume": 0.35
+      },
+      "burburinho-sala": {
+        "prompt": "classroom of teenagers murmuring quietly, indoor, no clear words",
+        "duration": 10,
+        "loop": true,
+        "volume": 0.3
+      },
+      "corredor-passos": {
+        "prompt": "many students walking in a school corridor, sneakers on tile floor, worried murmuring, no clear words",
+        "duration": 10,
+        "loop": true,
+        "volume": 0.35
+      },
+      "porao-ambiente": {
+        "prompt": "basement room tone, low hum of fluorescent lights, slight echo, people whispering far away",
+        "duration": 10,
+        "loop": true,
+        "volume": 0.3
+      },
+      "tensao-fim": {
+        "prompt": "short tense cinematic hit with a dark riser, suspense sting",
+        "duration": 3,
+        "volume": 0.7
+      },
+      "porta-abre": {
+        "file": "kenney-porta-abre.ogg",
+        "license": "CC0-1.0",
+        "source": "https://kenney.nl/assets/rpg-audio",
+        "author": "Kenney Vleugels (kenney.nl)",
+        "volume": 0.8
+      },
+      "porta-fecha": {
+        "file": "kenney-porta-fecha.ogg",
+        "license": "CC0-1.0",
+        "source": "https://kenney.nl/assets/rpg-audio",
+        "author": "Kenney Vleugels (kenney.nl)",
+        "volume": 0.9
+      },
+      "mensagem-erro": {
+        "file": "kenney-erro.ogg",
+        "license": "CC0-1.0",
+        "source": "https://kenney.nl/assets/interface-sounds",
+        "author": "Kenney Vleugels (kenney.nl)",
+        "volume": 0.6
+      },
+      "toque-tela": {
+        "file": "kenney-toque.ogg",
+        "license": "CC0-1.0",
+        "source": "https://kenney.nl/assets/interface-sounds",
+        "author": "Kenney Vleugels (kenney.nl)",
+        "volume": 0.4
+      }
+    }
+  },
+  "style": {
+    "look": "cel"
+  },
   "rules": [
     {
       "id": "ceu-vermelho",
@@ -22,7 +107,13 @@
           "fogNear": 40,
           "fogFar": 200
         },
-        "grade": { "tint": "#ff7a55", "amount": 0.3, "saturation": 1.1, "contrast": 1.08, "vignette": 0.3 }
+        "grade": {
+          "tint": "#ff7a55",
+          "amount": 0.3,
+          "saturation": 1.1,
+          "contrast": 1.08,
+          "vignette": 0.3
+        }
       }
     }
   ]

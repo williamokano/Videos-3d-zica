@@ -19,14 +19,25 @@ export interface Behaviour {
   group?: string;
   /** attend: what is being paid attention to. */
   object?: string;
-  /** watch: the point being stared at. */
+  /** watch, trance: the point being stared at. */
   point?: Vec3;
+  /** How the character feels: "calm" (default), "worried", "scared" or "happy". */
+  mood?: Mood;
 }
+
+export type Mood = 'calm' | 'worried' | 'scared' | 'happy';
+export const MOODS: Record<Mood, string> = {
+  calm: 'calmo: rosto neutro, sorri de vez em quando, raramente',
+  worried: 'preocupado: sobrancelhas tensas, boca para baixo, às vezes assustado',
+  scared: 'assustado: olhos arregalados, quase o tempo todo',
+  happy: 'alegre: sorri bastante',
+};
 
 export const BEHAVIOURS: Record<string, string> = {
   chat: 'conversa em grupo: quem tem o mesmo "group" se reveza falando, os outros olham para quem fala',
   attend: 'presta atenção em "object" (o professor, o quadro), com desvios de olhar de vez em quando',
   watch: 'fica olhando fixo para "point" (o céu pela janela), assustado',
+  trance: 'em transe: olhar parado em "point", olhos mais abertos, rosto sem expressão, quase sem piscar; não reage a nada',
   write: 'escreve numa superfície à frente (quadro) com a mão direita',
   idle: 'parado e vivo: olha em volta, muda o peso de perna, cruza os braços',
   none: 'sem comportamento de fundo',
@@ -54,12 +65,14 @@ export interface Ambient {
   visemes: Record<string, number>;
   /** Eyes wandering inside the face: [to the left, up], each about -0.3 to 0.3. */
   dart: [number, number];
+  /** 0 to 1: how much the blinking is held back (a fixed stare). */
+  stare: number;
   /** Head: going from `from` to `to`, `blend` of the way there. */
   gaze: { from: GazeSpec; to: GazeSpec; blend: number };
 }
 
 /** A body doing nothing by itself. */
-export const NO_AMBIENT: Ambient = { talk: 0, cross: 0, gestureL: 0, gestureR: 0, write: 0, nod: 0, sway: 0, expressions: {}, visemes: {}, dart: [0, 0], gaze: { from: null, to: null, blend: 1 } };
+export const NO_AMBIENT: Ambient = { talk: 0, cross: 0, gestureL: 0, gestureR: 0, write: 0, nod: 0, sway: 0, expressions: {}, visemes: {}, dart: [0, 0], stare: 0, gaze: { from: null, to: null, blend: 1 } };
 
 const hash = (a: number, b: number): number => {
   const v = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
@@ -115,10 +128,10 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
   const settle = smooth((t - mine.t0) / 0.6);
 
   const long = windowAt(t, 9.5, seed + 11);
-  const crossChance = { chat: 0.3, idle: 0.3, attend: 0.12, watch: 0.15, write: 0 }[mine.mode] ?? 0;
+  const crossChance = { chat: 0.3, idle: 0.3, attend: 0.12, watch: 0.15, write: 0, trance: 0 }[mine.mode] ?? 0;
   if (hash(long.k, seed + 1) < crossChance) out.cross = bell(long.u, 0.07) * settle;
   const short = windowAt(t, 3.3, seed + 23);
-  if (hash(short.k, seed + 2) < 0.28) out.nod = Math.sin(short.u * Math.PI * 4) * bell(short.u, 0.25) * settle;
+  if (mine.mode !== 'trance' && hash(short.k, seed + 2) < 0.28) out.nod = Math.sin(short.u * Math.PI * 4) * bell(short.u, 0.25) * settle;
   const mood = windowAt(t, 5.2, seed + 37);
   const feeling = hash(mood.k, seed + 3);
 
@@ -150,8 +163,6 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
       return away(k);
     };
     frame = turn;
-    if (feeling < 0.3) out.expressions.happy = 0.6 * bell(mood.u) * settle;
-    else if (feeling < 0.4) out.expressions.surprised = 0.4 * bell(mood.u) * settle;
   } else if (mine.mode === 'attend') {
     const object = mine.object;
     spec = (k) => (hash(k, seed + 12) < 0.22 || !object ? (hash(k, seed + 13) < 0.5 ? { yaw: 0, pitch: -28 } : away(k)) : { at: object });
@@ -160,18 +171,42 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
     spec = (k) => (point && hash(k, seed + 14) > 0.12 ? { at: point } : away(k));
     out.expressions.scared = (0.45 + 0.25 * Math.sin(t * 0.8 + seed)) * settle;
     if (feeling < 0.35) out.expressions.surprised = 0.5 * bell(mood.u) * settle;
+  } else if (mine.mode === 'trance') {
+    // Nothing else exists: the look does not leave the point, and the body goes still.
+    const point = mine.point;
+    spec = () => (point ? { at: point } : { yaw: 0, pitch: 25 });
+    out.expressions.trance = settle;
+    out.stare = settle;
+    out.sway *= 0.15;
   } else if (mine.mode === 'write') {
     out.write = settle;
     spec = () => ({ yaw: 6, pitch: 6 });
   } else {
     spec = (k) => (hash(k, seed + 15) < 0.55 ? away(k) : null);
-    if (feeling < 0.15) out.expressions.happy = 0.4 * bell(mood.u) * settle;
+  }
+  // Mood colors any behaviour but the stares, which have their own face.
+  if (mine.mode !== 'watch' && mine.mode !== 'trance') {
+    const feel = mine.mood ?? 'calm';
+    const swell = bell(mood.u) * settle;
+    if (feel === 'calm') {
+      if (feeling < (mine.mode === 'chat' ? 0.1 : 0.05)) out.expressions.happy = 0.45 * swell;
+      else if (mine.mode === 'chat' && feeling < 0.18) out.expressions.surprised = 0.35 * swell;
+    } else if (feel === 'worried') {
+      out.expressions.sad = (0.35 + 0.1 * Math.sin(t * 0.6 + seed)) * settle;
+      if (feeling < 0.3) out.expressions.scared = 0.45 * swell;
+    } else if (feel === 'scared') {
+      out.expressions.scared = (0.55 + 0.2 * Math.sin(t * 0.9 + seed)) * settle;
+      if (feeling < 0.3) out.expressions.surprised = 0.4 * swell;
+    } else if (feel === 'happy') {
+      if (feeling < 0.45) out.expressions.happy = 0.65 * swell;
+    }
   }
   out.gaze = { from: spec(frame.k - 1), to: spec(frame.k), blend: smooth(frame.into / 0.45) };
   // Eyes jump to a new spot now and then, and stay there.
   const look = windowAt(t, 1.9, seed + 53);
   const spot = (k: number): [number, number] => (hash(k, seed + 17) < 0.45 ? [0, 0] : [(hash(k, seed + 18) - 0.5) * 0.6, (hash(k, seed + 19) - 0.5) * 0.4]);
   const [from, to, jump] = [spot(look.k - 1), spot(look.k), smooth(look.into / 0.12)];
-  out.dart = [(from[0] + (to[0] - from[0]) * jump) * settle, (from[1] + (to[1] - from[1]) * jump) * settle];
+  const still = 1 - out.stare;
+  out.dart = [(from[0] + (to[0] - from[0]) * jump) * settle * still, (from[1] + (to[1] - from[1]) * jump) * settle * still];
   return out;
 }

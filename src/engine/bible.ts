@@ -1,3 +1,6 @@
+import type { VoiceSpec } from './audio/voice';
+import type { SoundDef } from './audio/sound';
+
 /** Series bible: facts that stay true across the whole series until revoked. */
 
 export interface Environment {
@@ -75,8 +78,19 @@ export interface Bible {
     provider: 'elevenlabs';
     /** tts: generate from text. sts: speech-to-speech over the author's own narration. */
     defaultMode: 'tts' | 'sts';
+    /** Voice model (default eleven_v3, which reads tone tags like [whispers]). */
+    model?: string;
+    /** Voice of the narrator, who has no body (`d.narrate`). */
+    narrator?: VoiceSpec;
+    /** Sounds the episodes can play by name (`d.sound`). */
+    sounds?: Record<string, SoundDef>;
   };
   rules: BibleRule[];
+  /**
+   * Base folder for what the tools make of this series (videos, pictures), instead of out/ in the project, e.g.
+   * "~/Videos/series". Each episode gets <output>/<series>/ep001/. See scripts/paths.mjs.
+   */
+  output?: string;
   /** Without it, the series is "soft". */
   style?: Style;
   /** Color of the picture for the whole series, before any rule changes it. */

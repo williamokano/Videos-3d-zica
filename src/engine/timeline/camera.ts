@@ -58,6 +58,24 @@ export interface CameraSubject {
   eyeHeight: number;
   /** How far the head is turned from the body, in degrees: `yaw` to the left, `pitch` up. */
   head?: { yaw: number; pitch: number };
+  /** Walking: strides taken so far (one stride is two steps) and the gait (0 still, 1 walking, 2 running). */
+  step?: { strides: number; gait: number };
+}
+
+/**
+ * How the eyes move with the steps, in meters: [to the right, up]. The head goes down at each heel strike and up
+ * over the standing leg, once a step, and sways to the side once a stride. Measured on people: 2 to 9 cm up and
+ * down, more with speed; here a little under that (about 2 cm walking, 5 cm running, 1 cm to the side), since
+ * the viewer is not the one walking and the eyes of a walker keep the world steady anyway.
+ */
+export function stepBob(step: { strides: number; gait: number } | undefined): [number, number] {
+  if (!step || step.gait <= 0.001) return [0, 0];
+  const walking = Math.min(1, step.gait);
+  const running = Math.max(0, Math.min(1, step.gait - 1));
+  const vertical = 0.022 * walking + 0.033 * running;
+  const lateral = 0.012 * walking + 0.006 * running;
+  const phase = step.strides * 2 * Math.PI;
+  return [(lateral / 2) * Math.sin(phase), -(vertical / 2) * Math.cos(2 * phase)];
 }
 
 /** What attached shots need to know about the scene. */
@@ -148,7 +166,13 @@ function attached(shot: CameraKey, a: CameraKey, b: CameraKey | undefined, t: nu
 
   if (mode === 'fpv') {
     const f = forward(subject.yaw + (subject.head?.yaw ?? 0), pitch + (subject.head?.pitch ?? 0));
-    return { pos: eye, lookAt: [eye[0] + f[0], eye[1] + f[1], eye[2] + f[2]], fov: mix((k) => k.fov, FPV_FOV), lens: mix((k) => k.lens, 0), mode, follow: id };
+    // The eyes bob with the steps but stay on the same spot ahead, as a walker's eyes do: only the position
+    // moves, and the aim at a point a few meters ahead tilts the view a touch against the bob.
+    const [side, up] = stepBob(subject.step);
+    const right = forward(subject.yaw - 90, 0);
+    const pos: Vec3 = [eye[0] + right[0] * side, eye[1] + up, eye[2] + right[2] * side];
+    const AIM = 6;
+    return { pos, lookAt: [eye[0] + f[0] * AIM, eye[1] + f[1] * AIM, eye[2] + f[2] * AIM], fov: mix((k) => k.fov, FPV_FOV), lens: mix((k) => k.lens, 0), mode, follow: id };
   }
 
   // Average the heading over the last moments so a quick turn of the body swings the camera gently.

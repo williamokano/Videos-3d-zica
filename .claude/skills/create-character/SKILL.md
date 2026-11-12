@@ -70,3 +70,11 @@ Se a bíblia tem `"style": { "look": "cel" }`, o personagem ganha luz em faixas 
 2. Abra a vitrine, `?vitrine=personagens&series=<série>`: todos os personagens da série lado a lado, sem precisar de episódio. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada. Pelo console: `window.__vitrine.select('<id>', 'body' | 'face')`, `setPose('walk')`, `setExpression('happy')`, `setMouth('O')`, `setBehaviour('chat')`, `setLook('camera')`, `restyle('<id>', { hairStyle: 'bun' })`, `addExtras('<id>', 6)`, `pause(<segundos>)`. `select(null)` volta a todos.
 3. Para ver o personagem dentro de um episódio, o painel do estúdio lista o elenco; clicar leva a câmera até ele.
 4. Olhe as imagens: pés no chão, braços para baixo, rosto visível sob o cabelo, personagem olhando para onde anda.
+
+## Voz
+
+- `voice: { "id": "<id da ElevenLabs>" }` na ficha. Opcional: `stability`, `similarity`, `style` (0 a 1) e `speed` (o v3 ignora a velocidade: o áudio é acelerado depois).
+- Um figurante com voz própria: `look: { voice: { id } }` no elenco.
+- Para achar vozes em pt-BR: `GET https://api.elevenlabs.io/v1/shared-voices?language=pt&accent=brazilian&gender=male&age=young` com o cabeçalho `xi-api-key`. As vozes da biblioteca funcionam direto pelo id.
+- Vozes já usadas em `ceu-vermelho` estão nas fichas da série. Combine idade e jeito com a bíblia: adolescente com voz jovem e animada, professor com voz mais grave e firme.
+

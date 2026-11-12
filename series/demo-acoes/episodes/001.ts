@@ -22,6 +22,7 @@ export default direct(
     d.background(() => {
       d.wait(0.3);
       robo.walkTo([9.2, 4.6]);
+      robo.behave('idle');
       robo.lookAt(ana);
     });
     d.wait(0.5);
