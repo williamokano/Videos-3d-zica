@@ -56,6 +56,25 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 - O personagem pisca e respira sozinho; não é preciso ação para isso.
 - O personagem ainda não usa as mãos: `pickUp` leva o item a um ponto dado em `to`, e ninguém aparece empurrando a porta. Isso chega com a Fase 3.
 
+## Câmera
+
+A trilha `camera` do episódio é uma lista de keyframes. Um plano vai de um keyframe com `"cut": true` (ou do primeiro) até o próximo corte, e o modo do plano fica no keyframe que o começa:
+
+| `mode` | O que faz | Campos |
+|---|---|---|
+| `cinematic` (padrão) | câmera posta à mão; entre keyframes do mesmo plano ela se move em curva suave | `pos`, `lookAt`, `fov` em cada keyframe |
+| `fpv` | nos olhos do personagem, olhando para onde o corpo aponta; a cabeça dele some da imagem | `follow` (id no elenco), `fov` (padrão 70), `pitch` |
+| `third_person` | atrás e acima do personagem, acompanhando; chega mais perto em vez de atravessar parede | `follow`, `distance` (padrão 3 m), `height` (padrão 0.5 m acima dos olhos), `pitch`, `fov` |
+
+```json
+{"t": 5.8, "cut": true, "mode": "third_person", "follow": "ana"},
+{"t": 8.5, "cut": true, "mode": "fpv", "follow": "beto", "fov": 75}
+```
+
+- `mode` e `follow` só mudam num corte. Dentro de um plano preso, keyframes sem `cut` animam `fov`, `distance`, `height` e `pitch`.
+- Plano preso não leva `pos` nem `lookAt`; plano `cinematic` exige os dois.
+- Erro na trilha de câmera aparece em vermelho no painel, junto dos erros de ação.
+
 ## Criar uma ação ou um objeto novo
 
 - Ação nova: `registerAction` em `src/engine/actions/`, declarando `appliesTo`, `params` e os canais que move. Ela deve servir a qualquer mapa.

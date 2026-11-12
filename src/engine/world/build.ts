@@ -26,6 +26,8 @@ export interface InteractiveObject extends ActionTarget {
   position(): [number, number, number];
   /** Things that move by themselves with the clock (blinking, breathing). Called after the channels are set. */
   tick?(t: number): void;
+  /** Characters: show or hide for a camera sitting in their eyes. */
+  firstPerson?(on: boolean): void;
 }
 
 /** Something to stand on: a floor, the ground, a landing or a flight of stairs. */
@@ -311,6 +313,30 @@ export function surfaceHeight(surfaces: Surface[], x: number, z: number, feetY: 
     if (y <= feetY + STEP_UP && y > best) best = y;
   }
   return best === -Infinity ? feetY : best;
+}
+
+/** How much of the straight line from `from` to `to` is free of colliders, from 0 (blocked at once) to 1. */
+export function clearFraction(colliders: Collider[], from: [number, number, number], to: [number, number, number]): number {
+  let free = 1;
+  for (const r of colliders) {
+    if (r.disabled) continue;
+    const slabs: [number, number, number][] = [[0, r.minX, r.maxX], [1, r.y0, r.y1], [2, r.minZ, r.maxZ]];
+    let enter = 0;
+    let exit = free;
+    for (const [axis, min, max] of slabs) {
+      const d = to[axis] - from[axis];
+      if (Math.abs(d) < 1e-9) {
+        if (from[axis] < min || from[axis] > max) exit = -1;
+        continue;
+      }
+      const t0 = (min - from[axis]) / d;
+      const t1 = (max - from[axis]) / d;
+      enter = Math.max(enter, Math.min(t0, t1));
+      exit = Math.min(exit, Math.max(t0, t1));
+    }
+    if (enter <= exit) free = enter;
+  }
+  return free;
 }
 
 /** Push a walker's circle at (x, z) out of every collider that overlaps their height. */

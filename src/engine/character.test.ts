@@ -13,6 +13,9 @@ import { blink, locomotionPose, resolveFace, walkPose } from './character/motion
 import { mapBones, retarget } from './character/retarget';
 import { JOINTS, PARENT, type CharacterDef, type Joint } from './character/types';
 import { buildLocation } from './world/build';
+import { evaluateCamera, validateCamera, type CameraKey } from './timeline/camera';
+import { buildCast, cameraStage, compileEpisode } from './timeline/stage';
+import type { Episode } from './timeline/episode';
 import { buildNav, findPath } from './world/nav';
 import type { Location } from './world/types';
 
@@ -212,5 +215,101 @@ describe('characters in an episode', () => {
     expect(evaluateActions(compiled, 1).ana).toMatchObject({ 'expr.happy': 1, yaw: 90 });
     expect(evaluateActions(compiled, 3).ana).toMatchObject({ 'expr.happy': 0, 'expr.scared': 0.5 });
     expect(() => compileActions([{ t: 0, target: 'ana', action: 'express', params: { expression: 'bored' } }], [walker])).toThrow(/expressão desconhecida/);
+  });
+});
+
+describe('camera attached to a character', () => {
+  // Two rooms side by side, joined by a door; Ana starts in the west one facing north.
+  const location: Location = {
+    id: 'teste', name: 'Teste', ground: { color: '#fff', size: 60 },
+    rooms: [
+      { id: 'a', name: 'A', origin: [0, 0], size: [6, 6], floorColor: '#fff', openings: [{ id: 'porta', wall: 'e', type: 'door', at: 5, width: 1, leaf: {} }] },
+      { id: 'b', name: 'B', origin: [6, 0], size: [6, 6], floorColor: '#fff' },
+    ],
+  };
+  const episode = (camera: CameraKey[], actions: ActionClip[] = [], at: [number, number] = [3, 3]): Episode => ({
+    episode: 1, title: 't', location: 'teste', duration: 20, camera, actions, cast: [{ character: 'ana', at }],
+  });
+  const stageOf = (ep: Episode) => {
+    const built = buildLocation(location);
+    const cast = buildCast(ep, [ana]);
+    return { cast, stage: cameraStage(compileEpisode(ep, built, cast), built, cast) };
+  };
+
+  it('fpv sits in the eyes and looks where the character faces', () => {
+    const ep = episode([{ t: 0, mode: 'fpv', follow: 'ana' }], [{ t: 1, duration: 1, target: 'ana', action: 'turnTo', params: { yaw: 90 } }]);
+    const { cast, stage } = stageOf(ep);
+    const before = evaluateCamera(ep.camera, 0.5, stage);
+    expect(before).toMatchObject({ mode: 'fpv', follow: 'ana', fov: 70 });
+    expect(before.pos[0]).toBe(3);
+    expect(before.pos[1]).toBeCloseTo(cast[0].traits.eyeHeight!);
+    expect(before.pos[1]).toBeGreaterThan(1.5);
+    expect(before.lookAt[2]).toBeCloseTo(2);
+    // After turning west, it looks along -x.
+    const after = evaluateCamera(ep.camera, 5, stage);
+    expect(after.lookAt[0]).toBeCloseTo(2);
+    expect(after.lookAt[2]).toBeCloseTo(3);
+  });
+
+  it('third person stays behind and above, and follows the walk', () => {
+    const ep = episode(
+      [{ t: 0, mode: 'third_person', follow: 'ana', distance: 2 }],
+      [{ t: 1, target: 'ana', action: 'walkTo', ease: 'linear', params: { to: [3, 1.5] } }],
+      [3, 3.5],
+    );
+    const { stage } = stageOf(ep);
+    const start = evaluateCamera(ep.camera, 0, stage);
+    // Facing north (-z), so behind is +z.
+    expect(start.pos[0]).toBeCloseTo(3);
+    expect(start.pos[2]).toBeCloseTo(5.5);
+    expect(start.pos[1]).toBeGreaterThan(1.9);
+    const end = evaluateCamera(ep.camera, 10, stage);
+    expect(end.pos[2]).toBeCloseTo(3.5);
+    expect(evaluateCamera(ep.camera, 1.7, stage)).toEqual(evaluateCamera(ep.camera, 1.7, stage));
+  });
+
+  it('third person comes closer instead of going through a wall', () => {
+    // 0.8 m from the south wall, back to it.
+    const ep = episode([{ t: 0, mode: 'third_person', follow: 'ana', distance: 3 }], [], [3, 5.2]);
+    const { stage } = stageOf(ep);
+    const pose = evaluateCamera(ep.camera, 0, stage);
+    expect(pose.pos[2]).toBeLessThan(5.9);
+    expect(pose.pos[2]).toBeGreaterThan(5.3);
+  });
+
+  it('keeps cinematic shots as they were and switches mode only at cuts', () => {
+    const ep = episode([
+      { t: 0, pos: [0, 2, 0], lookAt: [3, 1, 3] },
+      { t: 2, pos: [2, 2, 0], lookAt: [3, 1, 3] },
+      { t: 2, cut: true, mode: 'fpv', follow: 'ana', fov: 60 },
+      { t: 4, fov: 80 },
+      { t: 4, cut: true, pos: [1, 1, 1], lookAt: [3, 1, 3] },
+    ]);
+    const { cast, stage } = stageOf(ep);
+    expect(() => validateCamera(ep.camera, cast.map((c) => c.id))).not.toThrow();
+    expect(evaluateCamera(ep.camera, 1, stage)).toMatchObject({ mode: 'cinematic', pos: [1, 2, 0] });
+    expect(evaluateCamera(ep.camera, 3, stage)).toMatchObject({ mode: 'fpv', fov: 70 });
+    expect(evaluateCamera(ep.camera, 5, stage)).toMatchObject({ mode: 'cinematic', pos: [1, 1, 1] });
+  });
+
+  it('explains what is wrong with a camera track', () => {
+    expect(() => validateCamera([{ t: 0, mode: 'fpv' }], ['ana'])).toThrow(/precisa de "follow"/);
+    expect(() => validateCamera([{ t: 0, mode: 'fpv', follow: 'bia' }], ['ana'])).toThrow(/"bia" não está no elenco. Elenco: ana/);
+    expect(() => validateCamera([{ t: 0, pos: [0, 0, 0] }], [])).toThrow(/precisa de "pos" e "lookAt"/);
+    expect(() => validateCamera([{ t: 0, pos: [0, 0, 0], lookAt: [1, 0, 0] }, { t: 1, mode: 'fpv', follow: 'ana' }], ['ana'])).toThrow(/só podem mudar num corte/);
+  });
+
+  it('hides the head of the character the camera is in', () => {
+    const character = buildCharacter({ character: 'ana', at: [0, 0] }, ana);
+    const visibleMeshes = () => {
+      let n = 0;
+      character.object.traverseVisible((o) => { if (o instanceof THREE.Mesh) n++; });
+      return n;
+    };
+    const all = visibleMeshes();
+    character.firstPerson!(true);
+    expect(visibleMeshes()).toBeLessThan(all);
+    character.firstPerson!(false);
+    expect(visibleMeshes()).toBe(all);
   });
 });

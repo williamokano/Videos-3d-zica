@@ -54,12 +54,16 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     id,
     kind: 'character',
     channels: { ...state },
-    traits: { strideLength: (STRIDE * (def.height ?? 1.7)) / 1.7, expressions: names },
+    traits: { strideLength: (STRIDE * (def.height ?? 1.7)) / 1.7, eyeHeight: rig.eyeHeight, expressions: names },
     object,
     set: (channel, value) => {
       if (channel in state) state[channel] = value;
     },
     position: () => [state.x, state.y, state.z],
     tick,
+    firstPerson: (on) => {
+      if (rig.hideHead) rig.hideHead(on);
+      else rig.object.visible = !on;
+    },
   };
 }

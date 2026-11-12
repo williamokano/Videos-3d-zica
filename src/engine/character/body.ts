@@ -146,6 +146,10 @@ export function buildBody(def: CharacterDef): CharacterRig {
       joints.hips.position.y = OFFSETS.hips[1] + pose.lift;
     },
     setFace: (params) => face.set(params),
+    eyeHeight: scale * (1.48 + r * 1.02),
+    hideHead: (hidden) => {
+      head.visible = !hidden;
+    },
     joint: (name) => joints[name],
   };
 }

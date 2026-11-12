@@ -78,6 +78,10 @@ export interface CharacterRig {
   applyPose(pose: Pose): void;
   /** `blink` and `talk` go from 0 to 1; `expressions` are weights by name. */
   setFace(face: FaceParams, raw: { blink: number; talk: number; expressions: Record<string, number> }): void;
+  /** Height of the eyes above the feet when standing, in meters. */
+  eyeHeight: number;
+  /** Hide the head so a camera can sit in it. Bodies that cannot do it are hidden whole in first person. */
+  hideHead?(hidden: boolean): void;
   /** A standard joint, e.g. to put something in a hand. */
   joint(name: Joint): import('three').Object3D | undefined;
 }

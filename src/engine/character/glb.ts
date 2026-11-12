@@ -37,6 +37,7 @@ export function rigFromModel(def: CharacterDef, model: THREE.Object3D): Characte
   return {
     object: root,
     ...driven,
+    eyeHeight: (def.height ?? 1.7) * 0.93,
     setFace(_face, raw) {
       for (const [channel, target] of morphs) {
         const value = channel === 'blink' ? raw.blink : channel === 'talk' ? raw.talk : (raw.expressions[channel] ?? 0);

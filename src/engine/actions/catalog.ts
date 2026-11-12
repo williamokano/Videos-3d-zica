@@ -33,6 +33,8 @@ export interface TargetTraits {
   passableAt?: number;
   /** Characters: meters covered by one full walk cycle (two steps). */
   strideLength?: number;
+  /** Characters: height of the eyes above the feet, in meters. */
+  eyeHeight?: number;
   /** Characters: names of the expressions the face can show. */
   expressions?: string[];
 }

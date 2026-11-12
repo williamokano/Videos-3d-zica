@@ -7,10 +7,10 @@ import '../engine/assets/vehicles';
 import { evaluateActions, type CompiledActions } from '../engine/actions/catalog';
 import { loadGlbCharacter } from '../engine/character/glb';
 import type { CharacterDef, CharacterRig } from '../engine/character/types';
-import { buildCast, compileEpisode } from '../engine/timeline/stage';
+import { buildCast, cameraStage, compileEpisode } from '../engine/timeline/stage';
 import { activeRules, resolveEnvironment, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
-import { evaluateCamera } from '../engine/timeline/camera';
+import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import type { Episode } from '../engine/timeline/episode';
 import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
@@ -76,6 +76,8 @@ scene.add(gizmos);
 let actions: CompiledActions = { tracks: [], clips: [] };
 let actionsError = '';
 let cast: InteractiveObject[] = [];
+/** False when the camera track has an error; the shot view then stays where it is. */
+let cameraOk = false;
 if (episode) {
   try {
     const defs = inSeries(characters);
@@ -93,6 +95,17 @@ if (episode) {
     actionsError = error instanceof Error ? error.message : String(error);
   }
 }
+if (episode) {
+  try {
+    validateCamera(episode.camera, cast.map((c) => c.id));
+    cameraOk = true;
+  } catch (error) {
+    actionsError = [actionsError, error instanceof Error ? error.message : String(error)].filter(Boolean).join('\n');
+  }
+}
+const shotStage: CameraStage = cameraStage(actions, built, cast);
+/** Character whose eyes the episode camera is in right now, if any. */
+let firstPerson: InteractiveObject | undefined;
 const interactiveById = new Map([...built.interactives, ...cast].map((o) => [o.id, o]));
 /** Doors opened or closed by hand in walk mode, until the timeline moves again. */
 const handOverrides = new Map<string, number>();
@@ -129,7 +142,9 @@ window.addEventListener('keydown', (e) => {
 function applyShot(t: number): void {
   if (!episode) return;
   applyActions(t);
-  const pose = evaluateCamera(episode.camera, t);
+  if (!cameraOk) return;
+  const pose: CameraPose = evaluateCamera(episode.camera, t, shotStage);
+  firstPerson = pose.mode === 'fpv' ? interactiveById.get(pose.follow!) : undefined;
   shotCamera.position.set(...pose.pos);
   shotCamera.lookAt(...pose.lookAt);
   shotCamera.fov = pose.fov;
@@ -144,13 +159,14 @@ function applyShot(t: number): void {
 }
 
 let frustum: THREE.CameraHelper | undefined;
-if (episode) {
+if (episode && cameraOk) {
   frustum = new THREE.CameraHelper(gizmoCamera);
   const samples: THREE.Vector3[] = [];
-  for (let t = 0; t <= episode.duration; t += 0.1) samples.push(new THREE.Vector3(...evaluateCamera(episode.camera, t).pos));
+  for (let t = 0; t <= episode.duration; t += 0.1) samples.push(new THREE.Vector3(...evaluateCamera(episode.camera, t, shotStage).pos));
   const path = new THREE.Line(new THREE.BufferGeometry().setFromPoints(samples), new THREE.LineBasicMaterial({ color: '#ffd400' }));
   gizmos.add(frustum, path);
   for (const key of episode.camera) {
+    if (!key.pos) continue;
     const dot = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 8), new THREE.MeshBasicMaterial({ color: key.cut ? '#ff6b3d' : '#ffd400' }));
     dot.position.set(...key.pos);
     gizmos.add(dot);
@@ -409,6 +425,7 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
     built.exterior.visible = true;
     for (const s of built.stairs) s.group.visible = true;
     for (const c of cast) c.object.visible = true;
+    firstPerson?.firstPerson?.(true);
   }
   const [x, y, w, h] = rect ?? [0, 0, width, height];
   renderer.setViewport(x, y, w, h);
@@ -416,7 +433,10 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
   renderer.setScissorTest(true);
   renderer.clear();
   renderer.render(scene, cam);
-  if (asShot) applyVisibility();
+  if (asShot) {
+    firstPerson?.firstPerson?.(false);
+    applyVisibility();
+  }
 }
 
 applyEnvironment();
