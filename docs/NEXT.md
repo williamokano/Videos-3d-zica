@@ -48,33 +48,45 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Móveis bloqueiam o caminho a pé. Elenco com `look` (uma ficha, várias aparências) e `seated`.
   - Episódio 1 de `ceu-vermelho` (`series/ceu-vermelho/episodes/001.ts`): 2 min 15 s em primeira pessoa, 15 personagens.
 
-## Próxima sessão: personagens mais bonitos e expressivos
+## Próximas tarefas, em ordem
 
-Pedido do autor depois do episódio 1: "gostei muito, mas gostaria que fosse um pouquinho melhor, mais configurável". Referência de estilo: um reel de temática parecida (https://www.instagram.com/reel/Dffe38TqD-Q/), com arte mais para cell shading e rostos mais expressivos. O vídeo não fica no repositório; baixe de novo com `yt-dlp` se precisar.
+1. **Vitrine de personagens** (versão básica): ver todos lado a lado, câmera livre, menu de expressão e pose. Vem primeiro porque é onde as tarefas 2 a 6 vão ser ajustadas e conferidas.
+2. **Rosto expressivo**: olhos com branco, íris, brilho e pálpebra, olhos que se mexem dentro do rosto, sobrancelhas grossas, nariz, orelhas, boca com formas de fala.
+3. **Contorno grosso e luz em faixas**: o estilo da série passa a ser escolhido na bíblia (atual ou cell shading).
+4. **Mãos com dedos**: poses de mão, mão que fecha no que segura, ação de apontar.
+5. **Cabelo com volume e ficha mais configurável**: mais estilos de cabelo, formato de cabeça, olhos, nariz, boca, barba, óculos; `extraLook` sorteando tudo.
+6. **Cor do mundo por regra da bíblia**: o céu vermelho tingindo a cena inteira.
+7. **Tela final interativa**: "O que você faria?" com opções, configurável no roteiro.
+8. **Grande-angular como opção de câmera** e **granulado leve opcional**.
+9. **Vitrine para os outros assets**: carros, caminhões, escavadeiras, móveis.
+10. **Voz**: só com confirmação do autor.
 
-O que a referência faz e nós não:
+Os itens 2 a 8 vêm de uma referência de estilo que o autor mostrou; as decisões sobre o que puxar dela estão na seção seguinte.
 
-- **Contorno grosso e escuro** em tudo (personagens, carros, prédios), como desenho a nanquim. Em Three.js: casca invertida (o mesmo mesh, um pouco maior, só com as faces de trás, preto) ou um passe de pós-processamento de bordas por profundidade e normal.
-- **Cor chapada em 2 ou 3 faixas** de luz em vez de degradê (`MeshToonMaterial` com `gradientMap`), sombras como manchas escuras de borda dura, e uma textura leve de papel ou granulado por cima da imagem.
-- **Olhos grandes**: branco do olho, íris escura com brilho, contorno; a pálpebra cobre parte do olho para dar humor (cansado, desconfiado, assustado). Hoje os olhos são duas bolinhas escuras.
-- **Sobrancelhas grossas** que mudam muito de ângulo; são elas que mais carregam a emoção nos quadros da referência.
-- **Nariz** simples (uma bolinha escura) e **orelhas**, que hoje não existem.
-- **Boca que mexe bastante**: abre em formas diferentes ao falar (O, E, A, fechada), com o interior escuro e lábio. Hoje a fala só abre e fecha.
-- **Cabelo com volume**: o crespo da referência é feito de vários blocos arredondados; hoje há só uma calota com quatro estilos.
-- **Mãos com dedos**: polegar separado e os outros dedos juntos ou separados, que fecham em volta do que seguram (o rádio, em primeira pessoa, aparece com o polegar por cima e os dedos por trás). Hoje a mão é uma bola.
-- **Lente grande-angular** com distorção nas bordas em vários planos (efeito olho de peixe), que deixa a primeira pessoa mais intensa. Pode ser uma opção da câmera.
+## Referência de estilo e o que puxar dela
 
-Plano sugerido, nesta ordem:
+Depois do episódio 1 o autor disse: "gostei muito, mas gostaria que fosse um pouquinho melhor, mais configurável". Referência: um reel de temática parecida (https://www.instagram.com/reel/Dffe38TqD-Q/), com arte mais para cell shading e rostos mais expressivos. O vídeo não fica no repositório; baixe de novo com `yt-dlp` se precisar.
 
-1. **Mãos**: juntas de dedos no esqueleto padrão (polegar e quatro dedos, ou polegar e "luva" de 3 dedos para o estilo cartoon), poses de mão nomeadas (`relaxada`, `segurando`, `apontando`, `punho`, `aberta`, `digitando`) e transição entre elas. `pickUp` e `raise` passam a fechar a mão no objeto; `say` gesticula com a mão aberta; uma ação `point` para apontar. No retarget de GLB, os dedos são opcionais.
-2. **Rosto**: olhos com branco, íris, brilho e pálpebras; sobrancelhas grossas com mais amplitude; nariz e orelhas; boca com formas de fala (visemas simples: fechada, A, E, O, U, F/V) já preparando o lip-sync da voz. As expressões do catálogo ganham pálpebra e formato de boca.
-3. **Ficha do personagem mais configurável**: formato do rosto e da cabeça, tamanho e espaçamento dos olhos, cor da íris, espessura das sobrancelhas, tipo de nariz, tamanho da boca, mais estilos de cabelo (crespo, cacheado, raspado, rabo de cavalo, franja), barba, óculos, acessórios. `extraLook` sorteia tudo isso para os figurantes.
-4. **Visual da série**: o estilo (atual ou cell shading com contorno) vira opção da bíblia, para cada série escolher o seu. Contorno, faixas de luz e granulado entram juntos.
-5. **Vitrine de assets** (abaixo), para olhar e ajustar tudo isso sem montar um episódio.
+A regra: puxar as técnicas, manter a cara própria da série. Proporções e design dos personagens da referência não se copiam.
 
-## Próximo: vitrine de assets
+Puxar, como está nas tarefas 2 a 7:
 
-Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. Começa pelos personagens; depois vale para os outros grupos (carros, caminhões, escavadeiras, móveis...).
+- **Rosto** (tarefa 2). Na referência, as sobrancelhas carregam quase toda a emoção, e a boca abre em formas diferentes ao falar. Como a série é em primeira pessoa, com gente falando de frente para a câmera, é o que o espectador mais vê. As formas de boca (fechada, A, E, O, U, F/V) já servem de visemas para o lip-sync da voz.
+- **Contorno** (tarefa 3): casca invertida, o mesmo mesh um pouco maior, preto, só com as faces de trás. Combina com as formas arredondadas do kit. Fora do contorno: a tela do celular e os vidros, para não perder legibilidade.
+- **Luz em faixas** (tarefa 3): `MeshToonMaterial` com `gradientMap` de 3 faixas, não 2, para os interiores não ficarem chapados demais.
+- **Dedos** (tarefa 4): para figurantes, polegar e um bloco de dedos estilo luva, que lê melhor de longe. Os 5 dedos completos só na mão em primeira pessoa, que aparece grande segurando o celular (na referência, o rádio aparece com o polegar por cima e os dedos por trás). Poses nomeadas: `relaxada`, `segurando`, `apontando`, `punho`, `aberta`, `digitando`. `pickUp` e `raise` fecham a mão no objeto; `say` gesticula com a mão aberta. No retarget de GLB, os dedos são opcionais.
+- **Cabelo** (tarefa 5): blocos arredondados, como o crespo da referência. Também resolve a variedade dos figurantes, que hoje têm quatro cabelos.
+- **Cor do mundo** (tarefa 6): na referência o vermelho contamina tudo. Hoje só o céu e a luz ambiente tingem; um ajuste de cor da imagem inteira, por regra da bíblia, deixa a mudança bem mais dramática.
+- **Tela final** (tarefa 7): título e duas ou mais opções com ícone e cor, e uma chamada para comentar. É um formato genérico que puxa comentário. Fica como um recurso do roteiro (por exemplo, `d.endCard({ title, options })`), desenhado pelo motor por cima da imagem.
+
+Puxar com moderação (tarefa 8):
+
+- **Grande-angular / olho de peixe**: opção por plano, para momentos de tensão (a fuga, a corrida), não o tempo todo. Constante, cansa e deforma o celular, cuja tela precisa ser lida.
+- **Granulado de papel**: leve ou desligado. Granulado vira chuvisco quando Instagram e TikTok recomprimem o vídeo.
+
+## Vitrine de assets (tarefas 1 e 9)
+
+Pedido do autor: uma página para ver e testar os assets fora de um episódio, por grupo. Começa pelos personagens; depois os outros grupos.
 
 - Abre por grupo: todos os personagens de uma série (ou de todas) lado a lado, cada um com o nome embaixo.
 - Câmera livre pelo mouse (girar, aproximar, deslocar), e um clique num personagem para focar nele.
@@ -85,25 +97,24 @@ Pedido do autor: uma página para ver e testar os assets fora de um episódio, p
   - para onde olha (`lookAt`): a câmera, outro personagem, um ponto;
   - aparência: variar com `extraLook` e trocar pele, cabelo e altura na hora.
 - Tempo correndo de verdade (respira, pisca, anda) e pausável.
-- Para outros grupos, o menu mostra os canais do asset (portas, rodas, caçamba, braço da escavadeira) e as ações do catálogo que valem para ele.
+- Para outros grupos (tarefa 9), o menu mostra os canais do asset (portas, rodas, caçamba, braço da escavadeira) e as ações do catálogo que valem para ele.
 - Endereço sugerido: `?vitrine=personagens` (ou `?vitrine=veiculos`), na mesma aplicação do estúdio.
 
 Pela arquitetura atual, a página pode montar personagens com `buildCharacter` e mexer nos canais direto, sem episódio; as ações em loop saem de clipes compilados contra um mundo vazio.
 
-## Próximo: voz
+## Voz (tarefa 10)
 
 Só começa com confirmação do autor. O que falta, em ordem sugerida:
 
 1. Áudio de cada fala pela ElevenLabs (confirmar os endpoints na documentação), em `tts` ou `sts`, com cache em arquivo e tempos por palavra. As falas já estão no episódio compilado: eventos `line` com quem fala, o texto e a duração estimada.
 2. `resolveScript` recebendo o idioma e a duração real de cada fala, para a timeline sair do áudio.
-3. Lip-sync por visemas no lugar da boca genérica; mixagem do áudio no render.
+3. Lip-sync pelos visemas da tarefa 2; mixagem do áudio no render.
 4. Sons do mundo (celular vibrando, burburinho da turma, passos).
 
-Ideias que o episódio 1 deixou:
+## Ideias soltas, sem ordem
 
-- Personagens não desviam uns dos outros: a fila funciona porque cada um sai na sua hora. Um desvio simples entre pessoas deixaria as cenas de grupo mais soltas.
-- Os olhos não se mexem dentro do rosto; em primeira pessoa, de perto, faz falta.
-- Mais gestos de figurante: apontar, mão na boca, mexer no próprio celular.
+- Personagens não desviam uns dos outros: a fila do episódio 1 funciona porque cada um sai na sua hora. Um desvio simples entre pessoas deixaria as cenas de grupo mais soltas.
+- Mais gestos de figurante: apontar, mão na boca, mexer no próprio celular (depende das mãos, tarefa 4).
 - Render medido numa RTX 5090: o episódio 1 (4317 frames em 1080×1920) sai em ~34 s com 8 navegadores em paralelo. Desenhar um frame leva ~3 ms; o resto do tempo é a captura em PNG e o x264. Para ir além: ler os pixels direto do WebGL em vez de capturar a tela, e codificar com NVENC.
 
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
