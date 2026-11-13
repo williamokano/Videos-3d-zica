@@ -42,3 +42,7 @@ Meta do autor (2026-11-13): "terminar todos os assets com ações que façam sen
 - Defeitos achados olhando as imagens, e corrigidos: o cavalete caía no sentido do comprimento e afundava no chão; a bicicleta caía "de bico"; a motorista levantava o braço para o alto ao fechar a porta sentada; uma placa nova tapava a câmera de abertura do episódio 1 de `demo-acoes`.
 - O ventilador girando e parando ao ser desligado também foi visto, numa tomada própria no episódio 5.
 - Ainda não visto em imagem: as roupas de `wear` dentro de `ceu-vermelho` (só na série de demonstração).
+
+## Encerrado (2026-11-14)
+
+O autor decidiu parar a criação de assets: "não precisa criar, o que já estiver criado fica, iremos fazer outra história". Não foram feitos: moto, van, picape, objetos largados, orelhão, banca, hidrante, fachadas de comércio e delegacia. O kit fica como está em `docs/ASSETS.md`.
