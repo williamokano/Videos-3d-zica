@@ -78,3 +78,11 @@ Se a bíblia tem `"style": { "look": "cel" }`, o personagem ganha luz em faixas 
 - Para achar vozes em pt-BR: `GET https://api.elevenlabs.io/v1/shared-voices?language=pt&accent=brazilian&gender=male&age=young` com o cabeçalho `xi-api-key`. As vozes da biblioteca funcionam direto pelo id.
 - Vozes já usadas em `ceu-vermelho` estão nas fichas da série. Combine idade e jeito com a bíblia: adolescente com voz jovem e animada, professor com voz mais grave e firme.
 
+
+## Roupas e acessórios
+
+- `wear` na ficha: lista de peças do catálogo em `src/engine/character/wear.ts`, por id, com `color` e `accent` se quiser. Peças: `cap`, `policeCap`, `helmet`, `vest` (com `accent` vira colete refletivo, sem ele é tático), `badge`, `longSleeves`, `dutyBelt`, `backpack`, `deliveryBag`.
+- Exemplos em `series/demo-acoes/characters/`: `policial.json`, `entregador.json`, `gari.json`.
+- As peças ficam presas às juntas, então acompanham qualquer pose. As da cabeça somem junto com ela na câmera em primeira pessoa.
+- Peça nova: `registerWearable` em `wear.ts`, servindo a mais de um personagem (um colete com cor, não "o colete do fulano"). Só vale para o corpo do motor, não para GLB.
+- Para ver: `npm run vitrine -- --personagens --series <série>` (e `--orbit 150` para as costas, `--id <ficha>` para um só).

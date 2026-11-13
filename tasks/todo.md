@@ -5,9 +5,9 @@ Pedido do autor em 2026-11-13: "pode começar, vai comitando e dando push e se t
 **Como retomar (para mim, se a sessão travar):** leia este arquivo, rode `git status` e `npm run typecheck && npm test`, e continue do primeiro item sem marcar. Cada item termina com teste, conferência na vitrine (`npm run look` não serve para vitrine; use a página `?vitrine=assets` ou um episódio de `demo-acoes`), commit e push, sem coautoria. Marque o item aqui no mesmo commit.
 
 ## 1. Roupas e acessórios no personagem
-- [ ] `wear` na ficha: peças presas ao corpo (boné, quepe, colete, mochila, bag de entrega, cinto com coldre e rádio, distintivo)
-- [ ] Fichas de exemplo em `demo-acoes`: policial e entregador; vitrine de personagens mostrando
-- [ ] Testes e skill `create-character`
+- [x] `wear` na ficha: peças presas ao corpo (boné, quepe, colete, mochila, bag de entrega, cinto com coldre e rádio, distintivo)
+- [x] Fichas de exemplo em `demo-acoes`: policial e entregador; vitrine de personagens mostrando
+- [x] Testes e skill `create-character`
 
 ## 2. Base de veículos
 - [ ] Extrair do carro uma base comum (rodas, portas por canal, assentos, faróis)

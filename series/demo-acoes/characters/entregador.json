@@ -1,0 +1,21 @@
+{
+  "id": "entregador",
+  "name": "Entregador",
+  "height": 1.72,
+  "skin": "#d9a27c",
+  "hair": "#2c1d18",
+  "hairStyle": "short",
+  "shirt": "#3a3f4a",
+  "pants": "#2b2e36",
+  "shoes": "#e9e9e4",
+  "wear": [
+    {
+      "id": "helmet",
+      "color": "#e9e9e4"
+    },
+    {
+      "id": "deliveryBag",
+      "color": "#d7263d"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "gari",
+  "name": "Gari",
+  "height": 1.68,
+  "skin": "#8a5a3c",
+  "hair": "#1c1512",
+  "hairStyle": "short",
+  "shirt": "#e67e22",
+  "pants": "#e67e22",
+  "shoes": "#2b2e36",
+  "wear": [
+    {
+      "id": "cap",
+      "color": "#e67e22"
+    },
+    {
+      "id": "vest",
+      "color": "#d9e021",
+      "accent": "#c9ccd1"
+    },
+    {
+      "id": "backpack",
+      "color": "#3a3f4a"
+    }
+  ]
+}

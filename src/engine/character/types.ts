@@ -122,6 +122,12 @@ export interface CharacterDef {
   pants?: string;
   shoes?: string;
   /**
+   * What the character wears over the body, by id from the catalog in character/wear.ts, each with a `color`
+   * (and `accent`) if wanted: "cap", "policeCap", "helmet", "vest", "badge", "longSleeves", "dutyBelt",
+   * "backpack", "deliveryBag". E.g. ["policeCap", { "id": "vest", "color": "#1d2430" }, "dutyBelt", "badge"].
+   */
+  wear?: (string | import('./wear').WearSpec)[];
+  /**
    * Replace the built-in body by a model: file name of a GLB next to this file. The model must be skinned
    * and stand in a T-pose. Without face morph targets it has no expressions and no lip-sync.
    */

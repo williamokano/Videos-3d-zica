@@ -1,0 +1,23 @@
+{
+  "id": "policial",
+  "name": "Policial",
+  "height": 1.8,
+  "build": 1.08,
+  "skin": "#b97a52",
+  "hair": "#1c1512",
+  "hairStyle": "buzz",
+  "beard": "stubble",
+  "shirt": "#2c3e5c",
+  "pants": "#1f2a3d",
+  "shoes": "#111318",
+  "wear": [
+    "policeCap",
+    "longSleeves",
+    {
+      "id": "vest",
+      "color": "#1d2430"
+    },
+    "dutyBelt",
+    "badge"
+  ]
+}

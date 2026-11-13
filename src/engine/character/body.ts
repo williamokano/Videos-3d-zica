@@ -1,3 +1,4 @@
+import { buildWear } from './wear';
 import * as THREE from 'three';
 import { mat, rbox } from '../assets/registry';
 import { JOINTS, OFFSETS, PARENT, type CharacterDef, type CharacterRig, type FaceParams, type HandShape, type Joint } from './types';
@@ -470,6 +471,10 @@ export function buildBody(def: CharacterDef): CharacterRig {
   const face = buildFace(r, { skin, hair: def.hair ?? '#3b2a20', eyes: def.eyes ?? '#4a2f1d', lips: def.lips }, def);
   head.add(ball(r, skin, 0, 0, 0), face.group, buildHair(def.hairStyle ?? 'short', def.hair ?? '#3b2a20', r, skin, def.hairStreak));
   joints.head.add(head);
+
+  // What the character wears: pieces fixed to joints, so they follow every pose. Head pieces go on the head
+  // itself, to hide with it when a camera sits in the eyes.
+  for (const { joint, object } of buildWear(def.wear, { head: r, wide, shirt })) (joint === 'head' ? head : joints[joint]).add(object);
 
   root.traverse((o) => {
     if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
