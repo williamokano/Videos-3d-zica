@@ -1,0 +1,262 @@
+{
+  "id": "patio",
+  "name": "Pátio das ações",
+  "ground": {
+    "color": "#7fb069",
+    "size": 160
+  },
+  "spawn": {
+    "pos": [
+      12,
+      8
+    ],
+    "yaw": 0
+  },
+  "rooms": [
+    {
+      "id": "patio",
+      "name": "Pátio",
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        24,
+        14
+      ],
+      "outdoor": true,
+      "floorColor": "#d8cfc0",
+      "props": [
+        {
+          "asset": "structure.fence",
+          "pos": [
+            5.1,
+            4
+          ],
+          "params": {
+            "length": 9.8
+          }
+        },
+        {
+          "asset": "structure.fence",
+          "pos": [
+            18.9,
+            4
+          ],
+          "params": {
+            "length": 9.8
+          }
+        },
+        {
+          "id": "portao",
+          "asset": "structure.gate",
+          "pos": [
+            12,
+            4
+          ],
+          "params": {
+            "width": 3.2
+          }
+        },
+        {
+          "id": "mesa-banquinhos",
+          "asset": "school.concreteTable",
+          "pos": [
+            5,
+            9
+          ],
+          "params": {
+            "shape": "round",
+            "seats": "stools"
+          }
+        },
+        {
+          "id": "mesa-arcos",
+          "asset": "school.concreteTable",
+          "pos": [
+            9.4,
+            9.6
+          ],
+          "params": {
+            "shape": "round",
+            "seats": "benches",
+            "top": "#8a4b3c",
+            "color": "#d9c9a8"
+          }
+        },
+        {
+          "id": "mesa-reta",
+          "asset": "school.concreteTable",
+          "pos": [
+            5,
+            12.2
+          ],
+          "params": {
+            "shape": "rect"
+          }
+        },
+        {
+          "id": "lixeira",
+          "asset": "street.trashBin",
+          "pos": [
+            14.5,
+            8.2
+          ]
+        },
+        {
+          "id": "caixa",
+          "asset": "item.box",
+          "pos": [
+            14.95,
+            9.15
+          ],
+          "pickable": true,
+          "params": {
+            "size": 0.3
+          }
+        },
+        {
+          "id": "cone",
+          "asset": "street.cone",
+          "pos": [
+            17.5,
+            9
+          ]
+        },
+        {
+          "id": "cavalete",
+          "asset": "street.barrier",
+          "pos": [
+            18.9,
+            9
+          ],
+          "rot": 0
+        },
+        {
+          "id": "bike",
+          "asset": "vehicle.bicycle",
+          "pos": [
+            20.4,
+            9
+          ],
+          "rot": 90
+        },
+        {
+          "id": "semaforo",
+          "asset": "street.trafficLight",
+          "pos": [
+            22.6,
+            6
+          ]
+        },
+        {
+          "id": "poste",
+          "asset": "street.lightPole",
+          "pos": [
+            1.4,
+            5.2
+          ],
+          "params": {
+            "height": 5.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "sala",
+      "name": "Sala",
+      "origin": [
+        0,
+        14
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "floorColor": "#c9a27a",
+      "wallColor": "#f3ead7",
+      "openings": [
+        {
+          "wall": "n",
+          "type": "door",
+          "at": 3,
+          "width": 1.4
+        },
+        {
+          "id": "persiana",
+          "wall": "n",
+          "type": "window",
+          "at": 8.5,
+          "width": 2.2,
+          "frame": {
+            "kind": "blinds"
+          }
+        }
+      ],
+      "props": [
+        {
+          "id": "armarios",
+          "asset": "school.lockers",
+          "pos": [
+            2.2,
+            5.9
+          ],
+          "rot": 180,
+          "params": {
+            "count": 5
+          }
+        },
+        {
+          "id": "mesa-prof",
+          "asset": "school.teacherDesk",
+          "pos": [
+            6,
+            3.4
+          ],
+          "rot": 180
+        },
+        {
+          "id": "estante",
+          "asset": "storage.shelf",
+          "pos": [
+            10.4,
+            5.6
+          ],
+          "rot": 180
+        },
+        {
+          "id": "lampada",
+          "asset": "light.tubeLamp",
+          "pos": [
+            4,
+            3
+          ],
+          "y": 2.94,
+          "params": {
+            "intensity": 9
+          }
+        },
+        {
+          "id": "ventilador",
+          "asset": "school.ceilingFan",
+          "pos": [
+            8,
+            3
+          ],
+          "y": 2.94
+        }
+      ]
+    }
+  ],
+  "props": [
+    {
+      "id": "viatura",
+      "asset": "vehicle.policeCar",
+      "pos": [
+        3,
+        1.6
+      ],
+      "rot": -90
+    }
+  ]
+}

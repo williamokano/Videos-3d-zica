@@ -42,6 +42,8 @@ export interface TargetTraits {
   sockets?: Record<string, number[]>;
   /** Something light standing on the ground: it can be knocked over. */
   loose?: boolean;
+  /** How wide and how long it is in its own frame, whichever way it is turned: [across, along]. */
+  span?: [number, number];
   /** By seat: where the hands of whoever sits there hold ([x, y, z] from the seat, left then right), and whether the legs pedal. */
   seats?: Record<string, { hands?: [number[], number[]]; pedals?: boolean }>;
   /** Items: [width, height, depth] in meters. */

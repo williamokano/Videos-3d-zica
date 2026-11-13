@@ -181,7 +181,11 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
   const own = (obj.userData.channels ?? {}) as AssetChannels;
   // Where it stands, which way it faces, and how far it has tipped over (`lean` degrees, toward heading `leanTo`).
   const pose = { y: obj.position.y, yaw: prop.rot ?? 0, lean: 0, leanTo: 0 };
-  const reach = Math.min(...new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3()).toArray().filter((_, i) => i !== 1)) / 2;
+  // How far the object reaches from its middle, across and along itself: what it rolls over when it tips.
+  const yaw0 = obj.rotation.y;
+  obj.rotation.y = 0;
+  const span = new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3());
+  obj.rotation.y = yaw0;
   const [turn, tip, axis] = [new THREE.Quaternion(), new THREE.Quaternion(), new THREE.Vector3()];
   const settle = (): void => {
     turn.setFromAxisAngle(axis.set(0, 1, 0), THREE.MathUtils.degToRad(pose.yaw));
@@ -189,6 +193,9 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
     // Tipping toward a heading turns it about the level axis across that heading; it rolls on its edge, so it rises a little.
     tip.setFromAxisAngle(axis.set(-Math.cos(h), 0, Math.sin(h)), a);
     obj.quaternion.copy(tip).multiply(turn);
+    // The edge it rolls on is as far out as the object reaches toward the side it falls to.
+    const rel = h - THREE.MathUtils.degToRad(pose.yaw);
+    const reach = (Math.abs(Math.sin(rel)) * span.x + Math.abs(Math.cos(rel)) * span.z) / 2;
     obj.position.y = pose.y + Math.sin(Math.min(Math.abs(a), Math.PI / 2)) * reach;
   };
   const placement: AssetChannels = {
@@ -219,7 +226,7 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
     id: prop.id!,
     kind: prop.pickable && assetKind(prop.asset) === 'prop' ? 'item' : assetKind(prop.asset),
     channels: Object.fromEntries(Object.entries(all).map(([name, c]) => [name, c.value])),
-    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets, seats, parts: obj.userData.parts, loose: Boolean(obj.userData.loose) },
+    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets, seats, parts: obj.userData.parts, loose: Boolean(obj.userData.loose), span: [span.x, span.z] },
     object: obj,
     set: (channel, value) => all[channel]?.apply(value),
     // Held by its middle and hanging centered on the hand, unless the asset says where it is gripped

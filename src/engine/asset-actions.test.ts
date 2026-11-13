@@ -246,3 +246,21 @@ describe('every asset has the actions that fit it', () => {
     expect(bike.value('bike', 'lean')).toBe(90);
   });
 });
+
+describe('falling the right way', () => {
+  it('a bicycle and a barrier fall across their narrow side, however they are turned', () => {
+    for (const rot of [0, 90, 215]) {
+      const s = play([{ id: 'bike', asset: 'vehicle.bicycle', pos: [5, 8], rot }, { id: 'cavalete', asset: 'street.barrier', pos: [10, 8], rot }], (d) => {
+        d.do('bike', 'knockOver');
+        d.do('cavalete', 'knockOver');
+      });
+      const off = (id: string) => ((((s.value(id, 'leanTo')! - rot) % 180) + 180) % 180);
+      // The bicycle is long front to back: it falls to its side. The barrier is long side to side: it falls forward.
+      expect(off('bike')).toBeCloseTo(90);
+      expect(off('cavalete') % 180).toBeCloseTo(0);
+      // Lying down, nothing of it is under the ground.
+      s.show();
+      for (const id of ['bike', 'cavalete']) expect(new THREE.Box3().setFromObject(s.objects.get(id)!.object).min.y).toBeGreaterThan(-0.06);
+    }
+  });
+});

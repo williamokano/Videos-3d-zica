@@ -189,7 +189,9 @@ registerAction({
     if (!('lean' in ctx.target.channels) || !ctx.target.traits.loose) ctx.fail(`"${ctx.target.id}" não é um objeto solto: não dá para derrubar.`);
     const by = ctx.params.by as string | undefined;
     const here = ctx.placeOf(ctx.target.id);
-    let toward = (ctx.params.toward as number | undefined) ?? here.yaw;
+    // By itself it falls across its narrow side, as a board or a bicycle does.
+    const [across, along] = ctx.target.traits.span ?? [1, 1];
+    let toward = (ctx.params.toward as number | undefined) ?? (across > along * 1.3 ? here.yaw : here.yaw + 90);
     if (by) {
       const who = ctx.placeOf(by);
       const [dx, dz] = [here.pos[0] - who.pos[0], here.pos[2] - who.pos[2]];

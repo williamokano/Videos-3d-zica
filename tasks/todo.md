@@ -34,9 +34,10 @@ Meta do autor (2026-11-13): "terminar todos os assets com ações que façam sen
 
 ## Revisão
 
-- Cinco commits enviados: ações genéricas e canais dos assets, mãos no volante e pedalar, janelas, e este fecho com a lista gerada.
-- `npm run typecheck` limpo; `npm test` com 200 testes (179 antes).
-- Conferido em imagem: armários e gavetas abertos, faróis acesos, o entregador pedalando, as seis janelas abertas e fechadas por fora e por dentro, a escola com as basculantes, e a varredura dos episódios 1 de `ceu-vermelho` e 1, 3 e 4 de `demo-acoes`.
-- Achado e corrigido na varredura: placa nova na frente da câmera de abertura do episódio 1 de `demo-acoes`, e a motorista levantando o braço para o alto ao fechar a porta sentada.
-- Conferido só por teste: portão barrando a passagem, semáforo por nome, ligar e desligar, derrubar o cone, direção dos assentos em volta da mesa, rodas virando na curva.
-- Não conferido em imagem: alguém sentado numa mesa de concreto, o cone caído, as persianas subindo em movimento.
+- Seis commits enviados: ações genéricas e canais dos assets, mãos no volante e pedalar, janelas, a lista gerada, e a conferência em imagem com o episódio 5 de `demo-acoes`.
+- `npm run typecheck` limpo; `npm test` com 202 testes (179 antes).
+- **Todos os 38 assets vistos na vitrine**, grupo por grupo (`npm run vitrine -- --assets --grupo <grupo>`): backdrop, item, light, nature, school, storage, street, structure, vehicle.
+- **Cada ação nova vista em vídeo**, no episódio 5 de `demo-acoes` (`out/demo-acoes/ep005/`), feito para isso: portão abrindo e alguém passando; três pessoas sentando em mesas de concreto viradas para o meio; caixa posta dentro da lixeira; cone derrubado por esbarrão e posto de pé, cavalete e bicicleta caindo; semáforo trocando; viatura com giroflex e faróis saindo em curva com a roda virada; portas de armário e gavetas abrindo; persiana subindo; lâmpada apagando a sala.
+- Vistos também: as seis janelas abrindo e fechando (episódio 4), o entregador pedalando (episódio 3), a motorista ao volante (episódio 1).
+- Defeitos achados olhando as imagens, e corrigidos: o cavalete caía no sentido do comprimento e afundava no chão; a bicicleta caía "de bico"; a motorista levantava o braço para o alto ao fechar a porta sentada; uma placa nova tapava a câmera de abertura do episódio 1 de `demo-acoes`.
+- Ainda não visto em imagem: o ventilador parando (a câmera do episódio 5 não o enquadra; o canal está testado) e as roupas de `wear` dentro de `ceu-vermelho`.

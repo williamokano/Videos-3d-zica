@@ -153,6 +153,7 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - `open` / `close` valem para qualquer coisa que abre; novas `switch`, `signal`, `knockOver`, `setUpright`. Lista por asset em [ASSETS.md](ASSETS.md), gerada por `npm run assets`; um teste falha se sobrar canal ou lugar sem ação.
   - Luminárias e ventilador desligam; carros e ônibus têm faróis e rodas que viram; gavetas e portas de armário abrem; mesas, estantes e lixeira têm lugares; assento com direção própria; portão barra a passagem.
   - Motorista com as mãos no volante e ciclista pedalando (`ridePose`).
+  - O episódio 5 de `demo-acoes` (local `patio`) executa cada ação nova, uma depois da outra: é onde conferir um asset ou uma ação que mudou.
   - Janelas com esquadria (`world/windows.ts`): fixa, de correr, basculante, de abrir, veneziana e persiana, todas com `open`. A escola usa basculante; `demo-acoes` episódio 4 mostra todas.
 
 ## Próximas tarefas, em ordem
