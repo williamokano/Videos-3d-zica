@@ -85,3 +85,54 @@ describe('scenery assets', () => {
     expect(fenced.colliders).toHaveLength(1);
   });
 });
+
+describe('vehicles', () => {
+  const channelsOf = (o: THREE.Object3D) => o.userData.channels as Record<string, { value: number; apply(v: number): void }>;
+  const seatsOf = (o: THREE.Object3D) => o.children.filter((c) => c.name.startsWith('seat.')).map((c) => c.name.slice(5));
+
+  it('the police car is the car with a light bar that flashes with the clock, only with the siren on', () => {
+    const car = createAsset('vehicle.policeCar');
+    expect(Object.keys(channelsOf(car))).toEqual(expect.arrayContaining(['frontLeft.open', 'travel', 'siren']));
+    expect(seatsOf(car)).toEqual(['driver', 'passenger', 'rearLeft', 'rearRight']);
+    const animate = car.userData.animate as (t: number) => void;
+    const lit = () => meshes(car).filter((m) => m.material instanceof THREE.MeshBasicMaterial).length;
+    animate(0.05);
+    expect(lit()).toBe(0);
+    channelsOf(car).siren.apply(1);
+    const seen = new Set<number>();
+    for (let t = 0; t < 1; t += 1 / 30) {
+      animate(t);
+      seen.add(lit());
+    }
+    // Sometimes one lamp is lit, sometimes none; never both at once.
+    expect([...seen].sort()).toEqual([0, 1]);
+    animate(0.3);
+    const first = lit();
+    animate(0.3);
+    expect(lit()).toBe(first);
+  });
+
+  it('the bus has a door at the front and one at the back, a driver seat and passenger seats', () => {
+    const bus = createAsset('vehicle.bus');
+    expect(Object.keys(channelsOf(bus))).toEqual(expect.arrayContaining(['frontDoor.open', 'rearDoor.open', 'travel']));
+    expect(seatsOf(bus)).toEqual(['driver', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8']);
+    expect(size(bus).z).toBeGreaterThan(10);
+    expect(size(bus).y).toBeGreaterThan(3);
+  });
+
+  it('the bicycle rolls and can be sat on', () => {
+    const bike = createAsset('vehicle.bicycle');
+    expect(seatsOf(bike)).toEqual(['driver']);
+    const wheel = bike.children[0];
+    channelsOf(bike).travel.apply(1);
+    expect(wheel.rotation.x).not.toBe(0);
+  });
+
+  it('a vehicle of an episode is animated as an interactive object', async () => {
+    const { buildProp } = await import('./world/build');
+    const car = buildProp({ id: 'viatura', asset: 'vehicle.policeCar', pos: [0, 0] });
+    expect(car.kind).toBe('vehicle');
+    expect(typeof car.tick).toBe('function');
+    expect(car.channels.siren).toBe(0);
+  });
+});

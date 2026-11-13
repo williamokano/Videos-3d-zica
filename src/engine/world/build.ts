@@ -115,7 +115,8 @@ function placeProps(
           if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
         });
         parent.add(obj);
-        if (typeof obj.userData.animate === 'function') animated.push(obj.userData.animate as (t: number) => void);
+        // With an id it is animated as an interactive object (its `tick`), after its channels are set.
+        if (typeof obj.userData.animate === 'function' && !prop.id) animated.push(obj.userData.animate as (t: number) => void);
         if (prop.id) interactives.push(interactiveProp(prop, obj));
         else {
           const solid = footprint(obj);
@@ -196,6 +197,8 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
       }
       obj.position.lerp(grip, Math.min(1, weight));
     },
+    // Assets that move by themselves with the clock (a light bar flashing).
+    tick: typeof obj.userData.animate === 'function' ? (obj.userData.animate as (t: number) => void) : undefined,
     present: obj.userData.present && ((compiled, t) => obj.userData.present(compiled, t, prop.id)),
     position: () => [obj.position.x, obj.position.y, obj.position.z],
   };

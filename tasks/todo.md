@@ -10,11 +10,11 @@ Pedido do autor em 2026-11-13: "pode começar, vai comitando e dando push e se t
 - [x] Testes e skill `create-character`
 
 ## 2. Base de veículos
-- [ ] Extrair do carro uma base comum (rodas, portas por canal, assentos, faróis)
-- [ ] Viatura: pintura, giroflex que pisca com o tempo do episódio, rádio no painel
-- [ ] Ônibus com porta na frente e atrás (canais), assentos
-- [ ] Bicicleta (e a pessoa sentada nela)
-- [ ] Testes, vitrine de assets, skill `direct-actions`
+- [x] Extrair do carro uma base comum (rodas, portas por canal, assentos, faróis)
+- [x] Viatura: pintura, giroflex que pisca com o tempo do episódio, rádio no painel
+- [x] Ônibus com porta na frente e atrás (canais), assentos
+- [x] Bicicleta (e a pessoa sentada nela)
+- [x] Testes, vitrine de assets, skill `direct-actions`
 
 ## 3. Rádio
 - [ ] `item.radio`: rádio PX de mão, pegável
