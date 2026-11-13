@@ -28,4 +28,12 @@ Pedido do autor em 2026-11-13: "pode começar, vai comitando e dando push e se t
 - [x] Rua da `demo-acoes` usando o kit; skill `build-location`
 
 ## 5. Fecho
-- [ ] `docs/NEXT.md` atualizado, revisão aqui embaixo
+- [x] `docs/NEXT.md` atualizado, revisão aqui embaixo
+
+## Revisão
+
+- Cinco commits, todos enviados: roupas, veículos, rádio e filtros de voz, kit de rua com o episódio de demonstração, e este fecho.
+- `npm run typecheck` limpo; `npm test` com 179 testes (165 antes).
+- Conferido em imagem: os três personagens vestidos de frente e de costas; viatura, ônibus (portas abertas) e bicicleta na vitrine; o kit de rua na vitrine; o episódio 3 de `demo-acoes` renderizado e varrido.
+- Conferido por teste e não por imagem: giroflex piscando, poste falhando, semáforo trocando.
+- Não conferido: o som do filtro de rádio ouvido (só que o ffmpeg aceita a cadeia), o filtro no estúdio, e nada disso dentro de `ceu-vermelho` ainda.

@@ -142,6 +142,13 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
 - Cenário (2026-11-13): assets de teto e parede (`assets/fixtures.ts`: luminária de barra, ventilador que gira, caixinha de som), área externa (`assets/outdoor.ts`: cerca, portão, grama, mato, mesas de concreto, passarela coberta) e fundo (`assets/backdrop.ts`: casas simples e cidade pintada em cartões). A escola de `ceu-vermelho` ganhou tudo isso, mais a cantina, a rua e a calçada.
 - Desvio entre pessoas refeito para não tremer: só quem anda desvia, de lado, sem nenhuma decisão que mude de um quadro para o outro; os testes olham todos os quadros de todos os episódios.
 
+- Kit de rua, polícia e veículos (2026-11-13):
+  - Roupas e acessórios (`character/wear.ts`, `wear` na ficha): boné, quepe, capacete, colete, distintivo, mangas, cinto de serviço, mochila, bag de entrega.
+  - Veículos sobre uma base comum (`assets/vehicles.ts`): viatura com giroflex (`siren`) e rádio no painel, ônibus com duas portas, bicicleta.
+  - Rádio de mão (`item.radio`) e voz por filtro (`VOICE_FILTERS`: rádio, telefone, caixa de som, abafado), mais `d.narrate(texto, { as, filter })` para quem não está em cena.
+  - Kit de rua (`assets/street.ts`): poste, semáforo, placas, cone, barreiras, lixeira, ponto de ônibus, faixa, bueiro.
+  - `npm run vitrine` tira foto das vitrines. Episódio 3 de `demo-acoes` usa tudo.
+
 ## Próximas tarefas, em ordem
 
 As tarefas 1 a 10 estão feitas. Falta a 11, voz, que só começa com a confirmação do autor. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
@@ -233,6 +240,11 @@ Só começa com confirmação do autor. O que falta, em ordem sugerida:
 Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma original pt-BR com dublagem configurada na bíblia. O canal `talk` do personagem já existe para o lip-sync da Fase 4.
 
 ## Limitações conhecidas
+
+- Quem monta na bicicleta fica na pose de sentado: não há pose de pedalar nem as mãos no guidão.
+- As roupas (`wear`) só valem para o corpo do motor, não para personagens GLB.
+- O ônibus não tem as partes das portas descritas para o `open` com `by` (ninguém abre com a mão; o motorista abre pelo canal).
+- A série `demo-acoes` não tem vozes nas fichas: o episódio 3 mostra o rádio só na legenda. O filtro foi conferido no ffmpeg com uma gravação de `ceu-vermelho`.
 
 - Personagens desviam uns dos outros só no instante (afastamento lateral), sem planejar o caminho em volta de quem está parado; não desviam de objetos com `id` (carro, itens, o banco do depósito).
 - Quem está sentado numa cadeira comum fica dentro da área bloqueada pelo móvel: precisa de `standUp` para um ponto livre ao lado antes de `walkTo`.
