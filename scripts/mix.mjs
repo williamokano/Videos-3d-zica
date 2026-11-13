@@ -13,7 +13,7 @@ import { pathToFileURL } from 'node:url';
  * What plays when, from an episode resolved by src/tools/library.ts. Lines without a take are silent (and reported).
  * Times are shifted by `from` and cut at `to`.
  */
-export function cuesOf({ series, bible, episode, soundFile }, from = 0, to = episode.duration) {
+export function cuesOf({ series, bible, episode, soundFile, filters = {} }, from = 0, to = episode.duration) {
   const root = resolve('series', series, 'audio');
   const cuts = episode.cuts ?? [];
   // Jump cuts: times move to where they land in the finished video; a sound that starts inside a cut starts
@@ -35,7 +35,8 @@ export function cuesOf({ series, bible, episode, soundFile }, from = 0, to = epi
         continue;
       }
       if (t + take.duration <= 0 || t >= span) continue;
-      cues.push({ file: join(root, 'voz', `${take.key}.mp3`), t, skip, volume: 1, voice: true });
+      // A voice over a radio or a phone: the take is clean, the filter is put on here.
+      cues.push({ file: join(root, 'voz', `${take.key}.mp3`), t, skip, volume: 1, voice: true, filter: filters[clip.params.filter]?.ffmpeg });
     } else if (clip.action === 'sound') {
       const def = bible.audio?.sounds?.[clip.params.name];
       if (!def || t >= span) continue;
@@ -77,7 +78,8 @@ export async function mix(cues, length, out) {
     const skip = into > 0 ? `atrim=start=${into.toFixed(3)},asetpts=PTS-STARTPTS,` : '';
     const span = c.length ? `atrim=0:${(c.length - Math.max(0, -c.t)).toFixed(3)},` : '';
     const fade = c.length && c.fade ? `afade=t=in:d=${c.fade},afade=t=out:st=${Math.max(0, c.length - c.fade).toFixed(3)}:d=${c.fade},` : '';
-    const chain = `[${i}:a]aformat=sample_rates=48000:channel_layouts=stereo,${skip}${span}${fade}volume=${c.volume},adelay=${delay}:all=1,apad[c${i}]`;
+    const through = c.filter ? `${c.filter},` : '';
+    const chain = `[${i}:a]aformat=sample_rates=48000:channel_layouts=stereo,${skip}${span}${fade}${through}volume=${c.volume},adelay=${delay}:all=1,apad[c${i}]`;
     (c.voice ? voices : beds).push({ i, chain });
   });
   const parts = [...voices, ...beds].map((x) => x.chain);
@@ -99,9 +101,10 @@ export function mux(video, audio, out) {
 export async function episodeAudio(server, series, ep) {
   const library = await server.ssrLoadModule('/src/tools/library.ts');
   const { soundFile } = await server.ssrLoadModule('/src/engine/audio/sound.ts');
+  const { VOICE_FILTERS } = await server.ssrLoadModule('/src/engine/audio/voice.ts');
   const id = series ?? library.seriesIds()[0];
   const { bible, episode } = library.loadEpisode(id, ep);
-  return { series: id, bible, episode, soundFile };
+  return { series: id, bible, episode, soundFile, filters: VOICE_FILTERS };
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {

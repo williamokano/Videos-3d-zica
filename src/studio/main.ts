@@ -18,8 +18,8 @@ import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
 import { button, checkbox, el } from './ui';
 import { WalkControls } from './walk';
-import { StudioSound } from './sound';
-import { NARRATOR, type Take } from '../engine/audio/voice';
+import { StudioSound, type StudioCue } from './sound';
+import { NARRATOR, VOICE_FILTERS, type Take } from '../engine/audio/voice';
 import { soundFile } from '../engine/audio/sound';
 
 // Series data lives in /series as plain files; the studio only reads it.
@@ -223,7 +223,8 @@ function showLine(t: number): void {
   const member = episode?.cast?.find((m) => (m.id ?? m.character) === line.target);
   const name = member?.look?.name ?? inSeries(characters).find((c) => c.id === member?.character)?.name ?? line.target;
   // The narrator has no name on screen.
-  subtitle.replaceChildren(...(line.data.speaker === NARRATOR ? [] : [el('b', `${name}: `)]), String(line.data.text));
+  // Someone heard but not in the scene (over a radio) shows the name the line carries.
+  subtitle.replaceChildren(...(line.data.speaker === NARRATOR ? [] : [el('b', `${(line.data.name as string | undefined) ?? name}: `)]), String(line.data.text));
   const [x, y, w, h] = fit(0, 0, width, height);
   Object.assign(subtitle.style, { left: `${x + w * 0.06}px`, width: `${w * 0.88}px`, bottom: `${y + h * 0.1}px`, fontSize: `${h * 0.024}px` });
 }
@@ -499,11 +500,11 @@ if (episode) {
 
 /** The episode's voices and sounds, played along with the timeline (not while rendering: the render mixes its own). */
 const audioUrl = (path: string): string | undefined => audioFiles[`/series/${bible.series}/audio/${path}`];
-const studioSound = new StudioSound(rendering ? [] : (episode?.actions ?? []).flatMap((clip) => {
+const studioSound = new StudioSound(rendering ? [] : (episode?.actions ?? []).flatMap((clip): StudioCue[] => {
   const take = clip.params?.take as Take | undefined;
   if ((clip.action === 'say' || clip.action === 'narrate') && take) {
     const url = audioUrl(`voz/${take.key}.mp3`);
-    return url ? [{ url, t: clip.t, volume: 1 }] : [];
+    return url ? [{ url, t: clip.t, volume: 1, band: VOICE_FILTERS[clip.params?.filter as string]?.band }] : [];
   }
   const def = clip.action === 'sound' ? bible.audio?.sounds?.[clip.params?.name as string] : undefined;
   if (!def) return [];

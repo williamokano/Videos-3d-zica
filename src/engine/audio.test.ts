@@ -142,3 +142,35 @@ describe('nobody stands frozen', () => {
     expect(stillWithNothingToDo(clips, ['ana'], [], 12)).toEqual([]);
   });
 });
+
+describe('a voice heard through something', () => {
+  const location = buildLocation({ id: 't', name: 't', ground: { color: '#fff', size: 10 }, rooms: [] });
+  const defs: CharacterDef[] = [{ id: 'ana', name: 'Ana', voice: { id: 'voz-ana' } }, { id: 'pai', name: 'Pai', voice: { id: 'voz-pai' } }];
+  const header = { episode: 1, title: 't', location: 't', cast: [{ character: 'ana', at: [0, 0] as [number, number] }] };
+  const bible = { series: 't', title: 't', language: 'pt-BR', dubbing: [], format: { width: 10, height: 10, fps: 30 }, rules: [], audio: { provider: 'elevenlabs', defaultMode: 'tts' } } as Bible;
+
+  it('keeps the filter on the line, and the take is the same with or without it', () => {
+    const play = (filter?: string) => resolveScript(direct(header, (d) => {
+      d.camera.cut({ pos: [0, 1, 5], lookAt: [0, 1, 0] });
+      d.actor('ana').say('Câmbio', { filter });
+    }), location, defs, bible);
+    const [plain, radio] = [play(), play('radio')];
+    expect(radio.actions!.find((c) => c.action === 'say')!.params!.filter).toBe('radio');
+    expect(radio.lines![0].key).toBe(plain.lines![0].key);
+    expect(() => play('megafone')).toThrow(/megafone.*radio/);
+  });
+
+  it('someone who is not in the scene speaks with their own voice and name', () => {
+    const ep = resolveScript(direct(header, (d) => {
+      d.camera.cut({ pos: [0, 1, 5], lookAt: [0, 1, 0] });
+      d.narrate('Onde você está?', { as: 'pai', filter: 'radio' });
+    }), location, defs, bible);
+    expect(ep.lines!.map((l) => [l.speaker, l.voice.id])).toEqual([['pai', 'voz-pai']]);
+    const clip = ep.actions!.find((c) => c.action === 'narrate')!;
+    expect(clip.params).toMatchObject({ as: 'pai', name: 'Pai', filter: 'radio' });
+    expect(() => resolveScript(direct(header, (d) => {
+      d.camera.cut({ pos: [0, 1, 5], lookAt: [0, 1, 0] });
+      d.narrate('oi', { as: 'ninguem' });
+    }), location, defs, bible)).toThrow(/ninguem/);
+  });
+});

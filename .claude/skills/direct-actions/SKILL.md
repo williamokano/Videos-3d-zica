@@ -97,6 +97,9 @@ Para ler em primeira pessoa: `pickUp`, `raise()`, `lookAt('celular')` e aproxime
 
 - **Voz de cada personagem**: `voice: { id }` na ficha (id de voz da ElevenLabs), ou em `look.voice` no elenco para um figurante falar com outra voz. O narrador é `audio.narrator` na bíblia. Modelo: `audio.model` (padrão `eleven_v3`, que entende os tons).
 - **Tons**: `say(texto, { tone })`. Nomes em português em `TONES` (`src/engine/audio/voice.ts`): `sussurro`, `nervoso`, `grito`, `bravo`, `assustado`, `animado`, `triste`, `transe`, `ironico`, `cansado`, `urgente`, `preocupada`, `firme`, `decidido`. Qualquer outro vai como tag em inglês (`laughs`, `sighs`).
+- **Voz por rádio, telefone ou caixa de som**: `say(texto, { filter: 'radio' })`. Filtros em `VOICE_FILTERS` (`src/engine/audio/voice.ts`): `radio` (PX, viatura), `phone`, `speaker` (caixa de som da escola, megafone), `muffled` (do outro lado da porta). A gravação é a mesma com ou sem filtro: ele entra na mixagem, então não custa nada trocar.
+- **Alguém que não está em cena**: `d.narrate(texto, { as: 'pai', filter: 'radio' })` usa a voz e o nome da ficha `pai` da série, sem precisar pôr o personagem no elenco.
+- **Rádio de mão**: prop `item.radio` (com `pocketOf` para começar no bolso). `pickUp`, `raise('chest')` para falar, `lower`, `putAway`, como o celular.
 - **Gravações**: `npm run voz -- --series <s> --ep <n>` gera as falas que faltam e os sons gerados. Com `--dry`, só lista as falas e o custo em caracteres.
   - Cada gravação é achada pelo que ela soa (voz, modelo, texto com tom), em `series/<s>/audio/voz/<chave>.mp3` + `.json`. Mudar uma fala de lugar não custa nada; mudar o texto, o tom ou a voz gera de novo.
   - `--again <chave>` gera outra leitura da mesma fala.

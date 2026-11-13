@@ -71,6 +71,34 @@ export const TONES: Record<string, string> = {
   urgente: 'urgent',
 };
 
+/**
+ * How a voice reaches the listener, applied to the take when the sound is mixed (the take itself stays clean,
+ * so the same line can be heard in the room and over a radio). Each is an ffmpeg filter chain, and a band of
+ * frequencies for the studio's preview.
+ */
+export const VOICE_FILTERS: Record<string, { description: string; ffmpeg: string; band: [number, number] }> = {
+  radio: {
+    description: 'rádio comunicador (PX, viatura): faixa estreita, comprimido, um pouco rachado',
+    ffmpeg: 'highpass=f=420,lowpass=f=2900,acompressor=threshold=-22dB:ratio=6:attack=3:release=80,acrusher=bits=9:mix=0.25,volume=1.7',
+    band: [420, 2900],
+  },
+  phone: {
+    description: 'voz saindo do alto-falante de um celular',
+    ffmpeg: 'highpass=f=300,lowpass=f=3400,acompressor=threshold=-20dB:ratio=3,volume=1.3',
+    band: [300, 3400],
+  },
+  speaker: {
+    description: 'caixa de som de escola ou megafone: médio forte, com eco curto',
+    ffmpeg: 'highpass=f=350,lowpass=f=4200,aecho=0.8:0.6:45:0.3,volume=1.4',
+    band: [350, 4200],
+  },
+  muffled: {
+    description: 'abafado, do outro lado de uma porta ou parede',
+    ffmpeg: 'lowpass=f=700,volume=0.8',
+    band: [40, 700],
+  },
+};
+
 /** The text as sent to the provider. */
 export function spokenText(text: string, tone?: string): string {
   if (!tone) return text;

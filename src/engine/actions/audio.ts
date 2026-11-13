@@ -1,5 +1,5 @@
 import { NARRATOR, type Take } from '../audio/voice';
-import { lineMouth } from './character';
+import { lineMouth, voiceFilterOk } from './character';
 import { registerAction } from './catalog';
 
 registerAction({
@@ -10,13 +10,18 @@ registerAction({
     text: { type: 'string', description: 'o que o narrador diz', required: true },
     tone: { type: 'string', description: 'tom da voz (não aparece na legenda)' },
     take: { type: 'data', description: 'a gravação (posta pelo roteiro)' },
+    filter: { type: 'string', description: 'por onde a voz chega: radio, phone, speaker, muffled' },
+    as: { type: 'string', description: 'em vez do narrador, a voz de uma ficha da série (alguém que não está em cena, pelo rádio ou telefone)' },
+    name: { type: 'string', description: 'com "as": o nome que aparece na legenda' },
   },
   duration: 1,
   compile(ctx) {
     const text = ctx.params.text as string;
     const take = ctx.params.take as Take | undefined;
+    voiceFilterOk(ctx.params.filter as string | undefined, ctx.fail);
     const { duration } = lineMouth(text, take);
-    return { duration, writes: [], events: [{ type: 'line', data: { text, duration, take: take?.key, speaker: NARRATOR } }] };
+    const as = ctx.params.as as string | undefined;
+    return { duration, writes: [], events: [{ type: 'line', data: { text, duration, take: take?.key, speaker: as ?? NARRATOR, name: as ? (ctx.params.name ?? as) : undefined } }] };
   },
 });
 

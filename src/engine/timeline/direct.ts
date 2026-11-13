@@ -82,7 +82,7 @@ export interface Actor {
    * ones) and the mouth follows it. `to` is who it is said to; `tone` is how ("sussurro", "nervoso", "grito",
    * "transe"... see TONES in audio/voice.ts) and stays out of the subtitle. `gesture: 0` keeps the hands still.
    */
-  say(text: string, options?: StepOptions & { to?: Actor | string; tone?: string; gesture?: number }): Step;
+  say(text: string, options?: StepOptions & { to?: Actor | string; tone?: string; gesture?: number; filter?: string }): Step;
   /**
    * What the character does by itself from now on, until told otherwise. Takes no time.
    * "chat" (with `group`), "attend" (`object`), "watch" (`point`), "trance" (`point`), "write", "idle", "none".
@@ -146,8 +146,12 @@ export interface Director {
    * video. For long walks between moments. Takes no time.
    */
   cutOut(from: number | Step, to: number | Step): void;
-  /** The narrator speaks (the bible's `audio.narrator` voice). Takes as long as the take. */
-  narrate(text: string, options?: StepOptions & { tone?: string }): Step;
+  /**
+   * The narrator speaks (the bible's `audio.narrator` voice). Takes as long as the take.
+   * With `as`, it is the voice of a character of the series who is not in the scene (by its file id), heard
+   * through `filter`: "radio", "phone", "speaker" or "muffled". The subtitle shows that character's name.
+   */
+  narrate(text: string, options?: StepOptions & { tone?: string; as?: string; filter?: string }): Step;
   /**
    * Play a sound of the bible (`audio.sounds`) now. Takes no time. A looping sound (ambience) plays for
    * `length` seconds, fading in and out.
@@ -211,7 +215,8 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   };
   /** The take of a line, if made, and the line kept for `npm run voz`. */
   const voiced = (speaker: string, text: string, tone?: string): Take | undefined => {
-    const voice = speaker === NARRATOR ? bible?.audio?.narrator : voiceOf(speaker);
+    // A cast member, the narrator, or a character of the series who is not in the scene.
+    const voice = speaker === NARRATOR ? bible?.audio?.narrator : (voiceOf(speaker) ?? characters.find((c) => c.id === speaker)?.voice);
     if (!voice) return undefined;
     const spoken = spokenText(text, tone);
     const key = takeKey(voice, model, spoken);
@@ -300,7 +305,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       close: (object, options) => run(object, 'close', { by: id, part: options?.part, hand: options?.hand }, options),
       sit: (on, seat, options) => run(id, 'sit', { on, seat }, options),
       standUp: (to, options) => run(id, 'standUp', { to, yaw: options?.yaw }, options),
-      say: (text, options) => (options?.to !== undefined && faceFor(id, options.to), run(id, 'say', { text, to: options?.to === undefined ? undefined : idOf(options.to), tone: options?.tone, gesture: options?.gesture, take: voiced(id, text, options?.tone) }, options)),
+      say: (text, options) => (options?.to !== undefined && faceFor(id, options.to), run(id, 'say', { text, to: options?.to === undefined ? undefined : idOf(options.to), tone: options?.tone, gesture: options?.gesture, filter: options?.filter, take: voiced(id, text, options?.tone) }, options)),
       behave: (mode, options) => instant(id, 'behave', { mode, group: options?.group, object: options?.object === undefined ? undefined : idOf(options.object), point: options?.point, mood: options?.mood }),
       putAway: (item, options) => run(item, 'putAway', {}, options),
       raise: (to, options) => run(id, 'raise', { to }, options),
@@ -373,7 +378,11 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       if (!(b > a)) throw new Error(`cutOut: o fim (${b}) precisa vir depois do começo (${a}).`);
       cuts.push([round(a), round(b)]);
     },
-    narrate: (text, options) => run(WORLD, 'narrate', { text, tone: options?.tone, take: voiced(NARRATOR, text, options?.tone) }, options),
+    narrate: (text, options) => {
+      const who = options?.as === undefined ? undefined : characters.find((c) => c.id === options.as);
+      if (options?.as !== undefined && !who) throw new Error(`narrate: a ficha "${options.as}" não existe na série. Fichas: ${characters.map((c) => c.id).join(', ')}.`);
+      return run(WORLD, 'narrate', { text, tone: options?.tone, filter: options?.filter, as: who?.id, name: who?.name, take: voiced(who?.id ?? NARRATOR, text, options?.tone) }, options);
+    },
     sound: (name, options) => {
       if (!bible?.audio?.sounds?.[name]) throw new Error(`O som "${name}" não está em audio.sounds da bíblia. Sons: ${Object.keys(bible?.audio?.sounds ?? {}).join(', ') || 'nenhum'}.`);
       instant(WORLD, 'sound', { name, ...options });

@@ -17,9 +17,9 @@ Pedido do autor em 2026-11-13: "pode começar, vai comitando e dando push e se t
 - [x] Testes, vitrine de assets, skill `direct-actions`
 
 ## 3. Rádio
-- [ ] `item.radio`: rádio PX de mão, pegável
-- [ ] Voz por rádio: `say(..., { filter: 'radio' })` e `d.narrate`, aplicado na mixagem e no estúdio
-- [ ] Testes e skill
+- [x] `item.radio`: rádio PX de mão, pegável
+- [x] Voz por rádio: `say(..., { filter: 'radio' })` e `d.narrate`, aplicado na mixagem e no estúdio
+- [x] Testes e skill
 
 ## 4. Kit de rua
 - [ ] Poste de luz (com luz), semáforo, placa, ponto de ônibus

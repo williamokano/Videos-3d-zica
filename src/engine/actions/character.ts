@@ -1,5 +1,5 @@
 import { HAND_POSE_NAMES, VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
-import { takeVisemes, type Take } from '../audio/voice';
+import { VOICE_FILTERS, takeVisemes, type Take } from '../audio/voice';
 import { BEHAVIOURS, MOODS, type Mood } from './ambient';
 import { registerAction, type WalkPath } from './catalog';
 import { BODY, outAndBack, reachBody, type Point3 } from './hands';
@@ -323,6 +323,7 @@ registerAction({
     to: { type: 'string', description: 'id de com quem fala; ele olha para essa pessoa' },
     tone: { type: 'string', description: 'tom da voz: sussurro, nervoso, grito, transe... (não aparece na legenda)' },
     take: { type: 'data', description: 'a gravação da fala (posta pelo roteiro): duração e tempos de cada letra' },
+    filter: { type: 'string', description: `por onde a voz chega: ${Object.entries(VOICE_FILTERS).map(([k, v]) => `"${k}" (${v.description})`).join('; ')}` },
     gesture: { type: 'number', description: 'quanto as mãos acompanham, 0 a 1 (padrão 1)' },
   },
   duration: 1,
@@ -332,6 +333,7 @@ registerAction({
     const take = ctx.params.take as Take | undefined;
     if (to !== undefined) ctx.object(to);
     const gesture = (ctx.params.gesture as number | undefined) ?? 1;
+    voiceFilterOk(ctx.params.filter as string | undefined, ctx.fail);
     const { duration, shapes } = lineMouth(text, take);
     return {
       duration,
@@ -347,6 +349,11 @@ registerAction({
     };
   },
 });
+
+/** Fail on a voice filter that does not exist. */
+export function voiceFilterOk(filter: string | undefined, fail: (message: string) => never): void {
+  if (filter !== undefined && !(filter in VOICE_FILTERS)) fail(`filtro de voz desconhecido "${filter}". Existem: ${Object.keys(VOICE_FILTERS).join(', ')}.`);
+}
 
 /** Length of a line and its mouth shapes by progress (0 to 1): from its take if there is one, else from the letters. */
 export function lineMouth(text: string, take?: Take): { duration: number; shapes: (u: number) => Record<string, number> } {

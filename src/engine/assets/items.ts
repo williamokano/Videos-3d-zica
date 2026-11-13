@@ -71,3 +71,29 @@ function eventsOf(compiled: CompiledActions, id: string): PhoneEvent[] {
   if (!events) byId.set(id, (events = compiled.events.filter((e) => e.target === id)));
   return events;
 }
+
+/**
+ * Hand-held two-way radio, upright, front toward +z (toward whoever holds it). Held low in the palm like the
+ * phone, so it can be raised to the mouth with `raise('chest')`.
+ */
+registerAsset('item.radio', 'Rádio comunicador de mão (PX): corpo, antena, visor e botão de falar; pegável (params: color)', (p) => {
+  const color = String(p.color ?? '#22262e');
+  const radio = new THREE.Group();
+  radio.add(
+    rbox(0.062, 0.125, 0.034, color, [0, 0.0625, 0], 0.01),
+    // Antenna and the two knobs on top.
+    rbox(0.014, 0.11, 0.014, '#111318', [-0.018, 0.18, 0], 0.005),
+    rbox(0.016, 0.018, 0.016, '#3d424c', [0.006, 0.134, 0], 0.005),
+    rbox(0.016, 0.014, 0.016, '#3d424c', [0.024, 0.132, 0], 0.005),
+    // Speaker grille, a small lit display, and the push-to-talk key on the side.
+    rbox(0.046, 0.05, 0.004, '#15171b', [0, 0.04, 0.018], 0.002),
+    rbox(0.01, 0.045, 0.02, '#d95b2b', [-0.034, 0.08, 0], 0.004),
+  );
+  const display = new THREE.Mesh(new THREE.PlaneGeometry(0.04, 0.022), new THREE.MeshBasicMaterial({ color: '#9be36b', toneMapped: false }));
+  display.position.set(0, 0.092, 0.0175);
+  display.userData.noShadow = true;
+  radio.add(display);
+  radio.userData.grip = [0, 0, -0.014];
+  radio.userData.tilt = -0.2;
+  return radio;
+});
