@@ -26,6 +26,26 @@ export interface DoorLeaf {
   slide?: 'start' | 'end';
 }
 
+/**
+ * A real window in an opening: a frame with glass or slats, which can open (channel `open`, 0 to 1).
+ * Kinds: "fixed", "sliding" (leaves that run along the wall), "tilt" (basculante: rows of panes that tilt out,
+ * the window of Brazilian public schools), "casement" (two leaves hinged at the sides), "louver" (veneziana:
+ * slats that turn, no glass) and "blinds" (glass with a blind inside that rolls up).
+ */
+export interface WindowFrame {
+  kind: 'fixed' | 'sliding' | 'tilt' | 'casement' | 'louver' | 'blinds';
+  /** Color of the frame (each kind has its own default). */
+  color?: string;
+  /** How open it starts, from 0 (closed) to 1. */
+  open?: number;
+  /** sliding: how many leaves (2 or 4; default by the width). */
+  leaves?: number;
+  /** tilt: how many columns of panes (default: one about every 55 cm). */
+  columns?: number;
+  /** blinds: color of the blind. */
+  blind?: string;
+}
+
 export interface Opening {
   /** Name used by episode actions to target the door. Unique in the location. Defaults to "<room>.<wall><index>". */
   id?: string;
@@ -36,6 +56,11 @@ export interface Opening {
   width: number;
   /** Door leaf. Without it the doorway is an open passage. */
   leaf?: DoorLeaf;
+  /**
+   * Windows: the frame. Without it, the location's `windows` is used; with neither, the window is a plain pane
+   * of glass. `false` keeps this one plain whatever the location says.
+   */
+  frame?: WindowFrame | false;
 }
 
 export interface Prop {
@@ -123,4 +148,6 @@ export interface Location {
   rooms: Room[];
   stairs?: Stairs[];
   props?: Prop[];
+  /** The frame of every window that does not say its own, e.g. `{ "kind": "tilt" }` for a school. */
+  windows?: WindowFrame;
 }

@@ -3,6 +3,7 @@
   "name": "Escola",
   "ground": { "color": "#7fb069", "size": 400 },
   "spawn": { "pos": [12, 10], "yaw": 0 },
+  "windows": { "kind": "tilt", "color": "#5b6b78", "open": 0.35 },
   "rooms": [
     {
       "id": "sala-1",
@@ -178,12 +179,12 @@
       "wallColor": "#efe2c4",
       "openings": [
         { "id": "porta-cantina", "wall": "n", "type": "door", "at": 8, "width": 2.4, "leaf": { "kind": "sliding", "color": "#7c838c", "open": 0 } },
-        { "wall": "n", "type": "window", "at": 3, "width": 2.6 },
-        { "wall": "n", "type": "window", "at": 13, "width": 2.6 },
-        { "wall": "s", "type": "window", "at": 4, "width": 3.0 },
-        { "wall": "s", "type": "window", "at": 12, "width": 3.0 },
-        { "wall": "w", "type": "window", "at": 4, "width": 2.4 },
-        { "wall": "e", "type": "window", "at": 4, "width": 2.4 }
+        { "wall": "n", "type": "window", "at": 3, "width": 2.6, "frame": { "kind": "sliding" } },
+        { "wall": "n", "type": "window", "at": 13, "width": 2.6, "frame": { "kind": "sliding" } },
+        { "wall": "s", "type": "window", "at": 4, "width": 3.0, "frame": { "kind": "sliding" } },
+        { "wall": "s", "type": "window", "at": 12, "width": 3.0, "frame": { "kind": "sliding" } },
+        { "wall": "w", "type": "window", "at": 4, "width": 2.4, "frame": { "kind": "sliding" } },
+        { "wall": "e", "type": "window", "at": 4, "width": 2.4, "frame": { "kind": "sliding" } }
       ],
       "props": [
         { "asset": "light.tubeLamp", "pos": [5, 4], "y": 2.94, "params": { "intensity": 5 } },

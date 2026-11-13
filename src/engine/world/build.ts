@@ -3,6 +3,7 @@ import type { Ambient } from '../actions/ambient';
 import type { ActionTarget, CompiledActions } from '../actions/catalog';
 import { assetKind, createAsset, mat, type AssetChannels } from '../assets/registry';
 import { buildDoor } from './doors';
+import { buildWindow } from './windows';
 import { contains, subtractRects, union, type Rect } from './rect';
 import { layoutStairs, partHeight, type StairLayout } from './stairs';
 import type { Location, Prop } from './types';
@@ -344,6 +345,11 @@ export function buildLocation(loc: Location): BuiltLocation {
   root.add(exterior);
 
   const openings = loc.rooms.flatMap(roomOpenings);
+  // Windows with a real frame, their own or the location's, wherever a room declares them.
+  const framedWindows = loc.rooms.flatMap((room) => roomOpenings(room).filter((_, k) => {
+    const o = room.openings![k];
+    return o.type === 'window' && o.frame !== false && Boolean(o.frame ?? loc.windows);
+  }));
   const rooms: BuiltRoom[] = loc.rooms.map((room) => {
     const elevation = room.elevation ?? 0;
     const height = room.height ?? DEFAULT_ROOM_H;
@@ -357,14 +363,42 @@ export function buildLocation(loc: Location): BuiltLocation {
       surfaces.push(flat(r, elevation));
     }
     for (const piece of roomWalls(room, openings)) {
+      // Where a real window goes, the plain pane of glass gives way to it (the wall still blocks the way).
+      const framed = piece.kind === 'glass' && framedWindows.some((w) => w.axis === piece.axis && Math.abs(w.line - piece.center) < WALL_T && w.from < piece.to - 0.01 && w.to > piece.from + 0.01 && Math.abs(w.elevation - elevation) < 0.05);
       const y0 = elevation + piece.y0;
       const y1 = elevation + piece.y1;
       const isGlass = piece.kind === 'glass';
-      const mesh = box(pieceRect(piece, isGlass ? 0.03 : WALL_T), y0, y1, isGlass ? glass : mat(room.wallColor ?? '#f2ead8'));
-      mesh.castShadow = !isGlass;
-      g.add(mesh);
+      if (!framed) {
+        const mesh = box(pieceRect(piece, isGlass ? 0.03 : WALL_T), y0, y1, isGlass ? glass : mat(room.wallColor ?? '#f2ead8'));
+        mesh.castShadow = !isGlass;
+        g.add(mesh);
+      }
       colliders.push({ ...pieceRect(piece), y0, y1 });
     }
+    (room.openings ?? []).forEach((o, index) => {
+      const frame = o.type === 'window' && o.frame !== false ? (o.frame ?? loc.windows) : undefined;
+      if (!frame) return;
+      const built = buildWindow(room, o, frame);
+      g.add(built.object);
+      built.object.traverse((child) => {
+        if (child instanceof THREE.Mesh && !child.userData.noShadow) child.castShadow = child.receiveShadow = true;
+      });
+      const side = sideGeometry(room, o.wall);
+      const at = side.from + o.at;
+      const center: [number, number, number] = side.axis === 'x' ? [at, elevation + 1.5, side.center] : [side.center, elevation + 1.5, at];
+      // A window is opened and closed by the same actions as a door, but nobody walks through it.
+      interactives.push({
+        id: o.id ?? `${room.id}.${o.wall}${index}`,
+        kind: 'window',
+        channels: { open: frame.open ?? 0 },
+        traits: { size: [o.width, 1.2, WALL_T] },
+        object: built.object,
+        set: (channel, value) => {
+          if (channel === 'open') built.setOpen(value);
+        },
+        position: () => center,
+      });
+    });
     (room.openings ?? []).forEach((o, index) => {
       if (!o.leaf || o.type !== 'door') return;
       const door = buildDoor(room, o);

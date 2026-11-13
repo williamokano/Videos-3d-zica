@@ -132,6 +132,7 @@ Um objeto precisa de `id` no arquivo do local (único no local). Cada um expõe 
 | Objeto | Como declarar | Tipo | Canais |
 |---|---|---|---|
 | Porta | `id` na abertura com `leaf`; `leaf.kind`: `swing` (padrão), `sliding`, `rollup` | `door` | `open` de 0 a 1 |
+| Janela | `id` numa abertura `window` com `frame` (ou com `windows` no local) | `window` | `open` de 0 a 1 |
 | Carro | prop `vehicle.car` com `id` | `vehicle` | `frontLeft.open`, `frontRight.open`, `rearLeft.open`, `rearRight.open`, `travel`, `x`, `y`, `z`, `yaw` |
 | Viatura | prop `vehicle.policeCar` com `id` | `vehicle` | os do carro e `siren` (0 ou 1: o giroflex pisca sozinho enquanto ligado). Ligar: `d.do('viatura', 'set', { channel: 'siren', value: 1 })` |
 | Ônibus | prop `vehicle.bus` com `id` | `vehicle` | `frontDoor.open`, `rearDoor.open` (portas do lado direito), `travel`; assentos `driver` e `p1` a `p8` |

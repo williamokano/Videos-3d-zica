@@ -24,9 +24,9 @@ Meta do autor (2026-11-13): "terminar todos os assets com ações que façam sen
 - [x] Bicicleta: pose de pedalar com as pernas girando conforme anda e mãos no guidão
 
 ## 4. Janelas de verdade
-- [ ] Janela como parte da abertura (`frame` no opening): de correr, basculante, veneziana/persiana, de abrir, fixa
-- [ ] Canal `open` na janela, para o episódio abrir e fechar
-- [ ] Escola com a janela comum de escola pública (basculante de ferro com vidro) e a cantina com de correr
+- [x] Janela como parte da abertura (`frame` no opening): de correr, basculante, veneziana/persiana, de abrir, fixa
+- [x] Canal `open` na janela, para o episódio abrir e fechar
+- [x] Escola com a janela comum de escola pública (basculante de ferro com vidro) e a cantina com de correr
 
 ## 5. Fecho
 - [ ] Tabela "asset → ações" na skill, gerada do catálogo, e um teste que falha se um asset com canais não tiver ação que os mova

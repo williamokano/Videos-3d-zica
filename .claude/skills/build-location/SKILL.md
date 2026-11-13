@@ -20,6 +20,16 @@ Metros; +x leste, +z sul, +y cima. Direções: `n` = -z, `s` = +z, `e` = +x, `w`
 - **Área** (`rooms`): retângulo com `origin` (canto noroeste), `size`, cores, e `elevation` (altura do piso: 0 térreo, negativo porão, positivo andar de cima). `outdoor: true` tira paredes e teto.
 - **Aberturas** (`openings`): porta ou janela numa parede, com `at` medido a partir da ponta oeste (paredes n/s) ou norte (paredes e/w). Uma abertura também corta a parede da área vizinha na mesma linha e no mesmo nível, então declare cada porta uma vez só.
 - **Folha de porta** (`leaf`): sem ela a porta é um vão livre. `kind` é `swing` (de abrir, padrão), `sliding` (de correr; `slide` diz para que ponta) ou `rollup` (de enrolar, de loja). `opensFrom: "inside"` é porta de emergência (abre para fora, com barra); "dentro" é a área que declara a abertura. `open` é o estado inicial, de 0 (fechada) a 1 (aberta); `angle` é o ângulo máximo da porta de abrir. Porta fechada bloqueia a passagem. Dê um `id` à abertura para os episódios poderem abrir e fechar a porta (skill `direct-actions`).
+- **Janela de verdade** (`frame` numa abertura `window`): sem `frame` a janela é um vão com uma placa de vidro. Com ele, ganha esquadria e abre (canal `open`; dê um `id` para o episódio abrir e fechar). `kind`:
+  - `tilt`: basculante de ferro, fileiras de vidros que inclinam para fora. É a janela de escola pública.
+  - `sliding`: de correr (`leaves`: 2 ou 4 folhas). A comum de casa e de cantina.
+  - `casement`: de abrir, duas folhas com dobradiça nos lados.
+  - `louver`: veneziana, palhetas que giram, sem vidro; fechada não se vê através.
+  - `blinds`: vidro fixo com persiana por dentro, que sobe ao abrir (`blind`: cor).
+  - `fixed`: vidro fixo com montantes.
+  - Em todas: `color` da esquadria e `open` (de 0 a 1) para começar entreaberta.
+  - `"windows": { "kind": "tilt", "open": 0.35 }` no local dá a mesma janela a todas as que não têm `frame`; `"frame": false` numa abertura a deixa só com o vidro.
+  - `series/demo-acoes/world/janelas.json` tem uma de cada, e o episódio 4 de `demo-acoes` abre e fecha todas.
 - **Escadas** (`stairs`): descritas de cima para baixo. `top` é o centro da borda superior do primeiro lance. O `path` alterna lances (`{ "flight": "e", "drop": 1.5 }`) e patamares (`straight`, `uturn` com `side`, `corner` com `side`). O motor abre o buraco nos pisos e tetos que a escada atravessa e põe corrimão e guarda-corpo.
 - **Objetos** (`props`): `asset` do catálogo, `pos` relativo à origem da área, `y` acima do piso, `rot` em graus, `repeat` para grades. Com `id`, o objeto pode ser animado por ações do episódio; `pickable: true` permite pegá-lo.
 
