@@ -44,6 +44,13 @@ Metros; +x leste, +z sul, +y cima. Direções: `n` = -z, `s` = +z, `e` = +x, `w`
 
 ## Assets
 
+`docs/ASSETS.md` lista todos os assets, com o que cada um faz (gerado por `npm run assets`; rode de novo ao criar ou mudar um).
+
+- Um asset novo com algo que se mexe declara canais (`setChannels`) com os nomes que as ações já entendem: `open` ou `<parte>.open` (abrir), `on` / `siren` / `lights` (ligar), `state` (semáforo), `travel` e `steer` (veículo).
+- Lugares para sentar ou pôr coisas: `place(nome, x, y, z, direção)` de `assets/registry.ts`. Para pôr coisas, use os nomes `top`, `inside` ou `shelf<n>`.
+- Objeto leve e solto, que pode ser derrubado: `loose(...)`.
+- Num assento, `{ hands, pedals }` diz onde as mãos seguram e se as pernas pedalam.
+
 Consulte o catálogo antes de criar: os ids e descrições estão nos `registerAsset(...)` de `src/engine/assets/`. Se faltar algo, crie um asset paramétrico e reutilizável ali (com `rbox` para bordas arredondadas), não uma peça única para este lugar.
 
 ### Teto e parede

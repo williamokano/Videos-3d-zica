@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { group, mat, place, post, rbox, registerAsset, setChannels } from './registry';
+import { group, loose, mat, place, post, rbox, registerAsset, setChannels } from './registry';
 
 /*
  * What stands on a street. Things with a front (a sign, a bus stop, a traffic light) face +z, toward the road
@@ -182,11 +182,11 @@ registerAsset('street.cone', 'Cone de trânsito laranja com faixas brancas; dê 
     band.position.y = y + 0.03;
     return band;
   };
-  return group(
+  return loose(group(
     rbox(0.36, 0.035, 0.36, '#22242a', [0, 0.0175, 0], 0.012),
     new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.14, h, 16), mat(color)).translateY(h / 2 + 0.03),
     ringAt(h * 0.42, h * 0.14), ringAt(h * 0.68, h * 0.1),
-  );
+  ));
 });
 
 registerAsset(
@@ -195,7 +195,7 @@ registerAsset(
   (p) => {
     const kind = String(p.kind ?? 'wood');
     const length = Number(p.length ?? (kind === 'steel' ? 2.2 : 1.6));
-    const g = group();
+    const g = loose(group());
     if (kind === 'steel') {
       const steel = String(p.color ?? '#b9bcc2');
       const tube = (w: number, h: number, x: number, y: number) => rbox(w, h, 0.035, steel, [x, y, 0], 0.014);

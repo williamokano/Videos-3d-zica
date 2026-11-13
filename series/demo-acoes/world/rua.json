@@ -67,7 +67,7 @@
         { "asset": "street.trashBin", "pos": [8.2, 0.5] },
         { "asset": "street.sign", "pos": [0.5, 3.0], "params": { "kind": "name", "text": "Rua de Teste" } },
         { "asset": "street.sign", "pos": [27.6, 3.0], "params": { "kind": "stop" } },
-        { "asset": "street.sign", "pos": [5.6, 3.0], "params": { "kind": "crossing" } },
+        { "asset": "street.sign", "pos": [9.6, 3.0], "params": { "kind": "crossing" } },
         { "asset": "street.manhole", "pos": [13.4, 3.2], "params": { "kind": "grate" } }
       ]
     },

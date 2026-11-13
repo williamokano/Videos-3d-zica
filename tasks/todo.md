@@ -29,5 +29,14 @@ Meta do autor (2026-11-13): "terminar todos os assets com ações que façam sen
 - [x] Escola com a janela comum de escola pública (basculante de ferro com vidro) e a cantina com de correr
 
 ## 5. Fecho
-- [ ] Tabela "asset → ações" na skill, gerada do catálogo, e um teste que falha se um asset com canais não tiver ação que os mova
-- [ ] `docs/NEXT.md`, revisão aqui embaixo
+- [x] Tabela "asset → ações" na skill, gerada do catálogo, e um teste que falha se um asset com canais não tiver ação que os mova
+- [x] `docs/NEXT.md`, revisão aqui embaixo
+
+## Revisão
+
+- Cinco commits enviados: ações genéricas e canais dos assets, mãos no volante e pedalar, janelas, e este fecho com a lista gerada.
+- `npm run typecheck` limpo; `npm test` com 200 testes (179 antes).
+- Conferido em imagem: armários e gavetas abertos, faróis acesos, o entregador pedalando, as seis janelas abertas e fechadas por fora e por dentro, a escola com as basculantes, e a varredura dos episódios 1 de `ceu-vermelho` e 1, 3 e 4 de `demo-acoes`.
+- Achado e corrigido na varredura: placa nova na frente da câmera de abertura do episódio 1 de `demo-acoes`, e a motorista levantando o braço para o alto ao fechar a porta sentada.
+- Conferido só por teste: portão barrando a passagem, semáforo por nome, ligar e desligar, derrubar o cone, direção dos assentos em volta da mesa, rodas virando na curva.
+- Não conferido em imagem: alguém sentado numa mesa de concreto, o cone caído, as persianas subindo em movimento.

@@ -149,6 +149,12 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
   - Kit de rua (`assets/street.ts`): poste, semáforo, placas, cone, barreiras, lixeira, ponto de ônibus, faixa, bueiro.
   - `npm run vitrine` tira foto das vitrines. Episódio 3 de `demo-acoes` usa tudo.
 
+- Ações por asset e janelas (2026-11-13):
+  - `open` / `close` valem para qualquer coisa que abre; novas `switch`, `signal`, `knockOver`, `setUpright`. Lista por asset em [ASSETS.md](ASSETS.md), gerada por `npm run assets`; um teste falha se sobrar canal ou lugar sem ação.
+  - Luminárias e ventilador desligam; carros e ônibus têm faróis e rodas que viram; gavetas e portas de armário abrem; mesas, estantes e lixeira têm lugares; assento com direção própria; portão barra a passagem.
+  - Motorista com as mãos no volante e ciclista pedalando (`ridePose`).
+  - Janelas com esquadria (`world/windows.ts`): fixa, de correr, basculante, de abrir, veneziana e persiana, todas com `open`. A escola usa basculante; `demo-acoes` episódio 4 mostra todas.
+
 ## Próximas tarefas, em ordem
 
 As tarefas 1 a 10 estão feitas. Falta a 11, voz, que só começa com a confirmação do autor. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.
@@ -241,9 +247,11 @@ Decisões já tomadas para depois: voz pela ElevenLabs em `tts` ou `sts`, idioma
 
 ## Limitações conhecidas
 
-- Quem monta na bicicleta fica na pose de sentado: não há pose de pedalar nem as mãos no guidão.
 - As roupas (`wear`) só valem para o corpo do motor, não para personagens GLB.
 - O ônibus não tem as partes das portas descritas para o `open` com `by` (ninguém abre com a mão; o motorista abre pelo canal).
+- Derrubar (`knockOver`) gira o objeto em torno da base: não há física, ele não rola nem empurra o que está ao lado.
+- Passageiro de carro e de ônibus fica com as mãos soltas; só o motorista e o ciclista seguram algo.
+- Janela aberta não deixa ninguém passar por ela, e a de correr não tem trinco nem maçaneta para a mão ir.
 - A série `demo-acoes` não tem vozes nas fichas: o episódio 3 mostra o rádio só na legenda. O filtro foi conferido no ffmpeg com uma gravação de `ceu-vermelho`.
 
 - Personagens desviam uns dos outros só no instante (afastamento lateral), sem planejar o caminho em volta de quem está parado; não desviam de objetos com `id` (carro, itens, o banco do depósito).

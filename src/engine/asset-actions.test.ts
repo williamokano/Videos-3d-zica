@@ -212,3 +212,37 @@ describe('someone on a vehicle', () => {
     expect(Math.abs(s.value('ana', 'reachR.x', s.episode.duration - 1.6)! - s.value('ana', 'reachR.x')!)).toBeGreaterThan(0.1);
   });
 });
+
+describe('every asset has the actions that fit it', () => {
+  it('no asset has a channel or a place that no action reaches', async () => {
+    const { assetActions } = await import('./assets/showcase');
+    const { listAssets } = await import('./assets/registry');
+    const orphans: string[] = [];
+    for (const { id } of listAssets()) {
+      const { uses, channels, places } = assetActions(id);
+      for (const name of [...channels, ...places]) if (!uses.includes(name)) orphans.push(`${id}: ${name}`);
+    }
+    expect(orphans).toEqual([]);
+  });
+
+  it('says what makes sense for each kind of thing', async () => {
+    const { assetActions } = await import('./assets/showcase');
+    const names = (id: string) => assetActions(id).actions.map((a) => a.action);
+    expect(names('vehicle.policeCar')).toEqual(['open / close', 'switch', 'drive', 'sit / standUp']);
+    expect(names('vehicle.bicycle')).toEqual(['drive', 'sit / standUp', 'knockOver / setUpright']);
+    expect(names('street.trafficLight')).toEqual(['signal']);
+    expect(names('street.cone')).toEqual(['knockOver / setUpright']);
+    expect(names('school.lockers')).toEqual(['open / close']);
+    expect(names('school.teacherDesk')).toEqual(['open / close', 'sit / standUp', 'putDown (com "on")']);
+    expect(names('item.radio')).toEqual(['pickUp / putDown / putAway', 'raise / lower']);
+    expect(names('nature.tree')).toEqual([]);
+    expect(assetActions('school.lockers').actions[0].what).toContain('door1');
+  });
+
+  it('only loose things fall over', () => {
+    const props: Prop[] = [{ id: 'poste', asset: 'street.lightPole', pos: [5, 4.2] }];
+    expect(() => play(props, (d) => void d.do('poste', 'knockOver', { by: 'ana' }))).toThrow(/não é um objeto solto/);
+    const bike = play([{ id: 'bike', asset: 'vehicle.bicycle', pos: [5, 4.2] }], (d) => void d.do('bike', 'knockOver', { toward: 90 }));
+    expect(bike.value('bike', 'lean')).toBe(90);
+  });
+});

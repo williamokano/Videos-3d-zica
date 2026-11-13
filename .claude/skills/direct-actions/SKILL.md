@@ -151,8 +151,11 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 
 | Ação | Vale para | Parâmetros |
 |---|---|---|
-| `open` | porta, veículo | `part` (qual porta do carro), `amount` (0 a 1), `from` (`inside` ou `outside`), `by`, `hand` |
-| `close` | porta, veículo | `part`, `by`, `hand` |
+| `open` | o que abre: porta, portão, janela, ou uma parte (`part`) de um objeto | `part` (porta do carro ou do ônibus, `drawer1` da mesa, `door3` dos armários), `amount` (0 a 1), `from` (`inside` ou `outside`), `by`, `hand` |
+| `close` | o mesmo que `open` | `part`, `by`, `hand` |
+| `switch` | o que liga: luminária, poste, ventilador, viatura, carro, ônibus | `on` (true ou false), `what` (`siren` para o giroflex, `lights` para os faróis) |
+| `signal` | semáforo | `to`: `red`, `yellow`, `green` ou `off` |
+| `knockOver`, `setUpright` | objeto solto: cone, barreira, carteira, banco, caixa, bicicleta | `toward` (graus), `by` (cai para longe do personagem, que precisa estar a até 1,2 m), `angle` |
 | `drive` | veículo | `path` (pontos `[x, z]`), `speed` (m/s, padrão 6), `reverse` |
 | `moveTo` | prop, item, veículo | `to` (`[x, z]`), `y`, `yaw` |
 | `pickUp` | item | `by` (quem pega; fica segurando) ou `to` (`[x, y, z]`, sem personagem); `hand` (`left` ou `right`) |
@@ -174,7 +177,14 @@ O catálogo está em `src/engine/actions/builtin.ts` e `src/engine/actions/chara
 | `screen` | celular | `event` (`setup`, `open`, `message`, `typing`, `screen`), `data` |
 | `express` | personagem | `expression` (`neutral`, `happy`, `sad`, `angry`, `surprised`, `scared`), `amount` |
 
+A lista completa, asset por asset, com as partes, os lugares e os canais de cada um, está em `docs/ASSETS.md` (gerada por `npm run assets`; rode depois de criar ou mudar um asset). Um teste falha se um asset tiver um canal ou um lugar que nenhuma ação alcança.
+
 ## Regras
+
+- Lugares de um objeto (`sit` e `putDown` com `on`): além dos bancos de veículos, `chair` e `top` nas carteiras e na mesa do professor, `s1`–`s4` / `b1`–`b3` / `a1`,`a2`,`b1`,`b2` nas mesas de concreto, `left`/`middle`/`right` no banco e no ponto de ônibus, `shelf1`–`shelf3` na estante, `top` nos caixotes, `inside` na lixeira. Quem senta olha para onde o assento manda (em volta de uma mesa, para o meio).
+- Quem senta no `driver` de um carro ou ônibus segura o volante; na bicicleta, segura o guidão e pedala conforme ela anda. Com a mão no volante, uma ação com `by` (fechar a porta) tira a mão, faz e devolve.
+- `drive` vira as rodas da frente na curva sozinho.
+- Um portão (`structure.gate`) fechado barra quem anda, como uma porta: abra antes (`d.do('portao', 'open')`).
 
 - Porta com `opensFrom` `inside` ou `outside` só abre por aquele lado: `open` exige `from`, e o lado errado é erro de compilação. "Dentro" é a área que declara a abertura.
 - Porta fechada bloqueia a passagem. De enrolar libera quando quase toda aberta; as outras, da metade em diante.

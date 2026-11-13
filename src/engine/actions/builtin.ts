@@ -28,10 +28,18 @@ function byHand(ctx: ActionContext, channel: string, to: number): ActionResult {
     const side = Math.sign((place.pos[0] - door.center[0]) * door.inside[0] + (place.pos[2] - door.center[2]) * door.inside[1]) || 1;
     point = [door.handle[0] + door.inside[0] * side * 0.08, door.handle[1], door.handle[2] + door.inside[1] * side * 0.08];
   } else {
-    // No handle known: the hand goes out in front of the body.
     const a = (place.yaw * Math.PI) / 180;
     const scale = who.traits.bodyScale ?? 1;
-    point = [place.pos[0] - Math.sin(a) * 0.5 * scale, place.pos[1] + 0.95 * scale, place.pos[2] - Math.cos(a) * 0.5 * scale];
+    const hinged = ctx.params.part ? ctx.target.traits.parts?.[ctx.params.part as string] : undefined;
+    if (ctx.linkOf(by) && hinged) {
+      // Sitting inside, by a door of the vehicle: the hand goes to the door beside them, at the height of its pull.
+      const right = [Math.cos(a), -Math.sin(a)];
+      point = [place.pos[0] + right[0] * hinged.side * 0.42 * scale - Math.sin(a) * 0.12, place.pos[1] + 0.32 * scale, place.pos[2] + right[1] * hinged.side * 0.42 * scale - Math.cos(a) * 0.12];
+    } else {
+      // No handle known: the hand goes out in front of the body (lower when sitting).
+      const up = ctx.linkOf(by) ? 0.4 : 0.95;
+      point = [place.pos[0] - Math.sin(a) * 0.5 * scale, place.pos[1] + up * scale, place.pos[2] - Math.cos(a) * 0.5 * scale];
+    }
   }
   const from = ctx.current(channel);
   const hand = reach(ctx, by, freeHand(ctx, by), point, outAndBack(0.3, 0.6), door ? `a maçaneta de "${ctx.target.id}"` : `"${ctx.target.id}"`);
@@ -170,7 +178,7 @@ registerAction({
 registerAction({
   id: 'knockOver',
   description: 'Derruba um objeto solto (cone, cavalete, lixeira, carteira): ele tomba para um lado e fica caído. Com "by", cai para longe do personagem, que precisa estar perto.',
-  appliesTo: ['prop', 'item'],
+  appliesTo: ['prop', 'item', 'vehicle'],
   params: {
     toward: { type: 'number', description: 'para que lado cai, em graus (0 norte, 90 oeste); padrão: para longe de "by", ou para a frente do objeto' },
     by: { type: 'string', description: 'personagem que esbarra ou empurra' },
@@ -178,7 +186,7 @@ registerAction({
   },
   duration: 0.45,
   compile(ctx) {
-    if (!('lean' in ctx.target.channels)) ctx.fail(`"${ctx.target.id}" não pode ser derrubado.`);
+    if (!('lean' in ctx.target.channels) || !ctx.target.traits.loose) ctx.fail(`"${ctx.target.id}" não é um objeto solto: não dá para derrubar.`);
     const by = ctx.params.by as string | undefined;
     const here = ctx.placeOf(ctx.target.id);
     let toward = (ctx.params.toward as number | undefined) ?? here.yaw;
@@ -197,7 +205,7 @@ registerAction({
 registerAction({
   id: 'setUpright',
   description: 'Põe de pé um objeto caído.',
-  appliesTo: ['prop', 'item'],
+  appliesTo: ['prop', 'item', 'vehicle'],
   params: {},
   duration: 0.6,
   compile(ctx) {

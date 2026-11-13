@@ -13,6 +13,7 @@
     "animatic": "node scripts/render.mjs --scale 0.5 --step 15",
     "look": "node scripts/look.mjs",
     "vitrine": "node scripts/vitrine.mjs",
+    "assets": "node scripts/assets.mjs",
     "voz": "node scripts/voz.mjs",
     "roteiro": "node scripts/roteiro.mjs"
   },

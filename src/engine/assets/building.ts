@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { rng } from '../core/rng';
-import { group, place, post, rbox, registerAsset, setChannels, switchable } from './registry';
+import { group, loose, place, post, rbox, registerAsset, setChannels, switchable } from './registry';
 
 registerAsset('structure.pillar', 'Pilar de concreto (params: height, size)', (p) => {
   const h = Number(p.height ?? 3);
@@ -62,5 +62,5 @@ registerAsset('storage.crates', 'Pilha de caixotes de madeira (params: seed)', (
 registerAsset('item.box', 'Caixa de papelão pequena, boa para ser carregada (params: size, color)', (p) => {
   const s = Number(p.size ?? 0.4);
   const color = String(p.color ?? '#c8a06a');
-  return group(rbox(s, s * 0.75, s, color, [0, s * 0.375, 0], 0.02), rbox(s * 0.2, 0.01, s, '#e8d9b5', [0, s * 0.75, 0], 0.004));
+  return loose(group(rbox(s, s * 0.75, s, color, [0, s * 0.375, 0], 0.02), rbox(s * 0.2, 0.01, s, '#e8d9b5', [0, s * 0.75, 0], 0.004)));
 });

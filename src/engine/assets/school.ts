@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { group, place, post, rbox, registerAsset, setChannels, type AssetChannels } from './registry';
+import { group, loose, place, post, rbox, registerAsset, setChannels, type AssetChannels } from './registry';
 
 /*
  * Orientation convention: furniture a person uses faces -z (the person looks toward -z).
@@ -28,7 +28,7 @@ export const DESK_SEAT = { height: 0.46, back: 0.46 };
 registerAsset('school.desk', 'Carteira escolar brasileira: mesa individual de madeira com vão embaixo para cadernos, e cadeira (params: color da cadeira)', (p) => {
   const color = String(p.color ?? '#5b8fd9');
   const top = 0.74;
-  return group(
+  return loose(group(
     // Square wooden top and, under it, a box open toward the student.
     rbox(0.62, 0.035, 0.48, WOOD, [0, top, -0.1]),
     rbox(0.58, 0.015, 0.42, WOOD_DARK, [0, top - 0.15, -0.1], 0.005),
@@ -44,7 +44,7 @@ registerAsset('school.desk', 'Carteira escolar brasileira: mesa individual de ma
     // The chair to sit on, and the top to put things on.
     place('chair', 0, DESK_SEAT.height, DESK_SEAT.back),
     place('top', 0, top + 0.02, -0.1),
-  );
+  ));
 });
 
 registerAsset('school.teacherDesk', 'Mesa do professor: mesa de escritório simples de 1,20 × 0,70, cadeira (lugar `chair`), tampo (`top`) e duas gavetas que abrem (canais `drawer1.open` em cima e `drawer2.open` embaixo)', () => {
@@ -128,5 +128,5 @@ registerAsset('school.bench', 'Banco de pátio, com três lugares para sentar (l
     anchor.position.set(x, 0.48, 0);
     bench.add(anchor);
   }
-  return bench;
+  return loose(bench);
 });

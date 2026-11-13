@@ -308,6 +308,8 @@ registerAsset(
       // Whoever rides holds the handlebars and pedals.
       place('driver', 0, 0.99, 0.24, 0, { hands: [[-0.24, 1.05, -0.36], [0.24, 1.05, -0.36]], pedals: true }),
     );
+    // It can fall on its side.
+    bike.userData.loose = true;
     return setChannels(bike, rolling([frontWheel, rearWheel], R, [frontWheel]));
   },
   'vehicle',

@@ -5,7 +5,7 @@ import '../engine/actions/character';
 import '../engine/actions/phone';
 import '../engine/assets';
 import { mat, type AssetChannels } from '../engine/assets/registry';
-import { actionsFor, assetGroups, channelRange, rowLayout } from '../engine/assets/showcase';
+import { actionsFor, assetActions, assetGroups, channelRange, rowLayout } from '../engine/assets/showcase';
 import { resolveStyle, type Bible } from '../engine/bible';
 import { buildCharacter } from '../engine/character/cast';
 import { EnvironmentRig } from '../engine/environment';
@@ -189,7 +189,12 @@ function renderPanel(): void {
   const sockets = Object.keys(slot.object.traits.sockets ?? {});
   if (sockets.length) panel.append(el('p', `Lugares: ${sockets.map((s) => s.replace(/^seat\./, '')).join(', ')}.`, 'note'));
 
-  panel.append(el('h2', 'Ações que valem para ele'));
+  // What makes sense for this asset, from what it has; then the whole catalog that accepts it.
+  const fitting = assetActions(slot.id).actions;
+  panel.append(el('h2', 'Ações que fazem sentido'));
+  if (fitting.length) for (const a of fitting) panel.append(el('p', `${a.action}: ${a.what}`, 'note'));
+  else panel.append(el('p', 'Nenhuma: é cenário. Com "id", pode ser movido com moveTo.', 'note'));
+  panel.append(el('h2', 'Todas as que o catálogo aceita'));
   const actions = actionsFor(slot.kind);
   const chosen = el('p', '', 'note');
   panel.append(select('Ação', [['', '(ver uma)'], ...actions.map((a): [string, string] => [a.id, a.id])], '', (id) => {

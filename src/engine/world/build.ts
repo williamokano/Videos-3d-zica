@@ -219,7 +219,7 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
     id: prop.id!,
     kind: prop.pickable && assetKind(prop.asset) === 'prop' ? 'item' : assetKind(prop.asset),
     channels: Object.fromEntries(Object.entries(all).map(([name, c]) => [name, c.value])),
-    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets, seats, parts: obj.userData.parts },
+    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets, seats, parts: obj.userData.parts, loose: Boolean(obj.userData.loose) },
     object: obj,
     set: (channel, value) => all[channel]?.apply(value),
     // Held by its middle and hanging centered on the hand, unless the asset says where it is gripped

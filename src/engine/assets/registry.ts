@@ -118,6 +118,12 @@ export function switchable(glow: THREE.Mesh[], color: string, light?: THREE.Poin
   };
 }
 
+/** Mark an asset as loose: something light standing on the ground, which can be knocked over and stood up again. */
+export function loose<T extends THREE.Object3D>(obj: T): T {
+  obj.userData.loose = true;
+  return obj;
+}
+
 export function group(...children: THREE.Object3D[]): THREE.Group {
   const g = new THREE.Group();
   if (children.length) g.add(...children);
