@@ -99,7 +99,7 @@ export interface WalkPath {
 /** What the world offers to actions that need more than their target. */
 export interface ActionServices {
   /** Route on foot between two places, or null when there is none. */
-  findPath?(from: [number, number, number], to: [number, number], toElevation: number): WalkPath | null;
+  findPath?(from: [number, number, number], to: [number, number], toElevation?: number): WalkPath | null;
 }
 
 /** Checks that need the whole track compiled, e.g. "is that door open by the time I get there?". */

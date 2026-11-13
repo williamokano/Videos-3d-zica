@@ -141,7 +141,8 @@ describe('series data', () => {
 
   for (const series of readdirSync('series')) {
     const dir = `series/${series}/episodes`;
-    for (const file of readdirSync(dir)) {
+    // A series still being written may have no episode yet.
+    for (const file of existsSync(dir) ? readdirSync(dir) : []) {
       it(`compiles the actions and camera of ${series} episode ${file}`, () => {
         const source = file.endsWith('.ts') ? scripts[`/${dir}/${file}`] : json<Episode>(`${dir}/${file}`);
         const built = buildLocation(json<Location>(`series/${series}/world/${source.location}.json`));

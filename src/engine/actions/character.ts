@@ -21,7 +21,7 @@ function joinPaths(find: NonNullable<import('./catalog').ActionServices['findPat
   const out: WalkPath = { points: [from], distances: [0], length: 0, doors: [] };
   let at = from;
   for (const stop of stops) {
-    const part = find(at, [stop[0], stop[1]], stop[2] ?? at[1]);
+    const part = find(at, [stop[0], stop[1]], stop[2]);
     if (!part) return null;
     for (const door of part.doors) out.doors.push({ id: door.id, distance: out.length + door.distance });
     part.points.forEach((p, i) => {
@@ -68,9 +68,9 @@ registerAction({
     let to = ctx.params.to as [number, number];
     /** Heading to end with, when stopping at a door. */
     let facing: number | undefined;
-    const level = (ctx.params.elevation as number | undefined) ?? from[1];
+    const level = ctx.params.elevation as number | undefined;
     const via = (ctx.params.via as ([number, number] | [number, number, number])[] | undefined) ?? [];
-    let path = doorId ? null : via.length ? joinPaths(ctx.services.findPath!, from, [...via, [to[0], to[1], level]]) : ctx.services.findPath!(from, to, level);
+    let path = doorId ? null : via.length ? joinPaths(ctx.services.findPath!, from, [...via, level === undefined ? to : [to[0], to[1], level]]) : ctx.services.findPath!(from, to, level);
     if (doorId) {
       const door = ctx.object(doorId).traits.door ?? ctx.fail(`"${doorId}" não é uma porta.`);
       const kind = ctx.object(doorId).traits.doorKind;
@@ -98,7 +98,7 @@ registerAction({
       if (!path) ctx.fail(`não há caminho a pé até a porta "${doorId}" sem passar por ela.`);
       facing = heading(door.handle[0] - to[0], door.handle[2] - to[1]);
     }
-    if (!path) ctx.fail(`não há caminho a pé de [${from[0]}, ${from[2]}] até [${to}] no nível ${level}. Confira se os dois pontos estão em piso livre e o nível de destino.`);
+    if (!path) ctx.fail(`não há caminho a pé de [${from[0]}, ${from[2]}] até [${to}]${level === undefined ? '' : ` no nível ${level}`}. Confira se os dois pontos estão em piso livre e o nível de destino.`);
     const route = path!;
     if (route.length < 0.05) ctx.fail('o personagem já está nesse ponto.');
     const speed = (ctx.params.speed as number | undefined) ?? 1.4;

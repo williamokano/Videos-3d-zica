@@ -242,10 +242,28 @@ function shortest(nav: Nav, start: number, goal: number): number[] | null {
   return null;
 }
 
-/** Route on foot from a place to another, straightened where the way is clear. Null when there is no way. */
-export function findPath(nav: Nav, from: [number, number, number], to: [number, number], toElevation: number): WalkPath | null {
+/**
+ * The floor at a place that is closest in height to `near`: on the same storey of a building, that storey; on a
+ * hillside, the ground there, however far up or down the hill it is.
+ */
+export function levelAt(surfaces: Surface[], x: number, z: number, near: number): number {
+  let best = near;
+  let gap = Infinity;
+  for (const s of surfaces) {
+    if (!contains(s.rect, x, z)) continue;
+    const y = s.height(x, z);
+    if (Math.abs(y - near) < gap) [best, gap] = [y, Math.abs(y - near)];
+  }
+  return best;
+}
+
+/**
+ * Route on foot from a place to another, straightened where the way is clear. Null when there is no way.
+ * Without `toElevation`, the route ends on the floor at `to` closest in height to where it starts (see `levelAt`).
+ */
+export function findPath(nav: Nav, from: [number, number, number], to: [number, number], toElevation?: number): WalkPath | null {
   const start = nearestNode(nav, from[0], from[2], from[1]);
-  const goal = nearestNode(nav, to[0], to[1], toElevation);
+  const goal = nearestNode(nav, to[0], to[1], toElevation ?? levelAt(nav.surfaces, to[0], to[1], from[1]));
   if (start < 0 || goal < 0) return null;
   const nodes = shortest(nav, start, goal);
   if (!nodes) return null;

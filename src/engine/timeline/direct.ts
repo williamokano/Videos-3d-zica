@@ -189,7 +189,14 @@ const round = (t: number): number => Math.round(t * 1000) / 1000;
 
 /** Run a script against its location and turn it into an Episode with every time worked out. */
 export function resolveScript(source: EpisodeScript, built: BuiltLocation, characters: CharacterDef[], bible?: Bible, takes: Record<string, Take> = {}): Episode {
-  const { script, tail, duration, ...header } = source;
+  const { script, tail, duration, ...source2 } = source;
+  // On terrain, whoever has no floor height stands on the ground where they start.
+  const ground = (x: number, z: number): number | undefined => (built.groundAt(x, z) === 0 ? undefined : round(built.groundAt(x, z)));
+  const header = {
+    ...source2,
+    cast: source2.cast.map((m) => (m.elevation === undefined && ground(m.at[0], m.at[1]) !== undefined ? { ...m, elevation: ground(m.at[0], m.at[1]) } : m)),
+    props: source2.props?.map((p) => (p.y === undefined && p.pos && !p.pocketOf && ground(p.pos[0], p.pos[1]) !== undefined ? { ...p, y: ground(p.pos[0], p.pos[1]) } : p)),
+  };
   const cast = buildCast({ ...header, duration: 0, camera: [] }, characters);
   const targets = [...built.interactives, ...cast, buildWorld(bible, header.episode), ...buildProps(header)];
   const initial = { links: initialLinks(header) };
@@ -197,7 +204,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   // Every step compiles the track again to learn its length; routes are worked out once.
   const routes = new Map<string, WalkPath | null>();
   const services = {
-    findPath: nav && ((from: [number, number, number], to: Point2, elevation: number) => {
+    findPath: nav && ((from: [number, number, number], to: Point2, elevation?: number) => {
       const key = JSON.stringify([from, to, elevation]);
       if (!routes.has(key)) routes.set(key, findPath(nav, from, to, elevation));
       return routes.get(key)!;

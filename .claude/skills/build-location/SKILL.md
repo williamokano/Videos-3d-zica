@@ -31,6 +31,10 @@ Metros; +x leste, +z sul, +y cima. Direções: `n` = -z, `s` = +z, `e` = +x, `w`
   - `"windows": { "kind": "tilt", "open": 0.35 }` no local dá a mesma janela a todas as que não têm `frame`; `"frame": false` numa abertura a deixa só com o vidro.
   - `series/demo-acoes/world/janelas.json` tem uma de cada, e o episódio 4 de `demo-acoes` abre e fecha todas.
 - **Escadas** (`stairs`): descritas de cima para baixo. `top` é o centro da borda superior do primeiro lance. O `path` alterna lances (`{ "flight": "e", "drop": 1.5 }`) e patamares (`straight`, `uturn` com `side`, `corner` com `side`). O motor abre o buraco nos pisos e tetos que a escada atravessa e põe corrimão e guarda-corpo.
+- **Relevo** (`terrain` no local): morros e vales como dado. Cada item de `hills` tem `at` (centro), `radius` (um número, ou `[x, z]` para um morro comprido, girado por `rot`), `height` (negativo cava um vale) e `top` (parte do raio que é plana, de 0 a 0.95: acampamento e cidade precisam de topo plano). Morros que se cruzam somam. Cores: `highColor` no alto, `lowColor` no fundo, `slopeColor` na encosta (terra e pedra). `walkable`: áreas (`origin`, `size`) onde se anda fora das salas; o mapa de caminhada cobre só elas, então não exagere. Com relevo:
+  - os props do local ficam no chão sob a sua origem (`y` soma a partir dali). Coisa comprida e plana (riacho, tapete) vai em chão plano;
+  - quem está no elenco sem `elevation` começa no chão, e `walkTo` sem `elevation` termina no chão do destino, subindo e descendo o morro;
+  - uma sala (a tenda por dentro) tem `elevation` igual à altura do chão onde está (`top` plano ajuda).
 - **Objetos** (`props`): `asset` do catálogo, `pos` relativo à origem da área, `y` acima do piso, `rot` em graus, `repeat` para grades. Com `id`, o objeto pode ser animado por ações do episódio; `pickable: true` permite pegá-lo.
 
 ## Regras de modelagem
@@ -66,7 +70,7 @@ Consulte o catálogo antes de criar: os ids e descrições estão nos `registerA
 - `nature.grass` (`width`, `depth`, `density`): grama baixa num retângulo; `nature.weeds`: moita de mato para pé de cerca e canto de muro.
 - `school.concreteTable`: `shape: "round"` com `seats: "stools"` ou `"benches"`, ou `shape: "rect"`.
 - `structure.canopy` (`length`, `width`): passarela coberta entre dois prédios; passa-se por baixo.
-- Um asset por onde se passa (grama, passarela, fundo) marca `userData.passable = true` e não bloqueia o caminho. Muitas peças pequenas iguais vão num `InstancedMesh` ou numa malha só (`mergeGeometries`), não em centenas de malhas.
+- Um asset por onde se passa (grama, passarela, fundo) marca `userData.passable = true` e não bloqueia o caminho. Um asset com passagem por dentro (portão da cidade, tenda aberta) marca `userData.solidParts = true`: cada filho direto bloqueia só onde está. Muitas peças pequenas iguais vão num `InstancedMesh` ou numa malha só (`mergeGeometries`), não em centenas de malhas.
 
 ### Rua
 

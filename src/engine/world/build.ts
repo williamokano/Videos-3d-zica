@@ -6,6 +6,7 @@ import { buildDoor } from './doors';
 import { buildWindow } from './windows';
 import { contains, subtractRects, union, type Rect } from './rect';
 import { layoutStairs, partHeight, type StairLayout } from './stairs';
+import { buildTerrainMesh, terrainHeight } from './terrain';
 import type { Location, Prop } from './types';
 import { DEFAULT_ROOM_H, DOOR_H, WALL_T, roomOpenings, roomWalls, sideGeometry, type WallPiece } from './walls';
 
@@ -68,8 +69,10 @@ export interface BuiltLocation {
   interactives: InteractiveObject[];
   /** Props that move by themselves with the clock (a ceiling fan): call each with the time of the frame. */
   animated: ((t: number) => void)[];
-  /** Footprint of all areas. */
+  /** Footprint of all areas (and of the terrain's walkable area): where the walking map is laid. */
   bounds: Rect;
+  /** Height of the ground at a point (0 everywhere without terrain). */
+  groundAt(x: number, z: number): number;
 }
 
 export const WALKER_HEIGHT = 1.7;
@@ -96,7 +99,7 @@ function pieceRect(p: WallPiece, thickness = WALL_T): Rect {
 function placeProps(
   props: Prop[] | undefined,
   origin: [number, number],
-  elevation: number,
+  elevation: number | ((x: number, z: number) => number),
   parent: THREE.Object3D,
   interactives: InteractiveObject[],
   colliders: Collider[],
@@ -110,7 +113,10 @@ function placeProps(
     for (let i = 0; i < nx; i++) {
       for (let j = 0; j < nz; j++) {
         const obj = createAsset(prop.asset, prop.params);
-        obj.position.set(origin[0] + prop.pos[0] + i * dx, elevation + (prop.y ?? 0), origin[1] + prop.pos[1] + j * dz);
+        const [x, z] = [origin[0] + prop.pos[0] + i * dx, origin[1] + prop.pos[1] + j * dz];
+        // On terrain, a prop stands on the ground under its origin.
+        const floor = typeof elevation === 'number' ? elevation : elevation(x, z);
+        obj.position.set(x, floor + (prop.y ?? 0), z);
         obj.rotation.y = THREE.MathUtils.degToRad(prop.rot ?? 0);
         obj.traverse((o) => {
           if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
@@ -136,6 +142,14 @@ function placeProps(
             };
           }
         }
+        else if (obj.userData.solidParts) {
+          // Something with a way through it (a city gate, an open pavilion): each part blocks on its own.
+          obj.updateMatrixWorld(true);
+          for (const child of obj.children) {
+            const solid = footprint(child, obj.position.y);
+            if (solid) colliders.push(solid);
+          }
+        }
         else {
           const solid = footprint(obj);
           if (solid) colliders.push(solid);
@@ -149,11 +163,10 @@ function placeProps(
  * What a piece of furniture blocks: the footprint of its parts that are at body height. A tree blocks with its
  * trunk, not its crown; a ceiling lamp or a rug blocks nothing. Props with an id can move, so they do not count.
  */
-function footprint(obj: THREE.Object3D): Collider | undefined {
+function footprint(obj: THREE.Object3D, base = obj.position.y): Collider | undefined {
   // Something walked through or under: grass, a covered walkway, a picture of far buildings.
   if (obj.userData.passable) return undefined;
   obj.updateMatrixWorld(true);
-  const base = obj.position.y;
   const box = new THREE.Box3();
   const part = new THREE.Box3();
   obj.traverse((o) => {
@@ -342,13 +355,21 @@ export function buildLocation(loc: Location): BuiltLocation {
 
   const exterior = new THREE.Group();
   const half = loc.ground.size / 2;
-  for (const r of subtractRects({ minX: -half, maxX: half, minZ: -half, maxZ: half }, holesAt(0))) {
-    const ground = box(r, -0.04, -0.02, mat(loc.ground.color));
-    ground.castShadow = false;
-    exterior.add(ground);
-    surfaces.push(flat(r, 0));
+  const terrain = loc.terrain;
+  const groundAt = (x: number, z: number): number => terrainHeight(terrain, x, z);
+  if (terrain) {
+    exterior.add(buildTerrainMesh(terrain, loc.ground.size, loc.ground.color));
+    surfaces.push({ rect: { minX: -half, maxX: half, minZ: -half, maxZ: half }, height: groundAt });
   }
-  placeProps(loc.props, [0, 0], 0, exterior, interactives, colliders, animated);
+  else {
+    for (const r of subtractRects({ minX: -half, maxX: half, minZ: -half, maxZ: half }, holesAt(0))) {
+      const ground = box(r, -0.04, -0.02, mat(loc.ground.color));
+      ground.castShadow = false;
+      exterior.add(ground);
+      surfaces.push(flat(r, 0));
+    }
+  }
+  placeProps(loc.props, [0, 0], terrain ? groundAt : 0, exterior, interactives, colliders, animated);
   root.add(exterior);
 
   const openings = loc.rooms.flatMap(roomOpenings);
@@ -461,8 +482,9 @@ export function buildLocation(loc: Location): BuiltLocation {
     if (seen.has(id)) throw new Error(`Id repetido no local "${loc.id}": "${id}".`);
     seen.add(id);
   }
-  const bounds = union(loc.rooms.map((r) => ({ minX: r.origin[0], maxX: r.origin[0] + r.size[0], minZ: r.origin[1], maxZ: r.origin[1] + r.size[1] })));
-  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives, animated, bounds };
+  const areas = [...loc.rooms, ...(terrain?.walkable ?? [])].map((r) => ({ minX: r.origin[0], maxX: r.origin[0] + r.size[0], minZ: r.origin[1], maxZ: r.origin[1] + r.size[1] }));
+  const bounds = union(areas);
+  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives, animated, bounds, groundAt };
 }
 
 /** Floor height under a walker whose feet are at `feetY`: the highest surface they can stand on or step up to. */

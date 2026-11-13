@@ -139,10 +139,47 @@ export interface Stairs {
   path: (StairFlight | StairLanding)[];
 }
 
+/**
+ * A hill (positive height) or a hollow (negative) of the terrain. Its height falls smoothly from the flat top
+ * to nothing at the edge; overlapping hills add up.
+ */
+export interface Hill {
+  /** Center [x, z]. */
+  at: [number, number];
+  /** Radius in meters, or [along x, along z] for an elongated hill (before `rot`). */
+  radius: number | [number, number];
+  /** Height at the top in meters; negative digs a hollow. */
+  height: number;
+  /** Part of the radius that is a flat top, 0 to 0.95 (default 0, a round top). A camp needs a flat top. */
+  top?: number;
+  /** Turns an elongated hill, degrees. */
+  rot?: number;
+}
+
+/** Relief of the ground. Everything at location level (ground props, cast, walking) stands on it. */
+export interface Terrain {
+  hills: Hill[];
+  /** Ground color up high, down in the hollows, and on steep slopes (bare earth); default the ground color. */
+  highColor?: string;
+  lowColor?: string;
+  slopeColor?: string;
+  /** Size of a cell of the ground mesh, meters (default 1). */
+  resolution?: number;
+  /** Height of the small bumps on hillsides, meters (default 0.15). */
+  roughness?: number;
+  /**
+   * Where people walk outside the rooms, as areas with `origin` (north-west corner) and `size`: the walking map
+   * covers them. Keep them to where the episodes need it; a large map is slow to build.
+   */
+  walkable?: { origin: [number, number]; size: [number, number] }[];
+}
+
 export interface Location {
   id: string;
   name: string;
   ground: { color: string; size: number };
+  /** Hills and hollows. Without it the ground is flat at 0. Rooms keep their own `elevation`. */
+  terrain?: Terrain;
   /** Where a visitor starts in walk mode: [x, z], floor height and heading (0 = north, 90 = west). */
   spawn?: { pos: [number, number]; elevation?: number; yaw?: number };
   rooms: Room[];
