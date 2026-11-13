@@ -8,6 +8,7 @@ import './assets/school';
 import './assets/vehicles';
 import type { CharacterDef } from './character/types';
 import { isScript, resolveScript, type EpisodeScript } from './timeline/direct';
+import { charactersOf, crowdAt } from './actions/crowd';
 import type { Episode } from './timeline/episode';
 import { evaluateCamera, validateCamera } from './timeline/camera';
 import type { Bible } from './bible';
@@ -156,7 +157,19 @@ describe('series data', () => {
         for (let t = 0; t <= episode.duration; t += 0.5) expect(evaluateCamera(episode.camera, t, stage).pos.every(Number.isFinite)).toBe(true);
         // Nobody stands frozen with nothing to do (scripts only: the director finds it).
         expect(episode.warnings ?? []).toEqual([]);
-      });
+        // Stepping aside for each other, nobody jumps from one frame to the next.
+        const people = charactersOf(compiled);
+        let before = new Map<string, [number, number]>();
+        for (let frame = 0; frame <= episode.duration * 30; frame++) {
+          const now = crowdAt(compiled, people, frame / 30, built.colliders);
+          for (const id of new Set([...before.keys(), ...now.keys()])) {
+            const [a, b] = [before.get(id) ?? [0, 0], now.get(id) ?? [0, 0]];
+            expect(Math.hypot(b[0] - a[0], b[1] - a[1]), `${id} aos ${(frame / 30).toFixed(2)} s`).toBeLessThan(0.07);
+          }
+          before = now;
+        }
+      // Every frame of the episode is looked at.
+      }, 60000);
     }
   }
 });

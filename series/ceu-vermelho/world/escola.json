@@ -19,6 +19,13 @@
       "props": [
         { "asset": "school.blackboard", "pos": [0.15, 3.5], "rot": 90 },
         { "asset": "school.teacherDesk", "pos": [1.6, 3.6], "rot": -90 },
+        { "asset": "school.speaker", "pos": [0.11, 3.5], "y": 2.5, "rot": 90 },
+        { "asset": "light.tubeLamp", "pos": [2.6, 1.9], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "light.tubeLamp", "pos": [5.9, 1.9], "y": 2.94, "params": { "intensity": 0 } },
+        { "asset": "light.tubeLamp", "pos": [2.6, 5.1], "y": 2.94, "params": { "intensity": 0 } },
+        { "asset": "light.tubeLamp", "pos": [5.9, 5.1], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "school.ceilingFan", "pos": [2.9, 3.5], "y": 2.94 },
+        { "asset": "school.ceilingFan", "pos": [5.9, 3.5], "y": 2.94, "params": { "speed": 0.9 } },
         {
           "asset": "school.desk",
           "pos": [3.2, 1.3],
@@ -42,6 +49,13 @@
       "props": [
         { "asset": "school.blackboard", "pos": [0.15, 3.5], "rot": 90 },
         { "asset": "school.teacherDesk", "pos": [1.6, 3.6], "rot": -90 },
+        { "asset": "school.speaker", "pos": [0.11, 3.5], "y": 2.5, "rot": 90 },
+        { "asset": "light.tubeLamp", "pos": [2.6, 1.9], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "light.tubeLamp", "pos": [5.9, 1.9], "y": 2.94, "params": { "intensity": 0 } },
+        { "asset": "light.tubeLamp", "pos": [2.6, 5.1], "y": 2.94, "params": { "intensity": 0 } },
+        { "asset": "light.tubeLamp", "pos": [5.9, 5.1], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "school.ceilingFan", "pos": [2.9, 3.5], "y": 2.94 },
+        { "asset": "school.ceilingFan", "pos": [5.9, 3.5], "y": 2.94, "params": { "speed": 0.9 } },
         {
           "asset": "school.desk",
           "pos": [3.2, 1.3],
@@ -66,6 +80,13 @@
       "props": [
         { "asset": "school.blackboard", "pos": [0.15, 3.5], "rot": 90 },
         { "asset": "school.teacherDesk", "pos": [1.6, 3.6], "rot": -90 },
+        { "asset": "school.speaker", "pos": [0.11, 3.5], "y": 2.5, "rot": 90 },
+        { "asset": "light.tubeLamp", "pos": [2.6, 1.9], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "light.tubeLamp", "pos": [5.9, 1.9], "y": 2.94, "params": { "intensity": 0 } },
+        { "asset": "light.tubeLamp", "pos": [2.6, 5.1], "y": 2.94, "params": { "intensity": 0 } },
+        { "asset": "light.tubeLamp", "pos": [5.9, 5.1], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "school.ceilingFan", "pos": [2.9, 3.5], "y": 2.94 },
+        { "asset": "school.ceilingFan", "pos": [5.9, 3.5], "y": 2.94, "params": { "speed": 0.9 } },
         {
           "asset": "school.desk",
           "pos": [3.2, 1.3],
@@ -136,13 +157,70 @@
           "pos": [18, 9],
           "params": { "seed": 8, "height": 5 }
         },
-        {
-          "asset": "nature.bush",
-          "pos": [12, 13.2],
-          "params": { "seed": 2 },
-          "repeat": { "count": [5, 1], "spacing": [1.4, 0] }
-        }
+        { "asset": "nature.bush", "pos": [1.2, 13.3], "params": { "seed": 2 }, "repeat": { "count": [3, 1], "spacing": [1.4, 0] } },
+        { "asset": "nature.bush", "pos": [20.2, 13.3], "params": { "seed": 5 }, "repeat": { "count": [3, 1], "spacing": [1.4, 0] } },
+        { "asset": "structure.canopy", "pos": [12, 7], "rot": 90, "params": { "length": 14, "width": 2.4 } },
+        { "asset": "school.concreteTable", "pos": [3.6, 5.0], "params": { "shape": "round", "seats": "stools" } },
+        { "asset": "school.concreteTable", "pos": [7.4, 5.4], "rot": 20, "params": { "shape": "round", "seats": "benches", "top": "#8a4b3c", "color": "#d9c9a8" } },
+        { "asset": "school.concreteTable", "pos": [4.2, 11.8], "rot": 90, "params": { "shape": "rect" } },
+        { "asset": "school.concreteTable", "pos": [8.2, 11.6], "params": { "shape": "round", "seats": "stools" } },
+        { "asset": "school.concreteTable", "pos": [16.4, 11.9], "rot": 50, "params": { "shape": "round", "seats": "benches", "top": "#8a4b3c", "color": "#d9c9a8" } },
+        { "asset": "school.concreteTable", "pos": [20.6, 11.2], "params": { "shape": "rect" } },
+        { "asset": "school.concreteTable", "pos": [20.8, 5.4], "params": { "shape": "round", "seats": "stools" } }
       ]
+    },
+    {
+      "id": "cantina",
+      "name": "Cantina",
+      "origin": [4, 17],
+      "size": [16, 8],
+      "floorColor": "#c9bfae",
+      "wallColor": "#efe2c4",
+      "openings": [
+        { "id": "porta-cantina", "wall": "n", "type": "door", "at": 8, "width": 2.4, "leaf": { "kind": "sliding", "color": "#7c838c", "open": 0 } },
+        { "wall": "n", "type": "window", "at": 3, "width": 2.6 },
+        { "wall": "n", "type": "window", "at": 13, "width": 2.6 },
+        { "wall": "s", "type": "window", "at": 4, "width": 3.0 },
+        { "wall": "s", "type": "window", "at": 12, "width": 3.0 },
+        { "wall": "w", "type": "window", "at": 4, "width": 2.4 },
+        { "wall": "e", "type": "window", "at": 4, "width": 2.4 }
+      ],
+      "props": [
+        { "asset": "light.tubeLamp", "pos": [5, 4], "y": 2.94, "params": { "intensity": 5 } },
+        { "asset": "light.tubeLamp", "pos": [11, 4], "y": 2.94, "params": { "intensity": 0 } }
+      ]
+    },
+    {
+      "id": "entrada",
+      "name": "Entrada",
+      "origin": [-9, 0.3],
+      "size": [9, 2.4],
+      "outdoor": true,
+      "floorColor": "#cfc8ba"
+    },
+    {
+      "id": "calcada",
+      "name": "Calçada",
+      "origin": [-12, -20],
+      "size": [3, 56],
+      "outdoor": true,
+      "floorColor": "#bdb8ae"
+    },
+    {
+      "id": "rua",
+      "name": "Rua",
+      "origin": [-20, -20],
+      "size": [8, 56],
+      "outdoor": true,
+      "floorColor": "#55585e"
+    },
+    {
+      "id": "calcada-oposta",
+      "name": "Calçada do outro lado",
+      "origin": [-22.5, -20],
+      "size": [2.5, 56],
+      "outdoor": true,
+      "floorColor": "#bdb8ae"
     },
     {
       "id": "escadaria",
@@ -291,6 +369,63 @@
     }
   ],
   "props": [
+    { "asset": "structure.fence", "pos": [14.5, -15], "params": { "length": 47 } },
+    { "asset": "structure.fence", "pos": [14.5, 30], "params": { "length": 47 } },
+    { "asset": "structure.fence", "pos": [38, 7.5], "rot": 90, "params": { "length": 45 } },
+    { "asset": "structure.fence", "pos": [-9, -7.75], "rot": 90, "params": { "length": 14.5 } },
+    { "asset": "structure.fence", "pos": [-9, 16.75], "rot": 90, "params": { "length": 26.5 } },
+    { "id": "portao", "asset": "structure.gate", "pos": [-9, 1.5], "rot": 90 },
+
+    { "asset": "nature.grass", "pos": [14.5, -11.8], "params": { "width": 47, "depth": 6.4, "seed": 1 } },
+    { "asset": "nature.grass", "pos": [-4.5, -4.2], "params": { "width": 9, "depth": 8.8, "seed": 2 } },
+    { "asset": "nature.grass", "pos": [-4.5, 16.4], "params": { "width": 9, "depth": 27.2, "seed": 3 } },
+    { "asset": "nature.grass", "pos": [33.75, 10.7], "params": { "width": 8.5, "depth": 38.6, "seed": 4 } },
+    { "asset": "nature.grass", "pos": [26.75, 16.5], "params": { "width": 5.5, "depth": 27, "seed": 5 } },
+    { "asset": "nature.grass", "pos": [12, 27.6], "params": { "width": 24, "depth": 4.8, "seed": 6 } },
+    { "asset": "nature.grass", "pos": [2, 21.1], "params": { "width": 4, "depth": 8.2, "seed": 7 } },
+    { "asset": "nature.grass", "pos": [22, 21.1], "params": { "width": 4, "depth": 8.2, "seed": 8 } },
+
+    { "asset": "nature.weeds", "pos": [2.5, -14.6], "params": { "seed": 1 } },
+    { "asset": "nature.weeds", "pos": [9.4, -14.5], "params": { "seed": 2, "height": 0.7 } },
+    { "asset": "nature.weeds", "pos": [15.8, -14.6], "params": { "seed": 3 } },
+    { "asset": "nature.weeds", "pos": [20.5, -14.4], "params": { "seed": 4, "height": 0.65 } },
+    { "asset": "nature.weeds", "pos": [22.1, -14.6], "params": { "seed": 5 } },
+    { "asset": "nature.weeds", "pos": [30.6, -14.5], "params": { "seed": 6 } },
+    { "asset": "nature.weeds", "pos": [37.5, -9.2], "params": { "seed": 7 } },
+    { "asset": "nature.weeds", "pos": [37.6, 4.4], "params": { "seed": 8, "height": 0.7 } },
+    { "asset": "nature.weeds", "pos": [37.5, 18.8], "params": { "seed": 9 } },
+    { "asset": "nature.weeds", "pos": [31.2, 29.6], "params": { "seed": 10 } },
+    { "asset": "nature.weeds", "pos": [17.3, 29.5], "params": { "seed": 11, "height": 0.65 } },
+    { "asset": "nature.weeds", "pos": [5.2, 29.6], "params": { "seed": 12 } },
+    { "asset": "nature.weeds", "pos": [-8.5, 22.4], "params": { "seed": 13 } },
+    { "asset": "nature.weeds", "pos": [-8.6, 9.3], "params": { "seed": 14, "height": 0.6 } },
+    { "asset": "nature.weeds", "pos": [-8.5, -10.2], "params": { "seed": 15 } },
+    { "asset": "nature.weeds", "pos": [24.6, 3.6], "params": { "seed": 16, "height": 0.4 } },
+    { "asset": "nature.weeds", "pos": [-0.5, -6.4], "params": { "seed": 17, "height": 0.4 } },
+
+    { "asset": "backdrop.house", "pos": [-27, -14], "rot": 90, "params": { "seed": 1 } },
+    { "asset": "backdrop.house", "pos": [-27, -5], "rot": 90, "params": { "seed": 2 } },
+    { "asset": "backdrop.house", "pos": [-27, 4], "rot": 90, "params": { "seed": 3 } },
+    { "asset": "backdrop.house", "pos": [-27, 13], "rot": 90, "params": { "seed": 4 } },
+    { "asset": "backdrop.house", "pos": [-27, 22], "rot": 90, "params": { "seed": 5 } },
+    { "asset": "backdrop.house", "pos": [-27, 31], "rot": 90, "params": { "seed": 6 } },
+    { "asset": "backdrop.house", "pos": [-2, -24], "params": { "seed": 7 } },
+    { "asset": "backdrop.house", "pos": [8, -24], "params": { "seed": 8 } },
+    { "asset": "backdrop.house", "pos": [18, -24], "params": { "seed": 9 } },
+    { "asset": "backdrop.house", "pos": [28, -24], "params": { "seed": 10 } },
+    { "asset": "backdrop.house", "pos": [38, -24], "params": { "seed": 11 } },
+    { "asset": "backdrop.house", "pos": [47, -8], "rot": -90, "params": { "seed": 12 } },
+    { "asset": "backdrop.house", "pos": [47, 3], "rot": -90, "params": { "seed": 13 } },
+    { "asset": "backdrop.house", "pos": [47, 14], "rot": -90, "params": { "seed": 14 } },
+    { "asset": "backdrop.house", "pos": [47, 25], "rot": -90, "params": { "seed": 15 } },
+    { "asset": "backdrop.house", "pos": [0, 39], "rot": 180, "params": { "seed": 16 } },
+    { "asset": "backdrop.house", "pos": [11, 39], "rot": 180, "params": { "seed": 17 } },
+    { "asset": "backdrop.house", "pos": [22, 39], "rot": 180, "params": { "seed": 18 } },
+    { "asset": "backdrop.house", "pos": [33, 39], "rot": 180, "params": { "seed": 19 } },
+
+    { "asset": "backdrop.skyline", "pos": [14.5, 7.5], "params": { "radius": 80, "count": 16, "height": 17, "haze": 0.25, "seed": 3 } },
+    { "asset": "backdrop.skyline", "pos": [14.5, 7.5], "params": { "radius": 160, "count": 14, "height": 44, "haze": 0.6, "tall": 1, "seed": 9 } },
+
     {
       "asset": "nature.tree",
       "pos": [-5, -4],

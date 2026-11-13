@@ -65,6 +65,8 @@ export interface BuiltLocation {
   surfaces: Surface[];
   /** Doors and props with an id, for the action track. */
   interactives: InteractiveObject[];
+  /** Props that move by themselves with the clock (a ceiling fan): call each with the time of the frame. */
+  animated: ((t: number) => void)[];
   /** Footprint of all areas. */
   bounds: Rect;
 }
@@ -97,6 +99,7 @@ function placeProps(
   parent: THREE.Object3D,
   interactives: InteractiveObject[],
   colliders: Collider[],
+  animated: ((t: number) => void)[],
 ): void {
   for (const prop of props ?? []) {
     if (prop.repeat && prop.id) throw new Error(`Prop "${prop.id}": um prop com id não pode usar "repeat".`);
@@ -112,6 +115,7 @@ function placeProps(
           if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
         });
         parent.add(obj);
+        if (typeof obj.userData.animate === 'function') animated.push(obj.userData.animate as (t: number) => void);
         if (prop.id) interactives.push(interactiveProp(prop, obj));
         else {
           const solid = footprint(obj);
@@ -127,6 +131,8 @@ function placeProps(
  * trunk, not its crown; a ceiling lamp or a rug blocks nothing. Props with an id can move, so they do not count.
  */
 function footprint(obj: THREE.Object3D): Collider | undefined {
+  // Something walked through or under: grass, a covered walkway, a picture of far buildings.
+  if (obj.userData.passable) return undefined;
   obj.updateMatrixWorld(true);
   const base = obj.position.y;
   const box = new THREE.Box3();
@@ -278,6 +284,7 @@ export function buildLocation(loc: Location): BuiltLocation {
   const colliders: Collider[] = [];
   const surfaces: Surface[] = [];
   const interactives: InteractiveObject[] = [];
+  const animated: ((t: number) => void)[] = [];
 
   const layouts = (loc.stairs ?? []).map((st) => ({ st, layout: layoutStairs(st) }));
   /** Stair wells that pass through a slab at height y. */
@@ -292,7 +299,7 @@ export function buildLocation(loc: Location): BuiltLocation {
     exterior.add(ground);
     surfaces.push(flat(r, 0));
   }
-  placeProps(loc.props, [0, 0], 0, exterior, interactives, colliders);
+  placeProps(loc.props, [0, 0], 0, exterior, interactives, colliders, animated);
   root.add(exterior);
 
   const openings = loc.rooms.flatMap(roomOpenings);
@@ -349,7 +356,7 @@ export function buildLocation(loc: Location): BuiltLocation {
         position: () => center,
       });
     });
-    placeProps(room.props, room.origin, elevation, g, interactives, colliders);
+    placeProps(room.props, room.origin, elevation, g, interactives, colliders, animated);
     if (!room.outdoor) {
       // The ceiling hangs just under the floor of the storey above.
       const top = elevation + height - 0.06;
@@ -373,7 +380,7 @@ export function buildLocation(loc: Location): BuiltLocation {
     seen.add(id);
   }
   const bounds = union(loc.rooms.map((r) => ({ minX: r.origin[0], maxX: r.origin[0] + r.size[0], minZ: r.origin[1], maxZ: r.origin[1] + r.size[1] })));
-  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives, bounds };
+  return { group: root, rooms, exterior, stairs, colliders, surfaces, interactives, animated, bounds };
 }
 
 /** Floor height under a walker whose feet are at `feetY`: the highest surface they can stand on or step up to. */

@@ -36,6 +36,31 @@ Metros; +x leste, +z sul, +y cima. Direções: `n` = -z, `s` = +z, `e` = +x, `w`
 
 Consulte o catálogo antes de criar: os ids e descrições estão nos `registerAsset(...)` de `src/engine/assets/`. Se faltar algo, crie um asset paramétrico e reutilizável ali (com `rbox` para bordas arredondadas), não uma peça única para este lugar.
 
+### Teto e parede
+
+- A laje do teto fica 6 cm abaixo da altura da área: numa sala de 3 m, ponha luminária e ventilador com `y: 2.94`. Mais alto, ficam dentro da laje e somem.
+- `light.tubeLamp`: luminária de barra. Quatro por sala (duas na frente, duas atrás). Cada luz acesa custa no desenho: deixe duas com luz (`intensity: 5`) e as outras com `intensity: 0`, que aparecem acesas sem somar luz.
+- `school.ceilingFan`: gira sozinho com o tempo do episódio (`speed` em voltas por segundo, 0 para parado). Um asset que se mexe sozinho define `userData.animate = (t) => ...`; o motor chama a cada quadro.
+- `school.speaker`: caixinha de som, costas na parede, acima do quadro (`y: 2.5`).
+
+### Área externa
+
+- `structure.fence` (`length`, `style: "bars"` ou `"mesh"`): um prop cobre um lado inteiro do terreno. `structure.gate`: portão de correr com canal `open`; dê um `id` para o episódio abrir.
+- `nature.grass` (`width`, `depth`, `density`): grama baixa num retângulo; `nature.weeds`: moita de mato para pé de cerca e canto de muro.
+- `school.concreteTable`: `shape: "round"` com `seats: "stools"` ou `"benches"`, ou `shape: "rect"`.
+- `structure.canopy` (`length`, `width`): passarela coberta entre dois prédios; passa-se por baixo.
+- Um asset por onde se passa (grama, passarela, fundo) marca `userData.passable = true` e não bloqueia o caminho. Muitas peças pequenas iguais vão num `InstancedMesh` ou numa malha só (`mergeGeometries`), não em centenas de malhas.
+
+### Preencher o que fica além de onde se anda
+
+Ninguém entra lá, então não se modela de verdade. Em anéis, de perto para longe:
+
+1. **Logo depois da cerca** (onde as coisas deslizam umas contra as outras quando a câmera anda): rua e calçada como áreas `outdoor`, e `backdrop.house` (casas simples em 3D, uma por `seed`) em volta.
+2. **Longe**: `backdrop.skyline`, cartões com fachadas pintadas pelo motor, em arco em volta do lugar. Use dois anéis: um a ~80 m (`haze: 0.25`) e outro a ~160 m, mais alto e mais apagado (`haze: 0.6`, `tall: 1`). Os cartões não recebem luz: a névoa, da cor do horizonte, tinge tudo, então o céu mudando de cor muda a cidade junto.
+3. Quebre linhas retas longas (cerca, muro) com árvore, mato ou portão a cada 6 a 10 m, e confira o que se vê de cada janela.
+
+Os cartões só convencem na altura dos olhos; numa tomada do alto aparecem como placas.
+
 ## Conferir
 
 1. `npm test` e `npm run typecheck`.

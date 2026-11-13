@@ -139,6 +139,9 @@ A série `ceu-vermelho` tem o primeiro episódio de verdade. A série `demo-acoe
 - Desvio entre pessoas (`actions/crowd.ts`), corpo que vira quando o olhar passa do pescoço (`faceFor` em `timeline/direct.ts`), item na mão levantada estimado onde ele realmente está (para a câmera ler o celular).
 - Episódio 1 refeito com o roteiro novo (`roteiros/001-roteiro.md`), bíblia da história em `series/ceu-vermelho/biblia.md`, skill `write-episode`.
 
+- Cenário (2026-11-13): assets de teto e parede (`assets/fixtures.ts`: luminária de barra, ventilador que gira, caixinha de som), área externa (`assets/outdoor.ts`: cerca, portão, grama, mato, mesas de concreto, passarela coberta) e fundo (`assets/backdrop.ts`: casas simples e cidade pintada em cartões). A escola de `ceu-vermelho` ganhou tudo isso, mais a cantina, a rua e a calçada.
+- Desvio entre pessoas refeito para não tremer: só quem anda desvia, de lado, sem nenhuma decisão que mude de um quadro para o outro; os testes olham todos os quadros de todos os episódios.
+
 ## Próximas tarefas, em ordem
 
 As tarefas 1 a 10 estão feitas. Falta a 11, voz, que só começa com a confirmação do autor. O autor viu o rosto novo ("aceitável") e o cel shading ("gostei bastante"): `ceu-vermelho` fica em `cel`.

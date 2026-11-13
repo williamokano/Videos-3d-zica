@@ -168,6 +168,7 @@ const handOverrides = new Map<string, number>();
 function applyActions(t: number): void {
   handOverrides.clear();
   applyStage(actions, interactiveById, t, built.colliders);
+  for (const move of built.animated) move(t);
   applyEnvironment();
 }
 

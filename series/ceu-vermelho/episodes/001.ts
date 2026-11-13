@@ -530,7 +530,7 @@ function guardarCelular(d: Director, heroi: Actor, para: Actor): void {
  * para na janela do corredor e dois da sala 2 saem para o pátio, todos em transe.
  */
 function descerTurmas(d: Director, professora: Actor, roberto: Actor, a2: (Aluno & { actor: Actor })[], a1: (Aluno & { actor: Actor })[], antes: number): void {
-  const inicio = Math.max(3, antes - 50);
+  const inicio = Math.max(3, antes - 38);
   d.background(() => {
     d.at(inicio);
     // Roberto já saiu da sala e está parado na janela do corredor, perto da escada.
@@ -559,7 +559,7 @@ function descerTurmas(d: Director, professora: Actor, roberto: Actor, a2: (Aluno
   const descer = (alunos: (Aluno & { actor: Actor })[], primeiro: number, fora: Aluno[]) => {
     alunos.forEach((a, i) => {
       d.background(() => {
-        const vez = primeiro + i * 1.2;
+        const vez = primeiro + i * 0.9;
         const [ax, az] = aisle(a.sala, ...a.place);
         d.at(Math.max(0.5, vez - (ax - (SALAS[a.sala] + 2.3) + Math.abs(az) + 1.4) / 1.35));
         a.actor.behave('none');
@@ -586,5 +586,5 @@ function descerTurmas(d: Director, professora: Actor, roberto: Actor, a2: (Aluno
   // (da porta da sala 2 até lá são uns 22 m).
   const primeiro = abriu - 22 / 1.35 + 1;
   descer(a2, primeiro, transePatio);
-  descer(a1, primeiro + a2.length * 1.2 + 2, [transeCorredor]);
+  descer(a1, primeiro + a2.length * 0.9 + 1, [transeCorredor]);
 }

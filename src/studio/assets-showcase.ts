@@ -223,6 +223,8 @@ const timer = new THREE.Timer();
 renderer.setAnimationLoop(() => {
   timer.update();
   time += Math.min(timer.getDelta(), 0.1);
+  // Assets that move by themselves (a ceiling fan).
+  for (const slot of slots) (slot.object.object.userData.animate as ((t: number) => void) | undefined)?.(time);
   if (animate) {
     const swing = (1 - Math.cos(time * 1.6)) / 2;
     for (const slot of slots) {

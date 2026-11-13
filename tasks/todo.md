@@ -49,3 +49,13 @@ Pedido do autor em 2026-11-12 (texto guardado em `series/ceu-vermelho/roteiros/0
 - [x] Olhar para ninguém: o corpo vira junto quando o alvo do olhar ou da fala está além do pescoço (`faceFor` em `direct.ts`); no roteiro, olhares que ficavam presos durante caminhadas e pontos de olhar com a altura do térreo no porão
 - [x] Banco: virou móvel do depósito no cenário, com outro ao lado, encostados na parede fora do caminho
 - [x] Conferido varrendo o vídeo final inteiro (um quadro a cada 3 s) e os instantes de cada fala do Fernando e de cada leitura do celular. Resta: Lucas passa rente à carteira do Fernando aos 0:24 (ele senta ao lado; achei natural).
+
+## Tremor ao sair da sala e cenário (2026-11-13)
+
+- [x] Tremor em torno de 0:53: vinha do desvio entre pessoas (não de corte seco, que o episódio não tem). Medido: saltos de até 80 cm por quadro. Refeito sem decisões que alternam; agora o maior passo de lado é de 6 cm por quadro, conferido em todos os quadros nos testes
+- [x] Outras salas saindo cedo demais: a sala 2 começa a sair aos 12 s e a sala 1 aos 24 s (antes, 5 s e 20 s), com a fila mais apertada
+- [x] Luminárias de barra (4 por sala), 2 ventiladores de teto e caixinha de som acima do quadro, nas três salas
+- [x] Cerca em volta da escola com portão, grama baixa, mato
+- [x] Passarela coberta da porta do pátio até a cantina (janelas e porta de correr fechada), mesas de concreto de três tipos
+- [x] Fundo: rua, calçada, casas em 3D em volta e cidade pintada em dois anéis
+- Conferido em quadros (vista aérea, sala, janela, pátio, portão, céu vermelho) e na varredura do vídeo. Não conferido: a cantina por dentro (está vazia de propósito) e o cenário em tomadas do alto, onde os cartões do fundo aparecem como placas.
