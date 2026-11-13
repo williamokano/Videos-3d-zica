@@ -51,6 +51,18 @@ Consulte o catálogo antes de criar: os ids e descrições estão nos `registerA
 - `structure.canopy` (`length`, `width`): passarela coberta entre dois prédios; passa-se por baixo.
 - Um asset por onde se passa (grama, passarela, fundo) marca `userData.passable = true` e não bloqueia o caminho. Muitas peças pequenas iguais vão num `InstancedMesh` ou numa malha só (`mergeGeometries`), não em centenas de malhas.
 
+### Rua
+
+Coisas com frente (placa, ponto de ônibus, semáforo) olham para +z: na calçada do lado de cá ficam de frente para a rua com `rot: 0`; na calçada oposta, `rot: 180`.
+
+- `street.lightPole` (`height`, `reach`, `wires`): canal `on`; `flicker: 1` faz a lâmpada falhar sozinha. Com `intensity` maior que 0 ilumina de verdade (use em poucas, à noite).
+- `street.trafficLight`: canal `state` (0 vermelho, 1 amarelo, 2 verde, 3 apagado), ou `cycle: 1` para trocar sozinho.
+- `street.sign` (`kind`: `stop`, `noParking`, `speed`, `crossing`, `name`; `text`).
+- `street.cone`, `street.barrier` (`kind`: `wood`, `steel`, `plastic`), `street.trashBin`, `street.busStop` (com assentos `left`, `middle`, `right`).
+- No chão, por onde se passa: `street.crosswalk` (`width`, `length`) e `street.manhole` (`kind`: `round`, `grate`).
+- Veículos estacionados ou de cena: `vehicle.car`, `vehicle.policeCar`, `vehicle.bus`, `vehicle.bicycle` (com `id` para o episódio mexer).
+- A rua de `demo-acoes` (`series/demo-acoes/world/rua.json`) usa o kit inteiro, e o episódio 3 mostra polícia, ônibus e bicicleta nela.
+
 ### Preencher o que fica além de onde se anda
 
 Ninguém entra lá, então não se modela de verdade. Em anéis, de perto para longe:

@@ -22,10 +22,10 @@ Pedido do autor em 2026-11-13: "pode começar, vai comitando e dando push e se t
 - [x] Testes e skill
 
 ## 4. Kit de rua
-- [ ] Poste de luz (com luz), semáforo, placa, ponto de ônibus
-- [ ] Cone, cavalete de madeira, barreira de aço, lixeira
-- [ ] Faixa de pedestre e bueiro (no chão, por onde se passa)
-- [ ] Rua da `demo-acoes` usando o kit; skill `build-location`
+- [x] Poste de luz (com luz), semáforo, placa, ponto de ônibus
+- [x] Cone, cavalete de madeira, barreira de aço, lixeira
+- [x] Faixa de pedestre e bueiro (no chão, por onde se passa)
+- [x] Rua da `demo-acoes` usando o kit; skill `build-location`
 
 ## 5. Fecho
 - [ ] `docs/NEXT.md` atualizado, revisão aqui embaixo

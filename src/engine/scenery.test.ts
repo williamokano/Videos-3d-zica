@@ -136,3 +136,54 @@ describe('vehicles', () => {
     expect(car.channels.siren).toBe(0);
   });
 });
+
+describe('street kit', () => {
+  const channelsOf = (o: THREE.Object3D) => o.userData.channels as Record<string, { value: number; apply(v: number): void }>;
+  const litOf = (o: THREE.Object3D) => meshes(o).filter((m) => m.material instanceof THREE.MeshBasicMaterial).length;
+
+  it('registers the kit', () => {
+    const ids = listAssets().map((a) => a.id);
+    for (const id of ['street.lightPole', 'street.trafficLight', 'street.sign', 'street.cone', 'street.barrier', 'street.trashBin', 'street.busStop', 'street.crosswalk', 'street.manhole', 'item.radio', 'vehicle.policeCar', 'vehicle.bus', 'vehicle.bicycle']) expect(ids).toContain(id);
+  });
+
+  it('a street lamp goes on and off, and a failing one flickers with the clock', () => {
+    const pole = createAsset('street.lightPole');
+    expect(litOf(pole)).toBe(1);
+    channelsOf(pole).on.apply(0);
+    expect(litOf(pole)).toBe(0);
+    expect(pole.userData.animate).toBeUndefined();
+    const failing = createAsset('street.lightPole', { flicker: 1 });
+    const seen = new Set<number>();
+    for (let t = 0; t < 3; t += 1 / 30) {
+      (failing.userData.animate as (t: number) => void)(t);
+      seen.add(litOf(failing));
+    }
+    expect([...seen].sort()).toEqual([0, 1]);
+  });
+
+  it('a traffic light shows one lamp at a time, by its state or by the clock', () => {
+    const light = createAsset('street.trafficLight', { cycle: 1 });
+    for (const state of [0, 1, 2]) {
+      channelsOf(light).state.apply(state);
+      expect(litOf(light)).toBe(1);
+    }
+    channelsOf(light).state.apply(3);
+    expect(litOf(light)).toBe(0);
+    (light.userData.animate as (t: number) => void)(7);
+    expect(litOf(light)).toBe(1);
+  });
+
+  it('barriers come in three kinds, the bus stop has seats, and what lies on the ground is walked over', () => {
+    for (const kind of ['wood', 'steel', 'plastic']) {
+      const barrier = createAsset('street.barrier', { kind });
+      expect(size(barrier).x).toBeGreaterThan(1.4);
+      expect(size(barrier).y).toBeGreaterThan(0.8);
+    }
+    expect(createAsset('street.busStop').children.filter((c) => c.name.startsWith('seat.'))).toHaveLength(3);
+    expect(size(createAsset('street.cone')).y).toBeCloseTo(0.75, 1);
+    const built = buildLocation({ id: 't', name: 't', ground: { color: '#fff', size: 40 }, rooms: [], props: [
+      { asset: 'street.crosswalk', pos: [0, 0] }, { asset: 'street.manhole', pos: [3, 0] }, { asset: 'street.barrier', pos: [8, 0] },
+    ] });
+    expect(built.colliders).toHaveLength(1);
+  });
+});

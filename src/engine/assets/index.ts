@@ -6,4 +6,5 @@ import './items';
 import './nature';
 import './outdoor';
 import './school';
+import './street';
 import './vehicles';

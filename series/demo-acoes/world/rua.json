@@ -60,7 +60,15 @@
         { "asset": "school.bench", "pos": [10, 1.2] },
         { "id": "caixa", "pickable": true, "asset": "item.box", "pos": [18.2, 2.2] },
         { "asset": "nature.tree", "pos": [0.8, 1.5], "params": { "seed": 2 } },
-        { "asset": "nature.tree", "pos": [27, 1.5], "params": { "seed": 5 } }
+        { "asset": "nature.tree", "pos": [27, 1.5], "params": { "seed": 5 } },
+        { "asset": "street.lightPole", "pos": [1.6, 3.1], "params": { "height": 6.5 } },
+        { "id": "poste", "asset": "street.lightPole", "pos": [15.2, 3.1], "params": { "height": 6.5, "flicker": 1 } },
+        { "asset": "street.lightPole", "pos": [26.2, 3.1], "params": { "height": 6.5 } },
+        { "asset": "street.trashBin", "pos": [8.2, 0.5] },
+        { "asset": "street.sign", "pos": [0.5, 3.0], "params": { "kind": "name", "text": "Rua de Teste" } },
+        { "asset": "street.sign", "pos": [27.6, 3.0], "params": { "kind": "stop" } },
+        { "asset": "street.sign", "pos": [5.6, 3.0], "params": { "kind": "crossing" } },
+        { "asset": "street.manhole", "pos": [13.4, 3.2], "params": { "kind": "grate" } }
       ]
     },
     {
@@ -70,9 +78,32 @@
       "size": [28, 7],
       "outdoor": true,
       "floorColor": "#55585f"
+    },
+    {
+      "id": "calcada-oposta",
+      "name": "Calçada do outro lado",
+      "origin": [0, 13.5],
+      "size": [28, 3.2],
+      "outdoor": true,
+      "floorColor": "#c4c1b8",
+      "props": [
+        { "asset": "street.busStop", "pos": [9, 1.5], "rot": 180 },
+        { "asset": "street.lightPole", "pos": [4, 0.4], "rot": 180, "params": { "height": 6.5, "wires": 0 } },
+        { "asset": "street.lightPole", "pos": [20, 0.4], "rot": 180, "params": { "height": 6.5, "wires": 0 } },
+        { "asset": "street.trafficLight", "pos": [3.2, 0.5], "rot": -90, "params": { "cycle": 1 } },
+        { "asset": "street.barrier", "pos": [22, 1.2], "params": { "kind": "wood" } },
+        { "asset": "street.barrier", "pos": [24.4, 1.4], "rot": 12, "params": { "kind": "steel" } },
+        { "asset": "street.barrier", "pos": [26.6, 1.3], "rot": -8, "params": { "kind": "plastic" } },
+        { "asset": "street.cone", "pos": [21, 0.5] },
+        { "asset": "street.cone", "pos": [23.2, 0.4] },
+        { "id": "cone", "pickable": true, "asset": "street.cone", "pos": [25.4, 0.45] },
+        { "asset": "street.trashBin", "pos": [13.5, 2.6], "rot": 180 }
+      ]
     }
   ],
   "props": [
-    { "id": "carro", "asset": "vehicle.car", "pos": [3, 9], "rot": -90 }
+    { "id": "carro", "asset": "vehicle.car", "pos": [3, 9], "rot": -90 },
+    { "asset": "street.crosswalk", "pos": [5.6, 10], "params": { "width": 3, "length": 6.6 } },
+    { "asset": "street.manhole", "pos": [16, 9.6] }
   ]
 }
