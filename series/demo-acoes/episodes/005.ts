@@ -82,7 +82,12 @@ export default direct(
     d.camera.cut({ pos: [7.2, 1.6, 17.6], lookAt: [8.4, 1.75, 14.2], fov: 62 });
     d.wait(0.6);
     d.do('persiana', 'open', {}, { duration: 1.6 });
+    // O ventilador girando, e parado depois de desligado.
+    d.camera.cut({ pos: [6.6, 1.2, 18.4], lookAt: [8, 2.6, 17], fov: 50 });
+    d.wait(1.2);
     d.do('ventilador', 'switch', { on: false });
+    d.wait(1.2);
+    d.camera.cut({ pos: [7.2, 1.6, 17.6], lookAt: [5, 2.4, 16.4], fov: 70 });
     d.wait(0.5);
     d.do('lampada', 'switch', { on: false });
     d.wait(1);

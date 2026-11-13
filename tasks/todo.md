@@ -40,4 +40,5 @@ Meta do autor (2026-11-13): "terminar todos os assets com ações que façam sen
 - **Cada ação nova vista em vídeo**, no episódio 5 de `demo-acoes` (`out/demo-acoes/ep005/`), feito para isso: portão abrindo e alguém passando; três pessoas sentando em mesas de concreto viradas para o meio; caixa posta dentro da lixeira; cone derrubado por esbarrão e posto de pé, cavalete e bicicleta caindo; semáforo trocando; viatura com giroflex e faróis saindo em curva com a roda virada; portas de armário e gavetas abrindo; persiana subindo; lâmpada apagando a sala.
 - Vistos também: as seis janelas abrindo e fechando (episódio 4), o entregador pedalando (episódio 3), a motorista ao volante (episódio 1).
 - Defeitos achados olhando as imagens, e corrigidos: o cavalete caía no sentido do comprimento e afundava no chão; a bicicleta caía "de bico"; a motorista levantava o braço para o alto ao fechar a porta sentada; uma placa nova tapava a câmera de abertura do episódio 1 de `demo-acoes`.
-- Ainda não visto em imagem: o ventilador parando (a câmera do episódio 5 não o enquadra; o canal está testado) e as roupas de `wear` dentro de `ceu-vermelho`.
+- O ventilador girando e parando ao ser desligado também foi visto, numa tomada própria no episódio 5.
+- Ainda não visto em imagem: as roupas de `wear` dentro de `ceu-vermelho` (só na série de demonstração).
