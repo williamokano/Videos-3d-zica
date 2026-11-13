@@ -107,6 +107,9 @@ export function cameraStage(compiled: CompiledActions, built: BuiltLocation, cas
   };
 }
 
+/** Meters a bicycle rolls for one turn of its pedals. */
+const PEDAL_TURN = 4.2;
+
 /**
  * Put every object of the scene where the action track has it at time t: channels first, then whatever
  * rides on something (a character on a car seat, an item in a hand).
@@ -128,6 +131,11 @@ export function applyStage(compiled: CompiledActions, objects: Map<string, Inter
     rider.set('y', pos[1]);
     rider.set('z', pos[2]);
     rider.set('yaw', yaw);
+  }
+  // Whoever rides something that rolls pedals with it: one turn of the pedals every few meters.
+  for (const link of links) {
+    const rolled = compiled.initial[link.to]?.travel === undefined ? undefined : channelAt(compiled, link.to, 'travel', t);
+    if (rolled !== undefined && compiled.initial[link.target]?.pedal !== undefined) objects.get(link.target)?.set('pedal', rolled / PEDAL_TURN);
   }
   // Nobody walks through anybody.
   for (const [id, [dx, dz]] of crowdAt(compiled, charactersOf(compiled).filter((id) => objects.has(id)), t, walls)) {

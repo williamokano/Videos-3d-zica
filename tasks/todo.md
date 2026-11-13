@@ -20,8 +20,8 @@ Meta do autor (2026-11-13): "terminar todos os assets com ações que façam sen
 - [x] Portão: abrir e fechar pelo catálogo, e bloquear a passagem fechado
 
 ## 3. Pessoa no veículo
-- [ ] Motorista com as mãos no volante
-- [ ] Bicicleta: pose de pedalar com as pernas girando conforme anda e mãos no guidão
+- [x] Motorista com as mãos no volante
+- [x] Bicicleta: pose de pedalar com as pernas girando conforme anda e mãos no guidão
 
 ## 4. Janelas de verdade
 - [ ] Janela como parte da abertura (`frame` no opening): de correr, basculante, veneziana/persiana, de abrir, fixa

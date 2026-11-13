@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { group, mat, rbox, registerAsset, setChannels, type AssetChannels } from './registry';
+import { group, mat, place, rbox, registerAsset, setChannels, type AssetChannels } from './registry';
 
 const WHEEL_R = 0.33;
 const DOOR_ANGLE = THREE.MathUtils.degToRad(62);
@@ -22,13 +22,6 @@ function wheel(x: number, z: number, radius = WHEEL_R, width = 0.22): THREE.Grou
   return g;
 }
 
-/** A place to sit: a named anchor at the height of the seat, which `sit` and `putDown` find. */
-function seatAnchor(name: string, x: number, y: number, z: number): THREE.Object3D {
-  const anchor = new THREE.Object3D();
-  anchor.name = `seat.${name}`;
-  anchor.position.set(x, y, z);
-  return anchor;
-}
 
 /**
  * What makes a vehicle move like one: `travel` (meters rolled) turns the wheels, and `steer` (degrees, positive
@@ -121,7 +114,9 @@ function buildCar(color: string, doorColor = color): { car: THREE.Group; channel
 
   const seats: [string, number, number][] = [['driver', -0.4, -0.1], ['passenger', 0.4, -0.1], ['rearLeft', -0.4, 0.8], ['rearRight', 0.4, 0.8]];
   for (const [name, x, z] of seats) {
-    car.add(rbox(0.56, 0.14, 0.5, '#4a4f5c', [x, 0.49, z], 0.04), rbox(0.56, 0.6, 0.12, '#4a4f5c', [x, 0.82, z + 0.3], 0.04), seatAnchor(name, x, 0.56, z));
+    car.add(rbox(0.56, 0.14, 0.5, '#4a4f5c', [x, 0.49, z], 0.04), rbox(0.56, 0.6, 0.12, '#4a4f5c', [x, 0.82, z + 0.3], 0.04),
+      // The driver holds the wheel.
+      place(name, x, 0.56, z, 0, name === 'driver' ? { hands: [[-0.55, 0.98, -0.48], [-0.25, 0.98, -0.48]] } : {}));
   }
 
   const channels: AssetChannels = {};
@@ -263,7 +258,8 @@ registerAsset(
 
     // Driver on the left at the front; passengers in pairs along the left side, facing forward.
     const chair = (name: string, x: number, z: number) => {
-      bus.add(rbox(0.46, 0.1, 0.44, '#3f6aa8', [x, FLOOR + 0.52, z], 0.03), rbox(0.46, 0.62, 0.08, '#3f6aa8', [x, FLOOR + 0.86, z + 0.24], 0.03), seatAnchor(name, x, FLOOR + 0.57, z));
+      bus.add(rbox(0.46, 0.1, 0.44, '#3f6aa8', [x, FLOOR + 0.52, z], 0.03), rbox(0.46, 0.62, 0.08, '#3f6aa8', [x, FLOOR + 0.86, z + 0.24], 0.03));
+      bus.add(place(name, x, FLOOR + 0.57, z, 0, name === 'driver' ? { hands: [[x - 0.2, FLOOR + 1.0, z - 0.42], [x + 0.2, FLOOR + 1.0, z - 0.42]] } : {}));
     };
     chair('driver', -0.72, front + 1.0);
     const wheelAt = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.03, 8, 20), mat('#15161a'));
@@ -309,7 +305,8 @@ registerAsset(
       rbox(0.09, 0.035, 0.035, '#15171b', [-0.24, 1.03, -0.36], 0.014), rbox(0.09, 0.035, 0.035, '#15171b', [0.24, 1.03, -0.36], 0.014),
       // Pedals on their cranks.
       rbox(0.3, 0.03, 0.03, '#8d919b', [0, 0.3, 0.06], 0.01), rbox(0.09, 0.02, 0.07, '#15171b', [-0.17, 0.3, 0.06], 0.008), rbox(0.09, 0.02, 0.07, '#15171b', [0.17, 0.3, 0.06], 0.008),
-      seatAnchor('driver', 0, 0.99, 0.24),
+      // Whoever rides holds the handlebars and pedals.
+      place('driver', 0, 0.99, 0.24, 0, { hands: [[-0.24, 1.05, -0.36], [0.24, 1.05, -0.36]], pedals: true }),
     );
     return setChannels(bike, rolling([frontWheel, rearWheel], R, [frontWheel]));
   },

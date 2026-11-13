@@ -80,12 +80,21 @@ export function post(radius: number, height: number, color: string, x: number, y
  * A named place on an asset, which actions find: somewhere to sit (`sit`) or to put something (`putDown` with
  * `on`). `facing` turns whoever sits there from the way the asset faces, in degrees (a stool across a table).
  */
-export function place(name: string, x: number, y: number, z: number, facing = 0): THREE.Object3D {
+export function place(name: string, x: number, y: number, z: number, facing = 0, use: SeatUse = {}): THREE.Object3D {
   const anchor = new THREE.Object3D();
   anchor.name = `seat.${name}`;
   anchor.position.set(x, y, z);
   anchor.rotation.y = THREE.MathUtils.degToRad(facing);
+  if (use.hands || use.pedals) anchor.userData.use = use;
   return anchor;
+}
+
+/** What whoever sits on a seat does there. */
+export interface SeatUse {
+  /** Where the left and the right hand hold (a steering wheel, handlebars): [x, y, z] in the asset's frame. */
+  hands?: [[number, number, number], [number, number, number]];
+  /** The legs pedal as the vehicle rolls. */
+  pedals?: boolean;
 }
 
 /** The heading that looks from (x, z) to the origin of the asset: for seats around a table. */

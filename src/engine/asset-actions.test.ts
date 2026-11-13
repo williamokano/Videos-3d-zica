@@ -162,3 +162,53 @@ describe('places on assets', () => {
     expect([pos[0], pos[1], pos[2]].map((v) => Math.round(v * 100) / 100)).toEqual([5.6, 0.79, 5.3]);
   });
 });
+
+describe('someone on a vehicle', () => {
+  it('the driver takes the wheel on sitting and lets go on getting out; a passenger keeps the hands free', () => {
+    const car: Prop[] = [{ id: 'carro', asset: 'vehicle.car', pos: [6.2, 5] }];
+    const s = play(car, (d) => {
+      d.actor('ana').sit('carro', 'driver');
+      d.wait(1);
+      d.actor('ana').standUp([4.6, 5]);
+    });
+    // Sitting takes a second, then a second of waiting: the middle of the wait.
+    const mid = 1.5;
+    expect([s.value('ana', 'reachL', mid), s.value('ana', 'reachR', mid), s.value('ana', 'holding', mid)]).toEqual([1, 1, 1]);
+    // The hands are a little to each side, in front and above the seat.
+    expect(s.value('ana', 'reachL.x', mid)!).toBeLessThan(s.value('ana', 'reachR.x', mid)!);
+    expect(s.value('ana', 'reachL.z', mid)!).toBeLessThan(-0.3);
+    expect([s.value('ana', 'reachL'), s.value('ana', 'reachR'), s.value('ana', 'holding'), s.value('ana', 'ride')]).toEqual([0, 0, 0, 0]);
+    const passenger = play(car, (d) => void d.actor('ana').sit('carro', 'passenger'), [7.4, 5]);
+    expect(passenger.value('ana', 'reachR')).toBe(0);
+  });
+
+  it('on a bicycle the legs go round as it rolls, and stand still when it does', () => {
+    const s = play([{ id: 'bike', asset: 'vehicle.bicycle', pos: [5.6, 5], rot: -90 }], (d) => {
+      d.actor('ana').sit('bike');
+      d.do('bike', 'drive', { path: [[15, 5]], speed: 4 });
+    });
+    expect(s.value('ana', 'ride')).toBe(1);
+    const knee = (t: number) => {
+      s.show(t);
+      return s.objects.get('ana')!.object.getObjectByName('thighL')!.rotation.x;
+    };
+    const [a, b, c] = [knee(1.5), knee(1.8), knee(2.1)];
+    expect(new Set([a.toFixed(2), b.toFixed(2), c.toFixed(2)]).size).toBe(3);
+    // Stopped at the end: the same pose a moment apart.
+    expect(knee(s.episode.duration - 0.3)).toBeCloseTo(knee(s.episode.duration - 0.1), 5);
+  });
+
+  it('a hand on the wheel leaves it to do something and goes back', () => {
+    const s = play([{ id: 'carro', asset: 'vehicle.car', pos: [6.2, 5] }], (d) => {
+      d.do('carro', 'open', { part: 'frontLeft' });
+      d.actor('ana').sit('carro', 'driver');
+      d.actor('ana').close('carro', { part: 'frontLeft' });
+    });
+    expect(s.value('carro', 'frontLeft.open')).toBe(0);
+    // Back where it was on the wheel (0.38 m in front of the seat), and still held up.
+    expect(s.value('ana', 'reachR')).toBe(1);
+    expect(s.value('ana', 'reachR.z')).toBeCloseTo(-0.38, 3);
+    // Halfway through closing the door, it was somewhere else.
+    expect(Math.abs(s.value('ana', 'reachR.x', s.episode.duration - 1.6)! - s.value('ana', 'reachR.x')!)).toBeGreaterThan(0.1);
+  });
+});

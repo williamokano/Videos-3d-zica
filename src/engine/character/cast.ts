@@ -3,7 +3,7 @@ import type { Ambient } from '../actions/ambient';
 import type { InteractiveObject } from '../world/build';
 import { buildBody } from './body';
 import { palmToward, reachPose, wristPosition, type Side } from './ik';
-import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, resolveFace, resolveHand, sitPose, splitGaze } from './motion';
+import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, resolveFace, resolveHand, ridePose, sitPose, splitGaze } from './motion';
 import type { CharacterDef, CharacterRig, HandShape, Joint } from './types';
 
 /** A character placed in an episode. */
@@ -43,7 +43,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const state: Record<string, number> = {
     x: member.at[0], y: (member.elevation ?? 0) + (member.seated ?? 0), z: member.at[1], yaw: member.yaw ?? 0,
     // `seat` is how far above the floor the seat under the character is.
-    stride: 0, gait: 0, talk: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0,
+    stride: 0, gait: 0, talk: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0, ride: 0, pedal: 0, holding: 0,
     carryL: 0, carryR: 0,
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
@@ -64,7 +64,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     object.position.set(state.x, state.y, state.z);
     object.rotation.y = THREE.MathUtils.degToRad(state.yaw);
     object.updateMatrixWorld();
-    let pose = sitPose(crouchPose(locomotionPose(t, state.gait, state.stride), state.crouch), state.sit);
+    let pose = ridePose(sitPose(crouchPose(locomotionPose(t, state.gait, state.stride), state.crouch), state.sit), state.ride, state.pedal);
     // What each hand does because of what the arm is doing: open when it talks, closed on what it holds.
     const busy = { L: { open: 0, grip: 0 }, R: { open: 0, grip: 0 } };
     for (const side of ['L', 'R'] as Side[]) {

@@ -40,6 +40,8 @@ export interface TargetTraits {
   /** Fixed places on the object where something can be attached (car seats): name → [x, y, z] in the object's own frame. */
   /** Places on the object: [x, y, z] in its own frame and, optionally, the heading of who sits there relative to the object's. */
   sockets?: Record<string, number[]>;
+  /** By seat: where the hands of whoever sits there hold ([x, y, z] from the seat, left then right), and whether the legs pedal. */
+  seats?: Record<string, { hands?: [number[], number[]]; pedals?: boolean }>;
   /** Items: [width, height, depth] in meters. */
   size?: [number, number, number];
   /** Doors: where the handle is when the door is closed, and the direction that points into the room that declares it. */

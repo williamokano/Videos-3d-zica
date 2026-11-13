@@ -205,15 +205,20 @@ function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
   // A place on the object: where it is and, for a seat that does not face the way the object does, which way
   // whoever sits there faces (degrees, turned from the object's own heading).
   const sockets: Record<string, number[]> = {};
+  const seats: NonNullable<InteractiveObject['traits']['seats']> = {};
   obj.traverse((o) => {
-    if (o !== obj && o.name.startsWith('seat.')) sockets[o.name] = [...o.position.toArray(), THREE.MathUtils.radToDeg(o.rotation.y)];
+    if (o === obj || !o.name.startsWith('seat.')) return;
+    sockets[o.name] = [...o.position.toArray(), THREE.MathUtils.radToDeg(o.rotation.y)];
+    // What the hands hold there, measured from the seat.
+    const use = o.userData.use as { hands?: [number[], number[]]; pedals?: boolean } | undefined;
+    if (use) seats[o.name] = { hands: use.hands?.map((h) => [h[0] - o.position.x, h[1] - o.position.y, h[2] - o.position.z]) as [number[], number[]] | undefined, pedals: use.pedals };
   });
   const grip = new THREE.Vector3();
   return {
     id: prop.id!,
     kind: prop.pickable && assetKind(prop.asset) === 'prop' ? 'item' : assetKind(prop.asset),
     channels: Object.fromEntries(Object.entries(all).map(([name, c]) => [name, c.value])),
-    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets, parts: obj.userData.parts },
+    traits: { pickable: prop.pickable, size: [size.x, size.y, size.z], sockets, seats, parts: obj.userData.parts },
     object: obj,
     set: (channel, value) => all[channel]?.apply(value),
     // Held by its middle and hanging centered on the hand, unless the asset says where it is gripped

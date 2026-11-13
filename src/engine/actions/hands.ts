@@ -36,9 +36,20 @@ export function freeHand(ctx: ActionContext, by: string): 'L' | 'R' {
  */
 export function reach(ctx: ActionContext, by: string, side: 'L' | 'R', point: Point3, amount: (u: number) => number, what: string): ChannelWrite[] {
   const who = actor(ctx, by);
-  if (ctx.current(`reach${side}`, by) > 0.01) ctx.fail(`a mão de "${by}" está levantada segurando algo; use "lower" antes.`);
   const scale = who.traits.bodyScale ?? 1;
   const place = ctx.placeOf(by);
+  // A hand on a steering wheel or handlebars leaves it, does the thing and goes back: the arm stays up, and
+  // where the hand is goes from the wheel to the point and back. Both are places on the seated body.
+  if (ctx.current('holding', by) > 0.5 && ctx.current(`reach${side}.local`, by) > 0.5 && ctx.current(`reach${side}`, by) > 0.5) {
+    const a = (place.yaw * Math.PI) / 180;
+    const [dx, dz] = [point[0] - place.pos[0], point[2] - place.pos[2]];
+    const to = [(dx * Math.cos(a) - dz * Math.sin(a)) / scale, (point[1] - place.pos[1]) / scale + 0.82, (dx * Math.sin(a) + dz * Math.cos(a)) / scale];
+    return (['x', 'y', 'z'] as const).map((axis, i) => {
+      const from = ctx.current(`reach${side}.${axis}`, by);
+      return { target: by, channel: `reach${side}.${axis}`, at: (u: number) => from + (to[i] - from) * amount(u) };
+    });
+  }
+  if (ctx.current(`reach${side}`, by) > 0.01) ctx.fail(`a mão de "${by}" está levantada segurando algo; use "lower" antes.`);
   const far = Math.hypot(point[0] - place.pos[0], point[2] - place.pos[2]);
   const limit = 0.8 * scale;
   if (far > limit) {

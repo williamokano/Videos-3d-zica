@@ -115,6 +115,25 @@ export function sitPose(pose: Pose, amount: number): Pose {
   return blendPose(pose, seated, amount);
 }
 
+/**
+ * Riding a bicycle: sitting forward over the handlebars, the legs going round with the pedals. `turns` is how many
+ * times the pedals have gone round; the two legs are half a turn apart.
+ */
+export function ridePose(pose: Pose, amount: number, turns: number): Pose {
+  if (amount <= 0.001) return pose;
+  const leg = (phase: number): { thigh: [number, number, number]; shin: [number, number, number] } => {
+    const a = (turns + phase) * Math.PI * 2;
+    // The knee comes up as the pedal goes over the top and the leg stretches as it goes down.
+    return { thigh: [62 + 26 * Math.sin(a), 0, 0], shin: [-(78 + 30 * Math.sin(a + 0.9)), 0, 0] };
+  };
+  const [left, right] = [leg(0), leg(0.5)];
+  const riding: Pose = {
+    lift: pose.lift,
+    joints: { ...pose.joints, spine: [30, 0, 0], chest: [8, 0, 0], head: [-22, 0, 0], thighL: left.thigh, shinL: left.shin, thighR: right.thigh, shinR: right.shin, footL: [10, 0, 0], footR: [10, 0, 0] },
+  };
+  return blendPose(pose, riding, amount);
+}
+
 /** Hold something in front of the body with one hand: elbow at the side, forearm forward. */
 export function carryPose(pose: Pose, side: 'L' | 'R', amount: number): Pose {
   if (amount <= 0.001) return pose;

@@ -5,6 +5,8 @@ import { registerAction, type WalkPath } from './catalog';
 import { BODY, outAndBack, reachBody, type Point3 } from './hands';
 
 const RUN_FROM = 3;
+/** How far the body comes down to sit: a place on the body given standing is this much lower seated. */
+const SEATED_DROP = 0.82;
 
 /** Shortest way to turn from one heading to another, in degrees. */
 function turn(from: number, to: number): number {
@@ -230,8 +232,23 @@ registerAction({
     const base = ctx.placeOf(on).pos;
     const far = Math.hypot(me[0] - base[0], me[2] - base[2]);
     if (far > 2.5) ctx.fail(`"${on}" está a ${far.toFixed(1)} m; leve o personagem até lá antes, com walkTo.`);
+    // A seat with something to hold (a steering wheel, handlebars): the free hands go there, and stay.
+    const use = ctx.object(on).traits.seats?.[socket];
+    const who = ctx.target.id;
+    const settle = (u: number): number => Math.max(0, (u - 0.5) / 0.5);
+    const hold = (['L', 'R'] as const).flatMap((side, i) => {
+      if (!use?.hands || ctx.current(`carry${side}`) > 0.01 || ctx.current(`reach${side}`) > 0.01) return [];
+      // Points on the body are given standing; seated, the body is lower by the height of the hips.
+      const [x, y, z] = use.hands[i];
+      return [...reachBody(who, side, [x, y + SEATED_DROP, z], settle), { channel: `hand${side}.grip`, at: settle }];
+    });
     return {
-      writes: [{ channel: 'attached', to: 1 }, { channel: 'sit', at: (u) => Math.max(0, (u - 0.3) / 0.7) }],
+      writes: [
+        { channel: 'attached', to: 1 }, { channel: 'sit', at: (u) => Math.max(0, (u - 0.3) / 0.7) },
+        ...hold,
+        ...(hold.length ? [{ channel: 'holding', at: () => 1 }] : []),
+        ...(use?.pedals ? [{ channel: 'ride', at: settle }] : []),
+      ],
       attach: { to: on, socket, weight: 'attached' },
     };
   },
@@ -270,11 +287,18 @@ registerAction({
     if (far > 2.5) ctx.fail(`o ponto fica a ${far.toFixed(1)} m do assento; escolha um ao lado e depois use walkTo.`);
     const yaw = turn(seat.yaw, (ctx.params.yaw as number | undefined) ?? heading(to[0] - seat.pos[0], to[1] - seat.pos[2]));
     const constant = (channel: string, value: number) => ({ channel, at: () => value });
+    // Let go of the wheel or the handlebars, and stop pedalling.
+    const letGo = ctx.current('holding') > 0.5
+      ? (['L', 'R'] as const).flatMap((side) => (ctx.current(`reach${side}.local`) > 0.5 && ctx.current(`reach${side}`) > 0.01 ? [{ channel: `reach${side}`, at: (u: number) => 1 - Math.min(1, u / 0.4) }, { channel: `hand${side}.grip`, at: (u: number) => 1 - Math.min(1, u / 0.4) }] : []))
+      : [];
     return {
       writes: [
         constant('x', to[0]), constant('z', to[1]), constant('y', ctx.placeOf(link.to).pos[1]), constant('yaw', yaw),
         { channel: 'attached', to: 0 },
         { channel: 'sit', at: (u: number) => 1 - Math.min(1, u / 0.7) },
+        ...letGo,
+        ...(ctx.current('holding') > 0.5 ? [constant('holding', 0)] : []),
+        ...(ctx.current('ride') > 0.01 ? [{ channel: 'ride', at: (u: number) => 1 - Math.min(1, u / 0.4) }] : []),
       ],
       detach: {},
     };
