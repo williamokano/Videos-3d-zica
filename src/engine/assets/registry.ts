@@ -76,6 +76,39 @@ export function post(radius: number, height: number, color: string, x: number, y
   return mesh;
 }
 
+/**
+ * A named place on an asset, which actions find: somewhere to sit (`sit`) or to put something (`putDown` with
+ * `on`). `facing` turns whoever sits there from the way the asset faces, in degrees (a stool across a table).
+ */
+export function place(name: string, x: number, y: number, z: number, facing = 0): THREE.Object3D {
+  const anchor = new THREE.Object3D();
+  anchor.name = `seat.${name}`;
+  anchor.position.set(x, y, z);
+  anchor.rotation.y = THREE.MathUtils.degToRad(facing);
+  return anchor;
+}
+
+/** The heading that looks from (x, z) to the origin of the asset: for seats around a table. */
+export const facingCenter = (x: number, z: number): number => THREE.MathUtils.radToDeg(Math.atan2(x, z));
+
+/**
+ * A lamp that can be switched: `glow` are the parts seen lit, `light` what lights the scene (if any).
+ * Returns the `on` channel. Off, the lit parts turn dark and the light goes out.
+ */
+export function switchable(glow: THREE.Mesh[], color: string, light?: THREE.PointLight): AssetChannels {
+  const [lit, dark] = [new THREE.MeshBasicMaterial({ color }), mat(`#${new THREE.Color(color).multiplyScalar(0.3).getHexString()}`)];
+  const intensity = light?.intensity ?? 0;
+  return {
+    on: {
+      value: 1,
+      apply(v) {
+        for (const mesh of glow) mesh.material = v > 0.5 ? lit : dark;
+        if (light) light.intensity = v > 0.5 ? intensity : 0;
+      },
+    },
+  };
+}
+
 export function group(...children: THREE.Object3D[]): THREE.Group {
   const g = new THREE.Group();
   if (children.length) g.add(...children);

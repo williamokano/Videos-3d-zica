@@ -38,7 +38,8 @@ export interface TargetTraits {
   /** Characters: size relative to the standard 1.7 m body. */
   bodyScale?: number;
   /** Fixed places on the object where something can be attached (car seats): name → [x, y, z] in the object's own frame. */
-  sockets?: Record<string, [number, number, number]>;
+  /** Places on the object: [x, y, z] in its own frame and, optionally, the heading of who sits there relative to the object's. */
+  sockets?: Record<string, number[]>;
   /** Items: [width, height, depth] in meters. */
   size?: [number, number, number];
   /** Doors: where the handle is when the door is closed, and the direction that points into the room that declares it. */
@@ -235,7 +236,7 @@ export interface CompiledActions {
   focus: Record<string, { base?: [number, number, number]; up: number }>;
   /** Channel values before any action, by object. */
   initial: Record<string, Record<string, number>>;
-  sockets: Record<string, Record<string, [number, number, number]>>;
+  sockets: Record<string, Record<string, number[]>>;
   /** Body size of each character, relative to the standard one. */
   scales: Record<string, number>;
 }
@@ -463,7 +464,8 @@ export function placementAt(compiled: CompiledActions, id: string, t: number, de
   ];
   const w = link.weight ? Math.max(0, Math.min(1, own(link.weight))) : 1;
   for (let i = 0; i < 3; i++) pos[i] += (at[i] - pos[i]) * w;
-  yaw += ((((base.yaw - yaw) % 360) + 540) % 360 - 180) * w;
+  // A seat may face its own way on the object.
+  yaw += ((((base.yaw + (offset[3] ?? 0) - yaw) % 360) + 540) % 360 - 180) * w;
   return { pos, yaw };
 }
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { group, post, rbox, registerAsset } from './registry';
+import { group, place, post, rbox, registerAsset, setChannels, type AssetChannels } from './registry';
 
 /*
  * Orientation convention: furniture a person uses faces -z (the person looks toward -z).
@@ -41,24 +41,40 @@ registerAsset('school.desk', 'Carteira escolar brasileira: mesa individual de ma
     post(0.018, top - 0.02, METAL, -0.28, 0, 0.11),
     post(0.018, top - 0.02, METAL, 0.28, 0, 0.11),
     chair(color, DESK_SEAT.back),
+    // The chair to sit on, and the top to put things on.
+    place('chair', 0, DESK_SEAT.height, DESK_SEAT.back),
+    place('top', 0, top + 0.02, -0.1),
   );
 });
 
-registerAsset('school.teacherDesk', 'Mesa do professor: mesa de escritório simples de 1,20 × 0,70 com duas gavetas pequenas, e cadeira', () =>
-  group(
+registerAsset('school.teacherDesk', 'Mesa do professor: mesa de escritório simples de 1,20 × 0,70, cadeira (lugar `chair`), tampo (`top`) e duas gavetas que abrem (canais `drawer1.open` em cima e `drawer2.open` embaixo)', () => {
+  const desk = group(
     rbox(1.2, 0.04, 0.7, WOOD, [0, 0.76, 0]),
     rbox(0.04, 0.74, 0.64, WOOD_DARK, [-0.56, 0.37, 0], 0.01),
     rbox(0.04, 0.74, 0.64, WOOD_DARK, [0.56, 0.37, 0], 0.01),
     rbox(1.1, 0.4, 0.02, WOOD_DARK, [0, 0.52, -0.31], 0.008),
-    // Two small drawers on the right of whoever sits.
-    rbox(0.36, 0.3, 0.6, WOOD_DARK, [0.36, 0.59, 0.01], 0.01),
-    rbox(0.32, 0.12, 0.02, WOOD, [0.36, 0.665, 0.32], 0.006),
-    rbox(0.32, 0.12, 0.02, WOOD, [0.36, 0.515, 0.32], 0.006),
-    rbox(0.1, 0.02, 0.02, METAL, [0.36, 0.665, 0.335], 0.006),
-    rbox(0.1, 0.02, 0.02, METAL, [0.36, 0.515, 0.335], 0.006),
+    // The box of the two small drawers, on the right of whoever sits.
+    rbox(0.36, 0.3, 0.58, WOOD_DARK, [0.36, 0.59, 0], 0.01),
     chair('#444b5a', 0.62, 0.47, 0.46),
-  ),
-);
+    place('chair', 0, 0.49, 0.62),
+    place('top', -0.2, 0.79, 0),
+  );
+  const channels: AssetChannels = {};
+  [0.665, 0.515].forEach((y, i) => {
+    // Each drawer is a tray behind its front, and slides out toward whoever sits.
+    const drawer = group(
+      rbox(0.32, 0.12, 0.02, WOOD, [0, 0, 0.31], 0.006),
+      rbox(0.1, 0.02, 0.02, METAL, [0, 0, 0.325], 0.006),
+      rbox(0.3, 0.015, 0.5, '#6b4a3a', [0, -0.05, 0.05], 0.004),
+      rbox(0.012, 0.09, 0.5, '#6b4a3a', [-0.145, -0.01, 0.05], 0.004),
+      rbox(0.012, 0.09, 0.5, '#6b4a3a', [0.145, -0.01, 0.05], 0.004),
+    );
+    drawer.position.set(0.36, y, 0);
+    desk.add(drawer);
+    channels[`drawer${i + 1}.open`] = { value: 0, apply: (v) => (drawer.position.z = v * 0.36) };
+  });
+  return setChannels(desk, channels);
+});
 
 registerAsset('school.blackboard', 'Quadro-negro de parede, verde como nas escolas públicas, com giz (params: width)', (p) => {
   const w = Number(p.width ?? 3.6);
@@ -75,19 +91,26 @@ registerAsset('school.blackboard', 'Quadro-negro de parede, verde como nas escol
   return g;
 });
 
-registerAsset('school.lockers', 'Fileira de armários de corredor (params: count)', (p) => {
+registerAsset('school.lockers', 'Fileira de armários de corredor; cada porta abre (canais `door1.open`, `door2.open`... da esquerda para a direita de quem olha) (params: count)', (p) => {
   const n = Number(p.count ?? 6);
   const g = group();
   const colors = ['#d95763', '#5b8fd9'];
+  const channels: AssetChannels = {};
   for (let i = 0; i < n; i++) {
     const x = (i - (n - 1) / 2) * 0.42;
-    g.add(
-      rbox(0.4, 1.9, 0.45, colors[i % 2], [x, 0.95, 0.225], 0.02),
-      rbox(0.04, 0.12, 0.02, '#e8e8e8', [x + 0.12, 1.05, 0.46], 0.008),
-      rbox(0.24, 0.05, 0.01, '#3b3b46', [x, 1.6, 0.455], 0.004),
+    // The cabinet, dark inside, and its door hinged on the left edge.
+    g.add(rbox(0.4, 1.9, 0.42, colors[i % 2], [x, 0.95, 0.21], 0.02), rbox(0.36, 1.84, 0.01, '#2b2e36', [x, 0.95, 0.421], 0.004));
+    const hinge = new THREE.Group();
+    hinge.position.set(x - 0.2, 0, 0.43);
+    hinge.add(
+      rbox(0.4, 1.9, 0.025, colors[i % 2], [0.2, 0.95, 0.012], 0.01),
+      rbox(0.04, 0.12, 0.02, '#e8e8e8', [0.32, 1.05, 0.03], 0.008),
+      rbox(0.24, 0.05, 0.01, '#3b3b46', [0.2, 1.6, 0.026], 0.004),
     );
+    g.add(hinge);
+    channels[`door${i + 1}.open`] = { value: 0, apply: (v) => (hinge.rotation.y = -v * 1.75) };
   }
-  return g;
+  return setChannels(g, channels);
 });
 
 registerAsset('school.bench', 'Banco de pátio, com três lugares para sentar (left, middle, right); quem senta fica de frente para -z', () => {

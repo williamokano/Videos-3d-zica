@@ -94,8 +94,8 @@ function sideOf(ctx: ActionContext, by: string): 'inside' | 'outside' | undefine
 
 registerAction({
   id: 'open',
-  description: 'Abre uma porta (de abrir, de correr ou de enrolar) ou uma parte de um veículo. Com "by", o personagem abre com a mão.',
-  appliesTo: ['door', 'vehicle'],
+  description: 'Abre uma porta (de abrir, de correr ou de enrolar), um portão, uma janela, ou uma parte de um objeto (porta de carro, gaveta, porta de armário). Com "by", o personagem abre com a mão.',
+  appliesTo: ['*'],
   params: {
     part: { type: 'string', description: 'parte do objeto, ex.: "frontLeft" num carro' },
     amount: { type: 'number', description: 'quanto abrir, de 0 a 1 (padrão 1)' },
@@ -122,11 +122,88 @@ registerAction({
 
 registerAction({
   id: 'close',
-  description: 'Fecha uma porta ou uma parte de um veículo. Numa porta de enrolar, ela desce de cima para baixo. Com "by", o personagem fecha com a mão.',
-  appliesTo: ['door', 'vehicle'],
+  description: 'Fecha o que "open" abre: porta, portão, janela ou uma parte de um objeto. Numa porta de enrolar, ela desce de cima para baixo. Com "by", o personagem fecha com a mão.',
+  appliesTo: ['*'],
   params: { part: { type: 'string', description: 'parte do objeto, ex.: "frontLeft" num carro' }, by: BY, hand: HAND },
   duration: 0.8,
   compile: (ctx) => (ctx.params.by ? byHand(ctx, openChannel(ctx), 0) : { writes: [{ channel: openChannel(ctx), to: 0 }] }),
+});
+
+/** Channels that turn something on, in the order they are looked for when the action does not say which. */
+const SWITCHES = ['on', 'siren', 'lights'];
+
+registerAction({
+  id: 'switch',
+  description: 'Liga ou desliga algo: luminária, poste, ventilador, giroflex ("what": "siren"), faróis ("what": "lights"). Acontece na hora.',
+  appliesTo: ['*'],
+  params: {
+    on: { type: 'boolean', description: 'true liga, false desliga', required: true },
+    what: { type: 'string', description: 'o que ligar, quando o objeto tem mais de uma coisa: "on", "siren", "lights" (padrão: a primeira que ele tiver)' },
+  },
+  duration: 0,
+  compile(ctx) {
+    const what = (ctx.params.what as string | undefined) ?? SWITCHES.find((c) => c in ctx.target.channels);
+    if (!what || !(what in ctx.target.channels)) {
+      const has = SWITCHES.filter((c) => c in ctx.target.channels);
+      ctx.fail(has.length ? `"${ctx.target.id}" não tem "${what}" para ligar. Tem: ${has.join(', ')}.` : `"${ctx.target.id}" não tem nada para ligar ou desligar.`);
+    }
+    return { writes: [{ channel: what!, to: ctx.params.on ? 1 : 0 }] };
+  },
+});
+
+const SIGNALS: Record<string, number> = { red: 0, yellow: 1, green: 2, off: 3 };
+
+registerAction({
+  id: 'signal',
+  description: 'Muda um semáforo: "red", "yellow", "green" ou "off" (apagado). Acontece na hora.',
+  appliesTo: ['*'],
+  params: { to: { type: 'string', description: 'red, yellow, green ou off', required: true } },
+  duration: 0,
+  compile(ctx) {
+    const to = ctx.params.to as string;
+    if (!(to in SIGNALS)) ctx.fail(`sinal desconhecido "${to}". Existem: ${Object.keys(SIGNALS).join(', ')}.`);
+    if (!('state' in ctx.target.channels)) ctx.fail(`"${ctx.target.id}" não é um semáforo (não tem o canal "state").`);
+    return { writes: [{ channel: 'state', to: SIGNALS[to] }] };
+  },
+});
+
+registerAction({
+  id: 'knockOver',
+  description: 'Derruba um objeto solto (cone, cavalete, lixeira, carteira): ele tomba para um lado e fica caído. Com "by", cai para longe do personagem, que precisa estar perto.',
+  appliesTo: ['prop', 'item'],
+  params: {
+    toward: { type: 'number', description: 'para que lado cai, em graus (0 norte, 90 oeste); padrão: para longe de "by", ou para a frente do objeto' },
+    by: { type: 'string', description: 'personagem que esbarra ou empurra' },
+    angle: { type: 'number', description: 'quanto tomba, em graus (padrão 90, deitado)' },
+  },
+  duration: 0.45,
+  compile(ctx) {
+    if (!('lean' in ctx.target.channels)) ctx.fail(`"${ctx.target.id}" não pode ser derrubado.`);
+    const by = ctx.params.by as string | undefined;
+    const here = ctx.placeOf(ctx.target.id);
+    let toward = (ctx.params.toward as number | undefined) ?? here.yaw;
+    if (by) {
+      const who = ctx.placeOf(by);
+      const [dx, dz] = [here.pos[0] - who.pos[0], here.pos[2] - who.pos[2]];
+      const far = Math.hypot(dx, dz);
+      if (far > 1.2) ctx.fail(`"${by}" está a ${far.toFixed(1)} m de "${ctx.target.id}"; leve-o até lá antes (até 1,2 m).`);
+      if (ctx.params.toward === undefined && far > 0.01) toward = (Math.atan2(-dx, -dz) * 180) / Math.PI;
+    }
+    // It falls faster and faster, as things do.
+    return { writes: [{ channel: 'leanTo', at: () => toward }, { channel: 'lean', at: (u) => ((ctx.params.angle as number | undefined) ?? 90) * u * u }] };
+  },
+});
+
+registerAction({
+  id: 'setUpright',
+  description: 'Põe de pé um objeto caído.',
+  appliesTo: ['prop', 'item'],
+  params: {},
+  duration: 0.6,
+  compile(ctx) {
+    if (!('lean' in ctx.target.channels)) ctx.fail(`"${ctx.target.id}" não pode ser derrubado nem levantado.`);
+    return { writes: [{ channel: 'lean', to: 0 }] };
+  },
 });
 
 registerAction({
@@ -234,6 +311,14 @@ registerAction({
         { channel: 'z', at: (u) => route.at(u * route.length)[1] },
         { channel: 'yaw', at: yaw },
         { channel: 'travel', at: (u) => travel + (reverse ? -1 : 1) * u * route.length },
+        // The front wheels turn into the curve: how much the heading changes over the length of the vehicle.
+        ...('steer' in ctx.target.channels
+          ? [{ channel: 'steer', at: (u: number) => {
+              const span = Math.min(0.5, 1.4 / route.length);
+              const turn = yaw(Math.min(1, u + span)) - yaw(Math.max(0, u - span));
+              return Math.max(-35, Math.min(35, turn * 0.9)) * Math.min(1, u * 8, (1 - u) * 8);
+            } }]
+          : []),
       ],
     };
   },

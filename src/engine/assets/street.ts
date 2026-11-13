@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { group, mat, post, rbox, registerAsset, setChannels } from './registry';
+import { group, mat, place, post, rbox, registerAsset, setChannels } from './registry';
 
 /*
  * What stands on a street. Things with a front (a sign, a bus stop, a traffic light) face +z, toward the road
@@ -229,7 +229,8 @@ registerAsset('street.trashBin', 'Lixeira de rua num poste, das de calçada (par
   const color = String(p.color ?? '#e07b1f');
   const bin = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.5, 14, 1, true), new THREE.MeshStandardMaterial({ color, roughness: 0.85, side: THREE.DoubleSide }));
   bin.position.set(0, 0.85, 0.24);
-  return group(post(0.03, 1.15, '#6b6f78', 0, 0, 0), bin, new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.02, 14), mat('#3d424c')).translateY(0.61).translateZ(0.24), rbox(0.05, 0.05, 0.24, '#6b6f78', [0, 0.95, 0.1], 0.015));
+  // `inside`: where something thrown away goes.
+  return group(place('inside', 0, 0.68, 0.24), post(0.03, 1.15, '#6b6f78', 0, 0, 0), bin, new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.02, 14), mat('#3d424c')).translateY(0.61).translateZ(0.24), rbox(0.05, 0.05, 0.24, '#6b6f78', [0, 0.95, 0.1], 0.015));
 });
 
 registerAsset(
@@ -249,13 +250,8 @@ registerAsset(
     back.material = new THREE.MeshStandardMaterial({ color: '#9fd0ee', transparent: true, opacity: 0.35, roughness: 0.2 });
     back.userData.noShadow = true;
     g.add(back);
-    for (const [name, x] of [['left', -0.7], ['middle', 0], ['right', 0.7]] as const) {
-      const anchor = new THREE.Object3D();
-      anchor.name = `seat.${name}`;
-      anchor.position.set(x, 0.49, -0.05);
-      anchor.rotation.y = Math.PI;
-      g.add(anchor);
-    }
+    // Whoever sits looks at the road, the way the stop faces.
+    for (const [name, x] of [['left', -0.7], ['middle', 0], ['right', 0.7]] as const) g.add(place(name, x, 0.49, -0.05, 180));
     // The stop sign on its own post, at the kerb end.
     const sign = plate(0.42, 0.42, (c, w, h) => {
       c.fillStyle = color;

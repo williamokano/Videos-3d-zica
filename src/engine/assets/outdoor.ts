@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { rng } from '../core/rng';
-import { group, mat, post, rbox, registerAsset, setChannels } from './registry';
+import { facingCenter, group, mat, place, post, rbox, registerAsset, setChannels } from './registry';
 
 /*
  * The outside of a place: fences and gates, low grass and weeds, yard furniture, a covered walkway.
@@ -98,6 +98,8 @@ registerAsset(
       rbox(width * 2, 0.03, 0.06, '#6b6f78', [width / 2, 0.015, 0.1], 0.008),
       door,
     );
+    // Closed, nobody walks through: the engine blocks the opening until it is this far open.
+    g.userData.gate = { width, passableAt: 0.5 };
     return setChannels(g, { open: { value: 0, apply: (v) => (door.position.x = v * (width - 0.1)) } });
   },
 );
@@ -162,7 +164,8 @@ registerAsset(
     const concrete = String(p.color ?? '#c9c5ba');
     const top = String(p.top ?? concrete);
     const seats = String(p.seats ?? 'stools');
-    const g = group();
+    // On every table: `top`, to put things on. Seats are named in the description of each kind.
+    const g = group(place('top', 0, 0.79, 0));
     const disc = (radius: number, thick: number, color: string, x: number, y: number, z: number) => {
       const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius * 0.97, thick, 28), mat(color));
       mesh.position.set(x, y, z);
@@ -173,6 +176,8 @@ registerAsset(
       g.add(rbox(1.5, 0.08, 0.7, top, [0, 0.74, 0], 0.02), rbox(0.14, 0.7, 0.46, concrete, [-0.48, 0.35, 0], 0.02), rbox(0.14, 0.7, 0.46, concrete, [0.48, 0.35, 0], 0.02));
       for (const z of [-0.68, 0.68]) {
         g.add(rbox(1.5, 0.07, 0.32, top, [0, 0.44, z], 0.02), rbox(0.12, 0.41, 0.24, concrete, [-0.5, 0.205, z], 0.02), rbox(0.12, 0.41, 0.24, concrete, [0.5, 0.205, z], 0.02));
+        // Two places on each bench, facing the table.
+        for (const x of [-0.4, 0.4]) g.add(place(`${z < 0 ? 'a' : 'b'}${x < 0 ? 1 : 2}`, x, 0.48, z, facingCenter(0, z)));
       }
       return g;
     }
@@ -181,7 +186,7 @@ registerAsset(
       for (let i = 0; i < 4; i++) {
         const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
         const [x, z] = [Math.cos(a) * 0.92, Math.sin(a) * 0.92];
-        g.add(disc(0.19, 0.07, top, x, 0.44, z), post(0.085, 0.41, concrete, x, 0, z));
+        g.add(disc(0.19, 0.07, top, x, 0.44, z), post(0.085, 0.41, concrete, x, 0, z), place(`s${i + 1}`, x, 0.48, z, facingCenter(x, z)));
       }
       return g;
     }
@@ -198,6 +203,9 @@ registerAsset(
       bench.add(slab);
       for (const a of [-arc / 2 + 0.25, arc / 2 - 0.25]) bench.add(rbox(0.24, 0.41, 0.12, concrete, [Math.cos(a) * 0.96, 0.205, -Math.sin(a) * 0.96], 0.02).rotateY(a));
       g.add(bench);
+      // One place in the middle of each bench, facing the table.
+      const [x, z] = [Math.cos(bench.rotation.y) * 0.96, -Math.sin(bench.rotation.y) * 0.96];
+      g.add(place(`b${i + 1}`, x, 0.5, z, facingCenter(x, z)));
     }
     return g;
   },

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { rng } from '../core/rng';
-import { group, post, rbox, registerAsset } from './registry';
+import { group, place, post, rbox, registerAsset, setChannels, switchable } from './registry';
 
 registerAsset('structure.pillar', 'Pilar de concreto (params: height, size)', (p) => {
   const h = Number(p.height ?? 3);
@@ -15,7 +15,8 @@ registerAsset('light.ceilingLamp', 'Luminária de teto com luz própria; posicio
   glow.userData.noShadow = true;
   const light = new THREE.PointLight(color, Number(p.intensity ?? 14), Number(p.range ?? 11), 1.6);
   light.position.y = -0.2;
-  return group(post(0.015, 0.12, '#3b3b46', 0, 0, 0), glow, light);
+  // Channel `on`: with an id in the location, an episode can switch it off and on.
+  return setChannels(group(post(0.015, 0.12, '#3b3b46', 0, 0, 0), glow, light), switchable([glow], color, light));
 });
 
 registerAsset('storage.shelf', 'Estante de depósito com caixas (params: seed, width)', (p) => {
@@ -28,7 +29,9 @@ registerAsset('storage.shelf', 'Estante de depósito com caixas (params: seed, w
   const boxColors = ['#c8a06a', '#b98d58', '#d6b27c', '#8e9aa8'];
   for (const y of [0.25, 0.9, 1.55, 2.18]) {
     g.add(rbox(w, 0.04, 0.5, '#7b808c', [0, y, 0], 0.01));
+    // The end of each shelf is kept free, to put things on.
     if (y > 2) continue;
+    g.add(place(`shelf${[0.25, 0.9, 1.55].indexOf(y) + 1}`, w / 2 - 0.22, y + 0.02, 0));
     let x = -w / 2 + 0.12;
     while (x < w / 2 - 0.5) {
       const bw = 0.3 + rand() * 0.3;
@@ -51,6 +54,8 @@ registerAsset('storage.crates', 'Pilha de caixotes de madeira (params: seed)', (
     crate.rotation.y = (rand() - 0.5) * 0.3;
     g.add(crate);
   }
+  // On the second crate, which never has another on top.
+  g.add(place('top', s + 0.05, s, 0.1));
   return g;
 });
 

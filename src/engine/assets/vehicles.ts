@@ -17,6 +17,8 @@ function wheel(x: number, z: number, radius = WHEEL_R, width = 0.22): THREE.Grou
   // Spokes make the spin visible.
   const g = group(tyre, hub, rbox(width + 0.03, radius * 0.9, 0.06, '#8d919b', [0, 0, 0], 0.01), rbox(width + 0.03, 0.06, radius * 0.9, '#8d919b', [0, 0, 0], 0.01));
   g.position.set(x, radius, z);
+  // It rolls about its axle whichever way it is steered.
+  g.rotation.order = 'YXZ';
   return g;
 }
 
@@ -28,8 +30,29 @@ function seatAnchor(name: string, x: number, y: number, z: number): THREE.Object
   return anchor;
 }
 
-/** The channel that turns wheels as the vehicle rolls: `travel`, in meters. */
-const rolling = (wheels: THREE.Object3D[], radius: number): AssetChannels => ({ travel: { value: 0, apply: (v) => wheels.forEach((w) => (w.rotation.x = -v / radius)) } });
+/**
+ * What makes a vehicle move like one: `travel` (meters rolled) turns the wheels, and `steer` (degrees, positive
+ * to the left) turns the front ones. `drive` writes both.
+ */
+const rolling = (wheels: THREE.Object3D[], radius: number, front: THREE.Object3D[] = []): AssetChannels => ({
+  travel: { value: 0, apply: (v) => wheels.forEach((w) => (w.rotation.x = -v / radius)) },
+  ...(front.length ? { steer: { value: 0, apply: (v: number) => front.forEach((w) => (w.rotation.y = THREE.MathUtils.degToRad(v))) } } : {}),
+});
+
+/**
+ * Headlights and tail lights that can be switched (`lights`, 0 or 1): lit, they glow; they do not light the scene.
+ * `at` are the lamps as [x, y, z, width, color].
+ */
+function lamps(parent: THREE.Object3D, at: [number, number, number, number, string][]): AssetChannels {
+  const made = at.map(([x, y, z, w, color]) => {
+    const [bright, dim] = [new THREE.MeshBasicMaterial({ color }), mat(`#${new THREE.Color(color).multiplyScalar(0.72).getHexString()}`)];
+    const mesh = rbox(w, 0.14, 0.05, color, [x, y, z], 0.02);
+    mesh.userData.noShadow = true;
+    parent.add(mesh);
+    return { mesh, bright, dim };
+  });
+  return { lights: { value: 0, apply: (v) => made.forEach(({ mesh, bright, dim }) => (mesh.material = v > 0.5 ? bright : dim)) } };
+}
 
 /** A flat slab between two points of a side view ([z, y]), `wide` across the car and `thick`: slanted glass, a pillar. */
 function slab(wide: number, thick: number, from: [number, number], to: [number, number], x: number, material: THREE.Material): THREE.Mesh {
@@ -82,7 +105,7 @@ function buildCar(color: string, doorColor = color): { car: THREE.Group; channel
     rbox(1.76, 0.16, 0.14, dark, [0, 0.5, 2.08], 0.05),
     rbox(0.86, 0.14, 0.05, dark, [0, 0.78, -2.11], 0.02),
   );
-  for (const x of [-0.6, 0.6]) car.add(rbox(0.32, 0.14, 0.05, '#fff2b8', [x, 0.8, -2.11], 0.02), rbox(0.32, 0.12, 0.05, '#c0271b', [x, 0.82, 2.11], 0.02));
+  const lights = lamps(car, [[-0.6, 0.8, -2.11, 0.32, '#fff2b8'], [0.6, 0.8, -2.11, 0.32, '#fff2b8'], [-0.6, 0.82, 2.11, 0.32, '#e0271b'], [0.6, 0.82, 2.11, 0.32, '#e0271b']]);
   // Slanted glass front and back, with a pillar on each side of it; a straight pillar between the doors.
   for (const [from, to] of [SCREEN, REAR]) {
     const pane = slab(1.5, 0.025, from, to, 0, glass);
@@ -134,7 +157,7 @@ function buildCar(color: string, doorColor = color): { car: THREE.Group; channel
 
   const wheels = [wheel(-0.79, -1.35), wheel(0.79, -1.35), wheel(-0.79, 1.35), wheel(0.79, 1.35)];
   car.add(...wheels);
-  Object.assign(channels, rolling(wheels, WHEEL_R));
+  Object.assign(channels, rolling(wheels, WHEEL_R, wheels.slice(0, 2)), lights);
   setChannels(car, channels);
   return { car, channels };
 }
@@ -200,7 +223,7 @@ registerAsset(
       rbox(W + 0.04, 0.2, 0.14, '#2b2e36', [0, FLOOR + 0.04, front - 0.02], 0.05),
       rbox(W + 0.04, 0.2, 0.14, '#2b2e36', [0, FLOOR + 0.04, -front + 0.02], 0.05),
     );
-    for (const x of [-0.85, 0.85]) bus.add(rbox(0.36, 0.16, 0.05, '#fff2b8', [x, FLOOR + 0.36, front - 0.01], 0.02), rbox(0.3, 0.16, 0.05, '#c0271b', [x, FLOOR + 0.5, -front + 0.01], 0.02));
+    const lights = lamps(bus, [[-0.85, FLOOR + 0.36, front - 0.01, 0.36, '#fff2b8'], [0.85, FLOOR + 0.36, front - 0.01, 0.36, '#fff2b8'], [-0.85, FLOOR + 0.5, -front + 0.01, 0.3, '#e0271b'], [0.85, FLOOR + 0.5, -front + 0.01, 0.3, '#e0271b']]);
     const pane = (w: number, h: number, d: number, at: [number, number, number]) => {
       const mesh = rbox(w, h, d, '#9fd0ee', at, 0.01);
       mesh.material = sideGlassMaterial;
@@ -253,7 +276,7 @@ registerAsset(
 
     const wheels = [wheel(-half + 0.2, front + 2.0, R, 0.3), wheel(half - 0.2, front + 2.0, R, 0.3), wheel(-half + 0.2, -front - 2.6, R, 0.3), wheel(half - 0.2, -front - 2.6, R, 0.3)];
     bus.add(...wheels);
-    Object.assign(channels, rolling(wheels, R));
+    Object.assign(channels, rolling(wheels, R, wheels.slice(0, 2)), lights);
     return setChannels(bus, channels);
   },
   'vehicle',
@@ -269,6 +292,7 @@ registerAsset(
     const ring = (z: number) => {
       const g = new THREE.Group();
       g.position.set(0, R, z);
+      g.rotation.order = 'YXZ';
       const tyre = new THREE.Mesh(new THREE.TorusGeometry(R - 0.03, 0.028, 8, 28).rotateY(Math.PI / 2), mat('#22242a'));
       g.add(tyre, rbox(0.012, (R - 0.04) * 2, 0.012, '#b9bcc2', [0, 0, 0], 0.004), rbox(0.012, 0.012, (R - 0.04) * 2, '#b9bcc2', [0, 0, 0], 0.004), rbox(0.06, 0.06, 0.06, '#8d919b', [0, 0, 0], 0.02));
       return g;
@@ -287,7 +311,7 @@ registerAsset(
       rbox(0.3, 0.03, 0.03, '#8d919b', [0, 0.3, 0.06], 0.01), rbox(0.09, 0.02, 0.07, '#15171b', [-0.17, 0.3, 0.06], 0.008), rbox(0.09, 0.02, 0.07, '#15171b', [0.17, 0.3, 0.06], 0.008),
       seatAnchor('driver', 0, 0.99, 0.24),
     );
-    return setChannels(bike, rolling([frontWheel, rearWheel], R));
+    return setChannels(bike, rolling([frontWheel, rearWheel], R, [frontWheel]));
   },
   'vehicle',
 );

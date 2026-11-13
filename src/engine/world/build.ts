@@ -117,7 +117,24 @@ function placeProps(
         parent.add(obj);
         // With an id it is animated as an interactive object (its `tick`), after its channels are set.
         if (typeof obj.userData.animate === 'function' && !prop.id) animated.push(obj.userData.animate as (t: number) => void);
-        if (prop.id) interactives.push(interactiveProp(prop, obj));
+        if (prop.id) {
+          const interactive = interactiveProp(prop, obj);
+          interactives.push(interactive);
+          // A gate: its opening is closed to walkers until it is open enough, like a door.
+          const gate = obj.userData.gate as { width: number; passableAt: number } | undefined;
+          if (gate) {
+            obj.updateMatrixWorld(true);
+            const [a, b] = [new THREE.Vector3(-gate.width / 2, 0, 0), new THREE.Vector3(gate.width / 2, 0, 0)].map((v) => obj.localToWorld(v));
+            const collider: Collider = { door: prop.id, minX: Math.min(a.x, b.x) - 0.1, maxX: Math.max(a.x, b.x) + 0.1, minZ: Math.min(a.z, b.z) - 0.1, maxZ: Math.max(a.z, b.z) + 0.1, y0: obj.position.y, y1: obj.position.y + 2 };
+            colliders.push(collider);
+            interactive.traits.passableAt = gate.passableAt;
+            const set = interactive.set;
+            interactive.set = (channel, value) => {
+              set(channel, value);
+              if (channel === 'open') collider.disabled = value >= gate.passableAt;
+            };
+          }
+        }
         else {
           const solid = footprint(obj);
           if (solid) colliders.push(solid);
@@ -161,19 +178,35 @@ export function buildProp(prop: Prop): InteractiveObject {
 
 function interactiveProp(prop: Prop, obj: THREE.Object3D): InteractiveObject {
   const own = (obj.userData.channels ?? {}) as AssetChannels;
+  // Where it stands, which way it faces, and how far it has tipped over (`lean` degrees, toward heading `leanTo`).
+  const pose = { y: obj.position.y, yaw: prop.rot ?? 0, lean: 0, leanTo: 0 };
+  const reach = Math.min(...new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3()).toArray().filter((_, i) => i !== 1)) / 2;
+  const [turn, tip, axis] = [new THREE.Quaternion(), new THREE.Quaternion(), new THREE.Vector3()];
+  const settle = (): void => {
+    turn.setFromAxisAngle(axis.set(0, 1, 0), THREE.MathUtils.degToRad(pose.yaw));
+    const [h, a] = [THREE.MathUtils.degToRad(pose.leanTo), THREE.MathUtils.degToRad(pose.lean)];
+    // Tipping toward a heading turns it about the level axis across that heading; it rolls on its edge, so it rises a little.
+    tip.setFromAxisAngle(axis.set(-Math.cos(h), 0, Math.sin(h)), a);
+    obj.quaternion.copy(tip).multiply(turn);
+    obj.position.y = pose.y + Math.sin(Math.min(Math.abs(a), Math.PI / 2)) * reach;
+  };
   const placement: AssetChannels = {
     x: { value: obj.position.x, apply: (v) => (obj.position.x = v) },
-    y: { value: obj.position.y, apply: (v) => (obj.position.y = v) },
+    y: { value: obj.position.y, apply: (v) => ((pose.y = v), settle()) },
     z: { value: obj.position.z, apply: (v) => (obj.position.z = v) },
-    yaw: { value: prop.rot ?? 0, apply: (v) => obj.rotation.set(0, THREE.MathUtils.degToRad(v), 0) },
+    yaw: { value: prop.rot ?? 0, apply: (v) => ((pose.yaw = v), settle()) },
+    lean: { value: 0, apply: (v) => ((pose.lean = v), settle()) },
+    leanTo: { value: 0, apply: (v) => ((pose.leanTo = v), settle()) },
   };
   // `held` is 1 while something carries the item; characters will read it to attach the item to a hand.
   const held: AssetChannels = prop.pickable ? { held: { value: 0, apply: () => {} } } : {};
   const all = { ...own, ...placement, ...held };
   const size = new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3());
-  const sockets: Record<string, [number, number, number]> = {};
+  // A place on the object: where it is and, for a seat that does not face the way the object does, which way
+  // whoever sits there faces (degrees, turned from the object's own heading).
+  const sockets: Record<string, number[]> = {};
   obj.traverse((o) => {
-    if (o !== obj && o.name.startsWith('seat.')) sockets[o.name] = o.position.toArray();
+    if (o !== obj && o.name.startsWith('seat.')) sockets[o.name] = [...o.position.toArray(), THREE.MathUtils.radToDeg(o.rotation.y)];
   });
   const grip = new THREE.Vector3();
   return {

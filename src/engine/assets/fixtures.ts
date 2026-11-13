@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { group, mat, post, rbox, registerAsset } from './registry';
+import { group, mat, post, rbox, registerAsset, setChannels, switchable } from './registry';
 
 /*
  * Things fixed to a ceiling or a wall. Ceiling ones have their origin where they touch the ceiling and hang
@@ -19,19 +19,21 @@ registerAsset(
       rbox(0.03, 0.05, 0.16, '#c5cad1', [-length / 2 - 0.01, -0.07, 0], 0.006),
       rbox(0.03, 0.05, 0.16, '#c5cad1', [length / 2 + 0.01, -0.07, 0], 0.006),
     );
-    const glow = new THREE.MeshBasicMaterial({ color });
-    for (const z of [-0.045, 0.045]) {
-      const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, length, 10).rotateZ(Math.PI / 2), glow);
+    const tubes = [-0.045, 0.045].map((z) => {
+      const tube = new THREE.Mesh<THREE.BufferGeometry, THREE.Material>(new THREE.CylinderGeometry(0.018, 0.018, length, 10).rotateZ(Math.PI / 2));
       tube.position.set(0, -0.075, z);
       tube.userData.noShadow = true;
       g.add(tube);
-    }
+      return tube;
+    });
+    let light: THREE.PointLight | undefined;
     if (intensity > 0) {
-      const light = new THREE.PointLight(color, intensity, Number(p.range ?? 9), 1.6);
+      light = new THREE.PointLight(color, intensity, Number(p.range ?? 9), 1.6);
       light.position.y = -0.25;
       g.add(light);
     }
-    return g;
+    // Channel `on`: with an id in the location, an episode can switch it off and on.
+    return setChannels(g, switchable(tubes, color, light));
   },
 );
 
@@ -62,8 +64,10 @@ registerAsset(
     }
     g.add(rotor);
     // Turns with the clock of the episode, so every frame shows the blades where they are at that instant.
-    if (speed) g.userData.animate = (t: number) => (rotor.rotation.y = -t * speed * Math.PI * 2);
-    return g;
+    // Channel `on`: switched off, the blades stand still.
+    let on = speed ? 1 : 0;
+    if (speed) g.userData.animate = (t: number) => (rotor.rotation.y = on > 0.5 ? -t * speed * Math.PI * 2 : 0.4);
+    return setChannels(g, { on: { value: on, apply: (v) => (on = v) } });
   },
 );
 
