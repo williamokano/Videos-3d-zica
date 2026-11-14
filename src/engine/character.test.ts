@@ -46,7 +46,7 @@ describe('motion', () => {
   it('mixes expressions over the neutral face', () => {
     expect(resolveFace({}, 0, 0).eyeOpen).toBe(1);
     expect(resolveFace({ happy: 1 }, 0, 0).mouthCurve).toBe(1);
-    expect(resolveFace({ happy: 0.5 }, 0, 0).mouthCurve).toBeCloseTo(0.65);
+    expect(resolveFace({ happy: 0.5 }, 0, 0).mouthCurve).toBeCloseTo(0.7);
     expect(resolveFace({ happy: 1 }, 1, 0).eyeOpen).toBe(0);
     expect(resolveFace({}, 0, 0.6).mouthOpen).toBe(0.6);
   });

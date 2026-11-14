@@ -36,7 +36,7 @@ export function cuesOf({ series, bible, episode, soundFile, filters = {} }, from
       }
       if (t + take.duration <= 0 || t >= span) continue;
       // A voice over a radio or a phone: the take is clean, the filter is put on here.
-      cues.push({ file: join(root, 'voz', `${take.key}.mp3`), t, skip, volume: 1, voice: true, filter: filters[clip.params.filter]?.ffmpeg });
+      cues.push({ file: join(root, 'voz', `${take.key}.mp3`), t, skip, volume: 1, voice: true, duration: take.duration, filter: filters[clip.params.filter]?.ffmpeg });
     } else if (clip.action === 'sound') {
       const def = bible.audio?.sounds?.[clip.params.name];
       if (!def || t >= span) continue;
@@ -62,9 +62,12 @@ function run(args) {
 }
 
 /**
- * Mix cues into a WAV of `length` seconds. Sounds under the voices are lowered while someone speaks (ducking),
- * then the whole is brought to −14 LUFS with peaks under −1.5 dBTP.
+ * Mix cues into a WAV of `length` seconds. Sounds under the voices are lowered while someone speaks (ducking)
+ * and come back slowly after, then the whole is brought to −14 LUFS with peaks under −1.5 dBTP.
  */
+/** Seconds of fade at the end of each voice take. */
+const VOICE_TAIL = 0.14;
+
 export async function mix(cues, length, out) {
   const inputs = [];
   const voices = [];
@@ -79,7 +82,11 @@ export async function mix(cues, length, out) {
     const span = c.length ? `atrim=0:${(c.length - Math.max(0, -c.t)).toFixed(3)},` : '';
     const fade = c.length && c.fade ? `afade=t=in:d=${c.fade},afade=t=out:st=${Math.max(0, c.length - c.fade).toFixed(3)}:d=${c.fade},` : '';
     const through = c.filter ? `${c.filter},` : '';
-    const chain = `[${i}:a]aformat=sample_rates=48000:channel_layouts=stereo,${skip}${span}${fade}${through}volume=${c.volume},adelay=${delay}:all=1,apad[c${i}]`;
+    // Takes often stop on a sound (the provider cuts the file at the last letter): a short fade at each end
+    // takes the click and the hard stop away.
+    const left = (c.duration ?? 0) - into;
+    const ends = c.voice && left > VOICE_TAIL ? `afade=t=in:d=0.012,afade=t=out:st=${(left - VOICE_TAIL).toFixed(3)}:d=${VOICE_TAIL},` : '';
+    const chain = `[${i}:a]aformat=sample_rates=48000:channel_layouts=stereo,${skip}${span}${fade}${ends}${through}volume=${c.volume},adelay=${delay}:all=1,apad[c${i}]`;
     (c.voice ? voices : beds).push({ i, chain });
   });
   const parts = [...voices, ...beds].map((x) => x.chain);
@@ -87,7 +94,7 @@ export async function mix(cues, length, out) {
   const all = (list, name) => (list.length ? `${list.map((x) => `[c${x.i}]`).join('')}amix=inputs=${list.length}:normalize=0:duration=longest[${name}]` : `${silence}[${name}]`);
   parts.push(all(voices, 'vo'), all(beds, 'fx'));
   // Voices lead; the rest ducks under them.
-  parts.push('[vo]asplit=2[vo1][key]', '[fx][key]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=400[fxd]');
+  parts.push('[vo]asplit=2[vo1][key]', '[fx][key]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=900[fxd]');
   parts.push(`[vo1][fxd]amix=inputs=2:normalize=0:duration=longest,atrim=0:${length.toFixed(3)},acompressor=threshold=0.1:ratio=3:attack=5:release=120,loudnorm=I=-14:TP=-1.5:LRA=11[out]`);
   await run(['-y', '-loglevel', 'error', ...inputs, '-filter_complex', parts.join(';'), '-map', '[out]', '-ar', '48000', '-c:a', 'pcm_s16le', out]);
 }

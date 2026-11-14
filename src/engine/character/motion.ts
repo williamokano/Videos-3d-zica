@@ -163,7 +163,7 @@ export function blink(t: number, seed: number): number {
 }
 
 export const NEUTRAL_FACE: FaceParams = {
-  eyeOpen: 1, browLift: 0, browTilt: 0, mouthCurve: 0.3, mouthOpen: 0, mouthWidth: 1, mouthRound: 0, teeth: 0, gazeX: 0, gazeY: 0, lidTilt: 0,
+  eyeOpen: 1, browLift: 0, browTilt: 0, mouthCurve: 0.4, mouthOpen: 0, mouthWidth: 1, mouthRound: 0, teeth: 0, gazeX: 0, gazeY: 0, lidTilt: 0,
 };
 
 const face = (changes: Partial<FaceParams>): FaceParams => ({ ...NEUTRAL_FACE, ...changes });

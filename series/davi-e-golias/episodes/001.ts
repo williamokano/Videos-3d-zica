@@ -63,7 +63,8 @@ export default direct(
       ...FILHOS.map((id, i): CastMember => ({ character: id, at: FORA(i), yaw: 0 })),
       { id: 'davi-casa', character: 'davi', at: [12.8, -28.4], yaw: 30 },
       // O canto do palácio do Saul (a sala "sala-saul", longe de tudo).
-      { id: 'saul', character: 'saul', at: [100, -101.78], yaw: 180, seated: 0.64 },
+      // O episódio 1 já foi gravado com a primeira voz do Saul (Carlos); fica com ela para não gravar de novo.
+      { id: 'saul', character: 'saul', at: [100, -101.78], yaw: 180, seated: 0.64, look: { voice: { id: 'NFmEzNOony1UsEJGXLth' } } },
     ],
     props: [
       { id: 'chifre', asset: 'arms.oilHorn', pos: [0, 0], pocketOf: 'samuel' },
@@ -372,7 +373,7 @@ export default direct(
     d.do('chifre-casa', 'pour', { over: 'davi-casa' }, { duration: 4.2 });
     // O rosto do Davi, confuso, sem colar: de frente e um pouco de lado; atrás, o Samuel.
     d.camera.cut({ pos: [13.2, TOPO + 1.15, -33.0], lookAt: [11.5, TOPO + 1.0, -34.4], fov: 40 });
-    daviC.express('surprised', { amount: 0.5 });
+    daviC.express('surprised', { amount: 0.25 });
     d.narrate('E naquele dia, enquanto todos ainda viam um pastor, Deus havia escolhido um rei.');
     d.wait(0.5);
 

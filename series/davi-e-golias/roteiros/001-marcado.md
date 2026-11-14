@@ -8,6 +8,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:00.0` 🌍 rule.amanhecer → 0
 - `0:00.0` 🌍 rule.entardecer → 0
 - `0:00.0` *SAMUEL pega chifre*
+- `0:00.0` 🔊 musica-abertura
 - `0:00.0` 🔊 vento-portao (25 s)
 - `0:00.0` 🎥  fov 50
 - `0:01.0` *SAMUEL anda até [0.4,-21.6]*
@@ -34,6 +35,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:25.9` 🎥  fov 44
 - `0:32.6` **Narrador**: Não procurava o mais forte. Procurava aquele cujo coração ainda ninguém conhecia.
 - `0:32.6` 🎥 corte: câmera fov 40
+- `0:39.2` 🔊 musica-escolha
 - `0:39.2` 🌍 rule.entardecer → 1
 - `0:39.2` 🔊 casa-entardecer (71 s)
 - `0:39.2` 🎥 corte: câmera fov 52
@@ -91,6 +93,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `2:00.5` 🎥  fov 42
 - `2:01.3` **DAVI** (surpreso): O profeta? Comigo?
 - `2:03.3` 🔊 porta-madeira-passos
+- `2:03.3` 🔊 musica-uncao
 - `2:03.3` 🔊 casa-entardecer (37 s)
 - `2:03.7` 🎥 corte: câmera fov 44
 - ⏸ **4.7 s sem fala**
@@ -114,6 +117,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `2:40.3` 🌍 rule.entardecer → 0
 - `2:40.3` 🌍 rule.noite → 1
 - `2:40.3` 🔊 tensao-saul
+- `2:40.3` 🔊 musica-saul
 - `2:40.3` 🔊 palacio-noite (13 s)
 - `2:40.3` 🎥 corte: câmera fov 44
 - `2:41.8` 🎥  fov 36
