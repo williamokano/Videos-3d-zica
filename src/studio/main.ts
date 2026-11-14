@@ -550,6 +550,7 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
   renderer.setScissor(x, y, w, h);
   renderer.setScissorTest(true);
   renderer.clear();
+  environment.aim(cam);
   renderer.render(scene, cam);
   if (asShot) {
     grade.apply(renderer, [x, y, w, h], shotLens, timeline?.time ?? 0);

@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import type { Environment } from './bible';
 
+/** Where the sun is from what it lights. */
+const SUN_OFFSET = [6, 30, 7] as const;
+
 /** Sky, sun, ambient light and fog. `apply` restyles everything from a resolved Environment. */
 export class EnvironmentRig {
   readonly group = new THREE.Group();
@@ -23,7 +26,7 @@ export class EnvironmentRig {
           '#include <colorspace_fragment>\n}',
       }),
     );
-    this.sun.position.set(18, 30, 12);
+    this.sun.position.set(12 + SUN_OFFSET[0], SUN_OFFSET[1], 5 + SUN_OFFSET[2]);
     this.sun.target.position.set(12, 0, 5);
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(4096, 4096);
@@ -35,6 +38,19 @@ export class EnvironmentRig {
     this.sun.shadow.normalBias = 0.03;
     this.group.add(this.sky, this.sun, this.sun.target, this.ambient);
     scene.fog = new THREE.Fog('#ffffff');
+  }
+
+  /**
+   * Keep the sun's shadows around what a camera sees: they cover about 70 m, so in a large place (a valley) a
+   * shot far from the middle would otherwise have none. The sun keeps its direction.
+   */
+  aim(camera: THREE.Camera): void {
+    const ahead = camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(18).add(camera.getWorldPosition(new THREE.Vector3()));
+    // Snapped to a coarse grid, so the shadows do not shimmer as the camera moves.
+    const [x, y, z] = [ahead.x, ahead.y, ahead.z].map((v) => Math.round(v / 4) * 4);
+    this.sun.target.position.set(x, y, z);
+    this.sun.position.set(x + SUN_OFFSET[0], y + SUN_OFFSET[1], z + SUN_OFFSET[2]);
+    this.sun.target.updateMatrixWorld();
   }
 
   apply(env: Environment): void {
