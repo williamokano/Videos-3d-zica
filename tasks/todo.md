@@ -9,6 +9,9 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 - [x] Novos: Samuel, Jessé, os irmãos que faltam (Natanael, Radai, Ozém, Eliú) e um ancião de Belém
 - [x] Folha de personagens (frente, costas, rosto) para o autor aprovar: `series/davi-e-golias/referencias/folhas/` (`npm run vitrine -- --folha <id>`)
 
+## 1b. Roteiros
+- [x] Roteiros de trabalho dos episódios 2 a 5 com os ajustes aceitos pelo autor (`roteiros/00{2..5}-roteiro.md`); bíblia da série reescrita para os 5 episódios
+
 ## 2. Kit novo
 - [ ] Ovelhas (rebanho que pasta e anda), harpa (lira) na mão, chifre de azeite, lamparina de barro com luz
 - [ ] Ação de ungir (o óleo derramado sobre a cabeça)
@@ -17,8 +20,15 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 - [ ] Belém: colinas com pasto e pedra para sentar, portão e ruas, a casa de Jessé por dentro (noite, lamparinas)
 
 ## 4. Episódio "O escolhido"
-- [ ] Roteiro de trabalho com as sugestões aceitas, até 2:40
+- [x] Roteiro de trabalho com as sugestões aceitas, até 2:40
 - [ ] Episódio na engine, prévia sem som, varredura do vídeo inteiro
 
 ## Revisão
 (preencher no fim)
+
+## 5. Depois de "O escolhido" (em ordem)
+- [ ] Palácio do Saul (salão do trono com colunas, tochas, trono, janela) e episódio 2
+- [ ] Episódio 3 a partir do 003.ts atual (montagem dos 40 dias, abertura com narrador, Saul reconhece o Davi), cortado na saída da tenda
+- [ ] Episódio 4 (armadura, riacho, confronto, queda, silêncio e grito) a partir do resto do 003.ts e do começo do 005.ts
+- [ ] Episódio 5 (cidade, Jônatas na praça, janela do palácio, a lança)
+- [ ] Tela de abertura da série em todos
