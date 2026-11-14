@@ -18,3 +18,7 @@
 - Antes de pôr alguém encostado perto de uma porta, veja para que lado e até onde a folha abre (`doors.ts`: dobradiça no começo da abertura).
 
 - **Diálogo no centro do quadro.** O Instagram corta as beiradas do vertical: os dois personagens de um diálogo ficam no terço central, nunca um deles na borda. Prefira um plano sobre o ombro de quem fala, alinhado com o outro, a um plano de lado que abre os dois para as pontas. Confira no `look` antes de seguir.
+
+- **Rosto em repouso não pode parecer medo.** Olho redondo com branco em volta da íris e boca reta (que vista de baixo vira um arco para baixo) leem como susto. O neutro tem um leve sorriso e a pálpebra encostada na íris; o humor "worried" é para tensão de verdade, não para quem só está ouvindo ou tocando.
+- **Voz: ouvir o sotaque e o eco.** Algumas vozes brasileiras puxam para o português de Portugal em certas falas, e o tom "sussurro" deixa a voz com cara de eco. Prefira vozes da biblioteca marcadas como brasileiras com muito uso, e tons como "nervoso" no lugar do sussurro.
+- **Falas não se atropelam.** Uma caminhada que não está em `d.background` empurra a fala seguinte para o fim dela; confira sobreposições antes de renderizar.
