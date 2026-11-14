@@ -1,58 +1,100 @@
-import { direct } from '../../../src/engine/timeline/direct';
+import { direct, type Director } from '../../../src/engine/timeline/direct';
 import { IRMAOS, LINHA, TOPO, atentos, encolhem, filaDeIsrael, filaFilisteia, ids, rodaDaFogueira } from '../cena';
 
 /*
- * Episódio 1, "Cinco pedras". Roteiro de trabalho em series/davi-e-golias/roteiros/003-roteiro.md (as cenas
- * abaixo têm os mesmos números); regras da história em series/davi-e-golias/biblia.md.
+ * Episódio 3, "Quarenta dias". Roteiro de trabalho em series/davi-e-golias/roteiros/003-roteiro.md (as cenas
+ * abaixo têm os mesmos números); regras da série em series/davi-e-golias/biblia.md. Lugar: world/vale-de-ela.json
+ * (gerado por world/gerar-vale.py), que tem também um canto de Belém com a casa de Jessé.
  *
- * Sem áudio por enquanto (pedido do autor): as falas não têm voz gravada e duram o que o texto pede.
+ * Sem áudio por enquanto: as falas duram o que o texto pede.
  *
- * O Golias desafia Israel pelo 40º dia. Davi chega com comida para os irmãos, ouve a recompensa, leva bronca do
- * Eliabe, convence o Saul, recusa a armadura, pega cinco pedras no riacho, responde ao gigante e solta a pedra.
- * Corta com a pedra no ar.
+ * O Golias desafia Israel por quarenta dias. O Jessé manda o Davi com comida para os irmãos. O Davi chega ao
+ * acampamento, ouve o gigante e a recompensa, pergunta "quem é esse filisteu?", leva bronca do Eliabe e é levado
+ * ao Saul, que o reconhece. O leão e o urso. "Vai, e que o Senhor esteja contigo." O Davi olha o vale lá de cima.
+ *
+ * Quem aparece em dois lugares tem uma entrada no elenco para cada um ("davi" no vale, "davi-belem" em casa).
  */
+
+type V3 = [number, number, number];
 
 const fila = filaDeIsrael();
 const filisteus = filaFilisteia();
 const fogueira = rodaDaFogueira('fogueira', [-10, -39.5], 501);
 const tropa = ids(fila);
-// Quem fala na fila: dois da frente, perto dos irmãos, e um de trás, que corre contar ao rei.
+// Quem fala na fila: dois do lado do vão do meio, perto dos irmãos; o de trás (S2) corre contar ao rei.
 const S1 = 'israel-6';
-const S2 = 'israel-5';
-const S3 = 'israel-12';
+const S2 = 'israel-12';
+// Os dois da ponta, que largam a fila quando o gigante grita.
+const FOGEM = ['israel-8', 'israel-9'];
 
-/** Onde o Davi entra no acampamento, pela trilha que vem do norte (de Belém). */
-const TRILHA: [number, number] = [-9, -60];
+/** O canto de Belém (gerar-vale.py: BELEM): o canto noroeste da casa de Jessé; o terreiro fica ao sul. */
+const BX = -200;
+const BZ = -160;
+/** A tenda do rei (gerar-vale.py: TENDA): de 10 x 8, aberta para o sul em z = -41. O rei fica na boca dela. */
+const REI: [number, number] = [-0.9, -40.2];
+const DIANTE_DO_REI: [number, number] = [0.9, -40.2];
+/** Onde o Davi aparece, no fim da trilha que vem do norte, e onde fica o guarda das bagagens. */
+const TRILHA: [number, number] = [-10.9, -45.2];
+const BAGAGEM: [number, number] = [-12.4, -41.6];
+
+/** Direção (yaw) de quem vai de `a` para `b`: 0 olha para o norte (-z), 90 para o oeste (-x). */
+const rumo = (a: [number, number], b: [number, number]) => (Math.atan2(-(b[0] - a[0]), -(b[1] - a[1])) * 180) / Math.PI;
+
+/**
+ * Por cima do ombro de `de`, olhando para `para`: a câmera fica atrás e um pouco ao lado de quem está de costas,
+ * mais alta que a cabeça dele, mirando entre os dois, mais perto de quem está de frente. Os dois ficam perto do
+ * meio do quadro vertical.
+ */
+function ombro(d: Director, de: string, para: string, o: { back?: number; side?: number; up?: number; aim?: number; mix?: number } = {}): { pos: V3; lookAt: V3 } {
+  const { back = 2.0, side = 0.55, up = 2.0, aim = 1.4, mix = 0.2 } = o;
+  const a = d.where(de);
+  const b = d.where(para);
+  const len = Math.hypot(a[0] - b[0], a[2] - b[2]) || 1;
+  const ux = (a[0] - b[0]) / len;
+  const uz = (a[2] - b[2]) / len;
+  const pos: V3 = [a[0] + ux * back - uz * side, a[1] + up, a[2] + uz * back + ux * side];
+  const lookAt: V3 = [b[0] + (a[0] - b[0]) * mix, b[1] + aim, b[2] + (a[2] - b[2]) * mix];
+  return { pos, lookAt };
+}
+
+/** O mesmo plano, chegando um pouco mais perto: para a câmera nunca ficar parada. */
+const perto = (s: { pos: V3; lookAt: V3 }, k = 0.15): { pos: V3; lookAt: V3 } => ({
+  pos: [s.pos[0] + (s.lookAt[0] - s.pos[0]) * k, s.pos[1], s.pos[2] + (s.lookAt[2] - s.pos[2]) * k],
+  lookAt: s.lookAt,
+});
 
 export default direct(
   {
     episode: 3,
-    title: 'Cinco pedras',
+    title: 'Quarenta dias',
     location: 'vale-de-ela',
     cast: [
+      // O vale.
       { character: 'golias', at: [0, 18], yaw: 0 },
       { character: 'escudeiro', at: [-1.4, 16.6], yaw: 0 },
+      // O acampamento de Israel.
       { character: 'davi', at: TRILHA, yaw: 180 },
       { character: 'guarda', at: [-14.6, -40.6], yaw: -110 },
       { character: 'sama', at: [...IRMAOS.sama], yaw: 180 },
       { character: 'eliabe', at: [...IRMAOS.eliabe], yaw: 180 },
       { character: 'abinadabe', at: [...IRMAOS.abinadabe], yaw: 180 },
-      { character: 'saul', at: [0, -47.5], yaw: 180, seated: 0.2 },
-      { character: 'abner', at: [1.8, -46.5], yaw: 200 },
+      { character: 'saul', at: REI, yaw: 180 },
+      { character: 'abner', at: [-2.1, -41.0], yaw: 160 },
       ...fila,
       ...fogueira,
       ...filisteus,
+      // Belém, de madrugada.
+      { id: 'davi-belem', character: 'davi', at: [BX + 6.4, BZ + 11.6], yaw: -130 },
+      { character: 'jesse', at: [BX + 8.6, BZ + 9.8], yaw: 50 },
     ],
     props: [
-      { id: 'lanca-golias', asset: 'arms.spear', pos: [0.45, 17.7], params: { length: 3.6 }, pickable: true },
-      { id: 'escudo-golias', asset: 'arms.shield', pos: [-1.05, 16.3], params: { kind: 'tower', size: 1.25 }, pickable: true },
-      { id: 'cajado', asset: 'arms.staff', pos: [TRILHA[0] + 0.45, TRILHA[1] + 0.3], pickable: true },
-      { id: 'cesto', asset: 'ancient.basket', pos: [TRILHA[0] - 0.4, TRILHA[1] + 0.3], params: { bread: 1 }, pickable: true },
-      { id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi' },
-      // As cinco pedras lisas, na beira do riacho.
-      ...[[-2.1, -2.15], [-1.85, -2.05], [-1.6, -2.15], [-1.4, -2.25], [-1.95, -2.3]].map(([x, z], i) => ({
-        id: `pedra${i + 1}`, asset: 'arms.stone', pos: [x, z] as [number, number], pickable: true,
-      })),
+      { id: 'lanca-golias', asset: 'arms.spear', pos: [0, 0], pocketOf: 'golias', params: { length: 3.6 } },
+      { id: 'escudo-golias', asset: 'arms.shield', pos: [0, 0], pocketOf: 'escudeiro', params: { kind: 'tower', size: 1.25 } },
+      { id: 'cajado-belem', asset: 'arms.staff', pos: [0, 0], pocketOf: 'davi-belem' },
+      // O jumento carregado, em Belém e na trilha do acampamento.
+      { id: 'jumento-belem', asset: 'ancient.hitchedDonkey', pos: [BX + 4.9, BZ + 12.8], rot: -120, params: { load: 1, tied: 0 } },
+      { id: 'jumento', asset: 'ancient.hitchedDonkey', pos: [TRILHA[0] - 1.0, TRILHA[1] - 1.0], rot: 180, params: { load: 1, tied: 0 } },
+      { id: 'queijos', asset: 'ancient.basket', pos: [BX + 9.5, BZ + 10.7], params: { bread: 1 } },
     ],
   },
   (d) => {
@@ -60,351 +102,352 @@ export default direct(
     const escudeiro = d.actor('escudeiro');
     const davi = d.actor('davi');
     const guarda = d.actor('guarda');
-    const [sama, eliabe, abinadabe] = [d.actor('sama'), d.actor('eliabe'), d.actor('abinadabe')];
+    const [sama, eliabe] = [d.actor('sama'), d.actor('eliabe')];
     const [saul, abner] = [d.actor('saul'), d.actor('abner')];
-    const [s1, s2, s3] = [d.actor(S1), d.actor(S2), d.actor(S3)];
+    const [s1, s2] = [d.actor(S1), d.actor(S2)];
+    const [daviB, jesse] = [d.actor('davi-belem'), d.actor('jesse')];
+    const irmaos = ['sama', 'eliabe', 'abinadabe'];
+    const vale: V3 = [0, 3, 12];
 
     // ---- O mundo vivo desde o primeiro quadro ----
     d.world.rule('noite', false, { duration: 0 });
     d.world.rule('amanhecer', false, { duration: 0 });
     d.world.rule('entardecer', false, { duration: 0 });
-    atentos(d, [...tropa, 'sama', 'eliabe', 'abinadabe'], 'golias', 'worried');
+    atentos(d, [...tropa, ...irmaos], 'golias', 'worried');
     atentos(d, ids(filisteus), 'golias', 'happy');
     for (const id of ids(fogueira)) d.actor(id).behave('chat', { group: 'fogueira', mood: 'worried' });
     guarda.behave('idle');
-    saul.behave('idle', { mood: 'worried' });
-    abner.behave('attend', { object: 'saul' });
+    saul.behave('watch', { point: vale, mood: 'worried' });
+    abner.behave('attend', { object: 'saul', mood: 'worried' });
     escudeiro.behave('attend', { object: S1 });
     golias.behave('attend', { object: S1, mood: 'happy' });
     davi.behave('idle');
-    // Enquanto a câmera está no vale, o Davi pega o cajado e o cesto na trilha.
-    d.background(() => {
-      davi.pickUp('cajado', { hand: 'left' });
-      davi.pickUp('cesto', { hand: 'right' });
-    });
+    daviB.behave('attend', { object: 'jesse' });
+    jesse.behave('attend', { object: 'davi-belem' });
+    // Fora de quadro: a lança na mão do gigante, o escudo na do escudeiro, o cajado na do Davi em Belém (no
+    // acampamento ele fica com a carga).
+    d.background(() => golias.pickUp('lanca-golias', { hand: 'right' }));
+    d.background(() => escudeiro.pickUp('escudo-golias', { hand: 'left' }));
+    d.background(() => daviB.pickUp('cajado-belem', { hand: 'left' }));
 
     // ---- 1. O desafio (0:00) ----
-    // Rente ao chão do vale; uma pedrinha treme a cada passo. A câmera sobe pelo corpo até o rosto, que já grita.
-    d.camera.cut({ pos: [1.3, 0.3, 8.6], lookAt: [0.2, 0.25, 12.5], fov: 50, shake: 0.06 });
+    // [GANCHO] Rente ao chão do vale; o gigante desce, o escudeiro na frente. A câmera sobe até o rosto, que já grita.
+    d.camera.cut({ pos: [1.6, 0.35, 8.2], lookAt: [0.1, 0.6, 13.5], fov: 50, shake: 0.06 });
     d.together(
+      () => escudeiro.walkTo([-1.4, 10.8], { speed: 1.1 }),
       () => {
-        escudeiro.pickUp('escudo-golias', { hand: 'left' });
-        escudeiro.walkTo([-1.4, 10.8], { speed: 1.1 });
-      },
-      () => {
-        golias.pickUp('lanca-golias', { hand: 'right' });
-        d.background(() => golias.say('Escolham um homem! E que ele desça até mim!', { tone: 'grito', gesture: 0.4 }));
+        d.background(() => {
+          d.wait(1.0);
+          golias.say('Escolhei entre vós um homem! Que desça e venha lutar comigo!', { tone: 'grito', gesture: 0.5 });
+        });
         golias.walkTo([0, 12.6], { speed: 1.1 });
-        d.camera.moveTo({ pos: [1.9, 1.7, 8.0], lookAt: [0, 2.2, 12.6], fov: 50, shake: 0.03 });
+        d.camera.moveTo({ pos: [2.0, 1.6, 7.8], lookAt: [0, 2.4, 12.6], fov: 48, shake: 0.03 });
       },
     );
-    d.camera.moveTo({ pos: [1.6, 2.3, 8.4], lookAt: [0, 2.95, 12.6], fov: 48, shake: 0 });
-    golias.behave('attend', { object: S1, mood: 'happy' });
-    escudeiro.behave('attend', { object: S1 });
-
+    d.camera.moveTo({ pos: [1.7, 2.1, 8.2], lookAt: [0, 2.95, 12.6], fov: 46, shake: 0 });
+    d.wait(0.4);
     // Contraplano: a fila de Israel na beira do monte, que recua toda junta.
-    d.camera.cut({ pos: [9.5, TOPO + 1.9, -28.5], lookAt: [1, TOPO + 1.2, -36], fov: 45 });
-    encolhem(d, tropa, 1);
-    d.wait(0.6);
-    d.camera.moveTo({ pos: [-4, TOPO + 1.8, -30], lookAt: [-6, TOPO + 1.4, -36], fov: 42 });
-    s1.say('Quarenta dias. Toda manhã ele desce.', { tone: 'sussurro', to: S2, gesture: 0.1 });
-    s2.say('E toda tarde de novo.', { tone: 'sussurro', to: S1, gesture: 0.1 });
-    s1.say('Olha aquilo. Bronze da cabeça aos pés.', { tone: 'sussurro', gesture: 0.1 });
-
-    // ---- 2. A aposta e o pastor (0:15) ----
-    d.camera.cut({ pos: [-2.4, 0.9, 7.4], lookAt: [0, 3.3, 12.6], fov: 55 });
-    golias.say('Se ele me vencer, nós seremos escravos de vocês. Se eu vencer... vocês serão nossos!', { tone: 'grito', gesture: 0.6 });
+    d.camera.cut({ pos: [1.5, TOPO + 1.2, -29.6], lookAt: [-1.6, TOPO + 1.4, -35.5], fov: 46 });
+    encolhem(d, [...tropa, ...irmaos], 1);
+    d.wait(0.7);
+    d.camera.moveTo({ pos: [0.4, TOPO + 1.3, -30.6], lookAt: [-2.0, TOPO + 1.45, -35.5], fov: 42 });
+    d.actor('israel-6').say('De novo ele...', { tone: 'sussurro', gesture: 0 });
+    // A tela de abertura, por cima do vale visto do alto: os dois montes e o gigante pequeno no meio.
+    d.camera.cut({ pos: [26, 22, -16], lookAt: [0, 2, 10], fov: 50 });
+    d.camera.moveTo({ pos: [22, 17, -10], lookAt: [0, 2, 11], fov: 46 });
+    encolhem(d, [...tropa, ...irmaos], 0);
+    d.titleCard({ title: 'DAVI', subtitle: 'Uma história de coragem e destino', episode: 'Episódio 3 · Quarenta dias' }, { duration: 3.6 });
+    // De baixo para cima, o gigante e a aposta.
+    d.camera.cut({ pos: [-2.2, 0.9, 7.6], lookAt: [0, 3.2, 12.6], fov: 52 });
+    d.camera.moveTo({ pos: [-1.6, 1.0, 8.4], lookAt: [0, 3.2, 12.6], fov: 50 });
+    golias.say('Se ele me vencer, seremos vossos servos. Mas se eu o vencer, sereis nossos servos!', { tone: 'grito', gesture: 0.6 });
     d.do('golias', 'move', { name: 'cheer', amount: 0.8 }, { duration: 0.5 });
-    // Corte para a trilha atrás do acampamento: um rapaz ruivo sobe com o cesto. O eco chega até ele.
-    d.background(() => {
-      d.wait(1.2);
-      d.camera.cut({ pos: [-5.6, TOPO + 1.4, -52.5], lookAt: [-9.2, TOPO + 1.1, -57], fov: 46 });
-      davi.walkTo([-9.6, -54], { speed: 1.3 });
-      davi.lookAt([0, 3, 12], { duration: 0.5 });
-      d.wait(0.8);
-      davi.lookAhead({ duration: 0.3 });
-    });
-    golias.say('Hoje eu desafio o exército de Israel!', { tone: 'laughs', gesture: 0.3 });
     d.do('golias', 'move', { name: 'cheer', amount: 0 }, { duration: 0.6 });
-    d.wait(3.4);
 
-    // ---- 3. O acampamento (0:32) ----
-    // Ele não se assusta: aperta o passo, entre as tendas, até o guarda das bagagens.
-    d.camera.thirdPerson(davi, { distance: 3.4, height: 0.3, fov: 50 });
-    // [Liberdade] Na fogueira, os soldados falam do gigante enquanto o Davi passa.
+    // ---- 2. Quarenta dias (0:22) ----
+    // Amanhecer. Do alto, o gigante desce de novo ao vale.
+    d.world.rule('amanhecer', true, { duration: 0 });
+    d.camera.cut({ pos: [-14, 13, -18], lookAt: [0, 1, 11], fov: 46 });
+    d.background(() => golias.walkTo([0, 10.4], { speed: 0.9 }));
+    d.camera.moveTo({ pos: [-11, 11.5, -14], lookAt: [0, 1.5, 11], fov: 44 });
+    d.narrate('Quarenta dias, de manhã e à tarde, o gigante desceu ao vale.');
+    // Na boca da tenda, o rei olha o vale, com o Abner ao lado.
+    d.world.rule('amanhecer', false, { duration: 0 });
+    d.camera.cut({ pos: [1.2, TOPO + 1.75, -36.6], lookAt: [-1.2, TOPO + 1.5, -40.6], fov: 42 });
+    d.camera.moveTo({ pos: [0.8, TOPO + 1.7, -37.4], lookAt: [-1.2, TOPO + 1.5, -40.6], fov: 40 });
+    saul.express('sad', { amount: 0.4 });
+    d.wait(1.6);
+    // Entardecer. O gigante ergue a lança; na fila, os soldados desviam os olhos.
+    d.world.rule('entardecer', true, { duration: 0 });
+    d.camera.cut({ pos: [1.8, 0.8, 5.4], lookAt: [0, 3.0, 10.4], fov: 46 });
+    d.do('golias', 'move', { name: 'cheer', amount: 0.9 }, { duration: 0.6 });
+    d.camera.moveTo({ pos: [1.4, 0.9, 6.0], lookAt: [0, 3.0, 10.4], fov: 44 });
+    d.do('golias', 'move', { name: 'cheer', amount: 0 }, { duration: 0.6 });
+    d.camera.cut({ pos: [-5.4, TOPO + 1.3, -30.4], lookAt: [-5.5, TOPO + 1.55, -35.6], fov: 42 });
+    for (const id of ['israel-3', 'israel-4', 'israel-5']) d.actor(id).behave('watch', { point: [-20, TOPO, -45], mood: 'scared' });
+    d.camera.moveTo({ pos: [-5.5, TOPO + 1.35, -31.2], lookAt: [-5.5, TOPO + 1.55, -35.6], fov: 40 });
+    d.narrate('E nenhum homem de Israel teve coragem de responder.');
+    // Noite. A roda da fogueira.
+    // A noite pela metade: o céu escuro, mas os rostos na roda da fogueira ainda se veem.
+    d.world.rule('entardecer', 0.35, { duration: 0 });
+    d.world.rule('noite', 0.65, { duration: 0 });
+    d.camera.cut({ pos: [-7.0, TOPO + 1.8, -42.0], lookAt: [-10.6, TOPO + 1.1, -38.9], fov: 46 });
+    d.camera.moveTo({ pos: [-7.5, TOPO + 1.7, -41.6], lookAt: [-10.6, TOPO + 1.1, -38.9], fov: 44 });
+    d.actor('fogueira-2').say('Quarenta dias... e ninguém desceu.', { tone: 'cansado', gesture: 0.3 });
+    d.wait(0.6);
+
+    // ---- 3. Belém, de madrugada (0:42) ----
+    d.world.rule('noite', false, { duration: 0 });
+    d.world.rule('entardecer', false, { duration: 0 });
+    d.world.rule('amanhecer', true, { duration: 0 });
+    // De volta ao dia, o vale fica como estava: o gigante no seu monte, a fila olhando.
+    for (const id of ['israel-3', 'israel-4', 'israel-5']) d.actor(id).behave('attend', { object: 'golias', mood: 'worried' });
     d.background(() => {
-      d.wait(1.5);
-      d.actor('fogueira-1').say('Toda manhã é isso. Ele grita, e a gente treme.', { tone: 'cansado', gesture: 0.4 });
-      d.actor('fogueira-2').say('E o rei? Não faz nada?', { gesture: 0.5 });
-      d.actor('fogueira-3').say('O rei tá na tenda. Faz quarenta dias que tá na tenda.', { tone: 'sussurro', gesture: 0.3 });
+      golias.walkTo([0, 13.2], { speed: 1.2 });
+      golias.turnTo(0);
+      golias.behave('attend', { object: S1, mood: 'happy' });
     });
-    davi.walkTo([-12.3, -41.4], { speed: 1.6 });
+    // O terreiro: o pai, o filho e o jumento carregado. Os dois de lado, no meio do quadro.
+    // Por cima do ombro do Davi, o pai de frente; e o contrário para a resposta.
+    const conversa = ombro(d, 'davi-belem', 'jesse');
+    // Primeiro do alto, a casa e o terreiro; logo o pai de frente.
+    d.camera.cut({ pos: [BX + 13.5, 6.5, BZ + 19.0], lookAt: [BX + 6.5, 1.2, BZ + 10.0], fov: 46 });
+    d.camera.moveTo({ pos: [BX + 12.5, 5.0, BZ + 17.6], lookAt: [BX + 6.8, 1.2, BZ + 10.2], fov: 44 });
+    jesse.lookAt('queijos', { duration: 0.4 });
+    jesse.pointAt('jumento-belem', { duration: 1.0 });
+    d.camera.cut(conversa);
+    d.camera.moveTo(perto(conversa, 0.22));
+    jesse.say('Davi. Leva este grão e estes dez pães aos teus irmãos, no acampamento.', { to: daviB, gesture: 0.4 });
+    jesse.say('E estes dez queijos, ao comandante deles.', { to: daviB, gesture: 0.3 });
+    jesse.say('Vê se teus irmãos estão bem. E traz-me notícia.', { tone: 'preocupada', to: daviB, gesture: 0.3 });
+    const resposta = ombro(d, 'jesse', 'davi-belem', { side: -0.55 });
+    d.camera.cut(resposta);
+    d.camera.moveTo(perto(resposta));
+    daviB.say('Deixei as ovelhas com um guarda, pai. Eu vou.', { to: jesse, gesture: 0.2 });
+    // O Davi puxa o jumento e sai pela estrada; o pai fica olhando. A câmera acompanha de longe.
+    const saida: [number, number] = [BX + 14.0, BZ + 24.0];
+    const vai = d.background(() => {
+      daviB.walkTo([BX + 6.0, BZ + 13.6], { speed: 1.2 });
+      daviB.walkTo(saida, { speed: 1.3 });
+    });
+    d.background(() => {
+      d.wait(1.6);
+      d.do('jumento-belem', 'moveTo', { to: [saida[0] - 0.9, saida[1] - 1.6], yaw: rumo([BX + 4.9, BZ + 12.8], saida) }, { duration: vai.end - vai.start - 1.6, ease: 'linear' });
+    });
+    jesse.behave('attend', { object: 'davi-belem', mood: 'worried' });
+    d.camera.track('davi-belem', { from: [BX + 2.0, 2.2, BZ + 15.0], to: [BX + 3.6, 2.4, BZ + 18.0], duration: 3.6, fov: 46 });
+    d.wait(3.0);
+
+    // ---- 4. O acampamento (0:55) ----
+    d.world.rule('amanhecer', false, { duration: 0 });
+    // [GANCHO] Por trás do Davi, que chega com o jumento: lá na frente, o exército sai para a fila com o grito de
+    // guerra, lanças e braços para cima. (17:20-21)
+    [...tropa, ...irmaos].forEach((id, i) => {
+      d.background(() => {
+        d.wait(0.3 + (i % 4) * 0.1);
+        d.do(id, 'move', { name: 'cheer', amount: 0.9 }, { duration: 0.5 });
+        d.wait(1.4);
+        d.do(id, 'move', { name: 'cheer', amount: 0 }, { duration: 0.6 });
+      });
+    });
+    const chega = d.background(() => davi.walkTo(BAGAGEM, { speed: 1.6 }));
+    d.background(() => {
+      d.wait(0.4);
+      d.do('jumento', 'moveTo', { to: [BAGAGEM[0] - 0.6, BAGAGEM[1] - 1.7], yaw: rumo(TRILHA, BAGAGEM) }, { duration: chega.end - chega.start - 0.4, ease: 'linear' });
+    });
+    d.camera.track('davi', { from: [-6.4, TOPO + 2.3, -50.0], to: [-8.0, TOPO + 2.1, -46.4], duration: chega.end - d.now, fov: 50 });
+    d.waitFor(chega);
     davi.turnTo([-14.6, -40.6]);
     guarda.lookAt(davi, { duration: 0.4 });
-    d.camera.cut({ pos: [-12.0, TOPO + 1.5, -38.2], lookAt: [-13.5, TOPO + 1.3, -41.1], fov: 46 });
-    davi.say('Guarda isso pra mim? É dos filhos de Jessé, de Belém.', { to: guarda });
-    davi.putDown('cesto', [-12.85, TOPO + 0.02, -41.75]);
-    guarda.say('Mais comida? Põe ali. Teus irmãos tão na linha de frente.', { tone: 'cansado', to: davi });
-    davi.say('O que foi aquele grito?', { to: guarda });
-    guarda.say('Vai lá ver. Mas não vai muito pra frente, não.', { to: davi, gesture: 0.5 });
+    const bagagem = ombro(d, 'davi', 'guarda');
+    d.camera.cut(bagagem);
+    d.camera.moveTo(perto(bagagem));
+    davi.say('É pros filhos de Jessé. Onde eles estão?', { to: guarda, gesture: 0.3 });
+    guarda.pointAt([3, TOPO + 1.5, -36], { duration: 0.9 });
+    guarda.say('Na linha de frente.', { tone: 'cansado', to: davi, gesture: 0.3 });
     guarda.behave('attend', { object: 'davi' });
-
-    // ---- 4. Os irmãos (0:50) ----
-    d.camera.thirdPerson(davi, { distance: 3.2, height: 0.2, fov: 54, shake: 0.1 });
-    const corrida = davi.runTo([4.4, -LINHA - 2.1], { speed: 3.6 });
-    d.at(corrida.end - 2.6);
+    // Ele corre até a fila. A câmera acompanha de lado, de longe.
+    const atras: [number, number] = [3.3, -LINHA - 2.3];
+    const corrida = d.background(() => davi.runTo(atras, { speed: 3.6 }));
+    d.camera.track('davi', { from: [-14.5, TOPO + 4.6, -33.5], to: [-9.0, TOPO + 4.4, -33.0], duration: corrida.end - d.now + 0.3, fov: 46, shake: 0.05 });
+    d.at(corrida.end - 1.5);
     davi.say('Eliabe! Abinadabe! Samá!', { tone: 'animado', gesture: 0 });
     d.waitFor(corrida);
     davi.behave('idle');
-    d.camera.cut({ pos: [9.0, TOPO + 1.55, -39.4], lookAt: [3.8, TOPO + 1.4, -36.6], fov: 44 });
-    d.together(() => sama.turnTo([4.4, -38]), () => eliabe.turnTo([4.4, -38]), () => abinadabe.turnTo([4.4, -38]));
-    for (const irmao of ['sama', 'eliabe', 'abinadabe']) d.actor(irmao).behave('attend', { object: 'davi' });
-    davi.say('Paz pra vocês!', { gesture: 0.6 });
-    sama.say('Davi? O que você tá fazendo aqui?', { tone: 'surprised', to: davi });
-    davi.say('O pai mandou grão e pão. E dez queijos pro comandante de vocês. Ele quer um sinal de que vocês tão bem.', { to: sama, gesture: 0.5 });
-    abinadabe.say('Diz pra ele que a gente tá vivo. Por enquanto.', { tone: 'ironico', to: davi });
+    // Os irmãos se viram. Por cima do ombro do Samá, o Davi de frente.
+    d.together(...irmaos.map((id) => () => d.actor(id).turnTo(atras)));
+    for (const id of irmaos) d.actor(id).behave('attend', { object: 'davi' });
+    const irmao = ombro(d, 'sama', 'davi', { side: 0.4, mix: 0.12 });
+    d.camera.cut(irmao);
+    d.camera.moveTo(perto(irmao));
+    sama.say('Davi?!', { tone: 'surprised', to: davi, gesture: 0.3 });
+    davi.say('O pai mandou saber como estais.', { to: sama, gesture: 0.4 });
 
-    // O grito do Golias corta a conversa. A fila recua; dois soldados largam a posição e correm para trás.
-    d.camera.cut({ pos: [1.5, 1.2, 8.0], lookAt: [0, 3.1, 12.6], fov: 40 });
-    golias.say('Ninguém?! Israel inteiro e nenhum homem?!', { tone: 'grito', gesture: 0.5 });
-    d.camera.cut({ pos: [4.8, TOPO + 1.55, -40.6], lookAt: [4.4, TOPO + 1.45, -37.6], fov: 40 });
-    encolhem(d, [...tropa, 'sama', 'eliabe', 'abinadabe'], 1);
-    d.background(() => {
-      d.actor('israel-8').runTo([12.5, -43], { speed: 3.2 });
-      d.actor('israel-8').behave('watch', { point: [0, 3, 12], mood: 'scared' });
-    });
-    d.background(() => {
-      d.wait(0.3);
-      d.actor('israel-9').runTo([15, -44], { speed: 3.4 });
-      d.actor('israel-9').behave('watch', { point: [0, 3, 12], mood: 'scared' });
-    });
-    davi.lookAt([0, 3, 12], { duration: 0.6 });
-    d.wait(1.6);
-
-    // ---- 5. A recompensa (1:15) ----
-    encolhem(d, [...tropa, 'sama', 'eliabe', 'abinadabe'], 0);
-    d.camera.cut({ pos: [2.6, TOPO + 1.55, -40.0], lookAt: [-0.8, TOPO + 1.45, -36.5], fov: 44 });
-    davi.walkTo([0.2, -37.1], { speed: 1.2 });
-    davi.turnTo([-2.2, -LINHA]);
-    s1.turnTo([0.2, -37.1]);
-    s2.turnTo([0.2, -37.1]);
+    // ---- 5. A afronta (1:12) ----
+    // [GANCHO] Lá de baixo, o grito. (17:23)
+    d.camera.cut({ pos: [1.4, 1.1, 8.2], lookAt: [0, 3.1, 13.2], fov: 42 });
+    d.camera.moveTo({ pos: [1.2, 1.2, 8.8], lookAt: [0, 3.1, 13.2], fov: 40 });
+    golias.say('Hoje eu afronto as fileiras de Israel! Dai-me um homem, e lutaremos os dois!', { tone: 'grito', gesture: 0.5 });
+    // A fila inteira se encolhe; dois largam a posição e correm para trás. O Davi não se mexe. (17:24)
+    d.camera.cut({ pos: [5.6, TOPO + 1.8, -42.4], lookAt: [5.0, TOPO + 1.3, -36.6], fov: 48 });
+    encolhem(d, [...tropa, ...irmaos], 1);
+    FOGEM.forEach((id, i) => d.background(() => {
+      d.wait(0.1 + i * 0.25);
+      d.actor(id).runTo([12.5 + i * 2.5, -43 - i], { speed: 3.4 });
+      d.actor(id).behave('watch', { point: vale, mood: 'scared' });
+    }));
+    davi.lookAt(vale, { duration: 0.5 });
+    d.camera.moveTo({ pos: [5.4, TOPO + 1.8, -41.8], lookAt: [5.0, TOPO + 1.3, -36.6], fov: 46 });
+    d.wait(0.6);
+    // Os dois soldados do lado contam da recompensa.
+    encolhem(d, [...tropa, ...irmaos], 0);
+    const perguntar: [number, number] = [0.0, -37.5];
+    const vaiPerguntar = d.background(() => davi.walkTo(perguntar, { speed: 1.3 }));
+    d.together(() => s1.turnTo(perguntar), () => s2.turnTo(perguntar));
+    s1.behave('attend', { object: 'davi', mood: 'worried' });
+    s2.behave('attend', { object: 'davi', mood: 'worried' });
+    d.waitFor(vaiPerguntar.end - 0.8);
     davi.lookAt(s1, { duration: 0.4 });
-    s1.say('Viu aquele homem? Ele sobe pra afrontar Israel. O rei prometeu: quem matar o gigante fica rico.', { to: davi });
-    s2.say('Casa com a filha do rei.', { to: davi });
-    s1.say('E a casa do pai dele nunca mais paga imposto.', { to: davi });
-    davi.say('O que vão dar pra quem matar esse filisteu e tirar essa vergonha de Israel?', { to: s1 });
-    s1.say('Acabei de dizer.', { tone: 'ironico', to: davi });
-    d.camera.cut({ pos: [-0.7, TOPO + 1.6, -35.7], lookAt: [0.2, TOPO + 1.5, -37.1], fov: 36 });
-    davi.say('E quem é esse filisteu, pra desafiar o exército do Deus vivo?', { tone: 'firme', gesture: 0.4 });
-
-    // Silêncio na fila. O Eliabe vem por trás do irmão. [Liberdade: no texto ele só fala.]
-    d.wait(0.8);
-    eliabe.walkTo([1.1, -36.3], { speed: 1.6 });
-    eliabe.turnTo([0.2, -37.1]);
-    eliabe.express('angry');
-    d.camera.cut({ pos: [3.6, TOPO + 1.6, -38.4], lookAt: [0.6, TOPO + 1.5, -36.7], fov: 40 });
-    eliabe.say('O que você tá fazendo aqui? E as poucas ovelhas, deixou com quem no deserto?', { tone: 'bravo', to: davi, gesture: 0.7 });
-    eliabe.say('Eu te conheço. Conheço teu orgulho. Você veio pra ver a guerra.', { tone: 'bravo', to: davi, gesture: 0.5 });
-    davi.say('E o que foi que eu fiz agora? Foi só uma pergunta.', { to: eliabe });
-    eliabe.express('neutral');
-    eliabe.behave('attend', { object: 'davi', mood: 'worried' });
-
-    // Davi se solta e vai até outro soldado.
-    d.camera.cut({ pos: [-1.2, TOPO + 1.6, -40.8], lookAt: [-2.4, TOPO + 1.4, -37.6], fov: 44 });
-    const ate3 = davi.walkTo([-2.4, -38.6], { speed: 1.4 });
-    d.at(ate3.start + 0.8);
-    s2.say('Deixa o menino, Eliabe.', { tone: 'cansado', gesture: 0.3 });
-    d.waitFor(ate3);
-    davi.turnTo([-3.3, -37.4]);
-    s3.turnTo([-2.4, -38.6]);
-    davi.say('E você? O que o rei vai dar?', { to: s3 });
-    s3.say('O mesmo que te disseram, rapaz. Por quê? Tá pensando em ir?', { to: davi });
-    // Ele olha bem para o Davi e sai correndo para a tenda do rei.
+    const recompensa = ombro(d, 'davi', S1);
+    d.camera.cut(recompensa);
+    d.camera.moveTo(perto(recompensa));
+    s1.say('O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento.', { to: davi, gesture: 0.4 });
+    s2.say('E a casa do pai dele fica livre de impostos.', { to: davi, gesture: 0.4 });
+    // O Davi de frente, no meio do quadro. Enquanto ele fala, o Eliabe vem por trás.
+    davi.lookAt(vale, { duration: 0.5 });
+    d.camera.cut({ pos: [0.4, TOPO + 1.75, -34.7], lookAt: [0.0, TOPO + 1.45, -37.5], fov: 42 });
+    d.camera.moveTo({ pos: [0.35, TOPO + 1.72, -35.1], lookAt: [0.0, TOPO + 1.45, -37.5], fov: 40 });
+    const bronca: [number, number] = [1.4, -38.6];
     d.background(() => {
-      s3.runTo([1.4, -43.6], { speed: 3.2 });
-      s3.turnTo([0, -47]);
-      s3.behave('attend', { object: 'saul' });
+      d.wait(1.2);
+      eliabe.express('angry');
+      eliabe.walkTo(bronca, { speed: 1.5 });
+      eliabe.turnTo(perguntar);
+      eliabe.behave('attend', { object: 'davi', mood: 'worried' });
     });
-    d.wait(1.2);
+    davi.say('Quem é esse filisteu, para afrontar os exércitos do Deus vivo?', { tone: 'firme', gesture: 0.4 });
 
-    // ---- 6. A tenda do rei (1:38) ----
-    // O Davi segue o soldado. Lá dentro, o rei espera, cansado.
+    // ---- 6. A bronca (1:38) ----
+    // [Liberdade: no texto ele só fala.] Os dois na linha da câmera: quem fala de frente, o outro de costas na borda.
+    davi.turnTo(bronca);
+    davi.behave('attend', { object: 'eliabe' });
+    const irado = ombro(d, 'davi', 'eliabe');
+    d.camera.cut(irado);
+    d.camera.moveTo(perto(irado));
+    eliabe.say('Por que desceste aqui? Com quem deixaste aquelas poucas ovelhas no deserto?', { tone: 'bravo', to: davi, gesture: 0.7 });
+    eliabe.say('Eu conheço o teu orgulho. Vieste só pra ver a batalha.', { tone: 'bravo', to: davi, gesture: 0.5 });
+    const calmo = ombro(d, 'eliabe', 'davi', { side: -0.6, mix: 0.12 });
+    d.camera.cut(calmo);
+    d.camera.moveTo(perto(calmo));
+    davi.say('Que fiz eu agora? Foi só uma pergunta.', { to: eliabe, gesture: 0.3 });
+    eliabe.express('neutral');
+    // O Eliabe volta para o seu lugar na fila.
     d.background(() => {
-      davi.walkTo([0, -42.6], { speed: 1.6 });
-      davi.walkTo([0, -44.3], { speed: 1.1 });
+      eliabe.walkTo([...IRMAOS.eliabe], { speed: 1.2 });
+      eliabe.turnTo(180);
+      eliabe.behave('attend', { object: 'golias', mood: 'worried' });
+    });
+    // Ele dá as costas ao irmão e pergunta de novo, ao soldado de trás. (17:30) Do vão da fila, olhando para trás.
+    const outro: [number, number] = [-2.0, -38.0];
+    const vira = d.background(() => davi.walkTo(outro, { speed: 1.3 }));
+    d.camera.track('davi', { from: [0.6, TOPO + 1.9, -34.4], to: [-0.2, TOPO + 1.9, -34.6], duration: vira.end - d.now + 0.4, fov: 42 });
+    d.waitFor(vira);
+    s2.turnTo(outro);
+    davi.turnTo([d.where(S2)[0], d.where(S2)[2]]);
+    const soldado = ombro(d, 'davi', S2);
+    d.camera.cut(soldado);
+    d.camera.moveTo(perto(soldado));
+    davi.say('É verdade o que dizem do rei?', { to: s2, gesture: 0.2 });
+    s2.express('happy', { amount: 0.3 });
+    s2.say('É. Por quê? Estás pensando em descer?', { tone: 'irônico', to: davi, gesture: 0.4 });
+    s2.express('neutral');
+
+    // ---- 7. Na tenda do rei (1:55) ----
+    // [GANCHO] O soldado olha bem para o Davi e corre contar ao rei, na boca da tenda. (17:31) O Davi vai atrás.
+    const recado = d.background(() => {
+      s2.runTo([-3.4, -40.4], { speed: 3.0 });
+      s2.turnTo(REI);
+      s2.behave('attend', { object: 'saul' });
+    });
+    saul.behave('attend', { object: S2, mood: 'worried' });
+    d.background(() => abner.turnTo([-3.4, -40.4]));
+    abner.behave('attend', { object: S2 });
+    const vem = d.background(() => {
+      d.wait(0.8);
+      davi.walkTo(DIANTE_DO_REI, { speed: 1.3 });
+      davi.turnTo(REI);
       davi.behave('attend', { object: 'saul' });
     });
-    d.camera.cut({ pos: [0.7, TOPO + 1.25, -48.8], lookAt: [0, TOPO + 1.1, -43.5], fov: 46 });
-    saul.say('Quarenta dias, Abner.', { tone: 'cansado' });
-    abner.say('E nenhum homem desceu, majestade.', { to: saul });
-    d.waitFor(d.now + 1.2);
-    saul.lookAt(davi, { duration: 0.6 });
-    abner.say('Majestade, esse é o rapaz que anda perguntando sobre a recompensa.', { to: saul, gesture: 0.4 });
-    abner.behave('attend', { object: 'davi' });
-    davi.say('Que ninguém perca a coragem por causa dele. Eu vou lutar com esse filisteu.', { tone: 'decidido', to: saul });
-    abner.say('Ele é pastor, majestade.', { tone: 'ironico', to: saul });
-    saul.say('Você não consegue enfrentar esse homem. Você é um rapaz. Ele é guerreiro desde menino.', { tone: 'cansado', to: davi });
-
-    // A órbita lenta em volta dos dois enquanto o Davi conta do leão e do urso.
-    const historia = d.now;
-    d.camera.cut({ pos: [0.75, TOPO + 1.55, -40.9], lookAt: [-0.1, TOPO + 1.0, -47.4], fov: 44 });
-    d.at(historia + 18);
-    d.camera.moveTo({ pos: [0.5, TOPO + 1.45, -42.7], lookAt: [-0.1, TOPO + 1.0, -47.4], fov: 40 });
-    d.at(historia);
-    davi.say('Eu cuido das ovelhas do meu pai. Uma vez veio um leão e levou um cordeiro.', { to: saul, gesture: 0.5 });
-    davi.say('Eu fui atrás, bati nele e tirei o cordeiro da boca dele. Ele veio pra cima de mim. Eu peguei pela juba e matei.', { to: saul, gesture: 0.8 });
-    davi.say('Matei leão. Matei urso. Esse filisteu vai ser como um deles.', { to: saul, gesture: 0.5 });
-    davi.say('O Senhor que me livrou do leão e do urso vai me livrar desse filisteu também.', { tone: 'firme', to: saul, gesture: 0.3 });
-    d.waitFor(historia + 18);
-
-    // Silêncio. Lá fora, de longe, o Golias grita de novo. Saul e Abner se olham.
-    d.camera.cut({ pos: [-1.6, TOPO + 1.3, -44.0], lookAt: [0.9, TOPO + 1.1, -47], fov: 40 });
-    golias.say('Israel! Eu ainda tô esperando!', { tone: 'grito' });
-    d.together(() => saul.lookAt(abner, { duration: 0.5 }), () => abner.lookAt(saul, { duration: 0.5 }));
-    d.wait(0.8);
-    saul.lookAt(davi, { duration: 0.5 });
-    saul.say('Vá. E que o Senhor esteja com você.', { to: davi });
-
-    // ---- 7. A armadura (2:05) ----
-    // Câmera fixa, de frente, como um quadro.
-    d.camera.cut({ pos: [1.4, TOPO + 1.4, -41.0], lookAt: [-0.1, TOPO + 1.1, -44.7], fov: 50 });
-    saul.standUp([0.7, -46.6]);
-    saul.walkTo([0.55, -45.2], { speed: 1 });
-    saul.turnTo([0, -44.3]);
+    // Na frente da tenda, do lado de onde o rapaz vem: o rei e o Abner de frente, e o Davi entrando no quadro.
+    d.camera.cut({ pos: [3.9, TOPO + 2.1, -39.2], lookAt: [-1.0, TOPO + 1.35, -40.5], fov: 44 });
+    d.camera.moveTo({ pos: [3.5, TOPO + 2.05, -39.5], lookAt: [-1.0, TOPO + 1.35, -40.5], fov: 42 });
+    d.waitFor(recado);
+    d.together(() => saul.turnTo(DIANTE_DO_REI), () => abner.turnTo([0, -40]));
+    abner.say('Majestade, é o rapaz que anda perguntando pela recompensa.', { to: saul, gesture: 0.4 });
+    d.waitFor(vem);
     saul.behave('attend', { object: 'davi', mood: 'worried' });
-    // [Liberdade] As falas do Saul enquanto veste o Davi.
-    saul.say('Meu capacete.', { to: davi, gesture: 0 });
-    saul.pointAt(davi, { duration: 0.8 });
-    d.do('davi', 'set', { channel: 'wear.bronzeHelmet', value: 1 }, { duration: 0 });
-    saul.say('E a minha couraça.', { to: davi, gesture: 0 });
-    saul.pointAt(davi, { duration: 0.8 });
-    d.do('davi', 'set', { channel: 'wear.scaleArmor', value: 1 }, { duration: 0 });
-    // Tudo grande demais: ele tenta dar dois passos. [Liberdade: o soldado na porta segura a risada.]
-    davi.express('surprised', { amount: 0.6 });
-    d.background(() => {
-      d.wait(0.6);
-      s3.express('happy');
-    });
-    davi.walkTo([-0.9, -43.6], { speed: 0.55 });
-    davi.turnTo([0.55, -45.2]);
-    davi.say('Não dá. Eu nunca usei isso. Não consigo nem andar.', { to: saul, gesture: 0.6 });
-    s3.express('neutral');
-    // Ele tira o capacete e a couraça e devolve ao rei.
-    d.do('davi', 'set', { channel: 'wear.bronzeHelmet', value: 0 }, { duration: 0 });
-    d.wait(0.5);
-    d.do('davi', 'set', { channel: 'wear.scaleArmor', value: 0 }, { duration: 0 });
-    davi.express('neutral');
-    saul.say('Vai assim?', { tone: 'preocupada', to: davi });
-    davi.say('Eu sempre fui assim.', { to: saul });
+    abner.behave('attend', { object: 'davi' });
+    s2.behave('attend', { object: 'davi' });
+    // Por cima do ombro do Davi, o rei de frente.
+    const rei = ombro(d, 'davi', 'saul');
+    d.camera.cut(rei);
+    d.camera.moveTo(perto(rei));
+    saul.express('surprised', { amount: 0.5 });
+    saul.say('Davi? O meu escudeiro?', { tone: 'surpreso', to: davi, gesture: 0.2 });
+    saul.express('neutral');
+    const servo = ombro(d, 'saul', 'davi', { back: 2.4, side: -0.6, up: 2.2, mix: 0.12 });
+    d.camera.cut(servo);
+    d.camera.moveTo(perto(servo));
+    davi.say('Que ninguém desanime por causa desse filisteu. Teu servo irá lutar contra ele.', { tone: 'decidido', to: saul, gesture: 0.3 });
+    d.camera.cut(rei);
+    d.camera.moveTo(perto(rei));
+    saul.say('Não podes. És apenas um jovem, e ele é guerreiro desde a juventude.', { tone: 'cansado', to: davi, gesture: 0.3 });
+    // O leão e o urso: o Davi de frente, a câmera girando devagar do lado do rei.
+    const p = d.where('saul');
+    d.camera.orbit({ center: [(p[0] + DIANTE_DO_REI[0]) / 2 + 0.3, p[1] + 1.45, p[2]], radius: 3.8, height: 0.35, from: -60, to: -46, duration: 12, fov: 40 });
+    davi.say('Quando um leão ou um urso levava uma ovelha, eu ia atrás dele e a tirava da sua boca.', { to: saul, gesture: 0.6 });
+    davi.say('Teu servo matou o leão e o urso. Esse filisteu será como um deles.', { to: saul, gesture: 0.5 });
+    // O Davi de perto.
+    const dv = d.where('davi');
+    d.camera.cut({ pos: [dv[0] - 2.1, dv[1] + 1.8, dv[2] + 0.8], lookAt: [dv[0], dv[1] + 1.45, dv[2]], fov: 40 });
+    d.camera.moveTo({ pos: [dv[0] - 1.9, dv[1] + 1.78, dv[2] + 0.7], lookAt: [dv[0], dv[1] + 1.45, dv[2]], fov: 38 });
+    davi.say('O Senhor, que me livrou das garras do leão e do urso, me livrará das mãos desse filisteu.', { tone: 'firme', to: saul, gesture: 0.3 });
+    // Silêncio. O rei olha o Abner; o Abner não diz nada. [GANCHO]
+    const silencio = { pos: [-2.8, TOPO + 1.8, -37.0] as V3, lookAt: [-1.4, TOPO + 1.5, -40.5] as V3 };
+    d.camera.cut(silencio);
+    d.camera.moveTo(perto(silencio, 0.12));
+    d.together(() => saul.lookAt(abner, { duration: 0.5 }), () => abner.lookAt(saul, { duration: 0.5 }));
+    d.wait(0.9);
+    saul.lookAt(davi, { duration: 0.5 });
+    d.camera.cut(rei);
+    d.camera.moveTo(perto(rei, 0.2));
+    d.wait(0.3);
+    saul.say('Vai. E que o Senhor esteja contigo.', { to: davi, gesture: 0.2 });
 
-    // ---- 8. O riacho (2:22) ----
-    // Grua alta: o vale inteiro, os dois exércitos e o Davi pequeno, descendo sozinho.
-    const descida = d.background(() => {
-      davi.walkTo([0, -40.5], { speed: 1.8 });
-      davi.walkTo([-1.8, -2.7], { speed: 2.6 });
+    // ---- 8. A beira do vale (2:30) ----
+    // O Davi vai até a beira do monte. Lá embaixo, pequeno, o gigante; ele levanta a cabeça.
+    const beira: [number, number] = [0, -LINHA + 0.6];
+    const desce = d.background(() => {
+      davi.walkTo(beira, { speed: 1.7 });
       davi.turnTo(180);
+      davi.behave('watch', { point: vale, mood: 'calm' });
     });
-    d.wait(2.4);
-    d.camera.cut({ pos: [2.5, TOPO + 3.5, -41], lookAt: [-1, 1.5, -6], fov: 46 });
-    d.wait(1);
-    // [Liberdade] Na fila, alguém vê o rapaz descendo.
-    d.actor('israel-2').say('Olha! Tem alguém descendo!', { tone: 'urgente', gesture: 0.5 });
-    d.actor('israel-3').say('É um menino. Sem armadura!', { tone: 'nervoso', gesture: 0.4 });
-    d.wait(0.6);
-    d.camera.moveTo({ pos: [1.8, TOPO + 6, -44], lookAt: [-1, 1, -4], fov: 42 });
-    d.camera.cut({ pos: [7.2, TOPO + 1.6, -31.5], lookAt: [4.6, TOPO + 1.4, -35.8], fov: 40 });
-    for (const irmao of ['sama', 'eliabe', 'abinadabe']) d.actor(irmao).behave('attend', { object: 'davi', mood: 'scared' });
-    abinadabe.say('Ele vai mesmo?', { to: eliabe });
-    eliabe.say('Esse menino nunca escutou ninguém.', { tone: 'bravo' });
-    d.camera.cut({ pos: [1.6, 0.9, 8.6], lookAt: [0, 3, 12.6], fov: 44 });
-    golias.say('Cadê o homem de Israel?', { tone: 'grito', gesture: 0.4 });
-    d.camera.cut({ pos: [5.6, TOPO + 1.5, -38.5], lookAt: [4.0, TOPO + 1.5, -36], fov: 36 });
-    eliabe.say('Davi! Davi, volta!', { tone: 'grito', gesture: 0.8 });
-    d.waitFor(descida);
-
-    // Ele se ajoelha e escolhe as pedras, uma a uma.
-    d.camera.cut({ pos: [-0.2, 0.15, -1.0], lookAt: [-1.8, -0.25, -2.4], fov: 46 });
-    d.do('davi', 'move', { name: 'kneel' }, { duration: 0.8 });
-    const conta = ['Uma.', 'Duas.', 'Três.', 'Quatro.', 'Cinco.'];
-    for (let i = 1; i <= 5; i++) {
-      davi.pickUp(`pedra${i}`, { hand: 'right' });
-      // [Liberdade] Ele conta baixinho.
-      d.background(() => davi.say(conta[i - 1], { tone: 'sussurro', gesture: 0 }));
-      davi.putAway(`pedra${i}`);
-      if (i === 3) {
-        d.background(() => {
-          d.actor('filisteu-6').say('Olha lá! Mandaram um menino!', { tone: 'laughs', gesture: 0.6 });
-          d.actor('filisteu-4').say('Com um pau de pastor!', { tone: 'laughs', gesture: 0.6 });
-        });
-      }
-      if (i === 2) d.camera.cut({ pos: [-3.6, 0.6, -0.8], lookAt: [-1.8, -0.2, -2.4], fov: 40 });
-    }
-    d.do('davi', 'move', { name: 'kneel', amount: 0 }, { duration: 0.8 });
-    davi.behave('attend', { object: 'golias' });
-
-    // ---- 9. Frente a frente (2:40) ----
-    // Ele atravessa o riacho e vai na direção do gigante.
-    d.camera.cut({ pos: [9, 1.2, 3], lookAt: [0, 1.8, 7], fov: 50 });
-    davi.walkTo([0, 3.2], { speed: 1.4 });
-    golias.lookAt(davi, { duration: 0.5 });
-    escudeiro.lookAt(davi, { duration: 0.5 });
-    d.camera.orbit({ center: [0, 1.4, 8.0], radius: 9.2, height: 0.1, from: 200, to: 160, duration: 14, fov: 50 });
-    const face = d.now;
-    golias.say('Isso? Eu sou algum cachorro, pra você vir atrás de mim com um pedaço de pau?', { tone: 'laughs', to: davi, gesture: 0.5 });
-    golias.say('Que os meus deuses te amaldiçoem! Vem cá, menino. Vou dar a tua carne pros pássaros e pros bichos do campo.', { tone: 'bravo', to: davi, gesture: 0.6 });
-    d.camera.cut({ pos: [0.7, 0.95, 5.7], lookAt: [0, 0.75, 3.2], fov: 40 });
-    davi.say('Tu vens contra mim com espada, lança e escudo; eu, porém, vou contra ti em nome do Senhor dos Exércitos, o Deus dos exércitos de Israel, a quem tens afrontado.', { tone: 'firme', to: golias, gesture: 0.4 });
-    davi.say('Hoje o Senhor vai te entregar na minha mão. E a terra inteira vai saber que existe Deus em Israel.', { tone: 'firme', to: golias, gesture: 0.4 });
-    d.camera.cut({ pos: [1.7, 0.5, 5.2], lookAt: [0, 0.9, 3.2], fov: 46 });
-    davi.say('E todo mundo aqui vai saber que o Senhor não salva com espada nem com lança. Porque a batalha é do Senhor!', { tone: 'grito', to: golias, gesture: 0.7 });
-    void face;
-
-    // O Golias levanta a lança e começa a andar; o chão treme a cada passo.
-    d.camera.cut({ pos: [-1.5, 0.5, 1.6], lookAt: [0, 2.6, 10], fov: 50, shake: 0.15 });
-    // [Liberdade] Do outro monte, os filisteus gritam o nome dele.
-    d.background(() => {
-      d.wait(0.6);
-      d.actor('filisteu-5').say('Golias! Golias!', { tone: 'grito', gesture: 0.6 });
-      d.actor('filisteu-7').say('Golias!', { tone: 'grito', gesture: 0.6 });
-    });
-    for (const id of ids(filisteus)) d.background(() => d.do(id, 'move', { name: 'cheer', amount: 0.9 }, { duration: 0.6 }));
-    golias.walkTo([0, 9.2], { speed: 1.1 });
-    golias.behave('attend', { object: 'davi', mood: 'calm' });
-
-    // ---- 10. A pedra (3:05) ----
-    // Davi larga o cajado e corre na direção do gigante, com a funda na mão.
-    davi.putDown('cajado', [0.5, 0.02, 3.4]);
-    davi.pickUp('funda', { hand: 'right' });
-    d.do('funda', 'set', { channel: 'loaded', value: 1 }, { duration: 0 });
-    d.do('davi', 'move', { name: 'sling' }, { duration: 0.4 });
-    const giro = d.do('funda', 'set', { channel: 'spin', value: 10 }, { duration: 4.6, ease: 'linear' });
-    d.camera.thirdPerson(davi, { distance: 2.6, height: -0.2, fov: 58, shake: 0.1 });
-    d.at(giro.start);
-    davi.runTo([0, 3.6], { speed: 1.6 });
-    // Cortes rápidos: a fila prende a respiração, o Eliabe fecha os olhos, o Golias ergue a lança.
-    d.camera.cut({ pos: [3.4, TOPO + 1.5, -39.6], lookAt: [3.2, TOPO + 1.4, -36.2], fov: 46 });
+    saul.behave('attend', { object: 'davi', mood: 'worried' });
+    d.camera.track('davi', { from: [3.0, TOPO + 2.3, -40.2], to: [1.6, TOPO + 2.2, -38.8], duration: desce.end - d.now + 0.4, fov: 44 });
+    d.waitFor(desce.end - 1.2);
+    golias.lookAt(davi, { duration: 0.8 });
+    d.camera.cut({ pos: [0.5, 0.9, 9.6], lookAt: [0, 3.0, 13.2], fov: 42 });
+    d.camera.moveTo({ pos: [0.6, 1.0, 10.2], lookAt: [0, 3.05, 13.2], fov: 40 });
+    d.wait(0.9);
+    d.camera.cut({ pos: [0.5, TOPO + 2.2, -38.4], lookAt: [0, 3.0, 8], fov: 46 });
+    d.camera.moveTo({ pos: [0.3, TOPO + 2.0, -37.2], lookAt: [0, 3.0, 9], fov: 44 });
     d.wait(0.8);
-    d.camera.cut({ pos: [5.2, TOPO + 1.75, -37.4], lookAt: [4.0, TOPO + 1.7, -36.6], fov: 30 });
-    eliabe.express('scared');
-    eliabe.say('Senhor...', { tone: 'sussurro', gesture: 0 });
-    d.camera.cut({ pos: [-2.2, 0.6, 5.6], lookAt: [0, 3.4, 9.2], fov: 46, shake: 0.05 });
-    d.do('golias', 'move', { name: 'cheer', amount: 0.5 }, { duration: 0.5 });
-    d.waitFor(giro);
-    d.do('davi', 'move', { name: 'sling', amount: 0 }, { duration: 0.2 });
-
-    // Davi solta. Câmera lenta, seguindo a pedra no ar até um instante antes da testa.
-    const tiro = d.do('pedra1', 'throw', { hit: 'golias', with: 'funda', speed: 0.75, arc: 0.4 }, { ease: 'linear' });
-    d.at(tiro.start);
-    d.camera.cut({ pos: [2.2, 1.9, 3.0], lookAt: [0, 1.9, 5.6], fov: 40 });
-    d.at(tiro.start + 8);
-    d.camera.moveTo({ pos: [2.1, 2.6, 5.6], lookAt: [0, 2.8, 8.4], fov: 36 });
-    d.at(tiro.start + 2.2);
     d.endCard({
-      title: 'Você descia no vale no lugar do Davi?',
-      options: [{ label: 'DESCIA', icon: '🪨' }, { label: 'FICAVA', icon: '🛡️' }],
-      cta: 'Comenta DESCIA ou FICAVA 👇 e marca o amigo que sempre duvida de você',
+      title: 'Se você fosse o rei, deixava o Davi ir?',
+      options: [{ label: 'DEIXAVA', icon: '🪨' }, { label: 'SEGURAVA', icon: '🛡️' }],
+      cta: 'Comenta DEIXAVA ou SEGURAVA 👇 e marca o amigo que encarava um gigante',
     }, { duration: 6 });
-    d.at(tiro.start + 2.2);
-    d.narrate('Um rapaz, uma funda e cinco pedras. Você descia no vale no lugar do Davi... ou ficava na fila com o exército? Comenta aí. E marca aquele amigo que sempre duvida de você.');
+    d.at(d.now - 6);
+    d.narrate('No próximo episódio: o gigante.');
   },
 );

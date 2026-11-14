@@ -14,6 +14,8 @@ import math
 import os
 import random
 
+from casa_jesse import casa_jesse
+
 R = random.Random(1017)  # 1 Samuel 17
 
 ALTURA = 9.0          # altura do topo dos dois montes
@@ -217,6 +219,27 @@ for x, z in [(-20, -6), (-24, 7), (-9, -5.5), (12, 5), (-30, -5)]:
     prop("ancient.palm", cx + x, cz + z, params={"seed": int(x * 7 + z)})
 for i in range(12):
     prop("ancient.oliveTree", cx + R.uniform(-60, 40), cz + R.choice([-1, 1]) * R.uniform(18, 40), params={"seed": 700 + i})
+
+# ---- Um canto de Belém (ep. 3): a casa de Jessé e o terreiro, de onde o Davi sai de madrugada com a comida ----
+# Longe do vale, em chão plano, atrás dos morros do norte: do acampamento não se vê. A casa é a mesma de belem.json.
+BELEM = (-200.0, -160.0)  # canto noroeste da casa de Jessé
+bx, bz = BELEM
+rooms.append(casa_jesse(BELEM, round(ground(bx + 3.5, bz + 2.6), 2)))
+terrain["walkable"].append({"origin": [bx - 16, bz - 8], "size": [44, 40]})
+# O terreiro: sacos, a carroça e os jarros.
+prop("ancient.sack", bx + 7.5, bz + 6.4, params={"count": 3})
+prop("ancient.cart", bx + 10.5, bz + 3, rot=-80)
+prop("ancient.jar", bx - 0.8, bz + 6.2, params={"count": 2})
+# As casas vizinhas e as oliveiras.
+for i, (x, z, rot) in enumerate([(-9, 1, 0), (17, -1, 0), (-10, 12, 90), (19, 12, -90), (5, -9, 180)]):
+    prop("ancient.house", bx + x, bz + z, rot=rot, params={"seed": 30 + i, "width": round(R.uniform(5, 6.5), 1), "depth": round(R.uniform(4.5, 5.5), 1)})
+for i, (x, z) in enumerate([(13, 9), (-4, 17), (24, 20), (-14, 22)]):
+    prop("ancient.oliveTree", bx + x, bz + z, params={"seed": 740 + i})
+for i in range(30):
+    x, z = bx + R.uniform(-16, 28), bz + R.uniform(5, 32)
+    if bx - 2 < x < bx + 20 and z < bz + 15:
+        continue  # o terreiro fica limpo
+    prop("ancient.rock", x, z, rot=R.uniform(0, 360), params={"seed": 900 + i, "size": round(R.uniform(0.2, 0.45), 2)})
 
 location = {
     "id": "vale-de-ela",

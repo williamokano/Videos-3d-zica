@@ -146,6 +146,16 @@
      60,
      32
     ]
+   },
+   {
+    "origin": [
+     -216.0,
+     -168.0
+    ],
+    "size": [
+     44,
+     40
+    ]
    }
   ]
  },
@@ -186,6 +196,271 @@
    "outdoor": true,
    "floorColor": "#c9b28a",
    "elevation": 0.01
+  },
+  {
+   "id": "casa-jesse",
+   "name": "Casa de Jessé",
+   "origin": [
+    -200.0,
+    -160.0
+   ],
+   "size": [
+    7.0,
+    5.2
+   ],
+   "elevation": 0.0,
+   "height": 3.0,
+   "rustic": true,
+   "floorColor": "#8a7253",
+   "wallColor": "#c8b089",
+   "openings": [
+    {
+     "id": "porta-jesse",
+     "wall": "s",
+     "type": "door",
+     "at": 3.0,
+     "width": 1.2,
+     "leaf": {
+      "style": "planks",
+      "open": 1,
+      "angle": 100
+     }
+    },
+    {
+     "id": "janela-oeste",
+     "wall": "w",
+     "type": "window",
+     "at": 2.0,
+     "width": 0.75,
+     "frame": {
+      "kind": "shutters",
+      "open": 1
+     }
+    },
+    {
+     "id": "janela-leste",
+     "wall": "e",
+     "type": "window",
+     "at": 3.4,
+     "width": 0.6,
+     "frame": {
+      "kind": "shutters",
+      "open": 0.3
+     }
+    }
+   ],
+   "props": [
+    {
+     "asset": "ancient.mudBench",
+     "pos": [
+      3.5,
+      0.0
+     ],
+     "params": {
+      "length": 3.4
+     }
+    },
+    {
+     "asset": "ancient.post",
+     "pos": [
+      1.2,
+      3.6
+     ],
+     "params": {
+      "height": 2.85,
+      "seed": 2
+     }
+    },
+    {
+     "asset": "ancient.post",
+     "pos": [
+      5.8,
+      2.6
+     ],
+     "params": {
+      "height": 2.85,
+      "seed": 5
+     }
+    },
+    {
+     "asset": "ancient.plankShelf",
+     "pos": [
+      1.1,
+      0.0
+     ],
+     "y": 1.65,
+     "params": {
+      "length": 1.4,
+      "seed": 3
+     }
+    },
+    {
+     "asset": "ancient.plankShelf",
+     "pos": [
+      7.0,
+      1.6
+     ],
+     "y": 1.55,
+     "rot": -90,
+     "params": {
+      "length": 1.6,
+      "seed": 8
+     }
+    },
+    {
+     "asset": "ancient.wallNiche",
+     "pos": [
+      0.0,
+      3.7
+     ],
+     "y": 1.25,
+     "rot": 90,
+     "params": {
+      "item": "lamp"
+     }
+    },
+    {
+     "asset": "ancient.hangingCloth",
+     "pos": [
+      7.0,
+      3.6
+     ],
+     "y": 2.05,
+     "rot": -90,
+     "params": {
+      "width": 0.8,
+      "length": 1.4,
+      "color": "#8c3a2a",
+      "seed": 4
+     }
+    },
+    {
+     "asset": "ancient.hangingCloth",
+     "pos": [
+      5.6,
+      0.0
+     ],
+     "y": 2.15,
+     "params": {
+      "width": 0.9,
+      "length": 1.2,
+      "color": "#d9c9a4",
+      "seed": 7
+     }
+    },
+    {
+     "asset": "ancient.herbBundle",
+     "pos": [
+      2.4,
+      1.3
+     ],
+     "y": 2.6,
+     "params": {
+      "count": 3,
+      "seed": 1
+     }
+    },
+    {
+     "asset": "ancient.herbBundle",
+     "pos": [
+      4.8,
+      3.6
+     ],
+     "y": 2.6,
+     "params": {
+      "count": 2,
+      "seed": 6
+     }
+    },
+    {
+     "asset": "ancient.quern",
+     "pos": [
+      6.2,
+      2.4
+     ],
+     "rot": -20,
+     "params": {
+      "seed": 2
+     }
+    },
+    {
+     "asset": "ancient.potteryGroup",
+     "pos": [
+      6.3,
+      0.7
+     ],
+     "params": {
+      "count": 7,
+      "seed": 5
+     }
+    },
+    {
+     "asset": "ancient.basketGroup",
+     "pos": [
+      0.6,
+      2.5
+     ],
+     "params": {
+      "seed": 3
+     }
+    },
+    {
+     "asset": "ancient.potteryGroup",
+     "pos": [
+      0.6,
+      1.0
+     ],
+     "params": {
+      "count": 4,
+      "seed": 9
+     }
+    },
+    {
+     "asset": "ancient.ladder",
+     "pos": [
+      6.7,
+      0.5
+     ],
+     "rot": -90,
+     "params": {
+      "height": 2.7
+     }
+    },
+    {
+     "asset": "ancient.oilLamp",
+     "pos": [
+      5.0,
+      0.22
+     ],
+     "y": 0.42,
+     "params": {
+      "intensity": 3
+     }
+    },
+    {
+     "asset": "ancient.lampStand",
+     "pos": [
+      0.5,
+      0.5
+     ],
+     "params": {
+      "kind": "stone",
+      "intensity": 4
+     }
+    },
+    {
+     "asset": "ancient.rug",
+     "pos": [
+      3.5,
+      1.5
+     ],
+     "params": {
+      "width": 2.6,
+      "depth": 1.8,
+      "color": "#7a3b2a"
+     }
+    }
+   ]
   }
  ],
  "props": [
@@ -8206,6 +8481,425 @@
    ],
    "params": {
     "seed": 711
+   }
+  },
+  {
+   "asset": "ancient.sack",
+   "pos": [
+    -192.5,
+    -153.6
+   ],
+   "params": {
+    "count": 3
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    -189.5,
+    -157.0
+   ],
+   "rot": -80
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -200.8,
+    -153.8
+   ],
+   "params": {
+    "count": 2
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    -209.0,
+    -159.0
+   ],
+   "params": {
+    "seed": 30,
+    "width": 6.5,
+    "depth": 5.1
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    -183.0,
+    -161.0
+   ],
+   "params": {
+    "seed": 31,
+    "width": 5.5,
+    "depth": 4.7
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    -210.0,
+    -148.0
+   ],
+   "rot": 90,
+   "params": {
+    "seed": 32,
+    "width": 5.2,
+    "depth": 5.0
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    -181.0,
+    -148.0
+   ],
+   "rot": -90,
+   "params": {
+    "seed": 33,
+    "width": 5.0,
+    "depth": 4.6
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    -195.0,
+    -169.0
+   ],
+   "rot": 180,
+   "params": {
+    "seed": 34,
+    "width": 5.7,
+    "depth": 4.8
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -187.0,
+    -151.0
+   ],
+   "params": {
+    "seed": 740
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -204.0,
+    -143.0
+   ],
+   "params": {
+    "seed": 741
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -176.0,
+    -140.0
+   ],
+   "params": {
+    "seed": 742
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -214.0,
+    -138.0
+   ],
+   "params": {
+    "seed": 743
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -215.87,
+    -138.02
+   ],
+   "rot": 54.9,
+   "params": {
+    "seed": 901,
+    "size": 0.25
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -183.48,
+    -143.61
+   ],
+   "rot": 121.9,
+   "params": {
+    "seed": 903,
+    "size": 0.32
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -215.2,
+    -141.21
+   ],
+   "rot": 252.9,
+   "params": {
+    "seed": 904,
+    "size": 0.35
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -196.91,
+    -138.3
+   ],
+   "rot": 99.3,
+   "params": {
+    "seed": 905,
+    "size": 0.36
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -186.57,
+    -144.93
+   ],
+   "rot": 102.6,
+   "params": {
+    "seed": 906,
+    "size": 0.3
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -187.13,
+    -132.69
+   ],
+   "rot": 275.9,
+   "params": {
+    "seed": 907,
+    "size": 0.31
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -181.76,
+    -143.41
+   ],
+   "rot": 359.8,
+   "params": {
+    "seed": 908,
+    "size": 0.43
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -212.87,
+    -144.36
+   ],
+   "rot": 51.6,
+   "params": {
+    "seed": 909,
+    "size": 0.26
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -177.89,
+    -142.13
+   ],
+   "rot": 140.0,
+   "params": {
+    "seed": 910,
+    "size": 0.34
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -206.5,
+    -133.29
+   ],
+   "rot": 303.5,
+   "params": {
+    "seed": 911,
+    "size": 0.39
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -199.64,
+    -137.09
+   ],
+   "rot": 120.5,
+   "params": {
+    "seed": 912,
+    "size": 0.22
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -179.54,
+    -132.78
+   ],
+   "rot": 156.2,
+   "params": {
+    "seed": 914,
+    "size": 0.42
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -201.58,
+    -142.48
+   ],
+   "rot": 26.9,
+   "params": {
+    "seed": 916,
+    "size": 0.38
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -202.25,
+    -147.43
+   ],
+   "rot": 138.6,
+   "params": {
+    "seed": 917,
+    "size": 0.38
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -184.53,
+    -140.33
+   ],
+   "rot": 64.2,
+   "params": {
+    "seed": 918,
+    "size": 0.21
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -189.94,
+    -135.04
+   ],
+   "rot": 113.1,
+   "params": {
+    "seed": 919,
+    "size": 0.29
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -174.25,
+    -130.99
+   ],
+   "rot": 340.8,
+   "params": {
+    "seed": 920,
+    "size": 0.25
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -183.46,
+    -133.87
+   ],
+   "rot": 117.3,
+   "params": {
+    "seed": 921,
+    "size": 0.22
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -174.47,
+    -147.09
+   ],
+   "rot": 70.9,
+   "params": {
+    "seed": 922,
+    "size": 0.24
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -213.1,
+    -132.78
+   ],
+   "rot": 148.8,
+   "params": {
+    "seed": 923,
+    "size": 0.22
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -174.12,
+    -142.27
+   ],
+   "rot": 340.1,
+   "params": {
+    "seed": 924,
+    "size": 0.32
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -176.46,
+    -129.61
+   ],
+   "rot": 97.1,
+   "params": {
+    "seed": 926,
+    "size": 0.25
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -197.89,
+    -136.22
+   ],
+   "rot": 257.0,
+   "params": {
+    "seed": 927,
+    "size": 0.28
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -202.11,
+    -134.64
+   ],
+   "rot": 126.8,
+   "params": {
+    "seed": 928,
+    "size": 0.39
    }
   }
  ]

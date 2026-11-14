@@ -105,6 +105,18 @@ FIM DO EPISÓDIO 3.
 
 ---
 
+## Pedido de produção (2026-11-14, depois dos episódios 1 e 2)
+
+Passado pela sessão principal, como veio:
+
+> Episode 3 continues the biblical story from 1 Samuel 17 (Philistines and Israel facing each other in the valley of Elah, Goliath's challenge, Jessé sends Davi with food to his brothers, Eliabe's anger, Davi asking about the challenge) — let the series bible, roteiros and any existing old `episodes/003.ts` (it is an OLD version, rewrite it) guide where ep 3 ends; keep the giant fight itself for a later episode unless the bible says otherwise. Faithful to the Bible text, respectful tone.
+>
+> Apply these lessons: camera must keep the speakers in frame and centred (Instagram crops the edges — keep both characters of a dialogue near the centre, never at the side of the frame), track characters who walk instead of twoShot computed from start positions, no character walking through doors/props, scenes must not be too dark, nothing static >3 s, pace leaves room for real voices. Max duration 3:00 (aim ~2:30–2:50 since real voices are longer than estimates). Title card + end card with question like ep 1/2.
+>
+> Animals: the donkey asset `ancient.hitchedDonkey` now swings its legs when moved with `moveTo` (linear ease); use that if Davi travels with it.
+
+---
+
 ## Pedidos anteriores (da versão em dois episódios)
 
 

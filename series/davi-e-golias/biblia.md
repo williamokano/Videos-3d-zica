@@ -58,7 +58,7 @@ Terceira pessoa e cinematográfica; nada de primeira pessoa nesta série.
 
 Cenários bem detalhados, com vida e som próprios:
 
-- **Belém** (eps. 1 e 2):
+- **Belém** (eps. 1, 2 e 3; no ep. 3, um canto de Belém dentro de `vale-de-ela.json`, com a mesma casa de Jessé, gerada por `world/casa_jesse.py`):
   - colinas de pasto com rebanho e pedras;
   - o portão onde ficam os anciãos;
   - casas de pedra e barro;
@@ -106,6 +106,6 @@ A aparência de cada um está na ficha (`characters/`) e na folha aprovada (`ref
 |---|---|
 | 1 | Samuel vai a Belém; os anciãos temem. Os sete filhos de Jessé passam diante dele e nenhum é escolhido ("o Senhor olha para o coração"). Mandam buscar o caçula no campo; o Samuel o unge no meio dos irmãos. O Eliabe fica ofendido. O Saul, sozinho, é atormentado. |
 | 2 | Um servo indica o Davi ("valente, sábio nas palavras, o Senhor está com ele"). O Jessé o manda com presentes. A harpa acalma o Saul, que faz do Davi seu escudeiro. Os filisteus se reúnem em Socó. |
-| 3 | O Golias desafia Israel por 40 dias. O Davi chega com comida, ouve o desafio e a recompensa, leva bronca do Eliabe e convence o Saul com o leão e o urso. "Vai, e que o Senhor esteja contigo." |
+| 3 | O Golias desafia Israel por 40 dias. O Jessé manda o Davi com grão, pães e dez queijos (ele deixa as ovelhas com um guarda e leva o jumento). O Davi chega, ouve o desafio e a recompensa, pergunta "quem é esse filisteu?", leva bronca do Eliabe, e um soldado conta ao Saul. O Saul o reconhece como seu escudeiro; o leão e o urso. "Vai, e que o Senhor esteja contigo." O cajado do Davi fica com a carga, no acampamento. |
 | 4 | A armadura recusada, as cinco pedras, "Tu vens contra mim...". A pedra acerta a testa e o Golias cai de rosto. Silêncio. A espada (fora do quadro). Os filisteus fogem; Israel grita e persegue. |
 | 5 | O povo canta "dez milhares". O Jônatas dá ao Davi manto, espada, arco e cinto e faz aliança. O Saul ouve a canção e passa a invejar. Numa noite, enquanto o Davi toca, o Saul atira a lança. Fim da temporada. |

@@ -28,7 +28,7 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 
 ## 5. Depois de "O escolhido" (em ordem)
 - [ ] Palácio do Saul (salão do trono com colunas, tochas, trono, janela) e episódio 2
-- [ ] Episódio 3 a partir do 003.ts atual (montagem dos 40 dias, abertura com narrador, Saul reconhece o Davi), cortado na saída da tenda
+- [x] Episódio 3 a partir do 003.ts atual (montagem dos 40 dias, abertura com narrador, Saul reconhece o Davi), cortado na saída da tenda (ver seção 11)
 - [ ] Episódio 4 (armadura, riacho, confronto, queda, silêncio e grito) a partir do resto do 003.ts e do começo do 005.ts
 - [ ] Episódio 5 (cidade, Jônatas na praça, janela do palácio, a lança)
 - [ ] Tela de abertura da série em todos
@@ -78,3 +78,11 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [ ] Revisão do autor.
 - [ ] Vozes (servo, guardas, mensageiro precisam de voz na ficha / look.voice).
 - [ ] O jumento desliza sem mexer as pernas (só aparece de longe e de lado) e o cabrito fica no terreiro.
+
+## 11. Episódio 3 — Quarenta dias
+
+- [x] Roteiro v4 (`roteiros/003-roteiro.md`): desafio, 40 dias, o Jessé manda a comida (Belém), acampamento, recompensa, bronca do Eliabe, Saul, leão e urso, "Vai"; termina com o Davi olhando o vale.
+- [x] Canto de Belém no vale (`gerar-vale.py`), com a casa de Jessé dividida com `gerar-belem.py` (`world/casa_jesse.py`; belem.json sai idêntico).
+- [x] `episodes/003.ts` reescrito: 2:43.9 sem vozes; planos por cima do ombro, altos, quem fala no meio do quadro; nada dentro da tenda.
+- [ ] Revisão do autor.
+- [ ] Vozes que faltam: Golias, Abner, guarda das bagagens (fichas) e os soldados 6, 12 e da fogueira 2 (figurantes da ficha soldado, sem voz; precisam de look.voice ou de voz na ficha soldado).
