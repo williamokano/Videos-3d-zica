@@ -80,7 +80,7 @@ Cenários bem detalhados, com vida e som próprios:
 
 ## Personagens
 
-A aparência de cada um está na ficha (`characters/`) e na folha aprovada (`referencias/folhas/`). Não mude sem o autor.
+A ficha completa de cada um está em `characters/<id>.md` (personalidade, como fala, arco, cânone, voz) e `characters/<id>.json` (aparência, voz e dados fixos em `profile`), com a folha aprovada em `referencias/folhas/`. Não mude sem o autor. A tabela abaixo é o resumo.
 
 | Quem | Aparência | Como fala | O que quer | Nunca |
 |---|---|---|---|---|

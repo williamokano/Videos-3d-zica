@@ -52,7 +52,7 @@ export default direct(
     cast: [
       // O salão do trono.
       { character: 'saul', at: TRONO, yaw: 180, seated: 0.64 },
-      voz(guarda('guarda-1', [97.3, -99.6], -90, 21, 'Guarda 1'), 'hwnuNyWkl9DjdTFykrN6'), // Adriano: soa como locutor de rádio, ver canal/vozes.md
+      voz(guarda('guarda-1', [97.3, -99.6], -90, 21, 'Guarda 1'), 'hwnuNyWkl9DjdTFykrN6'), // Adriano: soa como locutor de rádio, ver canal/vozes.json
       guarda('guarda-2', [102.7, -99.6], 90, 34, 'Guarda 2'),
       guarda('soldado-1', [97.2, -89.3], -120, 47, 'Soldado 1'),
       voz(guarda('soldado-2', [97.6, -90.3], -20, 58, 'Soldado 2'), 'mBxe7tYxRAMLpIP3fPEp'),

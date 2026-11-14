@@ -1,6 +1,40 @@
 {
   "id": "davi",
   "name": "Davi",
+  "profile": {
+    "role": "protagonista",
+    "age": "17–20",
+    "origin": "Belém de Judá; pastor",
+    "family": {
+      "pai": "jesse",
+      "irmao-1": "eliabe",
+      "irmao-2": "abinadabe",
+      "irmao-3": "sama",
+      "irmao-4": "natanael",
+      "irmao-5": "radai",
+      "irmao-6": "ozem",
+      "irmao-7": "eliu"
+    },
+    "sources": [
+      "1 Samuel 16:1-13",
+      "1 Samuel 16:14-23",
+      "1 Samuel 17",
+      "1 Samuel 18:1-11"
+    ],
+    "episodes": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sheet": "referencias/folhas/davi.png",
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-13",
+      "note": "nenhuma reclamação do autor até o ep. 3"
+    }
+  },
   "voice": {
     "id": "YbP0Eq5RE5uOoCEl7F3T"
   },

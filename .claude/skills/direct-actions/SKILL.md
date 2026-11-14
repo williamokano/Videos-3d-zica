@@ -100,7 +100,7 @@ Para ler em primeira pessoa: `pickUp`, `raise()`, `lookAt('celular')` e aproxime
 
 ## Voz e som
 
-- **Voz de cada personagem**: `voice: { id }` na ficha (id de voz da ElevenLabs), ou em `look.voice` no elenco para um figurante falar com outra voz. O narrador é `audio.narrator` na bíblia. Modelo: `audio.model` (padrão `eleven_v3`, que entende os tons).
+- **Voz de cada personagem**: `voice: { id }` na ficha (id de voz da ElevenLabs), ou em `look.voice` no elenco para um figurante falar com outra voz. **Voz nova só depois do teste com o autor** (skill `create-character`, "Voz": `npm run testar-voz`, amostras para ele escolher). Nunca uma voz `vetada` em `canal/vozes.json`. O narrador é `audio.narrator` na bíblia. Modelo: `audio.model` (padrão `eleven_v3`, que entende os tons).
 - **Tons**: `say(texto, { tone })`. Nomes em português em `TONES` (`src/engine/audio/voice.ts`): `sussurro`, `nervoso`, `grito`, `bravo`, `assustado`, `animado`, `triste`, `transe`, `ironico`, `cansado`, `urgente`, `preocupada`, `firme`, `decidido`. Qualquer outro vai como tag em inglês (`laughs`, `sighs`).
 - **Voz por rádio, telefone ou caixa de som**: `say(texto, { filter: 'radio' })`. Filtros em `VOICE_FILTERS` (`src/engine/audio/voice.ts`): `radio` (PX, viatura), `phone`, `speaker` (caixa de som da escola, megafone), `muffled` (do outro lado da porta). A gravação é a mesma com ou sem filtro: ele entra na mixagem, então não custa nada trocar.
 - **Alguém que não está em cena**: `d.narrate(texto, { as: 'pai', filter: 'radio' })` usa a voz e o nome da ficha `pai` da série, sem precisar pôr o personagem no elenco.

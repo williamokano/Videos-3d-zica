@@ -11,6 +11,7 @@ O autor dirige; você é o roteirista que ajuda. O roteiro sai em texto para ele
 
 1. Leia, na pasta da série:
    - `biblia.md`: premissa, regras do mundo, personagens (como cada um fala, o que quer, o que nunca faz), pontas soltas e o cânone (fatos que não podem ser contraditos).
+   - `characters/<id>.md` e `.json` de quem entra no episódio: a ficha (personalidade, como fala, o que nunca faz, arco, cânone, rosto). Ela manda sobre o roteiro.
    - `roteiros/`: os episódios anteriores (o `-roteiro.md` de cada um e o texto original do autor).
    - `publico.md`, se existir: comentários, teorias, opção vencedora do cartão final.
 2. Guarde o pedido do autor como ele escreveu em `roteiros/<nnn>-pedido.md` antes de mexer (lição do projeto: o texto original vale tanto quanto a implementação).
@@ -89,7 +90,7 @@ Sugestões suas que mudam o cânone (um mistério novo, uma pista) ficam marcada
    - **[GANCHO]** marcados;
    - o cartão final;
    - no fim, "O que mudou e por quê" (furos corrigidos, sugestões).
-2. Atualize `biblia.md`: regras novas, pontas soltas e uma linha no cânone.
+2. Atualize `biblia.md` (regras novas, pontas soltas e uma linha no cânone) e as fichas de quem apareceu (`## Arco na série`, `## Cânone`, `profile.episodes`). Personagem novo com nome ganha ficha (skill `create-character`); quem fala com voz nova passa pelo teste de voz com o autor antes de `npm run voz`.
 3. Implemente com a skill `direct-actions` em `episodes/<n>.ts`, com os números das cenas nos comentários, e:
    - `npm run voz -- --series <s> --ep <n> --dry` para listar as falas e o custo; sem `--dry`, gera o que falta;
    - `npm run roteiro -- --series <s> --ep <n>` exporta `roteiros/<nnn>-marcado.md` com cada fala, ação, mensagem e pausa no seu tempo. É esse arquivo que o autor lê para pedir ajustes;

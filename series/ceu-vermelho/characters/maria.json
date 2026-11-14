@@ -1,6 +1,14 @@
 {
   "id": "maria",
   "name": "Maria",
+  "profile": {
+    "role": "principal",
+    "age": "16",
+    "origin": "amiga do Fernando, da mesma sala",
+    "episodes": [
+      1
+    ]
+  },
   "voice": {
     "id": "33B4UnXyTNbgLmdEDh5P"
   },

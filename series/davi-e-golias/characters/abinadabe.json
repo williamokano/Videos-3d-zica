@@ -1,6 +1,27 @@
 {
   "id": "abinadabe",
   "name": "Abinadabe",
+  "profile": {
+    "role": "secundario",
+    "origin": "Belém de Judá; soldado de Saul",
+    "family": {
+      "pai": "jesse",
+      "irmao-caçula": "davi"
+    },
+    "sources": [
+      "1 Samuel 16:8",
+      "1 Samuel 17:13"
+    ],
+    "episodes": [
+      1,
+      3,
+      4
+    ],
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-13"
+    }
+  },
   "voice": {
     "id": "tS45q0QcrDHqHoaWdCDR"
   },

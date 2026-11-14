@@ -1,6 +1,9 @@
 {
   "id": "beto",
   "name": "Beto",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.25,
   "skin": "#8d5a3b",
   "hair": "#141414",

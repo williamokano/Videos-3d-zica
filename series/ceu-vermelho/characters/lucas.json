@@ -1,6 +1,14 @@
 {
   "id": "lucas",
   "name": "Lucas",
+  "profile": {
+    "role": "principal",
+    "age": "16",
+    "origin": "melhor amigo do Fernando, da mesma sala",
+    "episodes": [
+      1
+    ]
+  },
   "voice": {
     "id": "4dlXQwYXFHlCAUmQAu9j"
   },

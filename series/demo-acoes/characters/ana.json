@@ -1,6 +1,9 @@
 {
   "id": "ana",
   "name": "Ana",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.65,
   "skin": "#d9a27c",
   "hair": "#2c1d18",

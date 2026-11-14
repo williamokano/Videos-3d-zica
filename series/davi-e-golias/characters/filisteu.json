@@ -1,6 +1,9 @@
 {
   "id": "filisteu",
   "name": "Soldado filisteu",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.76,
   "build": 1.04,
   "skin": "#c99067",

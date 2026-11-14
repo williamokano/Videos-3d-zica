@@ -1,6 +1,13 @@
 {
   "id": "professor",
   "name": "Professor",
+  "profile": {
+    "role": "principal",
+    "origin": "professor da sala do Fernando",
+    "episodes": [
+      1
+    ]
+  },
   "voice": {
     "id": "Dps47AVoFamqqkDShRDS"
   },

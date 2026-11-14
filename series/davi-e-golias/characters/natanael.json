@@ -1,6 +1,22 @@
 {
   "id": "natanael",
   "name": "Natanael",
+  "profile": {
+    "role": "secundario",
+    "origin": "Belém de Judá",
+    "family": {
+      "pai": "jesse",
+      "irmao-caçula": "davi"
+    },
+    "sources": [
+      "1 Samuel 16:10",
+      "1 Crônicas 2:14"
+    ],
+    "episodes": [
+      1
+    ],
+    "sheet": "referencias/folhas/natanael.png"
+  },
   "height": 1.8,
   "build": 1.06,
   "skin": "#c99068",

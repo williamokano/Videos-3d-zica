@@ -1,6 +1,9 @@
 {
   "id": "soldado",
   "name": "Soldado de Israel",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.74,
   "build": 1.02,
   "skin": "#d09a72",

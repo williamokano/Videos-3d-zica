@@ -1,6 +1,9 @@
 {
   "id": "anciao",
   "name": "Ancião de Belém",
+  "profile": {
+    "role": "figurante"
+  },
   "voice": {
     "id": "mBxe7tYxRAMLpIP3fPEp"
   },

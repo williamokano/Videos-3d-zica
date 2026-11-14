@@ -1,6 +1,30 @@
 {
   "id": "jesse",
   "name": "Jessé",
+  "profile": {
+    "role": "principal",
+    "age": "idoso",
+    "origin": "Belém de Judá",
+    "family": {
+      "filho-caçula": "davi",
+      "primogenito": "eliabe"
+    },
+    "sources": [
+      "1 Samuel 16:1-13",
+      "1 Samuel 16:20",
+      "1 Samuel 17:12-20"
+    ],
+    "episodes": [
+      1,
+      2,
+      3
+    ],
+    "sheet": "referencias/folhas/jesse.png",
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-13"
+    }
+  },
   "voice": {
     "id": "362PVGN0qz9gh4Hb4qdA",
     "speed": 1.08

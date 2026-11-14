@@ -84,7 +84,7 @@ export default direct(
       { character: 'abinadabe', at: [...IRMAOS.abinadabe], yaw: 180 },
       { character: 'saul', at: REI, yaw: 180 },
       { character: 'abner', at: [-2.1, -41.0], yaw: 160 },
-      // Os soldados que falam: o 6 e o 12 conversam, então vozes bem diferentes (ver canal/vozes.md).
+      // Os soldados que falam: o 6 e o 12 conversam, então vozes bem diferentes (ver canal/vozes.json).
       ...fila.map((m) => voz(m, { 'israel-6': 'tS45q0QcrDHqHoaWdCDR', 'israel-12': '2CECaLAGTS5NRGxgbcxr' }[m.id!])),
       ...fogueira.map((m) => voz(m, { 'fogueira-2': 'mBxe7tYxRAMLpIP3fPEp' }[m.id!])),
       ...filisteus,

@@ -7,6 +7,23 @@ description: Criar ou ajustar um personagem de uma série — corpo cartoon para
 
 Um personagem é dado da série: `series/<série>/characters/<id>.json`, no formato `CharacterDef` de `src/engine/character/types.ts`. Todo personagem, feito aqui ou importado, é movido pelo mesmo esqueleto padrão (17 juntas, em T-pose, olhando para -z), então qualquer movimento serve para qualquer personagem.
 
+## A ficha: dois arquivos por personagem
+
+Todo personagem que não é figurante tem uma ficha em dois arquivos, e ela manda sobre qualquer roteiro (mudar só com o autor):
+
+- **`characters/<id>.json`**: o que é fixo e o código lê, sem interpretar: a aparência, a voz e o `profile` (`CharacterProfile` em `src/engine/character/types.ts`):
+  ```json
+  "profile": { "role": "principal", "age": "idoso", "origin": "Belém de Judá", "family": { "filho-caçula": "davi" },
+               "sources": ["1 Samuel 17:12-20"], "episodes": [1, 2, 3], "sheet": "referencias/folhas/jesse.png",
+               "voiceChosen": { "by": "autor", "date": "2026-11-14", "note": "entre 5 amostras" } }
+  ```
+  `role`: `protagonista`, `principal`, `secundario` ou `figurante`. Figurante (soldado, aluno, povo) só tem o `role` e não tem `.md`.
+- **`characters/<id>.md`**: o que precisa ser lido e interpretado, nesta ordem: `## Quem é`, `## Personalidade`, `## Como fala`, `## Rosto e corpo` (expressões que combinam e as que o autor vetou), `## O que quer`, `## Nunca`, `## Arco na série` (uma linha por episódio), `## Cânone` (fatos fixos), `## Voz` (qual e por quê). Comece pela tabela de personagens da `biblia.md` e pelo que o autor disse.
+
+Nada fixo vai só no `.md` (idade, família, episódios, voz): o que o código pode precisar ler fica no JSON. `src/engine/fichas.test.ts` confere que todo personagem tem `role`, que todo não figurante tem o `.md` e que ninguém usa voz vetada.
+
+Ao fim de cada episódio, atualize o `## Arco na série`, o `## Cânone` e o `episodes` de quem apareceu.
+
 ## Antes de começar
 
 - Veja os personagens que a série já tem. Se a pessoa já existe, edite o arquivo; não crie outro.
@@ -72,12 +89,21 @@ Se a bíblia tem `"style": { "look": "cel" }`, o personagem ganha luz em faixas 
 3. Para ver o personagem dentro de um episódio, o painel do estúdio lista o elenco; clicar leva a câmera até ele.
 4. Olhe as imagens: pés no chão, braços para baixo, rosto visível sob o cabelo, personagem olhando para onde anda.
 
-## Voz
+## Voz: o autor escolhe, ouvindo
 
-- `voice: { "id": "<id da ElevenLabs>" }` na ficha. Opcional: `stability`, `similarity`, `style` (0 a 1) e `speed` (o v3 ignora a velocidade: o áudio é acelerado depois).
-- Um figurante com voz própria: `look: { voice: { id } }` no elenco.
-- Para achar vozes em pt-BR: `GET https://api.elevenlabs.io/v1/shared-voices?language=pt&accent=brazilian&gender=male&age=young` com o cabeçalho `xi-api-key`. As vozes da biblioteca funcionam direto pelo id.
-- Vozes já usadas em `ceu-vermelho` estão nas fichas da série. Combine idade e jeito com a bíblia: adolescente com voz jovem e animada, professor com voz mais grave e firme.
+Nenhuma voz nova entra num episódio sem o autor ouvir. A descrição da biblioteca engana: "Slow, Calm and Confident" já soou como locutor de rádio. Por isso:
+
+1. Leia `canal/vozes.json`: as vozes que o autor já aprovou, as em teste e as **vetadas** (locutor, anúncio, sotaque de Portugal). Uma aprovada pouco usada pode servir; nunca uma vetada.
+2. Busque candidatas: `npm run testar-voz -- --buscar --genero male --idade middle_aged` (deixa de fora locutor, anúncio e as vetadas). Prefira `narrative_story`, `conversational`, `characters_animation`; desconfie de `entertainment_tv`, `social_media`, `advertisement`.
+3. Gere a mesma fala em 4 a 6 candidatas, no tom da cena:
+   ```
+   npm run testar-voz -- --series <s> --personagem <id> --ep <n> --vozes "dono/id:nome,id:nome,..."
+   ```
+   (`--ep` pega a primeira fala do personagem nesse episódio, com o tom; ou `--texto "..." --tom cansado`.) As amostras saem em `out/<s>/vozes/<id>/`, no volume do vídeo final (-14 LUFS), e a voz atual entra primeiro, para comparar. Custa poucos créditos.
+4. Mande os arquivos ao autor (`SendUserFile`) e copie para o NAS, na pasta do episódio (`Videos Curtos/<Série>/epNN/vozes-<id>/`). **Espere ele escolher.**
+5. Grave a escolha: `voice: { "id": ... }` no JSON (ou `look.voice` no elenco, para um figurante), `profile.voiceChosen` com `"by": "autor"`, e a voz em `canal/vozes.json` (`aprovada`, com o uso). O que ele vetar vai para lá como `vetada`, com o motivo.
+
+Combine idade e jeito com a ficha: adolescente com voz jovem, profeta idoso com voz calma, gigante grave. Figurantes que conversam entre si precisam de vozes bem diferentes. Opcional na voz: `stability`, `similarity`, `style` (0 a 1) e `speed` (o v3 ignora a velocidade: o áudio é acelerado depois).
 
 
 ## Roupas e acessórios

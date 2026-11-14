@@ -1,6 +1,9 @@
 {
   "id": "mulher",
   "name": "Mulher",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.6,
   "build": 0.9,
   "skin": "#d9a27c",

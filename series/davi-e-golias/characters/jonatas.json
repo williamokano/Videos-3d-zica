@@ -1,6 +1,21 @@
 {
   "id": "jonatas",
   "name": "Jônatas",
+  "profile": {
+    "role": "secundario",
+    "age": "adulto jovem",
+    "origin": "príncipe, filho de Saul",
+    "family": {
+      "pai": "saul"
+    },
+    "sources": [
+      "1 Samuel 18:1-4"
+    ],
+    "episodes": [
+      5
+    ],
+    "sheet": "referencias/folhas/jonatas.png"
+  },
   "height": 1.78,
   "build": 1.0,
   "skin": "#dca47c",

@@ -1,6 +1,24 @@
 {
   "id": "abner",
   "name": "Abner",
+  "profile": {
+    "role": "secundario",
+    "age": "adulto",
+    "origin": "comandante do exército de Saul",
+    "sources": [
+      "1 Samuel 17:55-57"
+    ],
+    "episodes": [
+      3,
+      4,
+      5
+    ],
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-14",
+      "note": "ainda sem o autor ouvir"
+    }
+  },
   "voice": {
     "id": "Qrdut83w0Cr152Yb4Xn3"
   },

@@ -15,6 +15,7 @@
     "vitrine": "node scripts/vitrine.mjs",
     "assets": "node scripts/assets.mjs",
     "voz": "node scripts/voz.mjs",
+    "testar-voz": "node scripts/testar-voz.mjs",
     "roteiro": "node scripts/roteiro.mjs",
     "nivelar": "node scripts/nivel.mjs"
   },

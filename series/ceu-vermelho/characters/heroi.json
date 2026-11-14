@@ -1,6 +1,14 @@
 {
   "id": "heroi",
   "name": "Fernando",
+  "profile": {
+    "role": "protagonista",
+    "age": "16",
+    "origin": "aluno do ensino médio",
+    "episodes": [
+      1
+    ]
+  },
   "voice": {
     "id": "tS45q0QcrDHqHoaWdCDR"
   },

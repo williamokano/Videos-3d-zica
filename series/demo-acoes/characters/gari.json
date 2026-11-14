@@ -1,6 +1,9 @@
 {
   "id": "gari",
   "name": "Gari",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.68,
   "skin": "#8a5a3c",
   "hair": "#1c1512",

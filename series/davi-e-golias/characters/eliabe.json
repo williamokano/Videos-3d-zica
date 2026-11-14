@@ -1,6 +1,30 @@
 {
   "id": "eliabe",
   "name": "Eliabe",
+  "profile": {
+    "role": "principal",
+    "age": "adulto jovem",
+    "origin": "Belém de Judá; soldado de Saul",
+    "family": {
+      "pai": "jesse",
+      "irmao-caçula": "davi"
+    },
+    "sources": [
+      "1 Samuel 16:6-7",
+      "1 Samuel 17:13",
+      "1 Samuel 17:28-29"
+    ],
+    "episodes": [
+      1,
+      3,
+      4
+    ],
+    "sheet": "referencias/folhas/eliabe.png",
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-13"
+    }
+  },
   "voice": {
     "id": "Dps47AVoFamqqkDShRDS"
   },

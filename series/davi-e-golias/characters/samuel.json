@@ -1,6 +1,22 @@
 {
   "id": "samuel",
   "name": "Samuel",
+  "profile": {
+    "role": "principal",
+    "age": "idoso",
+    "origin": "profeta de Ramá",
+    "sources": [
+      "1 Samuel 16:1-13"
+    ],
+    "episodes": [
+      1
+    ],
+    "sheet": "referencias/folhas/samuel.png",
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-13"
+    }
+  },
   "voice": {
     "id": "zoe2cQFqDDW4DteHDEWI",
     "speed": 1.12

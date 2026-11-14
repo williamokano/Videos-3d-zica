@@ -1,6 +1,14 @@
 {
   "id": "guarda",
   "name": "Guarda das bagagens",
+  "profile": {
+    "role": "figurante",
+    "voiceChosen": {
+      "by": "autor",
+      "date": "2026-11-14",
+      "note": "Arnold, entre 6 amostras"
+    }
+  },
   "voice": {
     "id": "ZYCQDYoXnl78dNdU6JeG"
   },

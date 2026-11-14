@@ -1,6 +1,13 @@
 {
   "id": "roberto",
   "name": "Professor Roberto",
+  "profile": {
+    "role": "secundario",
+    "origin": "professor da sala 1",
+    "episodes": [
+      1
+    ]
+  },
   "voice": {
     "id": "362PVGN0qz9gh4Hb4qdA"
   },

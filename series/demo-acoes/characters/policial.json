@@ -1,6 +1,9 @@
 {
   "id": "policial",
   "name": "Policial",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.8,
   "build": 1.08,
   "skin": "#b97a52",

@@ -1,6 +1,9 @@
 {
   "id": "escudeiro",
   "name": "Escudeiro do Golias",
+  "profile": {
+    "role": "figurante"
+  },
   "height": 1.72,
   "build": 1.0,
   "skin": "#c99067",

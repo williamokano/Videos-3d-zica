@@ -76,9 +76,35 @@ export const HAIR_STYLES = ['short', 'buzz', 'fringe', 'mohawk', 'curly', 'curly
 export type HairStyle = (typeof HAIR_STYLES)[number];
 
 /** Character file in series/<series>/characters/<id>.json. */
+/**
+ * Who a character is, in fixed fields that code can read (the engine itself does not use them). What has to be
+ * read and interpreted (personality, how they speak, the arc, the canon) is in the sheet next to the JSON,
+ * `characters/<id>.md`, which every character but the extras has.
+ */
+export interface CharacterProfile {
+  /** protagonista, principal, secundario, or figurante (an extra: no sheet, may be reused under many names). */
+  role: 'protagonista' | 'principal' | 'secundario' | 'figurante';
+  /** Age as the series shows it, e.g. "17–20". */
+  age?: string;
+  /** Where the character is from or belongs. */
+  origin?: string;
+  /** Relation → character id, e.g. { "pai": "jesse" }. */
+  family?: Record<string, string>;
+  /** Where the character comes from in the source text, e.g. "1 Samuel 16:1-13". */
+  sources?: string[];
+  /** Episodes the character appears in. */
+  episodes?: number[];
+  /** The approved reference sheet, relative to the series folder. */
+  sheet?: string;
+  /** How the voice was chosen: by the author from samples (scripts/testar-voz.mjs), or by Claude still untested. */
+  voiceChosen?: { by: 'autor' | 'claude'; date: string; note?: string };
+}
+
 export interface CharacterDef {
   id: string;
   name: string;
+  /** Who the character is (role, family, sources...); see CharacterProfile. */
+  profile?: CharacterProfile;
   /** The voice that says this character's lines. */
   voice?: VoiceSpec;
   /** Height in meters (default 1.7). */

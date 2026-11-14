@@ -1,6 +1,32 @@
 {
   "id": "saul",
   "name": "Rei Saul",
+  "profile": {
+    "role": "principal",
+    "age": "adulto maduro",
+    "origin": "rei de Israel, da tribo de Benjamim",
+    "family": {
+      "filho": "jonatas"
+    },
+    "sources": [
+      "1 Samuel 16:14-23",
+      "1 Samuel 17",
+      "1 Samuel 18:1-11"
+    ],
+    "episodes": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sheet": "referencias/folhas/saul.png",
+    "voiceChosen": {
+      "by": "claude",
+      "date": "2026-11-14",
+      "note": "Eliel, depois que o autor reclamou do sotaque de Portugal da voz do ep. 1"
+    }
+  },
   "voice": {
     "id": "y3X5crcIDtFawPx7bcNq"
   },

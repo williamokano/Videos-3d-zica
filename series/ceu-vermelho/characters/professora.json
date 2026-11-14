@@ -1,6 +1,13 @@
 {
   "id": "professora",
   "name": "Professora",
+  "profile": {
+    "role": "secundario",
+    "origin": "professora da sala 2",
+    "episodes": [
+      1
+    ]
+  },
   "voice": {
     "id": "fUAUU80st9SqdYx319Zk"
   },
