@@ -1317,3 +1317,600 @@ registerAsset(
     return g;
   },
 );
+
+// ---------------------------------------------------------------------------------------------------------
+// Sheep
+
+/** A geometry in one color, kept as vertex colors so parts of different colors merge into one mesh. */
+function painted(g: THREE.BufferGeometry, color: string): THREE.BufferGeometry {
+  const n = g.index ? g.toNonIndexed() : g;
+  for (const k of Object.keys(n.attributes)) if (k !== 'position' && k !== 'normal') n.deleteAttribute(k);
+  const c = new THREE.Color(color);
+  const colors = new Float32Array(n.attributes.position.count * 3);
+  for (let i = 0; i < colors.length; i += 3) [colors[i], colors[i + 1], colors[i + 2]] = [c.r, c.g, c.b];
+  n.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  return n;
+}
+
+/** An ellipsoid of radii r·(sx, sy, sz) centered at `at`. */
+const ball = (r: number, [sx, sy, sz]: [number, number, number], at: [number, number, number]) => new THREE.SphereGeometry(r, 14, 10).scale(sx, sy, sz).translate(...at);
+
+/** The same geometry pushed out along its normals: the shell of a cel outline. */
+function inflated(g: THREE.BufferGeometry, by: number): THREE.BufferGeometry {
+  const shell = g.clone();
+  const [pos, nor] = [shell.attributes.position, shell.attributes.normal];
+  for (let i = 0; i < pos.count; i++) pos.setXYZ(i, pos.getX(i) + nor.getX(i) * by, pos.getY(i) + nor.getY(i) * by, pos.getZ(i) + nor.getZ(i) * by);
+  return shell;
+}
+
+/*
+ * A sheep in its own frame: facing -z, hooves on y = 0, 0.75 m to the top of the back. Four rigid parts that
+ * move: the woolly body, the head on its neck (turning at the chest), the two ears and the four legs.
+ */
+const NECK = v3(0, 0.46, -0.3);
+const EAR = v3(0.072, 0.19, -0.255);
+const HIPS: [number, number, number][] = [[-0.12, 0.34, -0.22], [0.12, 0.34, -0.22], [-0.12, 0.34, 0.26], [0.12, 0.34, 0.26]];
+
+interface SheepShape { body: THREE.BufferGeometry; head: THREE.BufferGeometry; ear: THREE.BufferGeometry; leg: THREE.BufferGeometry }
+const sheepShapes = new Map<string, SheepShape>();
+
+/** The geometries of a sheep of these colors, built once and shared by every sheep and flock. */
+function sheepShape(wool: string, face: string): SheepShape {
+  const key = `${wool}|${face}`;
+  let shape = sheepShapes.get(key);
+  if (shape) return shape;
+  const lumps = [ball(1, [0.27, 0.2, 0.38], [0, 0.5, 0.04]), ball(0.16, [1, 1, 0.9], [0, 0.5, -0.3]), ball(0.07, [1, 1.2, 1], [0, 0.56, 0.46])];
+  for (const [z, r] of [[-0.24, 0.15], [-0.03, 0.16], [0.17, 0.16], [0.34, 0.13]]) lumps.push(ball(r, [1, 0.85, 1], [0, 0.6, z]));
+  for (const s of [-1, 1]) for (const z of [-0.2, 0.06, 0.3]) lumps.push(ball(0.14, [0.9, 1, 1], [s * 0.16, 0.49, z]));
+  const head = [
+    painted(ball(0.13, [1, 1.05, 1.25], [0, 0.07, -0.08]), wool),
+    painted(ball(1, [0.085, 0.095, 0.16], [0, 0, 0]).rotateX(-0.6).translate(0, 0.12, -0.34), face),
+    painted(ball(0.075, [1.1, 0.8, 1.1], [0, 0.215, -0.27]), wool),
+  ];
+  for (const s of [-1, 1]) head.push(painted(ball(0.021, [1, 1, 1], [s * 0.07, 0.165, -0.37]), '#f4efe4'), painted(ball(0.012, [1, 1, 1], [s * 0.084, 0.166, -0.384]), '#141010'));
+  shape = {
+    body: mergeGeometries(lumps.map((g) => painted(g, wool))),
+    head: mergeGeometries(head),
+    // Pointing out along +x from where it joins the head.
+    ear: painted(ball(1, [0.065, 0.016, 0.034], [0.055, 0, 0]), face),
+    // Hanging from the hip, its tip on the ground.
+    leg: painted(new THREE.CapsuleGeometry(0.034, 0.272, 4, 8).translate(0, -0.17, 0), face),
+  };
+  sheepShapes.set(key, shape);
+  return shape;
+}
+
+/** What makes one sheep unlike the next: when it grazes, how big it is, the shade of its wool. */
+interface SheepLife { phase: number; period: number; size: number; tint: THREE.Color }
+function sheepLife(rand: () => number): SheepLife {
+  const k = 0.9 + rand() * 0.14;
+  return { phase: rand() * 40, period: 9 + rand() * 6, size: 0.9 + rand() * 0.18, tint: new THREE.Color(k, k * (0.97 + rand() * 0.03), k * (0.9 + rand() * 0.08)) };
+}
+
+const smooth01 = (u: number) => {
+  const v = Math.max(0, Math.min(1, u));
+  return v * v * (3 - 2 * v);
+};
+
+const [_q, _e, _p, _one, _part] = [new THREE.Quaternion(), new THREE.Euler(), new THREE.Vector3(), new THREE.Vector3(1, 1, 1), new THREE.Matrix4()];
+/** base × a part placed at `at`, turned by the euler angles. */
+const partAt = (out: THREE.Matrix4, base: THREE.Matrix4, at: THREE.Vector3, x: number, y: number, z: number, order: THREE.EulerOrder = 'XYZ') =>
+  out.multiplyMatrices(base, _part.compose(at, _q.setFromEuler(_e.set(x, y, z, order)), _one));
+
+/**
+ * Where the parts of a sheep are at time t, written into `out` (body, head, right ear, left ear, four legs),
+ * from `base` (where the sheep stands, which way it faces, its size). It grazes by itself: head down to the
+ * grass nibbling, then up looking around; the ears flick now and then. `walk` (0 to 1) swings the legs, at
+ * `stride` (radians of the step cycle).
+ */
+function poseSheep(out: THREE.Matrix4[], base: THREE.Matrix4, life: SheepLife, t: number, walk = 0, stride = 0): void {
+  const { phase } = life;
+  const u = (((t + phase) / life.period) % 1 + 1) % 1;
+  const down = smooth01(u / 0.08) * (1 - smooth01((u - 0.62) / 0.1));
+  const nibble = down * 0.06 * (0.5 + 0.5 * Math.sin(t * 8.5 + phase));
+  const pitch = 0.12 * (1 - down) - 1.2 * down - nibble;
+  const yaw = (1 - down) * 0.5 * Math.sin(t * 0.55 + phase * 1.7) + down * 0.12 * Math.sin(t * 0.8 + phase);
+  out[0].copy(base);
+  partAt(out[1], base, NECK, pitch, yaw, 0, 'YXZ');
+  for (const [i, s] of [[2, 1], [3, -1]] as const) {
+    const flick = Math.max(0, Math.sin(t * (1.1 + i * 0.17) + phase * (i + 2))) ** 14;
+    // The left ear is the right one turned round: the same geometry, never mirrored.
+    partAt(out[i], out[1], _p.set(s * EAR.x, EAR.y, EAR.z), 0, s > 0 ? -0.25 : Math.PI + 0.25, -0.35 + 0.55 * flick);
+  }
+  HIPS.forEach(([x, y, z], i) => {
+    const swing = walk * 0.45 * Math.sin(stride + (i === 0 || i === 3 ? 0 : Math.PI));
+    partAt(out[4 + i], base, _p.set(x, y, z), swing, 0, 0);
+  });
+}
+
+const sheepMaterials = new Map<string, THREE.MeshStandardMaterial>();
+/** The material of a sheep: its colors are in the geometry, `tint` shades them. */
+function sheepMaterial(tint: string): THREE.MeshStandardMaterial {
+  let m = sheepMaterials.get(tint);
+  if (!m) sheepMaterials.set(tint, (m = new THREE.MeshStandardMaterial({ color: tint, vertexColors: true, roughness: 0.95, metalness: 0 })));
+  return m;
+}
+
+const SHEEP_WOOL = '#eee6d3';
+const SHEEP_FACE = '#3d322c';
+/** Thickness of the outline the flock draws itself in cel (the style's own shells are not instanced). */
+const FLOCK_OUTLINE = 0.01;
+const outlineShell = new THREE.MeshBasicMaterial({ color: '#17131a', side: THREE.BackSide });
+
+registerAsset(
+  'ancient.sheep',
+  'Ovelha de lã fofa, cara e pernas escuras, de frente para -z, 75 cm até o lombo. Pasta sozinha com o tempo: baixa a cabeça até o capim e mordisca, levanta e olha em volta, mexe as orelhas; cada `seed` pasta num ritmo seu e tem tamanho e tom de lã um pouco diferentes (params: seed, color — da lã —, face — da cara e das pernas)',
+  (p) => {
+    const life = sheepLife(rng(Number(p.seed ?? 1)));
+    const shape = sheepShape(String(p.color ?? SHEEP_WOOL), String(p.face ?? SHEEP_FACE));
+    const material = sheepMaterial(`#${life.tint.getHexString()}`);
+    const parts = [shape.body, shape.head, shape.ear, shape.ear, ...HIPS.map(() => shape.leg)].map((geometry) => {
+      const m = new THREE.Mesh(geometry, material);
+      m.matrixAutoUpdate = false;
+      return m;
+    });
+    const g = group(...parts);
+    const base = new THREE.Matrix4().makeScale(life.size, life.size, life.size);
+    const out = parts.map(() => new THREE.Matrix4());
+    g.userData.animate = (t: number) => {
+      poseSheep(out, base, life, t);
+      parts.forEach((m, i) => {
+        m.matrix.copy(out[i]);
+        m.matrixWorldNeedsUpdate = true;
+      });
+    };
+    g.userData.animate(0);
+    return g;
+  },
+);
+
+registerAsset(
+  'ancient.flock',
+  'Rebanho de ovelhas espalhado num retângulo (width × depth, centrado na origem). Cada ovelha pasta no seu ritmo e vai andando devagar pelo pasto, para e anda de novo, virando para onde vai e mexendo as pernas; nunca sai da área nem esbarra na outra. Pisa-se no meio delas. Barato: 30 ovelhas são quatro malhas (params: count — 14 —, width — 12 —, depth — 8 —, color — da lã —, face, seed)',
+  (p) => {
+    const count = Math.max(1, Math.round(Number(p.count ?? 14)));
+    const width = Number(p.width ?? 12);
+    const depth = Number(p.depth ?? 8);
+    const rand = rng(Number(p.seed ?? 1));
+    const shape = sheepShape(String(p.color ?? SHEEP_WOOL), String(p.face ?? SHEEP_FACE));
+    const material = sheepMaterial('#ffffff');
+    const g = group();
+    const parts = ([[shape.body, 1], [shape.head, 1], [shape.ear, 2], [shape.leg, 4]] as const).map(([geometry, each]) => {
+      const m = new THREE.InstancedMesh(geometry, material, count * each);
+      // Instances move: the box of the whole mesh is not kept.
+      m.frustumCulled = false;
+      m.userData.noOutline = true;
+      const shell = new THREE.InstancedMesh(inflated(geometry, FLOCK_OUTLINE), outlineShell, count * each);
+      shell.instanceMatrix = m.instanceMatrix;
+      shell.frustumCulled = false;
+      shell.visible = false;
+      shell.userData.noShadow = shell.userData.noOutline = true;
+      g.add(m, shell);
+      return { mesh: m, shell, each };
+    });
+    // Each sheep wanders in a cell of its own, so two never meet: a grid over the area, cells taken at random.
+    const cols = Math.max(1, Math.min(count, Math.round(Math.sqrt((count * width) / depth))));
+    const rows = Math.ceil(count / cols);
+    const cells = Array.from({ length: cols * rows }, (_, i) => i);
+    for (let i = cells.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [cells[i], cells[j]] = [cells[j], cells[i]];
+    }
+    const [cw, cd] = [width / cols, depth / rows];
+    const flock = Array.from({ length: count }, (_, i) => {
+      const [c, r] = [cells[i] % cols, Math.floor(cells[i] / cols)];
+      // How far it may stray from the middle of its cell, keeping the whole body inside.
+      const [ax, az] = [Math.max(0, cw / 2 - 0.65), Math.max(0, cd / 2 - 0.65)];
+      const [f1, f2] = [0.6 + rand() * 0.5, 0.6 + rand() * 0.5];
+      const reach = Math.hypot(ax * f1, az * f2);
+      return {
+        life: sheepLife(rand),
+        home: [-width / 2 + (c + 0.5) * cw, -depth / 2 + (r + 0.5) * cd],
+        ax, az, f1, f2, reach,
+        a1: rand() * Math.PI * 2,
+        a2: rand() * Math.PI * 2,
+        // A walk cycle of `cycle` seconds: it stops, sets off, walks and slows down again. `k` keeps the top speed near 0.25 m/s.
+        cycle: 14 + rand() * 10,
+        psi: rand() * Math.PI * 2,
+        k: reach > 0.01 ? 0.25 / (4 * reach) : 0,
+        heading: rand() * Math.PI * 2,
+      };
+    });
+    const tint = new THREE.Color();
+    flock.forEach((s, i) => {
+      for (const { mesh, each } of parts) for (let j = 0; j < each; j++) mesh.setColorAt(i * each + j, tint.copy(s.life.tint));
+    });
+    const out = Array.from({ length: 8 }, () => new THREE.Matrix4());
+    const base = new THREE.Matrix4();
+    const [at, scale, turn] = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Quaternion()];
+    const up = v3(0, 1, 0);
+    g.userData.animate = (t: number) => {
+      flock.forEach((s, i) => {
+        // How far along its path: a pure function of t, so any frame can be drawn on its own.
+        const x = (2 * Math.PI * t) / s.cycle + s.psi;
+        const along = ((s.k * s.cycle) / (2 * Math.PI)) * (1.5 * x - 2 * Math.sin(x) + 0.25 * Math.sin(2 * x));
+        const rate = s.k * (1 - Math.cos(x)) ** 2;
+        const [c1, c2] = [Math.cos(along * s.f1 + s.a1), Math.cos(along * s.f2 + s.a2)];
+        const [dx, dz] = [s.ax * s.f1 * c1, s.az * s.f2 * c2];
+        const speed = Math.hypot(dx, dz) * rate;
+        const walk = Math.min(1, speed / 0.12);
+        const stride = ((along * s.reach * 0.7) / 0.5) * Math.PI * 2;
+        const heading = s.reach > 0.01 ? Math.atan2(-dx, -dz) : s.heading;
+        at.set(s.home[0] + s.ax * Math.sin(along * s.f1 + s.a1), 0.012 * walk * Math.abs(Math.sin(stride)), s.home[1] + s.az * Math.sin(along * s.f2 + s.a2));
+        base.compose(at, turn.setFromAxisAngle(up, heading), scale.setScalar(s.life.size));
+        poseSheep(out, base, s.life, t, walk, stride);
+        parts[0].mesh.setMatrixAt(i, out[0]);
+        parts[1].mesh.setMatrixAt(i, out[1]);
+        for (let j = 0; j < 2; j++) parts[2].mesh.setMatrixAt(i * 2 + j, out[2 + j]);
+        for (let j = 0; j < 4; j++) parts[3].mesh.setMatrixAt(i * 4 + j, out[4 + j]);
+      });
+      for (const { mesh, shell } of parts) {
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.boundingBox = mesh.boundingSphere = null;
+        // The outline shows only when the style has turned the sheep to cel.
+        shell.visible = mesh.material instanceof THREE.MeshToonMaterial;
+      }
+    };
+    g.userData.animate(0);
+    g.userData.passable = true;
+    return g;
+  },
+);
+
+// ---------------------------------------------------------------------------------------------------------
+// Lamps
+
+/** A clay oil lamp with its flame, the spout toward -z; with intensity > 0, a warm light that flickers with it. */
+function oilLamp(p: Record<string, number | string>): THREE.Group {
+  const color = String(p.color ?? '#b5704a');
+  const intensity = Number(p.intensity ?? 0);
+  const phase = rng(Number(p.seed ?? 1))() * 10;
+  // A round saucer, pinched at the front into a spout and with its rim folded up there.
+  const body = lathe([[0.001, 0], [0.03, 0], [0.048, 0.012], [0.052, 0.026], [0.046, 0.033], [0.038, 0.026], [0.03, 0.02], [0.001, 0.019]], 32);
+  body.deleteAttribute('normal');
+  body.deleteAttribute('uv');
+  const clay = mergeVertices(body);
+  const pos = clay.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const [x, y, z] = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+    const r = Math.hypot(x, z);
+    const f = r > 1e-4 ? Math.max(0, -z / r) ** 5 : 0;
+    pos.setXYZ(i, x * (1 - 0.55 * f), y + f * (y / 0.033) * 0.006, z - f * (r / 0.05) * 0.045);
+  }
+  clay.computeVertexNormals();
+  const tip = v3(0, 0.032, -0.088);
+  // The oil, the handle at the back and the wick lying in the spout: too small for an outline.
+  const small = [
+    mesh(new THREE.CylinderGeometry(0.031, 0.031, 0.002, 18), '#3a2a1a', [0, 0.024, 0]),
+    mesh(new THREE.TorusGeometry(0.014, 0.005, 6, 12, Math.PI * 1.3).rotateY(Math.PI / 2).rotateX(-0.6), color, [0, 0.028, 0.05]),
+    rod(v3(0, 0.026, -0.05), tip, 0.0035, '#2a211c'),
+  ];
+  for (const m of small) m.userData.noOutline = true;
+  const lamp = group(mesh(clay, color), ...small);
+  // The flame: an orange drop round a pale core, both their own light.
+  const drop = (r: number, h: number) => lathe([[0, 0], [r * 0.7, h * 0.12], [r, h * 0.33], [r * 0.6, h * 0.66], [0.0005, h]], 10);
+  const flame = group(new THREE.Mesh(drop(0.011, 0.05), new THREE.MeshBasicMaterial({ color: '#ff9a35', transparent: true, opacity: 0.7, depthWrite: false })), new THREE.Mesh(drop(0.0065, 0.028), new THREE.MeshBasicMaterial({ color: '#fff1b8' })));
+  flame.position.copy(tip).add(v3(0, 0.002, 0));
+  flame.traverse((o) => void (o.userData.noShadow = true));
+  lamp.add(flame);
+  const light = intensity > 0 ? new THREE.PointLight('#ffb062', intensity, Number(p.range ?? 6), 2) : undefined;
+  if (light) {
+    light.position.copy(tip).add(v3(0, 0.07, 0));
+    if (Number(p.shadow ?? 0) > 0) {
+      light.castShadow = true;
+      light.shadow.mapSize.set(512, 512);
+      light.shadow.camera.near = 0.03;
+      light.shadow.bias = -0.002;
+    }
+    lamp.add(light);
+  }
+  lamp.scale.setScalar(Number(p.size ?? 1));
+  const g = group(lamp);
+  g.userData.animate = (t: number) => {
+    const k = 1 + 0.16 * Math.sin(t * 13 + phase) + 0.08 * Math.sin(t * 29.7 + phase * 2);
+    flame.scale.set(1 / Math.sqrt(k), k, 1 / Math.sqrt(k));
+    flame.rotation.set(0.1 * Math.sin(t * 3.1 + phase), 0, 0.12 * Math.sin(t * 4.3 + phase));
+    if (light) light.intensity = intensity * (0.88 + 0.08 * Math.sin(t * 13 + phase) + 0.04 * Math.sin(t * 29.7 + phase * 2));
+  };
+  g.userData.animate(0);
+  return g;
+}
+
+registerAsset(
+  'ancient.oilLamp',
+  'Candeia de barro: pires com o bico beliscado para a frente (-z), pavio e chama que tremula sozinha (13 cm). Com `intensity` maior que 0 acende uma luz quente de verdade, de alcance curto (6 m), para interior à noite; `shadow: 1` faz essa luz projetar sombra (mais caro) (params: intensity, shadow, range, size — escala —, color — do barro —, seed)',
+  (p) => oilLamp(p),
+);
+
+registerAsset(
+  'ancient.lampStand',
+  'Candeia acesa num suporte. `kind`: "wood" (pé de madeira de três pernas, 1,1 m), "stone" (coluna baixa de pedra, 90 cm) ou "shelf" (prateleira de parede com mão-francesa: costas em z = 0, olha para +z; a origem é o tampo, ponha na altura com `y`). Mesma luz da `ancient.oilLamp` (params: kind, intensity, shadow, range, color — da madeira ou da pedra —, seed)',
+  (p) => {
+    const kind = String(p.kind ?? 'wood');
+    const g = group();
+    let top = 0;
+    let turn = 0;
+    if (kind === 'stone') {
+      const color = String(p.color ?? STONE);
+      top = 0.9;
+      g.add(mesh(lathe([[0.001, 0], [0.2, 0], [0.2, 0.08], [0.15, 0.12], [0.11, 0.16], [0.1, 0.78], [0.13, 0.82], [0.16, 0.86], [0.16, top], [0.001, top]], 18), color));
+    } else if (kind === 'shelf') {
+      const color = String(p.color ?? WOOD);
+      g.add(rbox(0.4, 0.035, 0.22, color, [0, -0.0175, 0.11], 0.008));
+      for (const x of [-0.14, 0.14]) {
+        g.add(rbox(0.03, 0.2, 0.03, shade(color, 0.8), [x, -0.135, 0.015], 0.006), rod(v3(x, -0.21, 0.025), v3(x, -0.03, 0.18), 0.012, shade(color, 0.8)));
+      }
+      turn = Math.PI;
+    } else {
+      const color = String(p.color ?? WOOD_DARK);
+      top = 1.1;
+      const legs = [0, 1, 2].map((i) => {
+        const a = (i / 3) * Math.PI * 2 + 0.3;
+        return rodGeo(v3(Math.cos(a) * 0.24, 0, Math.sin(a) * 0.24), v3(Math.cos(a) * 0.03, 0.3, Math.sin(a) * 0.03), 0.018, 0.022, 7);
+      });
+      g.add(merged(legs, color, true), mesh(new THREE.CylinderGeometry(0.025, 0.03, top - 0.25, 10), color, [0, 0.25 + (top - 0.25) / 2, 0]));
+      g.add(mesh(lathe([[0.001, 0], [0.04, 0], [0.11, 0.025], [0.12, 0.035], [0.001, 0.03]], 18), color, [0, top - 0.035, 0]));
+    }
+    const lamp = oilLamp(p);
+    lamp.position.set(0, top, kind === 'shelf' ? 0.12 : 0);
+    lamp.rotation.y = turn;
+    g.add(lamp);
+    g.userData.animate = lamp.userData.animate;
+    return g;
+  },
+);
+
+// ---------------------------------------------------------------------------------------------------------
+// Cattle
+
+registerAsset(
+  'ancient.heifer',
+  'Novilha (vaca nova), de frente para -z, 1,2 m na cernelha, com cabresto. Mexe a cauda, as orelhas e a cabeça sozinha com o tempo. `rope: 1` põe a corda de puxar pendurada do cabresto até o chão, para alguém levar pelo caminho (`moveTo`) (params: color — do pelo, castanho claro —, rope, seed)',
+  (p) => {
+    const color = String(p.color ?? '#b98a5a');
+    const light = '#ead7bb';
+    const dark = '#352a24';
+    const g = group(mesh(new THREE.CapsuleGeometry(0.33, 0.85, 6, 16).rotateX(Math.PI / 2), color, [0, 0.9, 0.05]));
+    // Legs with dark hooves; shoulders and haunches; the pale belly.
+    for (const [x, z] of [[-0.17, -0.42], [0.17, -0.42], [-0.17, 0.5], [0.17, 0.5]]) {
+      g.add(rod(v3(x, 0.08, z), v3(x, 0.82, z), 0.06, color, 0.1), mesh(new THREE.CylinderGeometry(0.058, 0.068, 0.09, 10), dark, [x, 0.045, z]));
+    }
+    for (const s of [-1, 1]) g.add(mesh(new THREE.SphereGeometry(0.2, 12, 10).scale(0.8, 1, 1), color, [s * 0.14, 0.92, 0.5]), mesh(new THREE.SphereGeometry(0.19, 12, 10).scale(0.8, 1.05, 1), color, [s * 0.13, 0.95, -0.42]));
+    g.add(mesh(new THREE.CapsuleGeometry(0.22, 0.6, 4, 12).rotateX(Math.PI / 2), light, [0, 0.72, 0.05]));
+    // Neck and head turn together from the shoulders.
+    const head = new THREE.Group();
+    head.position.set(0, 1.0, -0.55);
+    const skull = new THREE.CapsuleGeometry(0.13, 0.24, 6, 12);
+    skull.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(v3(0, 1, 0), v3(0, -0.75, -1).normalize()));
+    head.add(
+      rod(v3(0, -0.08, 0.1), v3(0, 0.16, -0.25), 0.22, color, 0.15),
+      mesh(skull, color, [0, 0.13, -0.42]),
+      mesh(new THREE.SphereGeometry(0.115, 12, 10).scale(1.05, 0.85, 0.9), light, [0, 0.0, -0.58]),
+      // The dewlap under the throat.
+      mesh(new THREE.SphereGeometry(0.1, 10, 8).scale(0.6, 1.3, 1.2), color, [0, -0.08, -0.2]),
+    );
+    for (const s of [-1, 1]) {
+      head.add(mesh(new THREE.SphereGeometry(0.02, 8, 6), '#141010', [s * 0.11, 0.21, -0.43]), mesh(new THREE.SphereGeometry(0.016, 8, 6), '#4a3030', [s * 0.04, -0.02, -0.68]));
+      // Two small horn buds: she is young.
+      head.add(mesh(new THREE.ConeGeometry(0.022, 0.06, 8).rotateZ(-s * 0.5), '#e2d6bd', [s * 0.07, 0.3, -0.32]));
+    }
+    const ears = [-1, 1].map((s) => {
+      const ear = new THREE.Group();
+      ear.position.set(s * 0.12, 0.25, -0.3);
+      ear.add(mesh(new THREE.SphereGeometry(1, 10, 8).scale(0.09, 0.025, 0.05).translate(s * 0.08, 0, 0), color));
+      ear.rotation.z = s * -0.25;
+      head.add(ear);
+      return ear;
+    });
+    // The halter: a band round the nose and one behind the ears, a ring under the chin.
+    const halter: THREE.BufferGeometry[] = [new THREE.TorusGeometry(0.125, 0.012, 5, 18).rotateX(1.25).translate(0, 0.03, -0.53), new THREE.TorusGeometry(0.15, 0.012, 5, 18).rotateY(Math.PI / 2).rotateZ(Math.PI / 2).rotateX(-0.25).translate(0, 0.17, -0.3)];
+    for (const s of [-1, 1]) halter.push(rodGeo(v3(s * 0.12, 0.06, -0.53), v3(s * 0.145, 0.2, -0.32), 0.011, 0.011, 5));
+    head.add(merged(halter, '#7a3b2a', true), mesh(new THREE.TorusGeometry(0.025, 0.007, 5, 12), BRONZE, [0, -0.1, -0.5]));
+    if (Number(p.rope ?? 0) > 0) {
+      // From the ring it hangs in a curve to the ground and lies there a little way forward.
+      const ground = -head.position.y;
+      const curve = new THREE.CatmullRomCurve3([v3(0, -0.12, -0.5), v3(0.02, -0.5, -0.62), v3(0.05, ground + 0.25, -0.72), v3(0.08, ground + 0.015, -0.9), v3(0.14, ground + 0.015, -1.25)]);
+      const rope = mesh(new THREE.TubeGeometry(curve, 24, 0.011, 5), ROPE);
+      rope.userData.noOutline = true;
+      head.add(rope);
+    }
+    g.add(head);
+    const tail = new THREE.Group();
+    tail.position.set(0, 1.08, 0.82);
+    tail.add(rod(v3(0, 0, 0), v3(0, -0.7, 0.05), 0.022, color), mesh(new THREE.SphereGeometry(0.05, 8, 8).scale(1, 2, 1), dark, [0, -0.76, 0.055]));
+    g.add(tail);
+    const phase = rng(Number(p.seed ?? 1))() * 10;
+    g.userData.animate = (t: number) => {
+      tail.rotation.z = 0.3 * Math.sin(t * 1.7 + phase) * Math.max(0, Math.sin(t * 0.4 + phase));
+      tail.rotation.x = 0.06 * Math.sin(t * 0.9 + phase);
+      head.rotation.x = 0.07 * Math.sin(t * 0.7 + phase);
+      head.rotation.y = 0.1 * Math.sin(t * 0.23 + phase);
+      ears.forEach((ear, i) => (ear.rotation.x = 0.5 * Math.max(0, Math.sin(t * (1.2 + i * 0.35) + phase * (i + 1))) ** 8));
+    };
+    g.userData.animate(0);
+    return g;
+  },
+);
+
+// ---------------------------------------------------------------------------------------------------------
+// Palace
+
+/** A fire of a few flame cones that flicker by themselves, standing on y = 0 of its group, `size` across. */
+function flickeringFire(rand: () => number, size: number): { fire: THREE.Group; update(t: number): void } {
+  const fire = group();
+  const flames: THREE.Mesh[] = [];
+  for (const [r, h, color, x, z] of [[0.45, 1, '#ff7b22', 0, 0], [0.3, 0.72, '#ff9f2e', 0.22, 0.12], [0.3, 0.66, '#ff9f2e', -0.2, -0.14], [0.25, 0.55, '#ffd45e', 0, 0.02]] as const) {
+    const f = new THREE.Mesh(new THREE.ConeGeometry(r * size, h * size, 7).translate(0, (h * size) / 2, 0), new THREE.MeshBasicMaterial({ color }));
+    f.position.set(x * size, 0, z * size);
+    f.userData.noShadow = true;
+    flames.push(f);
+  }
+  fire.add(...flames);
+  const phases = flames.map(() => rand() * 10);
+  const update = (t: number) =>
+    flames.forEach((f, i) => {
+      const k = 1 + 0.2 * Math.sin(t * 9 + phases[i]) + 0.1 * Math.sin(t * 15.7 + phases[i] * 2);
+      f.scale.set(1 / Math.sqrt(k), k, 1 / Math.sqrt(k));
+      f.rotation.set(0.12 * Math.sin(t * 5.3 + phases[i]), t * 0.7 + phases[i], 0.12 * Math.sin(t * 6.1 + phases[i]));
+    });
+  update(0);
+  return { fire, update };
+}
+
+/** The warm light of a fire, when `intensity` > 0; `shadow: 1` makes it cast shadows. */
+function fireLight(p: Record<string, number | string>, range: number): THREE.PointLight | undefined {
+  const intensity = Number(p.intensity ?? 0);
+  if (intensity <= 0) return undefined;
+  const light = new THREE.PointLight('#ffa257', intensity, Number(p.range ?? range), 2);
+  if (Number(p.shadow ?? 0) > 0) {
+    light.castShadow = true;
+    light.shadow.mapSize.set(512, 512);
+    light.shadow.camera.near = 0.05;
+    light.shadow.bias = -0.002;
+  }
+  return light;
+}
+
+const flickerLight = (light: THREE.PointLight | undefined, intensity: number, t: number, phase: number) => {
+  if (light) light.intensity = intensity * (0.85 + 0.1 * Math.sin(t * 11 + phase) + 0.05 * Math.sin(t * 23.3 + phase));
+};
+
+registerAsset(
+  'ancient.wallTorch',
+  'Tocha num suporte de ferro preso na parede: costas em z = 0, olha para +z, a tocha inclinada para fora com a chama tremendo sozinha. A origem é o pé da tocha: ponha na altura com `y` (1,6 m numa sala). Com `intensity` maior que 0 ilumina de verdade, quente e tremendo (alcance 8 m; `shadow: 1` para sombra) (params: intensity, shadow, range, seed)',
+  (p) => {
+    const rand = rng(Number(p.seed ?? 1));
+    const iron = '#3b3836';
+    const g = group();
+    // The plate on the wall and the arm holding a ring round the torch.
+    const ring = v3(0, 0.28, 0.13);
+    g.add(rbox(0.07, 0.22, 0.016, iron, [0, 0.22, 0.008], 0.006));
+    const arms = [rodGeo(v3(0, 0.3, 0.012), ring.clone().add(v3(0, 0.0, -0.035)), 0.009, 0.009, 6), rodGeo(v3(0, 0.15, 0.012), v3(0, 0.25, 0.1), 0.008, 0.008, 6), new THREE.TorusGeometry(0.035, 0.008, 6, 14).rotateX(Math.PI / 2).translate(ring.x, ring.y, ring.z)];
+    g.add(merged(arms, iron));
+    // The torch, leaning out from the wall, its head wrapped in pitch-soaked cloth.
+    const foot = v3(0, 0.0, 0.06);
+    const dir = ring.clone().sub(foot).normalize();
+    const head = foot.clone().addScaledVector(dir, 0.52);
+    g.add(rod(foot, head, 0.018, WOOD_DARK, 0.024), rod(head.clone().addScaledVector(dir, -0.09), head.clone().addScaledVector(dir, 0.03), 0.04, '#2d241f', 0.045));
+    const { fire, update } = flickeringFire(rand, 0.17);
+    fire.position.copy(head).addScaledVector(dir, 0.015);
+    g.add(fire);
+    const light = fireLight(p, 8);
+    if (light) {
+      light.position.copy(head).add(v3(0, 0.22, 0.08));
+      g.add(light);
+    }
+    const intensity = Number(p.intensity ?? 0);
+    const phase = rand() * 10;
+    g.userData.animate = (t: number) => {
+      update(t);
+      flickerLight(light, intensity, t, phase);
+    };
+    return g;
+  },
+);
+
+registerAsset(
+  'ancient.brazier',
+  'Braseiro: bacia de bronze sobre três pernas (85 cm até a borda), cheia de brasas, com fogo que treme sozinho. Com `intensity` maior que 0 ilumina de verdade, quente e tremendo (alcance 9 m; `shadow: 1` para sombra) (params: intensity, shadow, range, size — escala —, seed)',
+  (p) => {
+    const rand = rng(Number(p.seed ?? 1));
+    const bronze = new THREE.MeshStandardMaterial({ color: BRONZE, roughness: 0.45, metalness: 0.45 });
+    const g = group();
+    const rim = 0.85;
+    const bowl = new THREE.Mesh(lathe([[0.001, rim - 0.2], [0.12, rim - 0.2], [0.27, rim - 0.1], [0.33, rim - 0.01], [0.35, rim], [0.32, rim + 0.005], [0.29, rim - 0.02], [0.001, rim - 0.06]], 24), bronze);
+    g.add(bowl);
+    const legs: THREE.BufferGeometry[] = [];
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2 + Math.PI / 2;
+      const [c, s] = [Math.cos(a), Math.sin(a)];
+      legs.push(rodGeo(v3(c * 0.3, 0.04, s * 0.3), v3(c * 0.2, rim - 0.12, s * 0.2), 0.022, 0.018, 8), new THREE.SphereGeometry(0.04, 10, 8).scale(1, 0.7, 1).translate(c * 0.3, 0.028, s * 0.3));
+    }
+    legs.push(new THREE.TorusGeometry(0.22, 0.01, 6, 24).rotateX(Math.PI / 2).translate(0, 0.32, 0));
+    const legMesh = new THREE.Mesh(merge(legs), bronze);
+    g.add(legMesh);
+    // Coals heaped in the bowl, glowing, and the fire on them.
+    const coals = new THREE.Mesh(merge(Array.from({ length: 14 }, () => new THREE.IcosahedronGeometry(0.045 + rand() * 0.03, 0).translate((rand() - 0.5) * 0.4, rim - 0.035 + rand() * 0.03, (rand() - 0.5) * 0.4))), new THREE.MeshBasicMaterial({ color: '#ff5a1a' }));
+    coals.userData.noShadow = true;
+    const { fire, update } = flickeringFire(rand, 0.42);
+    fire.position.y = rim - 0.03;
+    g.add(coals, fire);
+    const light = fireLight(p, 9);
+    if (light) {
+      light.position.set(0, rim + 0.45, 0);
+      g.add(light);
+    }
+    g.scale.setScalar(Number(p.size ?? 1));
+    const intensity = Number(p.intensity ?? 0);
+    const phase = rand() * 10;
+    g.userData.animate = (t: number) => {
+      update(t);
+      flickerLight(light, intensity, t, phase);
+    };
+    return g;
+  },
+);
+
+registerAsset(
+  'ancient.throne',
+  'Trono de madeira da Idade do Ferro, de frente para -z: espaldar alto com crista, braços entalhados terminando em volutas, pés de pata, almofada e um escabelo (banquinho de pés) na frente. Assento `throne` para `sit` (params: color — da madeira —, trim — dos detalhes, dourado —, cushion — cor da almofada)',
+  (p) => {
+    const wood = String(p.color ?? '#6e4a2e');
+    const trim = String(p.trim ?? '#c99a3e');
+    const cloth = String(p.cushion ?? '#8e2f36');
+    const [w, d, seat] = [0.66, 0.56, 0.5];
+    const g = group();
+    // Seat box with a band of trim, on four legs ending in paws.
+    g.add(rbox(w, 0.08, d, wood, [0, seat - 0.04, 0], 0.02), rbox(w + 0.01, 0.025, d + 0.01, trim, [0, seat - 0.075, 0], 0.008));
+    for (const [x, z] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const [px, pz] = [x * (w / 2 - 0.05), z * (d / 2 - 0.05)];
+      g.add(rbox(0.07, seat - 0.1, 0.07, wood, [px, (seat - 0.1) / 2 + 0.04, pz], 0.02), mesh(new THREE.SphereGeometry(0.055, 12, 8).scale(1, 0.75, 1.25), shade(wood, 0.85), [px, 0.04, pz - 0.015]));
+    }
+    // The tall back with a rounded crest and a trim panel.
+    const backH = 1.35;
+    g.add(rbox(w, backH - seat, 0.07, wood, [0, seat + (backH - seat) / 2, d / 2 - 0.035], 0.025));
+    const crest = 0.15;
+    const arch = Array.from({ length: 17 }, (_, i): [number, number] => [Math.cos((i / 16) * Math.PI) * (w / 2), Math.sin((i / 16) * Math.PI) * crest]);
+    g.add(mesh(prismGeo(arch, 0.05), wood, [0, backH - 0.03, d / 2 - 0.035]));
+    g.add(rbox(w * 0.62, (backH - seat) * 0.62, 0.02, trim, [0, seat + (backH - seat) * 0.52, d / 2 - 0.075], 0.01));
+    g.add(mesh(new THREE.SphereGeometry(0.045, 12, 10), trim, [0, backH + crest - 0.01, d / 2 - 0.035]));
+    // Arms: a solid panel each side, a rail with a scroll at the front and a knob.
+    const armH = seat + 0.26;
+    for (const s of [-1, 1]) {
+      const x = s * (w / 2 - 0.02);
+      g.add(
+        mesh(sidePrismGeo([[-d / 2 + 0.06, seat], [d / 2 - 0.05, seat], [d / 2 - 0.05, armH], [-d / 2 + 0.12, armH], [-d / 2 + 0.06, armH - 0.08]], 0.05), wood, [x, 0, 0]),
+        rbox(0.09, 0.05, d, shade(wood, 1.1), [x, armH + 0.02, 0.01], 0.02),
+        mesh(new THREE.TorusGeometry(0.055, 0.022, 8, 16, Math.PI * 1.5).rotateY(Math.PI / 2), trim, [x, armH - 0.03, -d / 2 + 0.03]),
+        mesh(new THREE.SphereGeometry(0.035, 10, 8), trim, [x, armH + 0.06, -d / 2 + 0.02]),
+      );
+    }
+    // The cushion and the footstool in front.
+    g.add(rbox(w - 0.14, 0.07, d - 0.1, cloth, [0, seat + 0.035, -0.03], 0.03));
+    g.add(rbox(0.56, 0.13, 0.3, wood, [0, 0.065, -d / 2 - 0.2], 0.02), rbox(0.57, 0.02, 0.31, trim, [0, 0.12, -d / 2 - 0.2], 0.006));
+    g.add(place('throne', 0, seat + 0.07, -0.02));
+    return g;
+  },
+);
+
+registerAsset(
+  'ancient.column',
+  'Coluna grossa de pedra rebocada, com base em degraus e capitel largo de volutas (diâmetro 60 cm) (params: height — 4,5 —, radius — 0,3 —, color — do reboco —, trim — da base e do capitel)',
+  (p) => {
+    const h = Number(p.height ?? 4.5);
+    const r = Number(p.radius ?? 0.3);
+    const color = String(p.color ?? '#e6d8bc');
+    const trim = String(p.trim ?? shade(STONE, 0.95));
+    const g = group();
+    // A slight swelling of the shaft, wider at the foot.
+    const shaft = lathe([[0.001, 0.2], [r * 1.04, 0.2], [r, h * 0.45], [r * 0.93, h - 0.3], [0.001, h - 0.3]], 24);
+    g.add(mesh(shaft, color));
+    g.add(rbox(r * 2.7, 0.12, r * 2.7, trim, [0, 0.06, 0], 0.03), mesh(new THREE.CylinderGeometry(r * 1.2, r * 1.25, 0.1, 24), trim, [0, 0.17, 0]));
+    // The capital: a ring, a flaring bell, the volutes and the square slab on top.
+    g.add(mesh(new THREE.TorusGeometry(r * 0.96, 0.03, 8, 24).rotateX(Math.PI / 2), trim, [0, h - 0.3, 0]));
+    g.add(mesh(lathe([[0.001, 0], [r * 0.95, 0], [r * 1.25, 0.12], [r * 1.35, 0.18], [0.001, 0.18]], 24), trim, [0, h - 0.3, 0]));
+    for (const s of [-1, 1]) for (const z of [-1, 1]) g.add(mesh(new THREE.TorusGeometry(0.075, 0.03, 8, 16).rotateY(Math.PI / 2), trim, [s * r * 1.15, h - 0.17, z * r * 0.7]));
+    g.add(rbox(r * 2.9, 0.12, r * 2.9, trim, [0, h - 0.06, 0], 0.025));
+    return g;
+  },
+);

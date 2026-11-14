@@ -177,3 +177,131 @@ registerAsset('arms.tambourine', 'Tamborim (adufe): aro de madeira com pele e pl
   drum.userData.grip = [0, 0.01, 0];
   return drum;
 });
+
+registerAsset('arms.lyre', 'Kinnor, a lira pequena de madeira: caixa de som embaixo, dois braços que se abrem, a travessa inclinada em cima e as cordas, de frente para -z (50 cm). Pegável, pela ponta de baixo da caixa: segure na mão esquerda, ela fica de pé ao lado do corpo e inclinada para fora; com `raise` (`to: "chest"`) fica contra o peito e o braço (params: size — escala —, strings — quantas cordas, 8 —, color)', (p) => {
+  const wood = String(p.color ?? '#9a6a3c');
+  const dark = '#5e3d22';
+  const lyre = new THREE.Group();
+  // The sound box, its hole and the bar where the strings are tied, on the front.
+  const [bw, bh, bd] = [0.24, 0.13, 0.06];
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(0.022, 16).rotateY(Math.PI), mat('#24170e'));
+  hole.position.set(0, 0.078, -bd / 2 - 0.001);
+  lyre.add(rbox(bw, bh, bd, wood, [0, bh / 2, 0], 0.025), hole, rbox(0.15, 0.016, 0.014, dark, [0, 0.03, -bd / 2 - 0.005], 0.005));
+  // Two arms bowing outward, the left one taller, and the yoke across them, slanted.
+  const [left, right] = [new THREE.Vector3(-0.15, 0.49, 0), new THREE.Vector3(0.13, 0.43, 0)];
+  for (const [x0, top, bow] of [[-0.085, left, -0.05], [0.085, right, 0.045]] as const) {
+    const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(x0, bh - 0.01, 0), new THREE.Vector3(x0 + bow, (bh + top.y) / 2, 0), top.clone().add(new THREE.Vector3(0, -0.015, 0)));
+    lyre.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 10, 0.012, 7), mat(wood)));
+  }
+  const ends = [left.clone().add(new THREE.Vector3(-0.025, 0.004, 0)), right.clone().add(new THREE.Vector3(0.025, -0.001, 0))];
+  const yoke = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, ends[0].distanceTo(ends[1]), 8), mat(dark));
+  yoke.position.copy(ends[0]).add(ends[1]).multiplyScalar(0.5);
+  yoke.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), ends[1].clone().sub(ends[0]).normalize());
+  lyre.add(yoke);
+  for (const end of ends) lyre.add(new THREE.Mesh(new THREE.SphereGeometry(0.015, 10, 8), mat(dark)).translateX(end.x).translateY(end.y));
+  // The strings: from the bar on the box up to the yoke, in front of it.
+  const n = Math.max(3, Math.round(num(p.strings, 8)));
+  const points: number[] = [];
+  for (let i = 0; i < n; i++) {
+    const u = i / (n - 1);
+    const top = new THREE.Vector3().lerpVectors(left, right, 0.12 + u * 0.76);
+    points.push(-0.06 + u * 0.12, 0.034, -bd / 2 - 0.013, top.x, top.y - 0.012, -0.013);
+  }
+  const strings = new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(points, 3)), new THREE.LineBasicMaterial({ color: '#efe6cf' }));
+  lyre.add(strings);
+  for (const m of lyre.children) m.userData.noOutline = m !== lyre.children[0];
+  // In the left hand: held by the lower corner of the box nearest the body, the top leaning away from the head.
+  const grip = new THREE.Vector3(bw / 2 - 0.035, 0.035, 0.012);
+  const lean = new THREE.Group();
+  lean.position.copy(grip);
+  lean.rotation.z = 0.22;
+  lyre.position.copy(grip).negate();
+  lean.add(lyre);
+  // Leaning, the far corner of the box would go into the ground: everything goes up as much.
+  lean.position.y -= new THREE.Box3().setFromObject(lean).min.y;
+  const g = new THREE.Group();
+  g.add(lean);
+  g.scale.setScalar(num(p.size, 1));
+  g.userData.grip = lean.position.clone().multiplyScalar(num(p.size, 1)).toArray();
+  return g;
+});
+
+/** A hollow tube along a curve that narrows from radius r0 at the start to r1 at the end. */
+function taperedTube(curve: THREE.Curve<THREE.Vector3>, r0: number, r1: number, segments = 24, radial = 12): THREE.BufferGeometry {
+  const tube = new THREE.TubeGeometry(curve, segments, 1, radial, false);
+  const pos = tube.attributes.position;
+  const at = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    const u = Math.floor(i / (radial + 1)) / segments;
+    curve.getPointAt(u, center);
+    at.fromBufferAttribute(pos, i).sub(center).multiplyScalar(r0 + (r1 - r0) * u ** 0.8).add(center);
+    pos.setXYZ(i, at.x, at.y, at.z);
+  }
+  tube.computeVertexNormals();
+  return tube;
+}
+
+registerAsset('arms.oilHorn', 'Chifre de carneiro com azeite de unção, tampado embaixo, a boca estreita em cima com aro de bronze (30 cm). Pegável, pelo meio: segure na mão direita. Canal `pour`: 0 em pé, 1 virado com a boca para baixo (120°, girando na mão); passando de 0,6 cai da boca um fio de azeite dourado que balança (params: stream — comprimento do fio, 0,6 m —, color — do chifre)', (p) => {
+  const horn = new THREE.Group();
+  const curve = new THREE.CatmullRomCurve3([[0, 0.012, 0.035], [0, 0.09, 0.045], [0, 0.17, 0.028], [0, 0.235, -0.008], [0, 0.272, -0.06]].map(([x, y, z]) => new THREE.Vector3(x, y, z)));
+  // Light at the wide end, darker toward the tip.
+  const body = taperedTube(curve, 0.036, 0.011);
+  const [from, to] = [new THREE.Color(String(p.color ?? '#e3d0a6')), new THREE.Color('#8a6644')];
+  const tint = new THREE.Color();
+  const colors: number[] = [];
+  for (let i = 0; i < body.attributes.position.count; i++) {
+    tint.lerpColors(from, to, (Math.floor(i / 13) / 24) ** 1.5);
+    colors.push(tint.r, tint.g, tint.b);
+  }
+  body.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  horn.add(new THREE.Mesh(body, new THREE.MeshStandardMaterial({ color: '#ffffff', vertexColors: true, roughness: 0.55 })));
+  // Ridges round the horn, the wooden plug at the bottom, the bronze rim at the mouth.
+  const along = (u: number, r: number, tube: number, color: THREE.Material) => {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 6, 18), color);
+    ring.position.copy(curve.getPointAt(u));
+    ring.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), curve.getTangentAt(u));
+    ring.userData.noOutline = true;
+    return ring;
+  };
+  for (const u of [0.22, 0.4, 0.56]) horn.add(along(u, 0.036 - 0.025 * u ** 0.8, 0.003, mat('#c7b08a')));
+  const plug = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.033, 0.022, 14), mat(WOOD));
+  plug.position.copy(curve.getPointAt(0)).add(new THREE.Vector3(0, -0.004, 0));
+  plug.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), curve.getTangentAt(0));
+  const mouth = curve.getPointAt(1).add(curve.getTangentAt(1).multiplyScalar(0.004));
+  horn.add(plug, along(1, 0.0125, 0.0045, metal(BRONZE)));
+  // Held by the middle: the horn turns round the hand.
+  const grip = curve.getPointAt(0.42);
+  const pivot = new THREE.Group();
+  pivot.position.copy(grip);
+  horn.position.copy(grip).negate();
+  pivot.add(horn);
+  // The oil falls straight down from the mouth, wherever the mouth is.
+  const length = num(p.stream, 0.6);
+  const stream = new THREE.Mesh(new THREE.CylinderGeometry(0.0045, 0.0028, 1, 6, 1).translate(0, -0.5, 0), new THREE.MeshStandardMaterial({ color: '#e2ac2c', emissive: '#4a3000', roughness: 0.2, metalness: 0.1 }));
+  stream.userData.noOutline = stream.userData.noShadow = true;
+  const g = new THREE.Group();
+  g.add(pivot, stream);
+  g.userData.grip = grip.toArray();
+  g.userData.pivot = pivot;
+  g.userData.stream = stream;
+  const tip = new THREE.Vector3();
+  let flow = 0;
+  const pour = (v: number) => {
+    pivot.rotation.x = -v * (Math.PI * 2) / 3;
+    pivot.updateMatrix();
+    tip.copy(mouth).sub(grip).applyQuaternion(pivot.quaternion).add(grip);
+    stream.position.copy(tip);
+    // Starting to run once the mouth is well down.
+    flow = Math.max(0, Math.min(1, (v - 0.6) / 0.12));
+    stream.visible = flow > 0;
+    stream.scale.y = Math.max(0.001, flow * length);
+  };
+  g.userData.animate = (t: number) => {
+    if (!stream.visible) return;
+    stream.rotation.set(0.035 * Math.sin(t * 4.7 + 1), 0, 0.04 * Math.sin(t * 6.1));
+    const k = 1 + 0.2 * Math.sin(t * 17);
+    stream.scale.set(k, Math.max(0.001, flow * length * (1 + 0.03 * Math.sin(t * 9.3))), k);
+  };
+  return setChannels(g, { pour: { value: 0, apply: pour } });
+});

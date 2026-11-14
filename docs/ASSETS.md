@@ -24,6 +24,12 @@ Rochedo grande com pedras menores no pé, para os montes (params: size — largu
 
 - Cenário: sem ação própria.
 
+### `ancient.brazier`
+
+Braseiro: bacia de bronze sobre três pernas (85 cm até a borda), cheia de brasas, com fogo que treme sozinho. Com `intensity` maior que 0 ilumina de verdade, quente e tremendo (alcance 9 m; `shadow: 1` para sombra) (params: intensity, shadow, range, size — escala —, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.campfire`
 
 Fogueira: roda de pedras, lenha em pirâmide, brasas e chamas que tremem sozinhas com o tempo. `pot: 1` põe um tripé com uma panela de barro pendurada sobre o fogo. Com `intensity` maior que 0 ilumina de verdade, tremendo (use em poucas, à noite) (params: size — escala —, lit — 0 para só cinzas e lenha —, pot, intensity, seed)
@@ -56,6 +62,12 @@ Portão de cidade de pedra: duas torres com ameias e, entre elas, uma passagem e
 
 - Cenário: sem ação própria.
 
+### `ancient.column`
+
+Coluna grossa de pedra rebocada, com base em degraus e capitel largo de volutas (diâmetro 60 cm) (params: height — 4,5 —, radius — 0,3 —, color — do reboco —, trim — da base e do capitel)
+
+- Cenário: sem ação própria.
+
 ### `ancient.cushion`
 
 Almofada de chão, quadrada e fofa com borlas nos cantos, ou um rolo para encostar (params: shape — "square" ou "bolster" —, color, trim, size — escala)
@@ -68,9 +80,21 @@ Arbusto seco de encosta: galhos finos marrons e poucas folhas cinza-esverdeadas;
 
 - Cenário: sem ação própria.
 
+### `ancient.flock`
+
+Rebanho de ovelhas espalhado num retângulo (width × depth, centrado na origem). Cada ovelha pasta no seu ritmo e vai andando devagar pelo pasto, para e anda de novo, virando para onde vai e mexendo as pernas; nunca sai da área nem esbarra na outra. Pisa-se no meio delas. Barato: 30 ovelhas são quatro malhas (params: count — 14 —, width — 12 —, depth — 8 —, color — da lã —, face, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.groundShields`
 
 Escudos redondos de couro com borda e umbo de bronze, no chão (não na mão). `arrange`: "mixed" (dois apoiados um no outro e o resto empilhado), "stack" (pilha) ou "lean" (fileira inclinada para trás, para encostar em tenda, suporte ou pedra) (params: count, arrange, color, rim, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.heifer`
+
+Novilha (vaca nova), de frente para -z, 1,2 m na cernelha, com cabresto. Mexe a cauda, as orelhas e a cabeça sozinha com o tempo. `rope: 1` põe a corda de puxar pendurada do cabresto até o chão, para alguém levar pelo caminho (`moveTo`) (params: color — do pelo, castanho claro —, rope, seed)
 
 - Cenário: sem ação própria.
 
@@ -92,11 +116,23 @@ Jarro de barro. `shape`: "storage" (talha alta de gargalo com colar e duas alça
 
 - **knockOver / setUpright**: derrubar e pôr de pé
 
+### `ancient.lampStand`
+
+Candeia acesa num suporte. `kind`: "wood" (pé de madeira de três pernas, 1,1 m), "stone" (coluna baixa de pedra, 90 cm) ou "shelf" (prateleira de parede com mão-francesa: costas em z = 0, olha para +z; a origem é o tampo, ponha na altura com `y`). Mesma luz da `ancient.oilLamp` (params: kind, intensity, shadow, range, color — da madeira ou da pedra —, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.lowTable`
 
 Mesa baixa de madeira (35 cm, para comer sentado no chão), com jarra, copos e uma tigela de frutas em cima; põe-se coisas em `top` (params: width, depth, jar — 0 ou 1 —, cups, fruit — 0 ou 1 —, color)
 
 - **putDown (com "on")**: onde pôr coisas: top
+
+### `ancient.oilLamp`
+
+Candeia de barro: pires com o bico beliscado para a frente (-z), pavio e chama que tremula sozinha (13 cm). Com `intensity` maior que 0 acende uma luz quente de verdade, de alcance curto (6 m), para interior à noite; `shadow: 1` faz essa luz projetar sombra (mais caro) (params: intensity, shadow, range, size — escala —, color — do barro —, seed)
+
+- Cenário: sem ação própria.
 
 ### `ancient.oliveTree`
 
@@ -140,6 +176,12 @@ Saco de grão de pano grosso, amarrado na boca (70 cm em pé). Com `count` maior
 
 - **knockOver / setUpright**: derrubar e pôr de pé
 
+### `ancient.sheep`
+
+Ovelha de lã fofa, cara e pernas escuras, de frente para -z, 75 cm até o lombo. Pasta sozinha com o tempo: baixa a cabeça até o capim e mordisca, levanta e olha em volta, mexe as orelhas; cada `seed` pasta num ritmo seu e tem tamanho e tom de lã um pouco diferentes (params: seed, color — da lã —, face — da cara e das pernas)
+
+- Cenário: sem ação própria.
+
 ### `ancient.spearRack`
 
 Suporte de lanças: travessa sobre dois cavaletes em X, com lanças encostadas dos dois lados, ao longo de x (params: count — lanças —, color — da madeira)
@@ -158,9 +200,21 @@ Tenda de soldado. `style`: "ridge" (duas abas até o chão, 2,4 × 3 m, 1,75 m d
 
 - Cenário: sem ação própria.
 
+### `ancient.throne`
+
+Trono de madeira da Idade do Ferro, de frente para -z: espaldar alto com crista, braços entalhados terminando em volutas, pés de pata, almofada e um escabelo (banquinho de pés) na frente. Assento `throne` para `sit` (params: color — da madeira —, trim — dos detalhes, dourado —, cushion — cor da almofada)
+
+- **sit / standUp**: lugares: throne
+
 ### `ancient.wall`
 
 Trecho de muralha de pedra ao longo de x, com ameias, base mais larga e pedras aparentes (params: length, height, thickness, color, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.wallTorch`
+
+Tocha num suporte de ferro preso na parede: costas em z = 0, olha para +z, a tocha inclinada para fora com a chama tremendo sozinha. A origem é o pé da tocha: ponha na altura com `y` (1,6 m numa sala). Com `intensity` maior que 0 ilumina de verdade, quente e tremendo (alcance 8 m; `shadow: 1` para sombra) (params: intensity, shadow, range, seed)
 
 - Cenário: sem ação própria.
 
@@ -177,6 +231,21 @@ Poço redondo de pedra, com água escura lá dentro, dois esteios e um sarilho c
 Arco de madeira com a corda, em pé; pegável, pelo meio (params: size, a altura, padrão 1.2)
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.lyre`
+
+Kinnor, a lira pequena de madeira: caixa de som embaixo, dois braços que se abrem, a travessa inclinada em cima e as cordas, de frente para -z (50 cm). Pegável, pela ponta de baixo da caixa: segure na mão esquerda, ela fica de pé ao lado do corpo e inclinada para fora; com `raise` (`to: "chest"`) fica contra o peito e o braço (params: size — escala —, strings — quantas cordas, 8 —, color)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+- **raise / lower**: levar à frente do rosto ou do peito
+
+### `arms.oilHorn`
+
+Chifre de carneiro com azeite de unção, tampado embaixo, a boca estreita em cima com aro de bronze (30 cm). Pegável, pelo meio: segure na mão direita. Canal `pour`: 0 em pé, 1 virado com a boca para baixo (120°, girando na mão); passando de 0,6 cai da boca um fio de azeite dourado que balança (params: stream — comprimento do fio, 0,6 m —, color — do chifre)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+- **set**: canais: pour
+- Canais: `pour`
 
 ### `arms.shield`
 

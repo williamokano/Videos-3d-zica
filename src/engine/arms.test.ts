@@ -35,4 +35,43 @@ describe('things held in the hand', () => {
     sling.set('loaded', 1);
     expect(pivot.children.some((c) => c.visible && c instanceof THREE.Mesh && c.geometry instanceof THREE.SphereGeometry && c.position.y < -0.48)).toBe(true);
   });
+
+  it('a lyre stands on its box and is held by its lower corner', () => {
+    const lyre = createAsset('arms.lyre');
+    const box = new THREE.Box3().setFromObject(lyre);
+    expect(box.min.y).toBeCloseTo(0, 3);
+    expect(box.max.y).toBeGreaterThan(0.45);
+    const grip = lyre.userData.grip as [number, number, number];
+    expect(grip[1]).toBeLessThan(0.1);
+    // It reaches away from the hand on the side away from the body (-x for the left hand).
+    expect(box.min.x).toBeLessThan(grip[0] - 0.2);
+    expect(box.max.x).toBeLessThan(grip[0] + 0.1);
+    expect(createAsset('arms.lyre', { size: 1.5 }).userData.grip[1]).toBeCloseTo(grip[1] * 1.5);
+  });
+
+  it('a horn of oil tips round the hand and pours a stream', () => {
+    const horn = buildProp({ id: 'chifre', asset: 'arms.oilHorn', pickable: true, pos: [0, 0] });
+    const { pivot, stream } = horn.object.userData as { pivot: THREE.Object3D; stream: THREE.Mesh };
+    const grip = new THREE.Vector3(...(horn.object.userData.grip as [number, number, number]));
+    expect(pivot.position.distanceTo(grip)).toBeLessThan(1e-9);
+    expect(horn.channels.pour).toBe(0);
+    expect(stream.visible).toBe(false);
+    horn.set('pour', 0.5);
+    expect(stream.visible).toBe(false);
+    horn.set('pour', 1);
+    expect(pivot.rotation.x).toBeCloseTo((-2 * Math.PI) / 3);
+    expect(stream.visible).toBe(true);
+    // The stream starts at the mouth, now below and in front of the hand, and falls 0.6 m.
+    expect(stream.position.y).toBeLessThan(grip.y);
+    expect(stream.position.z).toBeLessThan(grip.z);
+    const fall = new THREE.Box3().setFromObject(stream);
+    expect(stream.position.y - fall.min.y).toBeCloseTo(0.6, 1);
+    // It wobbles with the time.
+    horn.tick!(1);
+    const a = stream.rotation.z;
+    horn.tick!(1.3);
+    expect(stream.rotation.z).not.toBeCloseTo(a);
+    horn.set('pour', 0);
+    expect(stream.visible).toBe(false);
+  });
 });
