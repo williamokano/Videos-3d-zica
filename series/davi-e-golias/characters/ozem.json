@@ -1,0 +1,25 @@
+{
+  "id": "ozem",
+  "name": "Ozém",
+  "height": 1.76,
+  "build": 1.06,
+  "skin": "#d49a70",
+  "hair": "#4a3020",
+  "hairStyle": "short",
+  "beard": "full",
+  "shirt": "#c99068",
+  "pants": "#c99068",
+  "shoes": "#c99068",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#7a6a52",
+      "accent": "#d8c9a0"
+    },
+    {
+      "id": "sash",
+      "color": "#5a3a22"
+    },
+    "sandals"
+  ]
+}

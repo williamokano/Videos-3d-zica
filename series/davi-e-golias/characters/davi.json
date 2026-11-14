@@ -1,21 +1,25 @@
 {
   "id": "davi",
   "name": "Davi",
-  "height": 1.66,
-  "build": 0.92,
-  "skin": "#e6ad82",
-  "hair": "#b5471f",
+  "height": 1.72,
+  "build": 1.0,
+  "skin": "#c99068",
+  "hair": "#6e3b22",
   "hairStyle": "curly",
-  "eyes": "#4f6b3a",
-  "beard": "none",
-  "shirt": "#e6ad82",
-  "pants": "#e6ad82",
-  "shoes": "#e6ad82",
+  "eyes": "#4a3020",
+  "beard": "stubble",
+  "shirt": "#c99068",
+  "pants": "#c99068",
+  "shoes": "#c99068",
   "wear": [
     {
       "id": "tunic",
-      "color": "#d9893a",
-      "accent": "#7a4a24"
+      "color": "#a88a62",
+      "accent": "#6b5236"
+    },
+    {
+      "id": "sash",
+      "color": "#6b5236"
     },
     "sandals",
     "shepherdBag",
@@ -27,5 +31,7 @@
       "id": "bronzeHelmet",
       "hidden": true
     }
-  ]
+  ],
+  "headShape": "oval",
+  "nose": "long"
 }

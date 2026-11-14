@@ -1,23 +1,23 @@
 {
   "id": "golias",
   "name": "Golias",
-  "height": 3.0,
+  "height": 3.1,
   "build": 1.35,
   "headScale": 1.75,
   "headShape": "wide",
-  "skin": "#c08a5e",
-  "hair": "#2a1c14",
-  "hairStyle": "short",
+  "skin": "#b98a62",
+  "hair": "#22160f",
+  "hairStyle": "long",
   "beard": "full",
   "nose": "wide",
   "eyeSize": 0.85,
-  "shirt": "#c08a5e",
-  "pants": "#c08a5e",
-  "shoes": "#c08a5e",
+  "shirt": "#b98a62",
+  "pants": "#b98a62",
+  "shoes": "#b98a62",
   "wear": [
     {
       "id": "tunic",
-      "color": "#7a2621"
+      "color": "#5a3a22"
     },
     "scaleArmor",
     "greaves",

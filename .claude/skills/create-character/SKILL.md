@@ -67,7 +67,8 @@ Se a bíblia tem `"style": { "look": "cel" }`, o personagem ganha luz em faixas 
 ## Conferir
 
 1. `npm test` e `npm run typecheck`.
-2. Abra a vitrine, `?vitrine=personagens&series=<série>`: todos os personagens da série lado a lado, sem precisar de episódio. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada. Pelo console: `window.__vitrine.select('<id>', 'body' | 'face')`, `setPose('walk')`, `setExpression('happy')`, `setMouth('O')`, `setBehaviour('chat')`, `setLook('camera')`, `restyle('<id>', { hairStyle: 'bun' })`, `addExtras('<id>', 6)`, `pause(<segundos>)`. `select(null)` volta a todos.
+2. Folha de personagem (frente, lado, costas e rosto, sozinho no palco): `npm run vitrine -- --folha <ficha> --series <série>`. É a referência que mantém o personagem igual em toda a série; guarde as folhas aprovadas em `series/<série>/referencias/folhas/`.
+3. Abra a vitrine, `?vitrine=personagens&series=<série>`: todos os personagens da série lado a lado, sem precisar de episódio. Tire screenshots de corpo inteiro parado, andando, e do rosto com cada expressão usada. Pelo console: `window.__vitrine.select('<id>', 'body' | 'face')`, `setPose('walk')`, `setExpression('happy')`, `setMouth('O')`, `setBehaviour('chat')`, `setLook('camera')`, `restyle('<id>', { hairStyle: 'bun' })`, `addExtras('<id>', 6)`, `pause(<segundos>)`. `select(null)` volta a todos.
 3. Para ver o personagem dentro de um episódio, o painel do estúdio lista o elenco; clicar leva a câmera até ele.
 4. Olhe as imagens: pés no chão, braços para baixo, rosto visível sob o cabelo, personagem olhando para onde anda.
 

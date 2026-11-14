@@ -1,0 +1,29 @@
+{
+  "id": "samuel",
+  "name": "Samuel",
+  "height": 1.72,
+  "build": 0.9,
+  "skin": "#c69270",
+  "hair": "#ece8df",
+  "hairStyle": "long",
+  "beard": "full",
+  "eyes": "#3a2a1c",
+  "headShape": "oval",
+  "nose": "long",
+  "shirt": "#c69270",
+  "pants": "#c69270",
+  "shoes": "#c69270",
+  "wear": [
+    {
+      "id": "robe",
+      "color": "#8a7a62",
+      "accent": "#5a4a36"
+    },
+    {
+      "id": "cloak",
+      "color": "#4f4334",
+      "accent": "#8a7a62"
+    },
+    "sandals"
+  ]
+}

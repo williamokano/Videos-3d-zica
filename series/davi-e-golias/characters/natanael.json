@@ -1,0 +1,25 @@
+{
+  "id": "natanael",
+  "name": "Natanael",
+  "height": 1.8,
+  "build": 1.06,
+  "skin": "#c99068",
+  "hair": "#3a2618",
+  "hairStyle": "short",
+  "beard": "full",
+  "shirt": "#c99068",
+  "pants": "#c99068",
+  "shoes": "#c99068",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#8a5a3a",
+      "accent": "#d8c9a0"
+    },
+    {
+      "id": "sash",
+      "color": "#5a3a22"
+    },
+    "sandals"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "eliu",
+  "name": "Eliú",
+  "height": 1.83,
+  "build": 1.06,
+  "skin": "#c48c64",
+  "hair": "#22160f",
+  "hairStyle": "short",
+  "beard": "stubble",
+  "shirt": "#c99068",
+  "pants": "#c99068",
+  "shoes": "#c99068",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#6a4a5a",
+      "accent": "#d8c9a0"
+    },
+    {
+      "id": "sash",
+      "color": "#5a3a22"
+    },
+    "sandals"
+  ]
+}

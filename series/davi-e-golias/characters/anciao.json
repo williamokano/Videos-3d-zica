@@ -1,0 +1,25 @@
+{
+  "id": "anciao",
+  "name": "Ancião de Belém",
+  "height": 1.68,
+  "build": 0.95,
+  "skin": "#c48c64",
+  "hair": "#cfc9bf",
+  "hairStyle": "short",
+  "beard": "full",
+  "shirt": "#c48c64",
+  "pants": "#c48c64",
+  "shoes": "#c48c64",
+  "wear": [
+    {
+      "id": "robe",
+      "color": "#7a6a52",
+      "accent": "#4a3a2a"
+    },
+    {
+      "id": "headwrap",
+      "color": "#e6dcc4"
+    },
+    "sandals"
+  ]
+}

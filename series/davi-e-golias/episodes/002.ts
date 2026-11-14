@@ -50,7 +50,7 @@ export default direct(
       {
         character: 'golias', at: [0, 9.2], yaw: 0,
         // A bainha vazia aparece quando o Davi tira a espada.
-        look: { wear: [{ id: 'tunic', color: '#7a2621' }, 'scaleArmor', 'greaves', 'bronzeHelmet', 'sandals', 'scabbard', { id: 'scabbardEmpty', hidden: true }] },
+        look: { wear: [{ id: 'tunic', color: '#5a3a22' }, 'scaleArmor', 'greaves', 'bronzeHelmet', 'sandals', 'scabbard', { id: 'scabbardEmpty', hidden: true }] },
       },
       { character: 'escudeiro', at: [-1.4, 10.8], yaw: 0 },
       { character: 'davi', at: [0, 3.6], yaw: 180 },
@@ -68,7 +68,7 @@ export default direct(
       {
         id: 'davi-tenda', character: 'davi', at: [0.2, -40.6], yaw: 180,
         // O que o Jônatas vai dar a ele: o manto, o cinto e a espada.
-        look: { wear: [{ id: 'tunic', color: '#d9893a', accent: '#7a4a24' }, 'sandals', 'shepherdBag', { id: 'cloak', color: '#2f56a8', accent: '#d9b04a', hidden: true }, { id: 'sash', color: '#2f56a8', accent: '#d9b04a', hidden: true }, { id: 'scabbard', hidden: true }] },
+        look: { wear: [{ id: 'tunic', color: '#a88a62', accent: '#6b5236' }, 'sandals', 'shepherdBag', { id: 'cloak', color: '#2f56a8', accent: '#d9b04a', hidden: true }, { id: 'sash', color: '#2f56a8', accent: '#d9b04a', hidden: true }, { id: 'scabbard', hidden: true }] },
       },
       { id: 'guarda-tenda-1', character: 'soldado', at: [-2.2, -41.6], yaw: 0, look: { name: 'Guarda' } },
       { id: 'guarda-tenda-2', character: 'soldado', at: [2.6, -42.0], yaw: 0, look: { name: 'Guarda' } },

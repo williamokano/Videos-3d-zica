@@ -28,6 +28,8 @@ const models = import.meta.glob<string>('/series/*/characters/*.glb', { eager: t
 
 const query = new URLSearchParams(window.location.search);
 const everySeries = query.get('series') === '*';
+/** `so=davi,golias` puts only these characters on the stage (a character sheet). */
+const only = query.get('so')?.split(',').filter(Boolean);
 const bible = bibles.find((b) => b.series === query.get('series')) ?? bibles[0];
 
 const stage = document.getElementById('stage')!;
@@ -187,7 +189,10 @@ const eye = new THREE.Vector3();
 /** Where the eyes of a character are right now. */
 function eyesOf(slot: Slot): [number, number, number] {
   const head = slot.object.socket?.('head');
-  if (head) return head.getWorldPosition(eye).toArray();
+  if (head) {
+    head.updateWorldMatrix(true, false);
+    return head.getWorldPosition(eye).toArray();
+  }
   const [x, y, z] = slot.object.position();
   return [x, y + (slot.object.traits.eyeHeight ?? 1.6), z];
 }
@@ -250,10 +255,12 @@ function frame(framing: Framing): void {
     camera.position.set(slot.at[0] + 0.5, height * 0.7, slot.at[1] + height * 2.3);
   } else {
     // The head joint is at its base; the face is a little above.
+    // A big head (a giant) is framed from farther away, so it fills the picture the same.
+    const size = ((slot.def.height ?? 1.7) / 1.7) * ((slot.def.headScale ?? 1.3) / 1.3);
     const [x, base, z] = eyesOf(slot);
-    const y = slot.object.socket?.('head') ? base + 0.11 : base;
+    const y = slot.object.socket?.('head') ? base + 0.11 * size : base;
     orbit.target.set(x, y, z);
-    camera.position.set(x + 0.1, y + 0.02, z + 0.85);
+    camera.position.set(x + 0.1 * size, y + 0.02 * size, z + 0.85 * size);
   }
   orbit.update();
 }
@@ -477,6 +484,7 @@ function renderPanel(): void {
 for (const [path, def] of Object.entries(characterFiles).sort(([a], [b]) => a.localeCompare(b))) {
   const series = path.split('/')[2];
   if (!everySeries && series !== bible.series) continue;
+  if (only && !only.includes(def.id)) continue;
   try {
     if (def.glb && !models[`/series/${series}/characters/${def.glb}`]) throw new Error(`arquivo "${def.glb}" não encontrado em series/${series}/characters.`);
     await addSlot(everySeries ? `${series}/${def.id}` : def.id, def, { ...def }, def.glb ? models[`/series/${series}/characters/${def.glb}`] : undefined);

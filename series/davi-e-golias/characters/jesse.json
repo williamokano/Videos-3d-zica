@@ -1,0 +1,27 @@
+{
+  "id": "jesse",
+  "name": "Jessé",
+  "height": 1.7,
+  "build": 1.0,
+  "skin": "#c48c64",
+  "hair": "#a8a29a",
+  "hairStyle": "short",
+  "beard": "full",
+  "headShape": "round",
+  "shirt": "#c48c64",
+  "pants": "#c48c64",
+  "shoes": "#c48c64",
+  "wear": [
+    {
+      "id": "robe",
+      "color": "#6b5236",
+      "accent": "#a88a62"
+    },
+    {
+      "id": "headwrap",
+      "color": "#d8ccb0",
+      "accent": "#6b5236"
+    },
+    "sandals"
+  ]
+}

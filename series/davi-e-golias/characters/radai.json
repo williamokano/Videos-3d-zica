@@ -1,0 +1,25 @@
+{
+  "id": "radai",
+  "name": "Radai",
+  "height": 1.78,
+  "build": 1.06,
+  "skin": "#b98258",
+  "hair": "#2a1c14",
+  "hairStyle": "short",
+  "beard": "goatee",
+  "shirt": "#c99068",
+  "pants": "#c99068",
+  "shoes": "#c99068",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#5a6a4a",
+      "accent": "#d8c9a0"
+    },
+    {
+      "id": "sash",
+      "color": "#5a3a22"
+    },
+    "sandals"
+  ]
+}

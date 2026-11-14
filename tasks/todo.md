@@ -1,37 +1,24 @@
-# Davi e Golias — produzir o visual dos dois episódios
+# DAVI — série em 5 episódios: bíblia visual e "O escolhido"
 
-Pedido do autor (2026-11-14): "pode começar produzir o necessário. Se precisar de audio, não faça, mas pode fazer o visual". Roteiros em `series/davi-e-golias/roteiros/00{1,2}-roteiro.md`, regras em `series/davi-e-golias/biblia.md`.
+Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md`; texto do episódio 1 em `roteiros/o-escolhido-pedido.md`. Decisões do autor (2026-11-14): ele aceitou as sugestões. Golias com 3 a 3,2 m (humano, mas a diferença tem que impressionar), Davi castanho-avermelhado ondulado, o Samuel diz "É este" (Deus não fala), a frase do coração (16:7), a abertura com os anciãos tremendo (16:4) e o gancho final com o Saul atormentado.
 
-**Como retomar:** leia este arquivo, rode `git status` e `npm run typecheck && npm test`, e continue do primeiro item sem marcar. Cada item termina com teste, conferência em imagem, commit (sem coautoria) e o item marcado aqui no mesmo commit. **Sem áudio:** não rodar `npm run voz` nem gerar sons; as falas ficam com a duração estimada pelo texto e o render sai com `--no-audio`.
+**Como retomar:** leia este arquivo, `git status`, `npm run typecheck && npm test`, e continue do primeiro item sem marcar. Sem áudio.
 
-## 1. Motor: terreno com morros
-- [x] `terrain` no local (morros e vales como dado: centro, raio, altura), chão com relevo, superfície de pé com altura em cada ponto
-- [x] Props do local, elenco e caminhada sobem e descem o relevo sozinhos
-- [x] Riacho como faixa de água no fundo do vale (asset `ancient.stream`, item 2)
+## 1. Bíblia visual dos personagens
+- [x] Davi, Golias e Saul refeitos pelas referências (`series/davi-e-golias/referencias/`)
+- [x] Novos: Samuel, Jessé, os irmãos que faltam (Natanael, Radai, Ozém, Eliú) e um ancião de Belém
+- [x] Folha de personagens (frente, costas, rosto) para o autor aprovar: `series/davi-e-golias/referencias/folhas/` (`npm run vitrine -- --folha <id>`)
 
-## 2. Kit de época (assets `ancient.*`)
-- [x] Tendas (simples e do rei), carroça, fogueira, sacos, jarros, cestos, estandarte, suporte de lanças, escudos no chão
-- [x] Pedras, rochedos, oliveira, palmeira, arbustos secos, seixos do riacho
-- [x] Interior da tenda do rei: tapete, almofadas, baú, mesa baixa com jarra
-- [x] Cidade: casa de pedra e barro com terraço, portão de pedra, poço
+## 2. Kit novo
+- [ ] Ovelhas (rebanho que pasta e anda), harpa (lira) na mão, chifre de azeite, lamparina de barro com luz
+- [ ] Ação de ungir (o óleo derramado sobre a cabeça)
 
-## 3. Personagens de época
-- [x] Roupas: túnica, manto, faixa na cabeça, sandálias, couraça de bronze, capacete de bronze, capacete filisteu de penacho, coroa, alforje de pastor
-- [x] Coisas na mão: lança, escudo, espada com bainha, cajado, funda, pedra
-- [x] Fichas: Davi, Golias (3 m), escudeiro, Eliabe, Abinadabe, Samá, Saul, Abner, Jônatas, guarda das bagagens, soldado, filisteu, mulher
+## 3. Lugares
+- [ ] Belém: colinas com pasto e pedra para sentar, portão e ruas, a casa de Jessé por dentro (noite, lamparinas)
 
-## 4. Movimentos e ações novas
-- [x] Ajoelhar, girar a funda e lançar (com a pedra voando), cair de frente, dançar com tamborim, vestir e tirar (trocar `wear` no meio do episódio)
-- [x] Câmera: órbita, grua, câmera na mão (tremor), chão tremendo
-
-## 5. Lugar e episódios
-- [x] `world/vale-de-ela.json`: os dois montes, o vale, o riacho, o acampamento de Israel, a tenda do rei, o acampamento filisteu, a estrada e a cidade
-- [x] `bible.json` da série (céu de manhã, cor, estilo)
-- [x] `episodes/001.ts` conforme o roteiro
-- [x] `episodes/002.ts` conforme o roteiro
-- [x] Prévia sem som dos dois, varredura do vídeo inteiro e correções
+## 4. Episódio "O escolhido"
+- [ ] Roteiro de trabalho com as sugestões aceitas, até 2:40
+- [ ] Episódio na engine, prévia sem som, varredura do vídeo inteiro
 
 ## Revisão
-- Feito em 2026-11-14. Prévias sem som em `out/davi-e-golias/ep001/` e `ep002/`. O episódio 1 tem cerca de 5 min e o 2 cerca de 2 min 15 s, com as durações estimadas pelo texto, porque não há voz gravada.
-- Correções depois da primeira prévia do autor: menos tremor, câmera fora da tenda (empurra pela entrada) e descida vista do alto. As lições estão em `tasks/lessons.md`.
-- Pendente: a introdução antes do Golias, a pedido do autor, com o roteiro a decidir. Áudio (vozes e sons) ainda não foi feito.
+(preencher no fim)
