@@ -177,6 +177,8 @@ export interface CharacterRig {
   setFace(face: FaceParams, raw: { blink: number; talk: number; expressions: Record<string, number>; visemes: Record<string, number> }): void;
   /** Height of the eyes above the feet when standing, in meters. */
   eyeHeight: number;
+  /** Radius of the head in meters, when the body knows it (the eyes sit at its middle). */
+  headRadius?: number;
   /** Hide the head so a camera can sit in it. Bodies that cannot do it are hidden whole in first person. */
   hideHead?(hidden: boolean): void;
   /** A standard joint, e.g. to put something in a hand. */

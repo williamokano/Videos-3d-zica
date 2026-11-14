@@ -72,22 +72,31 @@ registerAsset('arms.shield', 'Escudo: redondo de couro com borda e umbo de bronz
   return shield;
 });
 
-registerAsset('arms.sword', 'Espada reta de ferro com guarda e punho de bronze; pegável, pelo punho, com a lâmina para cima e um pouco à frente (params: length da lâmina, padrão 0.7; color)', (p) => {
+registerAsset('arms.sword', 'Espada reta de ferro com guarda e punho de bronze; pegável, pelo punho, com a lâmina para cima e um pouco à frente. Canal `swing` (0 a 1) leva a lâmina para a frente e para baixo, como no fim de um golpe (params: length da lâmina, padrão 0.7; color)', (p) => {
   const length = num(p.length, 0.7);
   const wide = 0.05 * Math.sqrt(length / 0.7);
   const sword = new THREE.Group();
   const blade = new THREE.Mesh(new THREE.CylinderGeometry(wide * 0.15, wide / 2, length, 4, 1).scale(1, 1, 0.22).rotateY(Math.PI / 4), metal(String(p.color ?? IRON)));
   blade.scale.set(1.41, 1, 1.41);
   blade.position.y = 0.16 + length / 2;
-  sword.add(
+  // Everything turns round the grip, so `swing` can bring the blade down in a blow without the hand letting go.
+  const GRIP = 0.085;
+  const pivot = new THREE.Group();
+  pivot.position.y = GRIP;
+  const parts = new THREE.Group();
+  parts.position.y = -GRIP;
+  parts.add(
     blade,
     rbox(wide * 2.4, 0.025, 0.04, BRONZE, [0, 0.15, 0], 0.008),
     rod(0.016, 0.12, '#5a3a22', 0.03),
     new THREE.Mesh(new THREE.SphereGeometry(0.026, 12, 8), metal(BRONZE)).translateY(0.025),
   );
-  sword.userData.grip = [0, 0.085, 0];
+  pivot.add(parts);
+  sword.add(pivot);
+  sword.userData.grip = [0, GRIP, 0];
   sword.userData.tilt = -0.5;
-  return sword;
+  // `swing` 0: the blade up, as held; 1: turned forward and down, at the end of a blow (the action `chop`).
+  return setChannels(sword, { swing: { value: 0, apply: (v) => void (pivot.rotation.x = -1.7 * Math.max(0, Math.min(1, v))) } });
 });
 
 registerAsset('arms.staff', 'Cajado de pastor: vara comprida com a ponta curva em gancho; pegável, pela vara (params: length, padrão 1.7)', (p) => {
@@ -100,8 +109,9 @@ registerAsset('arms.staff', 'Cajado de pastor: vara comprida com a ponta curva e
   return staff;
 });
 
-registerAsset('arms.sling', 'Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás), `overhead` (1: as cordas saem quase deitadas da mão e `spin` gira em volta dela, como acima da cabeça; é o que a ação `whirl` faz) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas', (p) => {
-  const cord = 0.48;
+registerAsset('arms.sling', 'Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás), `overhead` (1: as cordas saem quase deitadas da mão e `spin` gira em volta dela, como acima da cabeça; é o que a ação `whirl` faz) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas (params: cord, o comprimento das cordas em metros, padrão 0.6)', (p) => {
+  // Real slings have cords of 60 to 90 cm: a longer arm throws harder, and it reads as a sling, not a yo-yo.
+  const cord = num(p.cord, 0.6);
   const sling = new THREE.Group();
   // Everything turns round the hand: the pivot is the grip.
   const pivot = new THREE.Group();

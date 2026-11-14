@@ -209,3 +209,45 @@ registerAction({
     };
   },
 });
+
+registerAction({
+  id: 'chop',
+  description:
+    'Quem segura a espada (o item, na mão, depois de um "draw" ou "pickUp") ergue um pouco mais e desce num golpe até o ponto "at" [x, y, z], onde a lâmina chega; fica lá embaixo. A espada alcança mais longe que o braço: o ponto pode estar a até o braço mais a lâmina. Rápido (padrão 0,8 s; o golpe em si é o último terço).',
+  appliesTo: ['item'],
+  params: {
+    at: { type: 'point3', description: 'onde a lâmina chega [x, y, z]', required: true },
+  },
+  duration: 0.8,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id);
+    if (!link || (link.socket !== 'handR' && link.socket !== 'handL')) ctx.fail('a espada precisa estar na mão de alguém (depois de um "draw" ou "pickUp").');
+    const by = link!.to;
+    const side = link!.socket === 'handL' ? 'L' : 'R';
+    const me = ctx.placeOf(by);
+    const k = actor(ctx, by).traits.bodyScale ?? 1;
+    const at = ctx.params.at as Point3;
+    const blade = (ctx.target.traits.size?.[1] ?? 0.9) * 0.85;
+    const [dx, dz] = [at[0] - me.pos[0], at[2] - me.pos[2]];
+    const far = Math.hypot(dx, dz);
+    if (far > 0.8 * k + blade) ctx.fail(`o ponto do golpe está a ${far.toFixed(2)} m de "${by}", longe demais até para a espada (${(0.8 * k + blade).toFixed(2)} m).`);
+    // Where the hand is now (the sword raised), a little higher and back for the swing, and where it ends: in front,
+    // low, toward the point, a blade's length short of it, so the blade reaches it.
+    const from: Point3 = [ctx.current(`reach${side}.x`, by), ctx.current(`reach${side}.y`, by), ctx.current(`reach${side}.z`, by)];
+    const [ux, uz] = far > 1e-3 ? [dx / far, dz / far] : [0, 0];
+    const windup: Point3 = [from[0] - ux * 0.12 * k, from[1] + 0.12 * k, from[2] - uz * 0.12 * k];
+    const reachOut = Math.min(0.62 * k, Math.max(0.3 * k, far - blade * 0.7));
+    const end: Point3 = [me.pos[0] + ux * reachOut, Math.max(me.pos[1] + 0.55 * k, at[1] + blade * 0.35), me.pos[2] + uz * reachOut];
+    const path: [number, Point3][] = [[0, from], [0.6, windup], [1, end]];
+    return {
+      writes: [
+        { target: by, channel: `reach${side}.x`, at: along(path, 0) },
+        { target: by, channel: `reach${side}.y`, at: along(path, 1) },
+        { target: by, channel: `reach${side}.z`, at: along(path, 2) },
+        // The body follows the blow down: a bend at the end. The blade turns down with the arm.
+        { target: by, channel: 'crouch', at: (u: number) => 0.35 * ramp(u, 0.6, 1) },
+        ...('swing' in ctx.target.channels ? [{ channel: 'swing', at: (u: number) => ramp(u, 0.6, 1) }] : []),
+      ],
+    };
+  },
+});

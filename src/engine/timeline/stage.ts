@@ -6,6 +6,7 @@ import '../actions/moves';
 import '../actions/gear';
 import '../actions/endcard';
 import '../actions/titlecard';
+import '../actions/censor';
 import '../actions/audio';
 import '../actions/phone';
 import '../assets';

@@ -117,12 +117,14 @@ export default direct(
       { id: 'cajado', asset: 'arms.staff', pos: [2.0, -40.9], pickable: true },
       // No vale: o cajado na mão, a funda no alforje, as cinco pedras na margem.
       { id: 'cajado-vale', asset: 'arms.staff', pos: [0, 0], pocketOf: 'davi-vale' },
-      { id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi-vale' },
+      { id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi-vale', params: { cord: 0.66 } },
       ...PEDRAS.map(([x, z], i) => ({ id: `pedra${i + 1}`, asset: 'arms.stone', pos: [x, z] as [number, number], pickable: true })),
       { id: 'lanca-golias', asset: 'arms.spear', pos: [0, 0], pocketOf: 'golias', params: { length: 3.6 } },
       { id: 'escudo-golias', asset: 'arms.shield', pos: [0, 0], pocketOf: 'escudeiro', params: { kind: 'tower', size: 1.25 } },
       // A espada do Golias, que o Davi tira da bainha dele.
       { id: 'espada-golias', asset: 'arms.sword', pos: [0, 0], pocketOf: 'davi-vale', params: { length: 0.95 } },
+      // A cabeça do gigante depois do golpe: guardada debaixo do chão até lá, e só aparece sob mosaico.
+      { id: 'cabeca-golias', asset: 'ancient.severedHead', pos: [0, 40], y: -20, params: { radius: 0.27, skin: '#b98a62', hair: '#22160f', helmet: '#b8862f' } },
       // A poeira: os passos do gigante avançando, a queda.
     poeira('passo1', [0.4, 11.7], 0.9, 1),
       poeira('passo2', [-0.4, 11.1], 0.9, 2),
@@ -450,7 +452,8 @@ export default direct(
     const queda = d.do('golias', 'fall', {}, { ease: 'linear', duration: 1.5 });
     golias.lookAt([0, g[1] + 2, 0], { duration: 0.6 });
     d.background(() => {
-      d.waitFor(queda.end - 0.12);
+      // De volta ao instante do impacto: este ramo começa depois do lookAt, que já passou do fim da queda.
+      d.at(queda.end - 0.12);
       d.sound('queda-gigante');
       d.do('queda1', 'set', { channel: 'puff', value: 1 }, { duration: 3.2, ease: 'out' });
       d.do('queda2', 'set', { channel: 'puff', value: 1 }, { duration: 3.0, ease: 'out' });
@@ -489,7 +492,31 @@ export default direct(
     d.waitFor(espada.end - 0.7);
     d.camera.moveTo({ pos: [q[0] - 1.4, q[1] + 0.6, q[2] - 1.2], lookAt: [q[0] + 0.1, q[1] + 2.0, q[2] + 0.2], fov: 44 });
     d.waitFor(espada);
-    d.wait(0.3);
+    d.wait(0.2);
+
+    // O golpe (17:51). De lado e de corpo inteiro: a espada desce, e a área do golpe fica sob uma tarja preta.
+    // O gigante caiu de bruços para a frente (-z); o pescoço fica um metro à frente do quadril, rente ao chão.
+    const pescoco: V3 = [caido[0], d.ground(caido[0], caido[2] - 1.0) + 0.3, caido[2] - 1.0];
+    // Do outro lado do corpo caído: o Davi de frente, a espada no alto e descendo.
+    d.camera.cut({ pos: [caido[0] + 3.4, pescoco[1] + 1.2, caido[2] - 2.4], lookAt: [caido[0] - 0.6, pescoco[1] + 0.6, caido[2] - 0.6], fov: 46 });
+    const golpe = d.do('espada-golias', 'chop', { at: pescoco }, { duration: 0.8 });
+    d.at(golpe.start + 0.42);
+    d.censor({ at: [pescoco[0] - 0.15, pescoco[1] + 0.25, pescoco[2]], size: 0.7, mode: 'tarja' }, { duration: 1.4 });
+    d.at(golpe.start + 0.55);
+    d.sound('golpe-espada');
+    // Debaixo da tarja, a cabeça sai do corpo; ela só aparece no chão no corte, já sob mosaico.
+    d.do('golias', 'set', { channel: 'headOff', value: 1 }, { duration: 0 });
+    const noChao: [number, number] = [pescoco[0] + 0.55, pescoco[2] - 0.55];
+    d.at(golpe.end);
+    d.wait(0.9);
+    d.do('cabeca-golias', 'moveTo', { to: noChao, y: d.ground(...noChao) }, { duration: 0 });
+    // A cabeça, separada, sob mosaico; o Davi de pé ao lado, com a espada baixa.
+    const c3: V3 = [noChao[0], d.ground(...noChao) + 0.25, noChao[1]];
+    d.camera.cut({ pos: [c3[0] - 2.6, c3[1] + 1.1, c3[2] - 1.9], lookAt: [c3[0] - 0.6, c3[1] + 0.3, c3[2] + 0.2], fov: 44 });
+    d.censor({ at: c3, size: 0.85, mode: 'mosaico' }, { duration: 2.2 });
+    // O pescoço do corpo, onde a cabeça estava, também sob mosaico.
+    d.censor({ at: [pescoco[0], pescoco[1] + 0.05, pescoco[2] + 0.1], size: 0.6, mode: 'mosaico' }, { duration: 2.2 });
+    d.wait(2.2);
 
     // O monte dos filisteus: um recua, depois outro; em instantes todos fogem.
     d.camera.cut({ pos: [15, TOPO + 4.5, LINHA - 9], lookAt: [0, TOPO + 1.0, LINHA + 3], fov: 46 });

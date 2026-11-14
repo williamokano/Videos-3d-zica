@@ -90,9 +90,12 @@ registerAction({
     if (hit) {
       const victim = ctx.placeOf(hit);
       const [fx, fz] = facing(victim.yaw);
-      const eye = ctx.object(hit).traits.eyeHeight ?? 1.6;
-      // The forehead: a little above the eyes, at the front of the head.
-      to = [victim.pos[0] + fx * 0.1 * (eye / 1.6), victim.pos[1] + eye * 1.06, victim.pos[2] + fz * 0.1 * (eye / 1.6)];
+      const { eyeHeight: eye = 1.6, headRadius } = ctx.object(hit).traits;
+      // The forehead: on the front of the head, a little above the eyes, under a helmet's rim; exactly where the
+      // "foreheadStone" piece sits (a tenth of the head's radius above the eyes, on its surface). A big head (a
+      // giant) has its forehead farther out, so it is measured, not guessed from the height.
+      const r = headRadius ?? 0.1 * (eye / 1.6);
+      to = [victim.pos[0] + fx * r * 0.97, victim.pos[1] + eye + r * 0.1, victim.pos[2] + fz * r * 0.97];
     }
     const thrower = ctx.placeOf(by);
     const [fx, fz] = facing(thrower.yaw);

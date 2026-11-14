@@ -35,6 +35,8 @@ export interface TargetTraits {
   strideLength?: number;
   /** Characters: height of the eyes above the feet, in meters. */
   eyeHeight?: number;
+  /** Characters: radius of the head, in meters (the eyes are at its middle). */
+  headRadius?: number;
   /** Characters: size relative to the standard 1.7 m body. */
   bodyScale?: number;
   /** Fixed places on the object where something can be attached (car seats): name → [x, y, z] in the object's own frame. */

@@ -2659,3 +2659,24 @@ registerAsset(
     return g;
   },
 );
+
+registerAsset(
+  'ancient.severedHead',
+  'Uma cabeça separada do corpo, deitada de lado no chão, com barba e capacete de bronze: só para aparecer sob censura ("mosaico"), nunca à mostra. Feita nas cores do personagem (params: radius da cabeça em metros, padrão 0.27; skin; hair, cor da barba e do cabelo; helmet; stone — 1 para a pedra na testa)',
+  (p) => {
+    const r = Number(p.radius ?? 0.27);
+    const skin = String(p.skin ?? '#b98a62');
+    const hair = String(p.hair ?? '#22160f');
+    const head = group(
+      mesh(new THREE.SphereGeometry(r, 18, 12), skin),
+      // Beard over the lower front, hair at the back, a bronze helmet on the top.
+      mesh(new THREE.SphereGeometry(r * 0.92, 16, 10, 0, Math.PI * 2, Math.PI * 0.55, Math.PI * 0.45), hair, [0, -r * 0.08, -r * 0.12]),
+      mesh(new THREE.SphereGeometry(r * 1.06, 18, 10, 0, Math.PI * 2, 0, Math.PI * 0.42), String(p.helmet ?? '#b8862f'), [0, r * 0.05, 0]),
+    );
+    if (Number(p.stone ?? 1) > 0.5) head.add(mesh(new THREE.SphereGeometry(r * 0.13, 10, 8).scale(1, 0.75, 0.6), '#9a958c', [r * 0.05, r * 0.22, -r * 0.97]));
+    // Lying on its side on the ground, the face turned away.
+    head.rotation.set(0, 0, Math.PI / 2);
+    head.position.y = r * 0.9;
+    return loose(group(head));
+  },
+);

@@ -63,6 +63,9 @@ export default direct(
 | `d.do('espada', 'draw', { by: 'davi', from: 'golias' })` | tira a espada da bainha de alguém (de pé ou caído) e a ergue; a ficha dele precisa de `scabbard` e `scabbardEmpty` escondida |
 | `nature.dust` com `d.do('poeira', 'set', { channel: 'puff', value: 1 }, { duration: 2.5, ease: 'out' })` | nuvem de poeira: passo pesado, queda, impacto |
 | `d.slowMo(de, até, fator)` | câmera lenta de verdade (fator inteiro 2 a 8): tudo no trecho fica mais lento no vídeo; ninguém fala nele. O estúdio toca em velocidade normal |
+| `d.censor({ at: [x, y, z], size, mode }, { duration })` | censura na imagem final, presa a um ponto da cena: `mode: 'tarja'` (retângulo preto) ou `'mosaico'` (quadriculado); `size` em metros. Para violência bíblica: mostrar o golpe sob tarja só na área e o resultado sob mosaico, nunca à mostra. Não ocupa tempo |
+| `d.do('espada', 'draw', { by, from })` e depois `d.do('espada', 'chop', { at: [x, y, z] })` | tirar a espada da bainha de alguém e erguer; descer num golpe até o ponto (a lâmina gira para baixo, o corpo acompanha) |
+| `d.do('golias', 'set', { channel: 'headOff', value: 1 })` | esconde a cabeça (com o que está nela); a cabeça separada é o prop `ancient.severedHead`, sempre sob mosaico |
 
 - Os passos de um mesmo personagem são um depois do outro; para dois personagens ao mesmo tempo use `together` ou `background`.
 - Chamadas de câmera não andam o relógio. Para um corte no meio de uma ação longa: `d.background(() => { d.wait(1); d.camera.cut(...); })` antes da ação.

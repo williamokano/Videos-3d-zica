@@ -504,6 +504,7 @@ export function buildBody(def: CharacterDef): CharacterRig {
     },
     setFace: (params) => face.set(params),
     eyeHeight: scale * (1.48 + r * 1.02),
+    headRadius: r * scale,
     hideHead: (hidden) => {
       head.visible = !hidden;
     },

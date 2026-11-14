@@ -8,6 +8,7 @@ import { applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpis
 import { activeRules, resolveEnvironment, resolveGrade, resolveStyle, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { GradePass } from '../engine/grade';
+import { CensorPass, censorsAt } from '../engine/censor';
 import { endCardAt } from '../engine/ui/endcard';
 import { titleCardAt } from '../engine/ui/titlecard';
 import { applyStyle } from '../engine/style';
@@ -89,6 +90,7 @@ const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
 const environment = new EnvironmentRig(scene);
 /** Color of the finished picture, on the episode camera's view only. */
 const grade = new GradePass();
+const censor = new CensorPass();
 scene.add(environment.group);
 
 const built = buildLocation(location);
@@ -605,6 +607,8 @@ function draw(cam: THREE.Camera, rect: [number, number, number, number] | null, 
   renderer.render(scene, cam);
   if (asShot) {
     grade.apply(renderer, [x, y, w, h], shotLens, timeline?.time ?? 0);
+    // Censorship goes on last, over the graded picture, only in what the episode camera shows.
+    if (cam === shotCamera) censor.apply(renderer, [x, y, w, h], cam, censorsAt(actions, timeline?.time ?? 0));
     firstPerson?.firstPerson?.(false);
     applyVisibility();
   }

@@ -96,6 +96,7 @@ export function assetActions(id: string): { actions: AssetAction[]; uses: string
   if (settable.length) add('set', `canais: ${settable.join(', ')}`, settable);
   if (channels.includes('overhead')) add('whirl', 'girar acima da cabeça, no compasso da mão (depois, "throw" com "with" solta a pedra)', ['overhead', 'spin']);
   if (channels.includes('trail')) add('throw', 'arremessar; o rastro aparece no voo', ['trail']);
+  if (channels.includes('swing')) add('draw / chop', 'tirar da bainha de alguém e erguer; descer num golpe até um ponto (a lâmina gira para baixo)', ['swing']);
   if (id === 'item.phone' || id === 'item.radio' || id === 'arms.lyre') add('raise / lower', 'levar à frente do rosto ou do peito', []);
   if (kind === 'phone') add('screen', 'mensagens, digitando, tela acesa ou apagada', ['network']);
   if (asset.userData.loose) add('knockOver / setUpright', 'derrubar e pôr de pé', []);

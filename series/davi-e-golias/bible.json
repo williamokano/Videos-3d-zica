@@ -253,6 +253,11 @@
         "duration": 10,
         "loop": true,
         "volume": 0.4
+      },
+      "golpe-espada": {
+        "prompt": "a heavy iron sword swung down hard, a fast whoosh ending in a dull thud on the ground, short, no gore",
+        "duration": 1.5,
+        "volume": 0.6
       }
     }
   },

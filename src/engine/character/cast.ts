@@ -46,7 +46,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const state: Record<string, number> = {
     x: member.at[0], y: (member.elevation ?? 0) + (member.seated ?? 0), z: member.at[1], yaw: member.yaw ?? 0,
     // `seat` is how far above the floor the seat under the character is.
-    stride: 0, gait: 0, talk: 0, line: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0, ride: 0, pedal: 0, holding: 0,
+    stride: 0, gait: 0, talk: 0, line: 0, gesture: 0, headOff: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0, ride: 0, pedal: 0, holding: 0,
     carryL: 0, carryR: 0,
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
@@ -72,7 +72,13 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const inward = new THREE.Vector3();
   const wide = def.build ?? 1;
 
+  // `headOff` above 0.5 hides the head (with what is worn on it): a head that came off, shown apart as a prop.
+  let headless = false;
   const tick = (t: number): void => {
+    if (rig.hideHead && state.headOff > 0.5 !== headless) {
+      headless = state.headOff > 0.5;
+      rig.hideHead(headless);
+    }
     object.position.set(state.x, state.y, state.z);
     object.rotation.y = THREE.MathUtils.degToRad(state.yaw);
     object.updateMatrixWorld();
@@ -178,7 +184,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     id,
     kind: 'character',
     channels: { ...state },
-    traits: { strideLength: STRIDE * scale, bodyScale: scale, eyeHeight: rig.eyeHeight, expressions: names },
+    traits: { strideLength: STRIDE * scale, bodyScale: scale, eyeHeight: rig.eyeHeight, headRadius: rig.headRadius, expressions: names },
     object,
     set: (channel, value) => {
       if (channel in state) state[channel] = value;

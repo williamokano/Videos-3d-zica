@@ -1,6 +1,6 @@
 # Episódio 4 — O gigante (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:21.8. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:25.6. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -52,7 +52,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:31.3` 🎥  fov 40
 - `0:31.3` 🎥 corte: câmera
 - `0:34.0` **SOLDADO** (urgente): Olhem! Tem alguém descendo! ⚠ sem gravação
-- `0:34.0` 🔊 vale-vento (99 s)
+- `0:34.0` 🔊 vale-vento (103 s)
 - `0:34.0` 🎥 corte: câmera fov 44
 - `0:34.0` 🎥  fov 42
 - `0:36.3` **ABINADABE** (assustado): É o Davi. ⚠ sem gravação
@@ -119,35 +119,38 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:34.5` 🎥 corte: câmera fov 44
 - `1:34.7` 🐢 **câmera lenta** (0.9 s do episódio, 5 vezes mais devagar: 4.7 s de vídeo)
 - `1:35.8` 🎥  fov 42
-- `1:37.5` 🎥  fov 38
+- `1:37.4` 🎥  fov 38
 - `1:37.7` 🔊 impacto-testa
 - `1:40.0` 🎥 corte: câmera fov 36
 - `1:40.4` 🎥  fov 38
 - `1:42.0` 🎥 corte: câmera fov 46
 - `1:43.7` 🐢 **câmera lenta** (1.2 s do episódio, 2 vezes mais devagar: 2.4 s de vídeo)
-- `1:46.4` 🔊 queda-gigante
+- `1:45.3` 🔊 queda-gigante
 - `1:47.9` 🎥 corte: câmera fov 30
 - `1:49.0` 🎥 corte: câmera fov 28
 - `1:50.1` 🎥 corte: câmera fov 44
 - `1:51.7` 🔊 espada-saca
-- `1:52.6` 🎥 corte: câmera fov 46
-- `1:53.0` 🎥  fov 46
+- `1:51.9` 🎥 corte: câmera fov 46
+- `1:52.3` 🎥  fov 46
 - `1:54.1` 🎥 corte: câmera fov 44
 - `1:54.1` 🎥  fov 44
-- `1:54.4` 🔊 fuga-filisteus
-- `1:54.4` 🎥 corte: câmera fov 46
-- `1:54.4` 🎥  fov 46
-- `1:59.6` 🎥 corte: câmera fov 36
-- ⏸ **32.2 s sem fala**
-- `1:59.9` **SOLDADO 1** (grito): Israel! ⚠ sem gravação
-- `1:59.9` 🔊 musica-abertura (18 s)
-- `2:00.9` 🔊 grito-guerra
-- `2:00.9` 🔊 corrida-exercito (12 s)
-- `2:01.5` **SOLDADO 2** (grito): Atrás deles! ⚠ sem gravação
-- `2:01.8` **Narrador**: E naquele dia, o gigante que havia aterrorizado Israel por quarenta dias caiu diante de um pastor. ⚠ sem gravação
-- `2:01.8` 🎥 corte: câmera fov 50
-- `2:05.0` 🎥  fov 50
-- `2:08.9` 🟥 cartão final: "Você ia com a armadura do rei ou só com a funda?" — ARMADURA / FUNDA — Comenta ARMADURA ou FUNDA 👇 e marca quem precisa de coragem hoje
-- `2:09.2` **Narrador**: Você ia com a armadura do rei, ou só com a funda? Comenta aí. No próximo episódio: de herói a ameaça. ⚠ sem gravação
-- `2:10.0` 🎥  fov 50
+- `1:54.3` 🎥 corte: câmera fov 46
+- `1:54.8` 🔊 golpe-espada
+- `1:56.0` 🎥 corte: câmera fov 44
+- `1:58.2` 🔊 fuga-filisteus
+- `1:58.2` 🎥 corte: câmera fov 46
+- `1:58.2` 🎥  fov 46
+- `2:03.4` 🎥 corte: câmera fov 36
+- ⏸ **36.0 s sem fala**
+- `2:03.7` **SOLDADO 1** (grito): Israel! ⚠ sem gravação
+- `2:03.7` 🔊 musica-abertura (18 s)
+- `2:04.7` 🔊 grito-guerra
+- `2:04.7` 🔊 corrida-exercito (12 s)
+- `2:05.3` **SOLDADO 2** (grito): Atrás deles! ⚠ sem gravação
+- `2:05.6` **Narrador**: E naquele dia, o gigante que havia aterrorizado Israel por quarenta dias caiu diante de um pastor. ⚠ sem gravação
+- `2:05.6` 🎥 corte: câmera fov 50
+- `2:08.8` 🎥  fov 50
+- `2:12.7` 🟥 cartão final: "Você ia com a armadura do rei ou só com a funda?" — ARMADURA / FUNDA — Comenta ARMADURA ou FUNDA 👇 e marca quem precisa de coragem hoje
+- `2:13.0` **Narrador**: Você ia com a armadura do rei, ou só com a funda? Comenta aí. No próximo episódio: de herói a ameaça. ⚠ sem gravação
+- `2:13.8` 🎥  fov 50
 - ⏸ **5.5 s sem fala até o fim**

@@ -12,6 +12,7 @@ import '../actions/phone';
 import '../actions/audio';
 import '../actions/endcard';
 import '../actions/titlecard';
+import '../actions/censor';
 import { channelAt, compileActions, focusAt, placementAt, type ActionClip, type Ease, type WalkPath } from '../actions/catalog';
 import type { CastMember } from '../character/cast';
 import type { Bible } from '../bible';
@@ -156,6 +157,12 @@ export interface Director {
    * unless `duration` says otherwise. The episode goes on behind it, so it takes no time: the clock does not move.
    */
   titleCard(card: TitleCard, options?: StepOptions): Step;
+  /**
+   * Censorship on the finished picture: a black bar (`mode: 'tarja'`) or a mosaic (`'mosaico'`, the default) over
+   * the point `at`, `size` meters tall (default 0.6), for `duration` seconds (default 1). The cover follows the shot.
+   * Takes no time: what happens under it goes on.
+   */
+  censor(censor: { at: [number, number, number]; size?: number; mode?: 'tarja' | 'mosaico' }, options?: StepOptions): Step;
   /**
    * A jump cut: what happens from `from` to `to` (times or steps) stays in the episode but leaves the finished
    * video. For long walks between moments. Takes no time.
@@ -432,6 +439,12 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     ground: (x, z) => round(built.groundAt(x, z)),
     where: (who) => whereNow(idOf(who)),
     endCard: (card, options) => run(WORLD, 'endCard', { card }, options),
+    censor: (censor, options) => {
+      const start = now;
+      const step = run(WORLD, 'censor', { ...censor }, options);
+      now = start;
+      return step;
+    },
     titleCard: (card, options) => {
       const start = now;
       const step = run(WORLD, 'titleCard', { card }, options);
