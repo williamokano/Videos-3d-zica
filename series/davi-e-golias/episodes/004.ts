@@ -1,3 +1,4 @@
+import type { CastMember } from '../../../src/engine/character/cast';
 import { direct, type Director } from '../../../src/engine/timeline/direct';
 import { IRMAOS, LINHA, TOPO, atentos, filaDeIsrael, filaFilisteia, ids } from '../cena';
 
@@ -18,8 +19,15 @@ import { IRMAOS, LINHA, TOPO, atentos, filaDeIsrael, filaFilisteia, ids } from '
 
 type V3 = [number, number, number];
 
-const fila = filaDeIsrael();
-const filisteus = filaFilisteia();
+/** A voz de um figurante que fala, por cima da ficha de soldado. */
+const voz = (m: CastMember, id: string | undefined): CastMember => (id ? { ...m, look: { ...m.look, voice: { id } } } : m);
+// Os figurantes que falam, com vozes já aprovadas pelo autor e que não falam neste episódio (canal/vozes.json):
+// Guilherme (o Samá não fala aqui), Arnold, Papai Noel e Manoel Lopes (o Samuel não aparece). O soldado 6 era o
+// Lax no ep. 3, mas o Lax é a voz do Abinadabe, que fala neste episódio.
+const fila = filaDeIsrael().map((m) =>
+  voz(m, { 'israel-2': 'GnDrTQvdzZ7wqAKfLzVQ', 'israel-6': 'ZYCQDYoXnl78dNdU6JeG', 'israel-4': 'mBxe7tYxRAMLpIP3fPEp' }[m.id!]),
+);
+const filisteus = filaFilisteia().map((m) => voz(m, { 'filisteu-6': 'zoe2cQFqDDW4DteHDEWI' }[m.id!]));
 const tropa = ids(fila);
 const irmaos = ['sama', 'eliabe', 'abinadabe'];
 /** O soldado que grita sozinho depois do silêncio, no vão do meio da fila. */
@@ -149,6 +157,15 @@ export default direct(
     d.background(() => escudeiro.pickUp('escudo-golias', { hand: 'left', duration: 0.3 }));
     d.background(() => dv.pickUp('cajado-vale', { hand: 'left', duration: 0.3 }));
 
+    /** Um som de fundo (ambiente ou música) de `from` até agora, com entrada e saída suaves. */
+    const ambiente = (name: string, from: number, volume?: number) => {
+      const end = d.now;
+      d.at(from);
+      d.sound(name, { length: end - from, fade: 0.8, ...(volume !== undefined ? { volume } : {}) });
+      d.at(end);
+    };
+    let cena = d.now;
+
     // ---- 1. A armadura (0:00) ----
     // [GANCHO] Close, de lado: um capacete de bronze desce sobre a cabeça do Davi. Ele fecha os olhos com o peso.
     const cabeca = d.where('davi');
@@ -159,6 +176,7 @@ export default direct(
       d.wait(0.2);
       saul.say('Meu capacete.', { to: davi, gesture: 0 });
     });
+    d.sound('armadura-bronze');
     const capacete = d.do('capacete', 'don', { on: 'davi', wear: 'bronzeHelmet' }, { duration: 1.8 });
     d.background(() => {
       d.waitFor(capacete.start + 1.25);
@@ -171,6 +189,7 @@ export default direct(
     d.camera.moveTo({ pos: [meio[0] + 0.5, meio[1] + 0.3, meio[2] + 4.4], lookAt: meio, fov: 38 });
     saul.pickUp('couraca', { hand: 'right', duration: 0.6 });
     d.background(() => saul.say('Minha couraça.', { to: davi, gesture: 0 }));
+    d.sound('armadura-bronze');
     d.do('couraca', 'don', { on: 'davi', wear: 'scaleArmor' }, { duration: 1.8 });
     saul.say('Minha espada.', { to: davi, gesture: 0 });
     saul.pointAt([cabeca[0] + 0.1, cabeca[1] + 0.95, cabeca[2] - 0.2], { duration: 0.8 });
@@ -180,6 +199,7 @@ export default direct(
     // A tela de abertura, por cima do vale lá embaixo: os dois montes e o gigante pequeno no meio.
     d.camera.cut({ pos: [24, 21, -14], lookAt: [0, 2, 10], fov: 50 });
     d.camera.moveTo({ pos: [21, 17, -9], lookAt: [0, 2, 11], fov: 46 });
+    d.sound('titulo-impacto');
     d.titleCard({ title: 'DAVI', subtitle: 'Uma história de coragem e destino', episode: 'Episódio 4 · O gigante' }, { duration: 3.4 });
     d.wait(3.4);
 
@@ -202,6 +222,7 @@ export default direct(
     davi.say('Não estou acostumado.', { to: saul, gesture: 0.2 });
     // Ele tira o capacete e a couraça, com as duas mãos, por cima da cabeça, e põe no chão.
     davi.behave('idle');
+    d.sound('armadura-bronze');
     d.do('capacete', 'doff', { wear: 'bronzeHelmet' });
     davi.putDown('capacete', [2.75, TOPO, -39.2]);
     const tira = d.do('couraca', 'doff', { wear: 'scaleArmor' });
@@ -234,6 +255,10 @@ export default direct(
     d.wait(0.4);
 
     // ---- 2. O riacho (0:35) ----
+    // O acampamento e o tema do escudeiro ficam na cena da armadura; daqui até o fim, o vento do vale.
+    ambiente('acampamento-dia', cena);
+    ambiente('musica-escudeiro', cena, 0.2);
+    cena = d.now;
     // Grua por trás da fila de Israel: o Davi pequeno, descendo sozinho para o vale.
     const desce = d.background(() => {
       dv.walkTo([MARGEM[0], MARGEM[1] - 0.15], { speed: 2.4 });
@@ -253,6 +278,7 @@ export default direct(
     d.waitFor(desce);
 
     // A mão escolhendo as pedras lisas, uma a uma, contando baixinho. Rente à água.
+    const rio = d.now;
     dv.behave('attend', { object: 'golias' });
     const m0 = d.where('davi-vale');
     d.camera.cut({ pos: [m0[0] + 1.3, m0[1] + 1.5, m0[2] + 3.6], lookAt: [m0[0], m0[1] + 0.7, m0[2] + 0.3], fov: 40 });
@@ -260,6 +286,7 @@ export default direct(
     d.do('davi-vale', 'move', { name: 'kneel' }, { duration: 0.7 });
     const conta = ['Uma.', 'Duas.', 'Três.', 'Quatro.', 'Cinco.'];
     for (let i = 1; i <= 5; i++) {
+      if (i % 2 === 1) d.sound('pedras-agua');
       dv.pickUp(`pedra${i}`, { hand: 'right', duration: 0.9 });
       // [Liberdade] Ele conta baixinho.
       d.background(() => dv.say(conta[i - 1], { tone: 'sussurro', gesture: 0 }));
@@ -278,6 +305,7 @@ export default direct(
     }
     d.do('davi-vale', 'move', { name: 'kneel', amount: 0 }, { duration: 0.7 });
     dv.behave('attend', { object: 'golias' });
+    ambiente('riacho', rio);
 
     // ---- 3. Frente a frente (1:00) ----
     // Plano geral: o gigante desce com o escudeiro na frente; o Davi atravessa o riacho, pequeno.
@@ -294,6 +322,7 @@ export default direct(
       dv.walkTo(PARADA, { speed: 1.2 });
       dv.turnTo(GOLIAS1);
     });
+    d.sound('passos-gigante');
     d.camera.cut({ pos: [1.6, 2.6, -8.5], lookAt: [0, 1.6, 8], fov: 40 });
     d.camera.moveTo({ pos: [1.3, 2.3, -6.5], lookAt: [0, 1.7, 8], fov: 40 });
     d.waitFor(atravessa);
@@ -306,6 +335,7 @@ export default direct(
     const gigante = { pos: [0.9, d.where('davi-vale')[1] + 0.9, PARADA[1] - 1.6] as V3, lookAt: [0, d.where('golias')[1] + 2.7, GOLIAS1[1]] as V3 };
     d.camera.cut({ ...gigante, fov: 44 });
     d.camera.moveTo({ pos: [0.8, gigante.pos[1], PARADA[1] - 1.2], lookAt: gigante.lookAt, fov: 43 });
+    const ameaca = d.now;
     golias.say('Sou eu algum cão, para que venhas a mim com paus?', { tone: 'laughs', to: dv, gesture: 0.5 });
     // Ele olha para o céu e amaldiçoa.
     const baixo = d.where('golias');
@@ -335,6 +365,8 @@ export default direct(
     dv.express('neutral', { duration: 0.3 });
 
     // ---- 4. A batalha (1:45) ----
+    ambiente('musica-ameaca', ameaca);
+    d.sound('passos-gigante');
     // O gigante passa à frente do escudeiro e avança, pesado; a cada passo, poeira e o chão treme.
     golias.behave('attend', { object: 'davi-vale', mood: 'calm' });
     escudeiro.behave('attend', { object: 'golias' });
@@ -353,6 +385,8 @@ export default direct(
     dv.putDown('cajado-vale', [PARADA[0] - 0.6, d.ground(PARADA[0] - 0.6, PARADA[1]), PARADA[1] + 0.2]);
     dv.pickUp('funda', { hand: 'right', bag: true, duration: 0.7 });
     const corre = d.background(() => dv.runTo(TIRO, { speed: 2.6 }));
+    d.sound('tensao-saul');
+    d.sound('corrida-capim', { length: corre.end - corre.start, fade: 0.3 });
     // Os pés do Davi sobre a terra, a câmera baixa correndo junto.
     d.camera.track('davi-vale', { from: [1.3, d.where('davi-vale')[1] + 0.3, PARADA[1] - 0.6], to: [1.3, d.where('davi-vale')[1] + 0.35, TIRO[1] - 0.8], duration: corre.end - corre.start, aimHeight: -1.3, fov: 50, shake: 0.1 });
     // Correndo, ele tira uma pedra do alforje e a põe na funda.
@@ -362,6 +396,7 @@ export default direct(
     // A funda gira acima da cabeça. De baixo, de frente, a funda contra o céu.
     const giro = d.do('funda', 'whirl', {}, { duration: 2.6, ease: 'linear' });
     d.at(giro.start);
+    d.sound('funda-gira', { length: 2.6, fade: 0.2 });
     const t0 = d.where('davi-vale');
     d.camera.cut({ pos: [t0[0] + 1.5, t0[1] + 0.9, t0[2] + 2.7], lookAt: [t0[0], t0[1] + 1.65, t0[2]], fov: 44 });
     d.camera.moveTo({ pos: [t0[0] + 1.3, t0[1] + 0.85, t0[2] + 2.4], lookAt: [t0[0], t0[1] + 1.7, t0[2]], fov: 44 });
@@ -381,6 +416,7 @@ export default direct(
     const solta = tiro.start + 0.45;
     d.slowMo(tiro.start + 0.25, tiro.end + 0.35, 5);
     d.at(tiro.start);
+    d.sound('pedra-voa');
     const g = d.where('golias');
     const testa: V3 = [0, g[1] + 2.95, GOLIAS2[1] - 0.15];
     // Do lado do braço que gira (a direita dele, -x): o braço solta, e a câmera corre ao lado da pedra, com ela no
@@ -395,6 +431,7 @@ export default direct(
     d.at(tiro.end - 0.18);
     golias.express('surprised', { duration: 0.15 });
     d.waitFor(tiro);
+    d.sound('impacto-testa');
     // Impacto: a pedra crava na testa, a cabeça dá um tranco.
     d.do('golias', 'set', { channel: 'wear.foreheadStone', value: 1 }, { duration: 0 });
     d.do('impacto', 'set', { channel: 'puff', value: 1 }, { duration: 0.8, ease: 'out' });
@@ -414,6 +451,7 @@ export default direct(
     golias.lookAt([0, g[1] + 2, 0], { duration: 0.6 });
     d.background(() => {
       d.waitFor(queda.end - 0.12);
+      d.sound('queda-gigante');
       d.do('queda1', 'set', { channel: 'puff', value: 1 }, { duration: 3.2, ease: 'out' });
       d.do('queda2', 'set', { channel: 'puff', value: 1 }, { duration: 3.0, ease: 'out' });
       d.camera.cut({ pos: [5.6, 0.75, 6.4], lookAt: [0, 0.5, 8.7], fov: 46, shake: 0.15 });
@@ -444,6 +482,7 @@ export default direct(
     d.camera.cut({ pos: [-5.5, 1.9, 9.6], lookAt: [-0.8, 1.0, 8.2], fov: 44 });
     d.waitFor(vai);
     // A espada do Golias sai da bainha e sobe; o brilho da lâmina contra o céu. Corta antes do golpe.
+    d.sound('espada-saca');
     const espada = d.do('espada-golias', 'draw', { by: 'davi-vale', from: 'golias' }, { duration: 2.4 });
     const q = d.where('davi-vale');
     d.camera.cut({ pos: [q[0] - 1.6, q[1] + 0.8, q[2] - 1.4], lookAt: [q[0] + 0.1, q[1] + 1.3, q[2] + 0.2], fov: 44 });
@@ -459,6 +498,7 @@ export default direct(
       d.wait(0.12 * i);
       d.actor(f.id!).express('scared');
     }));
+    d.sound('fuga-filisteus');
     d.actor('filisteu-6').walkTo([-2.2, LINHA + 1.6], { speed: 0.8 });
     filisteus.forEach((f, i) => d.background(() => {
       d.wait(0.5 + 0.1 * (i % 5));
@@ -478,7 +518,10 @@ export default direct(
     d.camera.cut({ pos: [gp[0] + 0.6, gp[1] + 1.8, gp[2] + 2.7], lookAt: [gp[0], gp[1] + 1.5, gp[2]], fov: 36 });
     grito.behave('attend', { object: 'golias' });
     grito.express('neutral');
+    const vitoria = d.now;
     grito.say('Israel!', { tone: 'grito', gesture: 0 });
+    d.sound('grito-guerra');
+    d.sound('corrida-exercito', { length: 12, fade: 1.5 });
     const correm = [...tropa, 'sama', 'abinadabe', 'eliabe'];
     for (const id of correm) d.background(() => d.do(id, 'move', { name: 'cheer' }, { duration: 0.5 }));
     d.background(() => {
@@ -509,8 +552,13 @@ export default direct(
       options: [{ label: 'ARMADURA', icon: '🛡️' }, { label: 'FUNDA', icon: '🪨' }],
       cta: 'Comenta ARMADURA ou FUNDA 👇 e marca quem precisa de coragem hoje',
     }, { duration: 9 });
+    const fim = d.now;
     d.at(cartao.start + 0.3);
     d.narrate('Você ia com a armadura do rei, ou só com a funda? Comenta aí. No próximo episódio: de herói a ameaça.');
+    // O vento do vale desde o riacho, e o tema da abertura crescendo desde o grito de Israel até o fim.
+    d.at(Math.max(d.now, fim));
+    ambiente('vale-vento', cena);
+    ambiente('musica-abertura', vitoria);
     void sama;
     void vale;
     void rumo;

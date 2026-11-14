@@ -201,6 +201,58 @@
         "prompt": "ancient army war cry on a hillside, hundreds of men shouting together, spears beating on shields, outdoors, slightly distant, short",
         "duration": 4,
         "volume": 0.45
+      },
+      "armadura-bronze": {
+        "prompt": "heavy bronze helmet and scale armor being put on a young man, metallic scales clinking, leather straps pulled tight, close",
+        "duration": 2.5,
+        "volume": 0.5
+      },
+      "riacho": {
+        "prompt": "small shallow brook in a dry valley, water flowing gently over smooth stones, light wind, no music, no voices",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.3
+      },
+      "pedras-agua": {
+        "prompt": "a hand picking smooth stones out of shallow running water, stones clicking together, small splashes, close",
+        "duration": 3,
+        "volume": 0.45
+      },
+      "funda-gira": {
+        "prompt": "a leather sling whirled fast over the head, rhythmic deep whooshing getting faster, rope creaking, close",
+        "duration": 3,
+        "volume": 0.6
+      },
+      "pedra-voa": {
+        "prompt": "a single stone flying fast through the air past the camera, sharp short whoosh",
+        "duration": 1.2,
+        "volume": 0.6
+      },
+      "impacto-testa": {
+        "prompt": "a stone hitting a giant's forehead, hard sharp crack and a deep heavy thud, short",
+        "duration": 1.5,
+        "volume": 0.7
+      },
+      "queda-gigante": {
+        "prompt": "a huge man in bronze armor falling face down onto dry ground, massive body thud, armor crashing, dust settling, low rumble",
+        "duration": 3,
+        "volume": 0.75
+      },
+      "espada-saca": {
+        "prompt": "a large heavy iron sword slowly drawn from a leather scabbard, scraping metal, clear metallic ring at the end",
+        "duration": 2.5,
+        "volume": 0.55
+      },
+      "fuga-filisteus": {
+        "prompt": "an ancient army panicking and fleeing over a hill, many men shouting in fear, running footsteps, armor clanking, slightly distant",
+        "duration": 5,
+        "volume": 0.4
+      },
+      "corrida-exercito": {
+        "prompt": "hundreds of ancient soldiers running downhill and shouting in victory, heavy footsteps, spears and shields clanking, outdoors",
+        "duration": 10,
+        "loop": true,
+        "volume": 0.4
       }
     }
   },

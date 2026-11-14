@@ -9,15 +9,20 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:00.0` 🌍 rule.entardecer → 0
 - `0:00.0` 🌍 rule.fim-de-tarde → 0
 - `0:00.0` *DAVI passa a: attend*
+- `0:00.0` 🔊 acampamento-dia (34 s)
+- `0:00.0` 🔊 musica-escudeiro (34 s)
 - `0:00.0` 🎥  fov 34
+- `0:00.5` 🔊 armadura-bronze
 - `0:00.5` 🎥  fov 34
 - `0:00.7` **REI SAUL**: Meu capacete. ⚠ sem gravação
 - `0:02.3` *DAVI faz cara de sad*
 - `0:02.6` 🎥 corte: câmera fov 38
 - `0:02.6` 🎥  fov 38
 - `0:03.2` **REI SAUL**: Minha couraça. ⚠ sem gravação
+- `0:03.2` 🔊 armadura-bronze
 - `0:05.0` **REI SAUL**: Minha espada. ⚠ sem gravação
 - `0:07.1` *DAVI faz cara de neutral*
+- `0:07.4` 🔊 titulo-impacto
 - `0:07.4` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 4 · O gigante
 - `0:07.4` 🎥 corte: câmera fov 50
 - `0:07.4` 🎥  fov 46
@@ -32,6 +37,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:16.1` 🎥 corte: câmera
 - `0:18.7` **DAVI**: Não estou acostumado. ⚠ sem gravação
 - `0:20.5` *DAVI passa a: idle*
+- `0:20.5` 🔊 armadura-bronze
 - `0:26.5` *DAVI passa a: attend*
 - ⏸ **6.0 s sem fala**
 - `0:26.5` **REI SAUL** (preocupado): Não irás sem proteção. ⚠ sem gravação
@@ -46,35 +52,42 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:31.3` 🎥  fov 40
 - `0:31.3` 🎥 corte: câmera
 - `0:34.0` **SOLDADO** (urgente): Olhem! Tem alguém descendo! ⚠ sem gravação
+- `0:34.0` 🔊 vale-vento (99 s)
 - `0:34.0` 🎥 corte: câmera fov 44
 - `0:34.0` 🎥  fov 42
 - `0:36.3` **ABINADABE** (assustado): É o Davi. ⚠ sem gravação
 - `0:37.4` **ELIABE** (grito): Davi! Volta! ⚠ sem gravação
 - `0:37.4` 🎥 corte: câmera
 - `0:38.7` 🎥 corte: câmera fov 40
+- `0:44.0` 🔊 riacho (9 s)
 - `0:44.0` 🎥  fov 40
 - `0:44.0` 🎥 corte: câmera fov 40
 - `0:44.0` 🎥  fov 38
+- `0:44.7` 🔊 pedras-agua
 - ⏸ **6.9 s sem fala**
 - `0:45.6` **DAVI** (sussurro): Uma. ⚠ sem gravação
 - `0:45.6` *guarda pedra1*
 - `0:47.2` **DAVI** (sussurro): Duas. ⚠ sem gravação
 - `0:47.2` *guarda pedra2*
+- `0:47.9` 🔊 pedras-agua
 - `0:47.9` 🎥 corte: câmera fov 34
 - `0:48.8` **DAVI** (sussurro): Três. ⚠ sem gravação
 - `0:48.8` *guarda pedra3*
 - `0:50.4` **DAVI** (sussurro): Quatro. ⚠ sem gravação
 - `0:50.4` *guarda pedra4*
 - `0:51.1` **FILISTEU** (laughs): Mandaram um menino! ⚠ sem gravação
+- `0:51.1` 🔊 pedras-agua
 - `0:51.1` 🎥 corte: câmera fov 42
 - `0:52.0` **DAVI** (sussurro): Cinco. ⚠ sem gravação
 - `0:52.0` *guarda pedra5*
+- `0:53.4` 🔊 passos-gigante
 - `0:53.4` 🎥 corte: câmera fov 40
 - `0:53.4` 🎥  fov 40
 - `0:57.7` 🎥 corte: câmera fov 40
 - `0:57.7` 🎥  fov 38
 - ⏸ **6.3 s sem fala**
 - `0:59.3` **GOLIAS** (laughs): Sou eu algum cão, para que venhas a mim com paus? ⚠ sem gravação
+- `0:59.3` 🔊 musica-ameaca (29 s)
 - `0:59.3` 🎥 corte: câmera fov 44
 - `0:59.3` 🎥  fov 43
 - `1:03.0` 🎥 corte: câmera fov 42
@@ -91,33 +104,45 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:22.9` 🎥  fov 38
 - `1:24.1` 🎥 corte: câmera fov 34
 - `1:24.3` **DAVI** (grito): Hoje todos saberão que há um Deus em Israel! ⚠ sem gravação
+- `1:27.9` 🔊 passos-gigante
 - `1:28.6` 🎥 corte: câmera fov 50
 - `1:28.6` 🎥  fov 50
+- `1:30.5` 🔊 tensao-saul
+- `1:30.5` 🔊 corrida-capim (1 s)
 - `1:30.5` 🎥 corte: câmera fov 50
 - `1:31.8` 🎥  fov 50
+- `1:31.9` 🔊 funda-gira (3 s)
 - `1:31.9` 🎥 corte: câmera fov 44
 - `1:31.9` 🎥  fov 44
 - `1:33.2` 🎥 corte: câmera fov 40
+- `1:34.5` 🔊 pedra-voa
 - `1:34.5` 🎥 corte: câmera fov 44
 - `1:34.7` 🐢 **câmera lenta** (0.9 s do episódio, 5 vezes mais devagar: 4.7 s de vídeo)
 - `1:35.8` 🎥  fov 42
 - `1:37.5` 🎥  fov 38
+- `1:37.7` 🔊 impacto-testa
 - `1:40.0` 🎥 corte: câmera fov 36
 - `1:40.4` 🎥  fov 38
 - `1:42.0` 🎥 corte: câmera fov 46
 - `1:43.7` 🐢 **câmera lenta** (1.2 s do episódio, 2 vezes mais devagar: 2.4 s de vídeo)
+- `1:46.4` 🔊 queda-gigante
 - `1:47.9` 🎥 corte: câmera fov 30
 - `1:49.0` 🎥 corte: câmera fov 28
 - `1:50.1` 🎥 corte: câmera fov 44
+- `1:51.7` 🔊 espada-saca
 - `1:52.6` 🎥 corte: câmera fov 46
 - `1:53.0` 🎥  fov 46
 - `1:54.1` 🎥 corte: câmera fov 44
 - `1:54.1` 🎥  fov 44
+- `1:54.4` 🔊 fuga-filisteus
 - `1:54.4` 🎥 corte: câmera fov 46
 - `1:54.4` 🎥  fov 46
 - `1:59.6` 🎥 corte: câmera fov 36
 - ⏸ **32.2 s sem fala**
 - `1:59.9` **SOLDADO 1** (grito): Israel! ⚠ sem gravação
+- `1:59.9` 🔊 musica-abertura (18 s)
+- `2:00.9` 🔊 grito-guerra
+- `2:00.9` 🔊 corrida-exercito (12 s)
 - `2:01.5` **SOLDADO 2** (grito): Atrás deles! ⚠ sem gravação
 - `2:01.8` **Narrador**: E naquele dia, o gigante que havia aterrorizado Israel por quarenta dias caiu diante de um pastor. ⚠ sem gravação
 - `2:01.8` 🎥 corte: câmera fov 50
