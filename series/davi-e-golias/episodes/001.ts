@@ -101,6 +101,15 @@ export default direct(
     /** A point `up` meters above the ground at [x, z]: the road to the gate climbs steeply. */
     const sobre = (x: number, z: number, up: number): [number, number, number] => [x, d.ground(x, z) + up, z];
 
+    /** O som de fundo de uma cena, de `from` até agora. */
+    const ambiente = (name: string, from: number, volume?: number) => {
+      const end = d.now;
+      d.at(from);
+      d.sound(name, { length: end - from, fade: 0.8, ...(volume !== undefined ? { volume } : {}) });
+      d.at(end);
+    };
+    let cena = d.now;
+
     // ---- 1. A chegada (0:00) ----
     // Os anciãos conversam no portão; o vento levanta poeira. Depois, o chifre na mão velha e o rosto do Samuel.
     d.camera.cut({ pos: sobre(0.2, -30.5, 1.8), lookAt: sobre(0.2, -16, 1.0), fov: 50 });
@@ -133,9 +142,13 @@ export default direct(
 
     // A tela de abertura, por cima da imagem.
     d.camera.cut({ pos: [3, TOPO + 3.5, -2], lookAt: [0, TOPO + 3, -22], fov: 46 });
+    d.sound('titulo-impacto');
     d.titleCard({ title: 'DAVI', subtitle: 'Uma história de coragem e destino', episode: 'Episódio 1 · O escolhido' }, { duration: 3.6 });
     d.background(() => samuel.walkTo([3.2, -27], { speed: 1 }));
     d.wait(3.6);
+
+    ambiente('vento-portao', cena);
+    cena = d.now;
 
     // ---- 2. O pastor (0:14) ----
     // Grua larga sobre as colinas e o rebanho, descendo até o rapaz na pedra. Lá longe, a cidade.
@@ -146,6 +159,10 @@ export default direct(
     d.camera.cut({ pos: [-35.2, 7.5, 37.2], lookAt: [-32.9, 7.0, 34.6], fov: 40 });
     d.narrate('Não procurava o mais forte. Procurava aquele cujo coração ainda ninguém conhecia.');
     d.wait(0.6);
+
+    ambiente('campo-ovelhas', cena);
+    ambiente('harpa-pastor', cena);
+    cena = d.now;
 
     // ---- 3. Os filhos de Jessé (0:34) ----
     // Fim de tarde. A casa de Jessé, pequena: o Samuel sentado no banco baixo do fundo, o Jessé diante dele. A luz
@@ -278,12 +295,16 @@ export default direct(
     filho('eliabe').say('O pastorzinho.', { tone: 'ironico', gesture: 0 });
     samuelC.say('Mande buscá-lo. Não nos sentaremos à mesa até que ele chegue.', { tone: 'firme', to: jesse, gesture: 0.3 });
 
+    ambiente('casa-entardecer', cena);
+    cena = d.now;
+
     // ---- 4. O mais novo (1:30) ----
     // As colinas ao entardecer. O Samá sobe correndo até o Davi, que toca perto da fogueira.
     // Câmera semifixa perto do Davi, que acompanha o Samá subindo a colina na direção dela.
     d.camera.track('sama-campo', { from: sobre(-39.6, 36.4, 3.0), to: sobre(-38.9, 35.8, 2.6), duration: 4.4, fov: 40 });
     davi.behave('idle', { mood: 'calm' });
     const corrida = samaC.runTo([-31.4, 33.2], { speed: 3.4 });
+    d.sound('corrida-capim');
     d.at(corrida.end - 1.4);
     samaC.say('Davi!', { tone: 'grito', gesture: 0 });
     d.waitFor(corrida);
@@ -295,6 +316,10 @@ export default direct(
     samaC.say('O pai te chama. Agora. O profeta está lá em casa.', { tone: 'urgente', to: davi, gesture: 0.6 });
     davi.say('O profeta? Comigo?', { tone: 'surpreso', to: samaC });
 
+    ambiente('campo-ovelhas', cena);
+    ambiente('harpa-pastor', cena, 0.2);
+    cena = d.now;
+    d.sound('porta-madeira-passos');
     // A casa. A porta. O Davi entra com a roupa de pastor, o cajado e a palha das colinas, sem jeito, e para logo
     // depois da porta, entre os irmãos de túnica limpa.
     d.background(() => daviC.pickUp('cajado-casa', { hand: 'right' }));
@@ -335,9 +360,11 @@ export default direct(
     jesse.express('happy', { amount: 0.4 });
     d.wait(0.6);
     daviC.lookAt(samuelC, { duration: 0.4 });
+    d.sound('ajoelhar');
     d.do('davi-casa', 'move', { name: 'kneel' }, { duration: 1 });
     // De lado, aberto, a câmera girando devagar em volta dos dois: o azeite cai sobre a cabeça dele.
     d.camera.twoShot('samuel-casa', 'davi-casa', { duration: 4.5, swing: 24, fov: 44, side: 1, height: 1.2 });
+    d.sound('azeite');
     d.do('chifre-casa', 'pour', { over: 'davi-casa' }, { duration: 4.2 });
     // O rosto do Davi, confuso, sem colar: de frente e um pouco de lado; atrás, o Samuel.
     d.camera.cut({ pos: [13.2, TOPO + 1.15, -33.0], lookAt: [11.5, TOPO + 1.0, -34.4], fov: 40 });
@@ -345,12 +372,16 @@ export default direct(
     d.narrate('E naquele dia, enquanto todos ainda viam um pastor, Deus havia escolhido um rei.');
     d.wait(0.5);
 
+    ambiente('casa-entardecer', cena);
+    cena = d.now;
+
     // ---- 5. O gancho (2:20) ----
     // Em outro lugar, de noite, o Saul sozinho no escuro, com as mãos na cabeça.
     d.world.rule('entardecer', false, { duration: 0 });
     d.world.rule('noite', true, { duration: 0 });
     const saul = d.actor('saul');
     d.camera.cut({ pos: [100.6, 1.5, -98.6], lookAt: [100, 1.2, -101.6], fov: 44 });
+    d.sound('tensao-saul');
     d.do('saul', 'move', { name: 'cower', amount: 0.8 }, { duration: 0.8 });
     d.wait(0.7);
     d.camera.moveTo({ pos: [100.2, 1.35, -99.4], lookAt: [100, 1.2, -101.6], fov: 36 });
@@ -364,6 +395,7 @@ export default direct(
       options: [{ label: 'FELIZ', icon: '🙌' }, { label: 'INVEJA', icon: '😒' }],
       cta: 'Comenta FELIZ ou INVEJA 👇 e marca o irmão que ia te zoar',
     }, { duration: 6 });
+    ambiente('palacio-noite', cena);
     d.at(d.now - 6);
     d.narrate('No próximo episódio: o rei e o pastor.');
   },

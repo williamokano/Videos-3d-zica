@@ -15,6 +15,68 @@
     "narrator": {
       "id": "GIuLCSVfgJaUuh7hYOY8",
       "speed": 1.08
+    },
+    "sounds": {
+      "vento-portao": {
+        "prompt": "warm dry wind over an ancient stone town gate on a hill, distant goat bells, faint birds, no voices, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "campo-ovelhas": {
+        "prompt": "open grassy hills at sunset, gentle breeze, distant sheep bleating now and then, crickets starting, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "harpa-pastor": {
+        "prompt": "solo ancient lyre gently plucked, simple calm pastoral melody, outdoors, soft, slightly distant",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.3
+      },
+      "casa-entardecer": {
+        "prompt": "small wood fire crackling and popping steadily in a clay hearth, close and clear, crickets chirping outside, quiet evening, no voices, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "palacio-noite": {
+        "prompt": "large empty stone hall at night, braziers and torches crackling, low wind outside, cold echo, no voices, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "titulo-impacto": {
+        "prompt": "deep cinematic low boom with long epic reverb tail, trailer title hit",
+        "duration": 3.5,
+        "volume": 0.6
+      },
+      "corrida-capim": {
+        "prompt": "one young man running uphill on dry grass and dirt, quick footsteps, cloth flapping, outdoors",
+        "duration": 3.5,
+        "volume": 0.5
+      },
+      "azeite": {
+        "prompt": "thick olive oil slowly poured from a horn, soft viscous liquid trickle and drip, close, quiet room",
+        "duration": 4,
+        "volume": 0.5
+      },
+      "ajoelhar": {
+        "prompt": "person kneeling down on a woven rug, cloth rustle, soft knee thud, close",
+        "duration": 1.5,
+        "volume": 0.45
+      },
+      "tensao-saul": {
+        "prompt": "dark ominous low drone swelling, unsettling whispery texture, horror tension rising, no melody",
+        "duration": 10,
+        "volume": 0.4
+      },
+      "porta-madeira-passos": {
+        "prompt": "sandals stepping on a packed earth floor indoors, a few slow steps, close",
+        "duration": 3,
+        "volume": 0.35
+      }
     }
   },
   "style": {
