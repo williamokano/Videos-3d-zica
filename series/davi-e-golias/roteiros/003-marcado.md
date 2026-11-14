@@ -1,6 +1,6 @@
 # Episódio 3 — Quarenta dias (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:42.8. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:43.7. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -68,72 +68,72 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:49.9` 🔊 jumento-passos (10 s)
 - `0:51.3` 🔊 grito-guerra
 - `0:51.3` 🌍 rule.amanhecer → 0
-- `0:51.3` 🔊 musica-entrada (20 s)
-- `0:51.3` 🔊 acampamento-dia (100 s)
+- `0:51.3` 🔊 musica-entrada (21 s)
+- `0:51.3` 🔊 acampamento-dia (101 s)
 - `0:51.3` 🎥 corte: câmera fov 50
 - `0:53.9` 🎥  fov 50
 - ⏸ **6.4 s sem fala**
 - `0:54.7` **DAVI**: É pros meus irmãos, os filhos de Jessé. Onde eles estão?
 - `0:54.7` 🎥 corte: câmera
 - `0:59.6` **GUARDA DAS BAGAGENS** (cansado): Na linha de frente.
-- `1:01.0` 🔊 corrida-capim (5 s)
-- `1:01.0` 🎥 corte: câmera fov 46
+- `1:02.0` 🔊 corrida-capim (5 s)
+- `1:02.0` 🎥 corte: câmera fov 46
 - ⏸ **3.0 s sem fala**
-- `1:04.0` **DAVI** (animado): Eliabe! Abinadabe! Samá!
-- `1:05.8` 🎥  fov 46
-- `1:07.8` **SAMÁ** (surprised): Davi?!
-- `1:07.8` 🎥 corte: câmera
-- `1:09.3` **DAVI**: O pai mandou saber como estais.
-- `1:10.9` **GOLIAS** (grito): Hoje eu afronto as fileiras de Israel! Dai-me um homem, e lutaremos os dois!
-- `1:10.9` 🔊 musica-ameaca (20 s)
-- `1:10.9` 🎥 corte: câmera fov 42
-- `1:10.9` 🎥  fov 40
-- `1:16.8` 🎥 corte: câmera fov 48
-- `1:17.3` 🎥  fov 46
+- `1:05.0` **DAVI** (animado): Eliabe! Abinadabe! Samá!
+- `1:06.8` 🎥  fov 46
+- `1:08.8` **SAMÁ** (surprised): Davi?!
+- `1:08.8` 🎥 corte: câmera
+- `1:10.2` **DAVI**: O pai mandou saber como estais.
+- `1:11.9` **GOLIAS** (grito): Hoje eu afronto as fileiras de Israel! Dai-me um homem, e lutaremos os dois!
+- `1:11.9` 🔊 musica-ameaca (20 s)
+- `1:11.9` 🎥 corte: câmera fov 42
+- `1:11.9` 🎥  fov 40
+- `1:17.8` 🎥 corte: câmera fov 48
+- `1:18.3` 🎥  fov 46
 - ⏸ **3.2 s sem fala**
-- `1:20.1` **SOLDADO 1**: O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento.
-- `1:20.1` 🎥 corte: câmera
-- `1:23.9` **SOLDADO 2**: E a casa do pai dele fica livre de impostos.
-- `1:26.9` **DAVI** (firme): Quem é esse filisteu, para afrontar os exércitos do Deus vivo?
-- `1:26.9` 🎥 corte: câmera fov 42
-- `1:26.9` 🎥  fov 40
-- `1:31.3` **ELIABE** (bravo): Por que desceste aqui? Com quem deixaste aquelas poucas ovelhas no deserto?
-- `1:31.3` 🎥 corte: câmera
-- `1:36.9` **ELIABE** (bravo): Eu conheço o teu orgulho. Vieste só pra ver a batalha.
-- `1:41.5` **DAVI**: Que fiz eu agora? Foi só uma pergunta.
-- `1:41.5` 🎥 corte: câmera
-- `1:44.1` 🎥 corte: câmera fov 42
-- `1:46.0` 🎥  fov 42
-- `1:46.4` **DAVI**: É verdade o que dizem do rei?
-- `1:46.4` 🎥 corte: câmera
-- `1:48.2` **SOLDADO 2** (irônico): É. Por quê? Estás pensando em descer?
-- `1:50.9` 🎥 corte: câmera fov 44
-- `1:50.9` 🎥  fov 42
-- `1:52.7` **ABNER**: Majestade, é o rapaz que anda perguntando pela recompensa.
-- `1:55.9` 🎥 corte: câmera
-- `1:56.2` **REI SAUL** (surpreso): Davi? O meu escudeiro?
-- `1:59.3` **DAVI** (decidido): Que ninguém desanime por causa desse filisteu. Teu servo irá lutar contra ele.
-- `1:59.3` 🎥 corte: câmera
-- `2:04.7` **REI SAUL** (cansado): Não podes. És apenas um jovem, e ele é guerreiro desde a juventude.
-- `2:04.7` 🎥 corte: câmera
-- `2:09.8` **DAVI**: Quando um leão ou um urso levava uma ovelha, eu ia atrás dele e a tirava da sua boca.
-- `2:09.8` 🔊 musica-abertura (32 s)
-- `2:09.8` 🎥 corte: câmera fov 40
-- `2:15.6` **DAVI**: Teu servo matou o leão e o urso. Esse filisteu será como um deles.
-- `2:15.8` 🎥  fov 40
-- `2:20.2` **DAVI** (firme): O Senhor, que me livrou das garras do leão e do urso, me livrará das mãos desse filisteu.
-- `2:20.2` 🎥 corte: câmera fov 40
-- `2:20.2` 🎥  fov 38
-- `2:25.9` 🎥 corte: câmera
-- `2:27.8` 🎥 corte: câmera
-- `2:28.1` **REI SAUL**: Vai. E que o Senhor esteja contigo.
-- `2:30.9` 🔊 vale-vento (11 s)
-- `2:30.9` 🎥 corte: câmera fov 44
-- `2:34.1` 🎥 corte: câmera fov 42
-- `2:34.1` 🎥  fov 40
-- `2:35.0` 🎥 corte: câmera fov 46
-- `2:35.0` 🎥  fov 44
-- `2:35.8` 🟥 cartão final: "Se você fosse o rei, deixava o Davi ir?" — DEIXAVA / SEGURAVA — Comenta DEIXAVA ou SEGURAVA 👇 e marca o amigo que encarava um gigante
+- `1:21.0` **SOLDADO 1**: O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento.
+- `1:21.0` 🎥 corte: câmera
+- `1:24.8` **SOLDADO 2**: E a casa do pai dele fica livre de impostos.
+- `1:27.9` **DAVI** (firme): Quem é esse filisteu, para afrontar os exércitos do Deus vivo?
+- `1:27.9` 🎥 corte: câmera fov 42
+- `1:27.9` 🎥  fov 40
+- `1:32.3` **ELIABE** (bravo): Por que desceste aqui? Com quem deixaste aquelas poucas ovelhas no deserto?
+- `1:32.3` 🎥 corte: câmera
+- `1:37.8` **ELIABE** (bravo): Eu conheço o teu orgulho. Vieste só pra ver a batalha.
+- `1:42.4` **DAVI**: Que fiz eu agora? Foi só uma pergunta.
+- `1:42.4` 🎥 corte: câmera
+- `1:45.0` 🎥 corte: câmera fov 42
+- `1:47.0` 🎥  fov 42
+- `1:47.4` **DAVI**: É verdade o que dizem do rei?
+- `1:47.4` 🎥 corte: câmera
+- `1:49.2` **SOLDADO 2** (irônico): É. Por quê? Estás pensando em descer?
+- `1:51.8` 🎥 corte: câmera fov 44
+- `1:51.8` 🎥  fov 42
+- `1:53.6` **ABNER**: Majestade, é o rapaz que anda perguntando pela recompensa.
+- `1:56.9` 🎥 corte: câmera
+- `1:57.2` **REI SAUL** (surpreso): Davi? O meu escudeiro?
+- `2:00.2` **DAVI** (decidido): Que ninguém desanime por causa desse filisteu. Teu servo irá lutar contra ele.
+- `2:00.2` 🎥 corte: câmera
+- `2:05.6` **REI SAUL** (cansado): Não podes. És apenas um jovem, e ele é guerreiro desde a juventude.
+- `2:05.6` 🎥 corte: câmera
+- `2:10.7` **DAVI**: Quando um leão ou um urso levava uma ovelha, eu ia atrás dele e a tirava da sua boca.
+- `2:10.7` 🔊 musica-abertura (32 s)
+- `2:10.7` 🎥 corte: câmera fov 40
+- `2:16.6` **DAVI**: Teu servo matou o leão e o urso. Esse filisteu será como um deles.
+- `2:16.7` 🎥  fov 40
+- `2:21.1` **DAVI** (firme): O Senhor, que me livrou das garras do leão e do urso, me livrará das mãos desse filisteu.
+- `2:21.1` 🎥 corte: câmera fov 40
+- `2:21.1` 🎥  fov 38
+- `2:26.8` 🎥 corte: câmera
+- `2:28.7` 🎥 corte: câmera
+- `2:29.0` **REI SAUL**: Vai. E que o Senhor esteja contigo.
+- `2:31.9` 🔊 vale-vento (11 s)
+- `2:31.9` 🎥 corte: câmera fov 44
+- `2:35.0` 🎥 corte: câmera fov 42
+- `2:35.0` 🎥  fov 40
+- `2:35.9` 🎥 corte: câmera fov 46
+- `2:35.9` 🎥  fov 44
+- `2:36.7` 🟥 cartão final: "Se você fosse o rei, deixava o Davi ir?" — DEIXAVA / SEGURAVA — Comenta DEIXAVA ou SEGURAVA 👇 e marca o amigo que encarava um gigante
 - ⏸ **4.9 s sem fala**
-- `2:35.8` **Narrador**: No próximo episódio: o gigante.
+- `2:36.7` **Narrador**: No próximo episódio: o gigante.
 - ⏸ **4.2 s sem fala até o fim**

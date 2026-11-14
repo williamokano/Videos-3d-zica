@@ -26,6 +26,7 @@ Notas do autor sobre as vozes já usadas, para escolher a próxima. Vale para to
 | Lucas – Deep & Profound | `GIuLCSVfgJaUuh7hYOY8` | DAVI ep. 3+ (Golias, na ficha) | Grave, de narrador de cinema. |
 | Paulo | `Qrdut83w0Cr152Yb4Xn3` | DAVI ep. 3+ (Abner, na ficha) | "formal", grave. |
 | Davi Andrei | `2CECaLAGTS5NRGxgbcxr` | DAVI ep. 3 (soldado 12) | Jovem, conversa do dia a dia. |
+| Arnold | `ZYCQDYoXnl78dNdU6JeG` | DAVI ep. 3+ (guarda das bagagens, na ficha `guarda`) | **Escolhida pelo autor** entre 6 amostras (2026-11-14). |
 
 ## Evitar
 
