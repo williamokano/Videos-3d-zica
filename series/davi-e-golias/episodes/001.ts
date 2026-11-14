@@ -23,7 +23,7 @@ const TOPO = 10;
  * da parede sul, em x = 11; o banco de barro na parede do fundo, onde o Samuel se senta.
  */
 const PORTA: [number, number] = [11.0, -30.8];
-const BANCO: [number, number] = [11.5, -35.75];
+const BANCO: [number, number] = [11.5, -35.5];
 /** Onde cada filho para diante do Samuel. */
 const DIANTE: [number, number] = [11.5, -34.25];
 const FILHOS = ['eliabe', 'abinadabe', 'sama', 'natanael', 'radai', 'ozem', 'eliu'];
@@ -67,7 +67,7 @@ export default direct(
       { id: 'chifre-casa', asset: 'arms.oilHorn', pos: [0, 0], pocketOf: 'samuel-casa' },
       { id: 'harpa', asset: 'arms.lyre', pos: [0, 0], pocketOf: 'davi' },
       { id: 'cajado-casa', asset: 'arms.staff', pos: [0, 0], pocketOf: 'davi-casa' },
-      { id: 'novilha', asset: 'ancient.heifer', pos: [1.3, -13.8], params: { rope: 1 } },
+      { id: 'novilha', asset: 'ancient.heifer', pos: [4.4, -23.0], rot: 80, params: { rope: 1 } },
     ],
   },
   (d) => {
@@ -104,10 +104,8 @@ export default direct(
     d.wait(1.5);
     // A câmera, à beira da estrada, acompanha o Samuel subindo, girando e deslizando para mantê-lo em quadro.
     d.camera.track('samuel', { from: sobre(4.6, -12.6, 1.9), to: sobre(3.8, -17.4, 2.0), duration: 3.4, fov: 38 });
-    const chegada = d.together(
-      () => samuel.walkTo([0.4, -21.6], { speed: 1.05 }),
-      () => d.do('novilha', 'moveTo', { to: [2.1, -17.0] }, { duration: 5.0, ease: 'linear' }),
-    );
+    // A novilha do sacrifício já está amarrada junto do portão, no plano, esperando.
+    const chegada = samuel.walkTo([0.4, -21.6], { speed: 1.05 });
     d.at(chegada.start + 3.2);
     // Os anciãos se levantam de uma vez.
     d.camera.cut({ pos: sobre(4.4, -28.6, 1.8), lookAt: sobre(-0.4, -23.2, 1.0), fov: 50 });
@@ -194,7 +192,9 @@ export default direct(
     d.waitFor(eliabeEntra);
     aproxima(1);
     samuelC.behave('attend', { object: 'eliabe' });
-    d.camera.twoShot('samuel-casa', 'eliabe', { duration: 11, swing: 14, fov: 44, side: -1, height: 1.2 });
+    // Por cima do ombro do Eliabe: o Samuel sentado olhando para ele.
+    d.camera.cut({ pos: [12.35, TOPO + 1.85, -32.9], lookAt: [11.45, TOPO + 1.0, -35.5], fov: 46 });
+    d.camera.moveTo({ pos: [12.2, TOPO + 1.8, -33.1], lookAt: [11.45, TOPO + 1.0, -35.5], fov: 44 });
     // [Liberdade] O pai elogia o primogênito; o Samuel o olha de alto a baixo, devagar.
     jesse.say('É o mais forte de nós. Já serve no exército do rei.', { tone: 'orgulhoso', to: samuelC, gesture: 0.4 });
     samuelC.lookAt([DIANTE[0], TOPO + 1.8, DIANTE[1]], { duration: 0.8 });
@@ -203,21 +203,24 @@ export default direct(
     samuelC.pickUp('chifre-casa', { hand: 'right' });
     samuelC.say('Certamente este é o ungido do Senhor.', { tone: 'sussurro', gesture: 0 });
     // Ele para. Abaixa o chifre devagar.
-    d.camera.cut({ pos: [12.9, TOPO + 1.3, -34.5], lookAt: [11.5, TOPO + 1.15, -35.6], fov: 38 });
+    d.camera.cut({ pos: [13.4, TOPO + 1.45, -33.4], lookAt: [11.5, TOPO + 1.05, -35.4], fov: 40 });
     d.wait(1.6);
     samuelC.say('Não. O homem vê o que está diante dos olhos. Porém o Senhor olha para o coração.', { tone: 'sussurro', gesture: 0 });
     // O Eliabe fica rígido e vai para a parede sem olhar para ninguém. [Liberdade]
     filho('eliabe').express('angry', { amount: 0.5 });
+    // A câmera acompanha o rejeitado voltando para a parede, de frente para ele, do lado do banco.
+    d.camera.track('eliabe', { from: [12.9, TOPO + 1.6, -35.2], to: [12.6, TOPO + 1.6, -35.1], duration: 2.6, fov: 42 });
     encosta(0);
+    d.wait(1.2);
     filho('eliabe').behave('watch', { point: [8.0, TOPO + 1.6, -33], mood: 'calm' });
 
     // Os outros, um por um, pela porta. A câmera, do canto, acompanha cada um entrando.
     for (let i = 1; i < 4; i++) {
       const id = FILHOS[i];
-      if (i === 1 || i === 3) d.camera.track(id, { from: [8.7, TOPO + 1.8, -35.3], to: [8.9, TOPO + 1.75, -35.1], duration: 6, fov: 46 });
-      // Espera o anterior sair da frente e o próprio chegar à porta.
-      d.wait(0.6);
+      // Espera o anterior sair da frente e o próprio chegar à porta. A câmera passa a seguir quem entra.
+      d.wait(0.3);
       d.waitFor(naVez[i].end);
+      d.camera.track(id, { from: [9.0, TOPO + 1.7, -35.3], to: [9.2, TOPO + 1.65, -35.1], duration: 3, fov: 44 });
       entra(i);
       if (i < 3) aproxima(i + 1);
       samuelC.behave('attend', { object: id });
@@ -227,7 +230,11 @@ export default direct(
       samuelC.lookAt([DIANTE[0], TOPO + 0.8, DIANTE[1]], { duration: 0.8 * calm });
       samuelC.lookAt([DIANTE[0], TOPO + 1.65, DIANTE[1]], { duration: 0.6 * calm });
       if (i <= 2) samuelC.say(i === 1 ? 'Também não é este.' : 'Nem este.', { gesture: 0 });
+      // Rejeitado, ele volta para a parede, cabisbaixo; a câmera vai com ele.
+      filho(id).express('sad', { amount: 0.6 });
+      d.camera.track(id, { from: [12.9, TOPO + 1.6, -35.2], to: [12.6, TOPO + 1.6, -35.1], duration: 2.4, fov: 42 });
       encosta(i);
+      d.wait(0.9);
       if (i === 3) filho('sama').say('Nenhum de nós?', { tone: 'sussurro', to: 'abinadabe', gesture: 0 });
     }
     // Os três mais novos (antes do Davi) entram juntos; o Samuel quase não precisa olhar.
@@ -244,7 +251,16 @@ export default direct(
     // [GANCHO] Nenhum dos sete.
     d.wait(1.0);
     samuelC.behave('attend', { object: 'jesse' });
-    d.camera.twoShot('samuel-casa', 'jesse', { duration: 12, swing: 14, fov: 44, side: 1, height: 1.2 });
+    // Por cima do ombro do Jessé, o Samuel sentado; a câmera chega devagar.
+    {
+      const [pj, ps] = [d.where(jesse), d.where(samuelC)];
+      const [dx, dz] = [pj[0] - ps[0], pj[2] - ps[2]];
+      const len = Math.hypot(dx, dz) || 1;
+      // Atrás do Jessé, um pouco de lado, olhando o Samuel por cima do ombro dele.
+      const behind = (k: number): [number, number, number] => [pj[0] + (dx / len) * k - (dz / len) * 0.35, TOPO + 1.85, pj[2] + (dz / len) * k + (dx / len) * 0.35];
+      d.camera.cut({ pos: behind(0.9), lookAt: [ps[0], TOPO + 1.0, ps[2]], fov: 46 });
+      d.camera.moveTo({ pos: behind(0.7), lookAt: [ps[0], TOPO + 1.0, ps[2]], fov: 42 });
+    }
     samuelC.say('O Senhor não escolheu nenhum destes. São estes todos os teus filhos?', { to: jesse, gesture: 0.3 });
     jesse.say('Ainda falta o mais novo. Está cuidando das ovelhas.', { tone: 'hesitante', to: samuelC, gesture: 0.3 });
     filho('eliabe').say('O pastorzinho.', { tone: 'ironico', gesture: 0 });

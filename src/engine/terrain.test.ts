@@ -58,4 +58,18 @@ describe('terrain', () => {
       expect(ground(x, z) + flock.position.y).toBeCloseTo(built.groundAt(x, -22 + z), 3);
     }
   });
+
+  it('something slid up a slope stays on the ground', () => {
+    const built = buildLocation(loc);
+    const defs: CharacterDef[] = [{ id: 'davi', name: 'Davi' }];
+    const episode = resolveScript(direct({ episode: 1, title: 't', location: 't', cast: [{ character: 'davi', at: [3, 0], yaw: 0 }], props: [{ id: 'caixa', asset: 'item.box', pos: [0, 0] }] }, (d) => {
+      d.camera.cut({ pos: [10, 10, 0], lookAt: [0, 0, -15] });
+      d.do('caixa', 'moveTo', { to: [0, -28] }, { duration: 6, ease: 'linear' });
+    }), built, defs);
+    const compiled = compileEpisode(episode, built, buildCast(episode, defs));
+    for (const t of [0, 2, 4, 6]) {
+      const { pos } = placementAt(compiled, 'caixa', t);
+      expect(pos[1]).toBeCloseTo(built.groundAt(pos[0], pos[2]), 2);
+    }
+  });
 });

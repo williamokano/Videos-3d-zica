@@ -77,7 +77,7 @@ export function compileEpisode(episode: Episode, built: BuiltLocation, cast: Int
   return compileActions(
     episode.actions ?? [],
     [...built.interactives, ...cast, ...others],
-    { findPath: nav && ((from, to, elevation) => findPath(nav, from, to, elevation)) },
+    { findPath: nav && ((from, to, elevation) => findPath(nav, from, to, elevation)), groundAt: built.groundAt },
     { links: initialLinks(episode) },
   );
 }

@@ -230,7 +230,7 @@ registerAction({
 
 registerAction({
   id: 'moveTo',
-  description: 'Desliza um objeto com id em linha reta até um ponto do local.',
+  description: 'Desliza um objeto com id em linha reta até um ponto do local; sem "y", acompanha o chão (morros) mantendo a altura sobre ele.',
   appliesTo: ['prop', 'item', 'phone', 'vehicle'],
   params: {
     to: { type: 'point2', description: 'destino [x, z] em coordenadas do local', required: true },
@@ -240,8 +240,15 @@ registerAction({
   duration: 1,
   compile(ctx) {
     const [x, z] = ctx.params.to as [number, number];
-    const writes = [{ channel: 'x', to: x }, { channel: 'z', to: z }];
+    const writes: ChannelWrite[] = [{ channel: 'x', to: x }, { channel: 'z', to: z }];
     if (ctx.params.y !== undefined) writes.push({ channel: 'y', to: ctx.params.y as number });
+    else if (ctx.services.groundAt) {
+      // On a hillside, what slides keeps its height over the ground instead of going into it.
+      const ground = ctx.services.groundAt;
+      const [x0, y0, z0] = [ctx.current('x'), ctx.current('y'), ctx.current('z')];
+      const above = y0 - ground(x0, z0);
+      writes.push({ channel: 'y', at: (u) => ground(x0 + (x - x0) * u, z0 + (z - z0) * u) + above });
+    }
     if (ctx.params.yaw !== undefined) writes.push({ channel: 'yaw', to: ctx.params.yaw as number });
     return { writes };
   },

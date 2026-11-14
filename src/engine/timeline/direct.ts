@@ -238,6 +238,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   // Every step compiles the track again to learn its length; routes are worked out once.
   const routes = new Map<string, WalkPath | null>();
   const services = {
+    groundAt: built.groundAt,
     findPath: nav && ((from: [number, number, number], to: Point2, elevation?: number) => {
       const key = JSON.stringify([from, to, elevation]);
       if (!routes.has(key)) routes.set(key, findPath(nav, from, to, elevation));

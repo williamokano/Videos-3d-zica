@@ -19,3 +19,11 @@ Referências em `../referencias/casa/`.
 > Quando Davi finalmente entrar, vindo das colinas com suas roupas de pastor, o contraste entre ele e os irmãos mais velhos será visualmente muito interessante.
 >
 > É exatamente esse tipo de detalhe que fará a série parecer um filme histórico, e não apenas uma coleção de imagens bíblicas.
+
+## Quarta rodada (2026-11-14)
+
+> A cabra ainda está entrando no chão no começo na escada meu amigo
+
+> Deposi que eliabe entra, a camera fica mostrando um pedaço da casa só com móveis e da pra ver uma minuscula parte de alguém se movendo, acho qeu a camera esta'errada. O profeta sentado está dentro da parede
+
+> Cada um que for rejeitado, quando os outros forem entrando na casa, a camera deve começar a seguir eles, eles passam a ser o subject, não quem estava antes. Legal mostrando eles voltando e meio tristes, mas podemos melhorar esses angulos

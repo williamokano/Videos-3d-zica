@@ -100,6 +100,8 @@ export interface WalkPath {
 export interface ActionServices {
   /** Route on foot between two places, or null when there is none. */
   findPath?(from: [number, number, number], to: [number, number], toElevation?: number): WalkPath | null;
+  /** Height of the location's ground at [x, z] (terrain), for things that slide over it. */
+  groundAt?(x: number, z: number): number;
 }
 
 /** Checks that need the whole track compiled, e.g. "is that door open by the time I get there?". */
