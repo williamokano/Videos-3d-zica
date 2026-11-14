@@ -54,3 +54,10 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [x] Ritmo menos seco: o Samuel examina cada filho com mais calma (e o Jessé apresenta), até 2:50
 - [x] O Davi chega acanhado ("Mandaste me chamar, pai?"), o Samuel diz "Aproxima-te", examina o Davi em silêncio, e só então "É este"
 - [x] O azeite cai na cabeça do Davi, não ao lado
+
+## 8. A casa de Jessé como casa israelita (terceira rodada; referências em referencias/casa/)
+- [ ] Paredes de pedra de campo arredondada com barro nas juntas, reboco gasto em partes, sem esquadro
+- [ ] Teto de vigas de madeira roliça com caniço/ramos por cima (nada de laje), postes de madeira segurando a viga
+- [ ] Mobília da época: banco de barro encostado na parede, prateleira de tábua com potes, banquinhos de palha, mó de pedra, cestos, panos listrados pendurados, nichos na parede, escada de mão, ervas secas
+- [ ] Casa menor e apertada; luz natural do fim da tarde entrando pela porta e pela janela (e pelas frestas do teto)
+- [ ] Cena: Samuel sentado num banco baixo, Jessé diante dele, os filhos entrando um por um pela porta; o Davi chega das colinas com a roupa de pastor (contraste com os irmãos)

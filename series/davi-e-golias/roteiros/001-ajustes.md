@@ -7,3 +7,15 @@ Texto do autor depois de assistir a prévia, como ele mandou:
 ## Segunda rodada (2026-11-14)
 
 > Começo do episódio o profeta sobe a escada e o animal entra na escada. Na cena pro cima dos ombros a camera pode ficar um pouco mais alta. Na camera da pessoa conversando com o davi ele filma davi de costas e a segunda pessoa, coloque o davi de frente e a segunda pessoa. Outra coisa, o roteiro, o profeta já escolhe Davi rápido demais, assim como ele julga os outros rápido demais, ainda temos 0:44 segundos de episódio, conseguimos dar um pouquinho mais de detalhe nessa parte da história? Ele analisa Davi um pouquinho e fala "é esse". E quando ele joga o liquido, não era pra ser na cabeça de davi? A camera vai rotacioanndo (bom plano) mas da pra ver o liquido caindo fora da cabeça dele, como se ele estivesse derrubando no chão. E quando Davi chegar ao invés de ele ir direto, talvez ele chegue um pouquinho acanhado e diga alguam coisa como "mandaste me chamar pai?". E o profeta diz, se aproxime, ou algo assim. Daí ele analisa um pouco davi, como se estivesse pensando e fala "é este". Algo assim. A histórai está muito "seca" e direta ao ponto
+
+## Terceira rodada (2026-11-14): a casa
+
+Referências em `../referencias/casa/`.
+
+> A porta e a janela melhorou, mas a casa em si ainda está muito quadradada, e com laje, não acho que as coisas antigas fossem assim. Referencias pra casa pra modelar
+
+> Minha recomendação narrativa: na cena em que Samuel visita Jessé, não colocaria os personagens em um grande salão. Colocaria Samuel sentado em um banco baixo, Jessé diante dele e os filhos entrando um por um pela porta. O ambiente seria apertado, intimista e iluminado pela luz natural.
+>
+> Quando Davi finalmente entrar, vindo das colinas com suas roupas de pastor, o contraste entre ele e os irmãos mais velhos será visualmente muito interessante.
+>
+> É exatamente esse tipo de detalhe que fará a série parecer um filme histórico, e não apenas uma coleção de imagens bíblicas.
