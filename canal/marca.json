@@ -1,0 +1,52 @@
+{
+  "channel": "historinhas.animadas.3d",
+  "name": "historinhas animadas 3D",
+  "tagline": "Grandes histórias, pequenas telas.",
+  "palette": {
+    "bg": "#161B3D",
+    "bg2": "#2A3373",
+    "text": "#FFF4E0",
+    "textShade": "#F2D9B1",
+    "accent": "#FFB627",
+    "accentShade": "#E8901A",
+    "accent2": "#FF5E5B",
+    "accent2Shade": "#D93F4C",
+    "ink": "#0D1028",
+    "shadow": "#0D1028"
+  },
+  "paletteRoles": {
+    "bg": "noite: fundo de toda arte do canal",
+    "bg2": "clarão do fundo (centro do degradê)",
+    "text": "creme de papel: títulos e texto",
+    "accent": "lanterna: destaque, número do episódio, estrelas",
+    "accent2": "coral: o selo 3D e chamadas (siga, novo)",
+    "ink": "tinta: contorno e espessura 3D, como o traço cel da engine"
+  },
+  "fonts": {
+    "title": "canal/fontes/Fredoka-Bold.ttf",
+    "titleSemi": "canal/fontes/Fredoka-SemiBold.ttf",
+    "body": "canal/fontes/Nunito-Medium.ttf",
+    "bodyBold": "canal/fontes/Nunito-ExtraBold.ttf"
+  },
+  "fontLicenses": {
+    "Fredoka": "canal/fontes/OFL-Fredoka.txt",
+    "Nunito": "canal/fontes/OFL-Nunito.txt",
+    "Cinzel": "canal/fontes/OFL-Cinzel.txt"
+  },
+  "logo": "canal/logo.png",
+  "profile": "canal/perfil.png",
+  "safeZones9x16": { "top": 0.14, "bottom": 0.20, "sides": 0.06 },
+  "series": {
+    "davi-e-golias": {
+      "name": "DAVI",
+      "subtitle": "Uma história de coragem e destino",
+      "seal": "canal/selo-serie-davi.png",
+      "titleFont": "canal/fontes/Cinzel-ExtraBold.ttf",
+      "subtitleFont": "canal/fontes/Cinzel-SemiBold.ttf",
+      "accent": "#E0A84E",
+      "bg": "#3B1F14",
+      "hashtags": ["#Davi", "#DaviEGolias", "#HistóriasBíblicas", "#AnimaçãoBíblica", "#1Samuel"]
+    }
+  },
+  "hashtags": ["#historinhasanimadas", "#animação3d", "#históriaanimada", "#historinhas", "#desenhoanimado"]
+}
