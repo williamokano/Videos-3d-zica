@@ -43,10 +43,12 @@ def marca(serie):
     s = m.get('series', {}).get(serie, {}) if serie else {}
     if s.get('accent'):
         pal['accent'] = s['accent']
+    if s.get('bg'):
+        pal['bg'] = s['bg']
     title_font = os.path.join(ROOT, s['titleFont']) if s.get('titleFont') else fonts['title']
     logo = os.path.join(ROOT, m['logo']) if m.get('logo') else None
     seal = os.path.join(ROOT, s['seal']) if s.get('seal') else None
-    return {'pal': pal, 'title': title_font, 'body': fonts['body'], 'logo': logo, 'seal': seal,
+    return {'pal': pal, 'title': title_font, 'body': fonts.get('bodyBold', fonts['body']), 'logo': logo, 'seal': seal,
             'channel': m.get('channel', 'historinhas.animadas.3d')}
 
 
