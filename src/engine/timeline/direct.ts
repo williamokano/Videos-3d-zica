@@ -55,7 +55,7 @@ export interface Step {
 }
 
 type Point2 = [number, number];
-type Shot = { pos: Vec3; lookAt: Vec3; fov?: number; lens?: number };
+type Shot = { pos: Vec3; lookAt: Vec3; fov?: number; lens?: number; shake?: number };
 
 /** A character of the cast, as the script sees it. Every method is one step: it starts now and the clock moves to its end. */
 export interface Actor {
@@ -172,7 +172,12 @@ export interface Director {
     /** Cut to the eyes of a character. */
     fpv(who: Actor | string, options?: { fov?: number; pitch?: number; lens?: number }): void;
     /** Cut to behind and above a character, following them. */
-    thirdPerson(who: Actor | string, options?: { distance?: number; height?: number; pitch?: number; fov?: number; lens?: number }): void;
+    thirdPerson(who: Actor | string, options?: { distance?: number; height?: number; pitch?: number; fov?: number; lens?: number; shake?: number }): void;
+    /**
+     * Go round a point over `duration` seconds, looking at it, from angle `from` to `to` (degrees; 0 is south of the
+     * point, 90 east, as seen from above). Starts with a cut unless `cut: false`. The clock does not move.
+     */
+    orbit(options: { center: Vec3; radius: number; height: number; from: number; to: number; duration: number; fov?: number; lens?: number; shake?: number; cut?: boolean }): void;
   };
 }
 
@@ -404,6 +409,18 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       moveTo: (shot) => key(shot),
       fpv: (who, options) => key({ ...options, cut: keys.length > 0 || undefined, mode: 'fpv', follow: idOf(who) }),
       thirdPerson: (who, options) => key({ ...options, cut: keys.length > 0 || undefined, mode: 'third_person', follow: idOf(who) }),
+      orbit: ({ center, radius, height, from, to, duration, fov, lens, shake, cut = true }) => {
+        if (!(duration > 0)) throw new Error('d.camera.orbit: "duration" precisa ser maior que zero.');
+        // A key every 10 degrees or so keeps the curve between keys close to a circle.
+        const steps = Math.max(2, Math.ceil(Math.abs(to - from) / 10));
+        const start = now;
+        for (let k = 0; k <= steps; k++) {
+          const a = ((from + ((to - from) * k) / steps) * Math.PI) / 180;
+          now = start + (duration * k) / steps;
+          key({ pos: [center[0] + Math.sin(a) * radius, center[1] + height, center[2] + Math.cos(a) * radius], lookAt: center, fov, lens, shake, ...(k === 0 && cut && keys.length > 0 ? { cut: true } : {}) });
+        }
+        now = start;
+      },
     },
   };
   script(director);

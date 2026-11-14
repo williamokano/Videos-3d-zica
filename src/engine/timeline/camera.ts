@@ -24,6 +24,11 @@ export interface CameraKey {
    * the edges curve. For moments of tension, not all the time: it bends whatever has to be read.
    */
   lens?: number;
+  /**
+   * Shake, from 0 (steady, the default) to 1: a camera held in the hand while running (about 0.3), the ground
+   * trembling under a giant's steps (short bursts near 1). Varies between keys, like `fov`.
+   */
+  shake?: number;
   /** Hard cut: jump to this key instead of moving from the previous one. A cut starts a new shot. */
   cut?: boolean;
   /** Mode of the shot this key starts (first key or a cut). Default "cinematic". */
@@ -128,6 +133,7 @@ export function validateCamera(keys: CameraKey[], castIds: string[] = []): void 
       throw new Error(`Câmera, keyframe ${i + 1} (aos ${key.t}s): ${message}`);
     };
     if (key.lens !== undefined && !(key.lens >= 0 && key.lens <= 1)) fail('"lens" precisa ser um número de 0 a 1.');
+    if (key.shake !== undefined && !(key.shake >= 0 && key.shake <= 1)) fail('"shake" precisa ser um número de 0 a 1.');
     if (i > 0 && key.t < keys[i - 1].t) fail('os keyframes precisam estar em ordem de tempo.');
     const starts = i === 0 || key.cut;
     if (!starts && (key.mode || key.follow)) fail('"mode" e "follow" só podem mudar num corte; adicione "cut": true.');
@@ -202,9 +208,32 @@ function attached(shot: CameraKey, a: CameraKey, b: CameraKey | undefined, t: nu
   };
 }
 
+/** Up to 6 cm and 1.2° of wobble at full shake: a few slow waves plus a faster jitter, the same at every play. */
+function shaken(pose: CameraPose, amount: number, t: number): CameraPose {
+  if (amount <= 0.001) return pose;
+  const wave = (f: number, phase: number): number => Math.sin(t * f + phase) * 0.6 + Math.sin(t * f * 2.7 + phase * 1.9) * 0.3 + Math.sin(t * f * 7.3 + phase * 0.7) * 0.1;
+  const move = 0.06 * amount;
+  const aim = 0.35 * amount;
+  const [dx, dy, dz] = [wave(5.1, 0.3) * move, wave(6.3, 2.1) * move, wave(4.7, 4.2) * move];
+  return {
+    ...pose,
+    pos: [pose.pos[0] + dx, pose.pos[1] + dy, pose.pos[2] + dz],
+    lookAt: [pose.lookAt[0] + dx + wave(3.9, 1.1) * aim, pose.lookAt[1] + dy + wave(4.4, 3.3) * aim, pose.lookAt[2] + dz + wave(3.1, 5.5) * aim],
+  };
+}
+
 /** Camera pose at time t. `stage` is needed when the track has fpv or third_person shots. */
 export function evaluateCamera(keys: CameraKey[], t: number, stage?: CameraStage): CameraPose {
   if (!keys.length) throw new Error('Camera track has no keyframes.');
+  let i = keys.length - 1;
+  while (i > 0 && keys[i].t > t) i--;
+  const a = keys[i];
+  const b = t > a.t && keys[i + 1] && !keys[i + 1].cut ? keys[i + 1] : undefined;
+  const shake = (a.shake ?? 0) + (b ? ((b.shake ?? 0) - (a.shake ?? 0)) * ((t - a.t) / (b.t - a.t)) : 0);
+  return shaken(steadyCamera(keys, t, stage), shake, t);
+}
+
+function steadyCamera(keys: CameraKey[], t: number, stage?: CameraStage): CameraPose {
   let i = keys.length - 1;
   while (i > 0 && keys[i].t > t) i--;
   const a = keys[i];
