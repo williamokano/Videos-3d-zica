@@ -6,7 +6,7 @@ import { buildDoor } from './doors';
 import { buildWindow } from './windows';
 import { contains, subtractRects, union, type Rect } from './rect';
 import { layoutStairs, partHeight, type StairLayout } from './stairs';
-import { archFill, rusticBlock } from './rustic';
+import { archFill, beamRoof, rusticBlock } from './rustic';
 import { buildTerrainMesh, terrainHeight } from './terrain';
 import type { Location, Prop } from './types';
 import { DEFAULT_ROOM_H, DOOR_H, WALL_T, roomOpenings, roomWalls, sideGeometry, type WallPiece } from './walls';
@@ -478,7 +478,9 @@ export function buildLocation(loc: Location): BuiltLocation {
     if (!room.outdoor) {
       // The ceiling hangs just under the floor of the storey above.
       const top = elevation + height - 0.06;
-      for (const r of subtractRects(footprint, holesAt(top))) ceiling.add(box(r, top - 0.06, top, mat('#e9e4d8')));
+      // A house built by hand has beams and reeds, not a slab.
+      if (room.rustic) ceiling.add(beamRoof(footprint, elevation + height - 0.32));
+      else for (const r of subtractRects(footprint, holesAt(top))) ceiling.add(box(r, top - 0.06, top, mat('#e9e4d8')));
     }
     g.add(ceiling);
     root.add(g);

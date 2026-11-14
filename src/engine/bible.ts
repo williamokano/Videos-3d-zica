@@ -13,6 +13,10 @@ export interface Environment {
   fogFar: number;
   /** How much of the sky has clouds, from 0 (clear) to 1 (overcast). */
   clouds: number;
+  /** Where the sun is, seen from the ground: degrees round from north (90 east, 180 south, 270 west). */
+  sunAzimuth: number;
+  /** How high the sun is, in degrees over the horizon (low sun: long shadows, light deep into a room). */
+  sunElevation: number;
 }
 
 export const DEFAULT_ENVIRONMENT: Environment = {
@@ -24,6 +28,8 @@ export const DEFAULT_ENVIRONMENT: Environment = {
   fogNear: 70,
   fogFar: 260,
   clouds: 0,
+  sunAzimuth: 140,
+  sunElevation: 72,
 };
 
 /**

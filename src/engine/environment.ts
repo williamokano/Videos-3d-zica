@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import type { Environment } from './bible';
 
-/** Where the sun is from what it lights. */
-const SUN_OFFSET = [6, 30, 7] as const;
+/** How far the sun is placed from what it lights, along its direction. */
+const SUN_DISTANCE = 31;
 
 /** Sky, sun, ambient light and fog. `apply` restyles everything from a resolved Environment. */
 export class EnvironmentRig {
@@ -11,6 +11,8 @@ export class EnvironmentRig {
   private readonly sky: THREE.Mesh<THREE.SphereGeometry, THREE.ShaderMaterial>;
   private readonly sun = new THREE.DirectionalLight();
   private readonly ambient = new THREE.HemisphereLight();
+  /** From what the sun lights to the sun, SUN_DISTANCE long. */
+  private readonly sunFrom = new THREE.Vector3(6, 30, 7);
   /** Puffy clouds high up in a ring round the place, shown up to how much of the sky has clouds. */
   private readonly clouds = new THREE.Group();
   private readonly cloudMaterial = new THREE.MeshBasicMaterial({ color: '#ffffff', vertexColors: true, transparent: true, opacity: 0.95, fog: false, depthWrite: false });
@@ -30,8 +32,8 @@ export class EnvironmentRig {
           '#include <colorspace_fragment>\n}',
       }),
     );
-    this.sun.position.set(12 + SUN_OFFSET[0], SUN_OFFSET[1], 5 + SUN_OFFSET[2]);
     this.sun.target.position.set(12, 0, 5);
+    this.sun.position.set(12 + this.sunFrom.x, this.sunFrom.y, 5 + this.sunFrom.z);
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(4096, 4096);
     const cam = this.sun.shadow.camera;
@@ -54,7 +56,7 @@ export class EnvironmentRig {
     // Snapped to a coarse grid, so the shadows do not shimmer as the camera moves.
     const [x, y, z] = [ahead.x, ahead.y, ahead.z].map((v) => Math.round(v / 4) * 4);
     this.sun.target.position.set(x, y, z);
-    this.sun.position.set(x + SUN_OFFSET[0], y + SUN_OFFSET[1], z + SUN_OFFSET[2]);
+    this.sun.position.set(x + this.sunFrom.x, y + this.sunFrom.y, z + this.sunFrom.z);
     this.sun.target.updateMatrixWorld();
   }
 
@@ -109,6 +111,10 @@ export class EnvironmentRig {
     this.sky.material.uniforms.top.value.set(env.skyTop);
     this.sky.material.uniforms.horizon.value.set(env.skyHorizon);
     this.sun.color.set(env.sunColor);
+    // North is -z and east +x; the azimuth turns from north toward east.
+    const [az, el] = [THREE.MathUtils.degToRad(env.sunAzimuth ?? 140), THREE.MathUtils.degToRad(env.sunElevation ?? 72)];
+    this.sunFrom.set(Math.sin(az) * Math.cos(el), Math.sin(el), -Math.cos(az) * Math.cos(el)).multiplyScalar(SUN_DISTANCE);
+    this.sun.position.copy(this.sun.target.position).add(this.sunFrom);
     this.sun.intensity = env.sunIntensity;
     // The sky tints the ambient light without washing out object colors.
     this.ambient.color.set('#ffffff').lerp(new THREE.Color(env.skyHorizon), 0.3);
