@@ -8,3 +8,4 @@
 - **Tremor de câmera é tempero, não regra.** Pus `shake` 0.35 na abertura e o autor achou que chacoalhava demais. Tremor fica entre 0.03 e 0.15, só em corrida ou passo de gigante, e por pouco tempo.
 - **Câmera não entra em cenário fechado nem atravessa pano ou parede.** A órbita dentro da tenda passou pelo pano e tapou tudo. Em lugar fechado, filme pela abertura (de fora para dentro, por cima do ombro) e confira cada quadro do movimento, não só o começo e o fim.
 - **No vídeo vertical o campo lateral é estreito.** Órbita em volta do meio de duas pessoas perde as duas. Deixe as pessoas na linha do olhar da câmera (uma atrás da outra) e gire pouco.
+- **Com ajudantes trabalhando, nunca `git add -A` numa pasta que eles mexem.** Um commit meu levou o trabalho pela metade de outro agente (e um teste temporário dele). Adicione os arquivos pelo nome, ou confira `git show --stat` antes de seguir.
