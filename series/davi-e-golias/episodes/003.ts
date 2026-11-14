@@ -1,3 +1,4 @@
+import type { CastMember } from '../../../src/engine/character/cast';
 import { direct, type Director } from '../../../src/engine/timeline/direct';
 import { IRMAOS, LINHA, TOPO, atentos, encolhem, filaDeIsrael, filaFilisteia, ids, rodaDaFogueira } from '../cena';
 
@@ -63,6 +64,9 @@ const perto = (s: { pos: V3; lookAt: V3 }, k = 0.15): { pos: V3; lookAt: V3 } =>
   lookAt: s.lookAt,
 });
 
+/** A voz de um figurante que fala, por cima da ficha de soldado. */
+const voz = (m: CastMember, id: string | undefined): CastMember => (id ? { ...m, look: { ...m.look, voice: { id } } } : m);
+
 export default direct(
   {
     episode: 3,
@@ -80,8 +84,9 @@ export default direct(
       { character: 'abinadabe', at: [...IRMAOS.abinadabe], yaw: 180 },
       { character: 'saul', at: REI, yaw: 180 },
       { character: 'abner', at: [-2.1, -41.0], yaw: 160 },
-      ...fila,
-      ...fogueira,
+      // Os soldados que falam: o 6 e o 12 conversam, então vozes bem diferentes (ver canal/vozes.md).
+      ...fila.map((m) => voz(m, { 'israel-6': 'tS45q0QcrDHqHoaWdCDR', 'israel-12': '2CECaLAGTS5NRGxgbcxr' }[m.id!])),
+      ...fogueira.map((m) => voz(m, { 'fogueira-2': 'mBxe7tYxRAMLpIP3fPEp' }[m.id!])),
       ...filisteus,
       // Belém, de madrugada.
       { id: 'davi-belem', character: 'davi', at: [BX + 6.4, BZ + 11.6], yaw: -130 },
@@ -130,8 +135,18 @@ export default direct(
     d.background(() => escudeiro.pickUp('escudo-golias', { hand: 'left' }));
     d.background(() => daviB.pickUp('cajado-belem', { hand: 'left' }));
 
+    /** Um som de fundo (ambiente ou música) de `from` até agora, com entrada e saída suaves. */
+    const ambiente = (name: string, from: number, volume?: number) => {
+      const end = d.now;
+      d.at(from);
+      d.sound(name, { length: end - from, fade: 0.8, ...(volume !== undefined ? { volume } : {}) });
+      d.at(end);
+    };
+    let cena = d.now;
+
     // ---- 1. O desafio (0:00) ----
     // [GANCHO] Rente ao chão do vale; o gigante desce, o escudeiro na frente. A câmera sobe até o rosto, que já grita.
+    d.sound('passos-gigante');
     d.camera.cut({ pos: [1.6, 0.35, 8.2], lookAt: [0.1, 0.6, 13.5], fov: 50, shake: 0.06 });
     d.together(
       () => escudeiro.walkTo([-1.4, 10.8], { speed: 1.1 }),
@@ -156,6 +171,7 @@ export default direct(
     d.camera.cut({ pos: [26, 22, -16], lookAt: [0, 2, 10], fov: 50 });
     d.camera.moveTo({ pos: [22, 17, -10], lookAt: [0, 2, 11], fov: 46 });
     encolhem(d, [...tropa, ...irmaos], 0);
+    d.sound('titulo-impacto');
     d.titleCard({ title: 'DAVI', subtitle: 'Uma história de coragem e destino', episode: 'Episódio 3 · Quarenta dias' }, { duration: 3.6 });
     // De baixo para cima, o gigante e a aposta.
     d.camera.cut({ pos: [-2.2, 0.9, 7.6], lookAt: [0, 3.2, 12.6], fov: 52 });
@@ -189,6 +205,10 @@ export default direct(
     d.narrate('E nenhum homem de Israel teve coragem de responder.');
     // Noite. A roda da fogueira.
     // A noite pela metade: o céu escuro, mas os rostos na roda da fogueira ainda se veem.
+    // O vale e a ameaça, do primeiro quadro até a noite.
+    ambiente('vale-vento', cena);
+    ambiente('musica-ameaca', cena);
+    cena = d.now;
     d.world.rule('entardecer', 0.35, { duration: 0 });
     d.world.rule('noite', 0.65, { duration: 0 });
     d.camera.cut({ pos: [-7.0, TOPO + 1.8, -42.0], lookAt: [-10.6, TOPO + 1.1, -38.9], fov: 46 });
@@ -197,6 +217,8 @@ export default direct(
     d.wait(0.6);
 
     // ---- 3. Belém, de madrugada (0:42) ----
+    ambiente('fogueira-noite', cena);
+    cena = d.now;
     d.world.rule('noite', false, { duration: 0 });
     d.world.rule('entardecer', false, { duration: 0 });
     d.world.rule('amanhecer', true, { duration: 0 });
@@ -234,6 +256,10 @@ export default direct(
     });
     d.background(() => {
       d.wait(1.6);
+      d.sound('jumento-passos', { length: vai.end - vai.start - 1.6, fade: 0.5 });
+    });
+    d.background(() => {
+      d.wait(1.6);
       d.do('jumento-belem', 'moveTo', { to: [saida[0] - 0.9, saida[1] - 1.6], yaw: rumo([BX + 4.9, BZ + 12.8], saida) }, { duration: vai.end - vai.start - 1.6, ease: 'linear' });
     });
     jesse.behave('attend', { object: 'davi-belem', mood: 'worried' });
@@ -241,6 +267,11 @@ export default direct(
     d.wait(3.0);
 
     // ---- 4. O acampamento (0:55) ----
+    ambiente('manha-belem', cena);
+    ambiente('musica-partida', cena);
+    cena = d.now;
+    const acampamento = d.now;
+    d.sound('grito-guerra');
     d.world.rule('amanhecer', false, { duration: 0 });
     // [GANCHO] Por trás do Davi, que chega com o jumento: lá na frente, o exército sai para a fila com o grito de
     // guerra, lanças e braços para cima. (17:20-21)
@@ -271,6 +302,7 @@ export default direct(
     // Ele corre até a fila. A câmera acompanha de lado, de longe.
     const atras: [number, number] = [3.3, -LINHA - 2.3];
     const corrida = d.background(() => davi.runTo(atras, { speed: 3.6 }));
+    d.sound('corrida-capim', { length: corrida.end - corrida.start, fade: 0.3 });
     d.camera.track('davi', { from: [-14.5, TOPO + 4.6, -33.5], to: [-9.0, TOPO + 4.4, -33.0], duration: corrida.end - d.now + 0.3, fov: 46, shake: 0.05 });
     d.at(corrida.end - 1.5);
     davi.say('Eliabe! Abinadabe! Samá!', { tone: 'animado', gesture: 0 });
@@ -286,6 +318,8 @@ export default direct(
     davi.say('O pai mandou saber como estais.', { to: sama, gesture: 0.4 });
 
     // ---- 5. A afronta (1:12) ----
+    ambiente('musica-entrada', cena);
+    cena = d.now;
     // [GANCHO] Lá de baixo, o grito. (17:23)
     d.camera.cut({ pos: [1.4, 1.1, 8.2], lookAt: [0, 3.1, 13.2], fov: 42 });
     d.camera.moveTo({ pos: [1.2, 1.2, 8.8], lookAt: [0, 3.1, 13.2], fov: 40 });
@@ -330,6 +364,7 @@ export default direct(
     davi.say('Quem é esse filisteu, para afrontar os exércitos do Deus vivo?', { tone: 'firme', gesture: 0.4 });
 
     // ---- 6. A bronca (1:38) ----
+    ambiente('musica-ameaca', cena, 0.2);
     // [Liberdade: no texto ele só fala.] Os dois na linha da câmera: quem fala de frente, o outro de costas na borda.
     davi.turnTo(bronca);
     davi.behave('attend', { object: 'eliabe' });
@@ -407,6 +442,7 @@ export default direct(
     // O leão e o urso: o Davi de frente, a câmera girando devagar do lado do rei.
     const p = d.where('saul');
     d.camera.orbit({ center: [(p[0] + DIANTE_DO_REI[0]) / 2 + 0.3, p[1] + 1.45, p[2]], radius: 3.8, height: 0.35, from: -60, to: -46, duration: 12, fov: 40 });
+    const coragem = d.now;
     davi.say('Quando um leão ou um urso levava uma ovelha, eu ia atrás dele e a tirava da sua boca.', { to: saul, gesture: 0.6 });
     davi.say('Teu servo matou o leão e o urso. Esse filisteu será como um deles.', { to: saul, gesture: 0.5 });
     // O Davi de perto.
@@ -427,6 +463,8 @@ export default direct(
     saul.say('Vai. E que o Senhor esteja contigo.', { to: davi, gesture: 0.2 });
 
     // ---- 8. A beira do vale (2:30) ----
+    ambiente('acampamento-dia', acampamento);
+    cena = d.now;
     // O Davi vai até a beira do monte. Lá embaixo, pequeno, o gigante; ele levanta a cabeça.
     const beira: [number, number] = [0, -LINHA + 0.6];
     const desce = d.background(() => {
@@ -449,7 +487,12 @@ export default direct(
       options: [{ label: 'DEIXAVA', icon: '🪨' }, { label: 'SEGURAVA', icon: '🛡️' }],
       cta: 'Comenta DEIXAVA ou SEGURAVA 👇 e marca o amigo que encarava um gigante',
     }, { duration: 6 });
-    d.at(d.now - 6);
+    const fim = d.now;
+    d.at(fim - 6);
     d.narrate('No próximo episódio: o gigante.');
+    // O vento do vale na beira do monte, e o tema da abertura crescendo desde o leão e o urso até o fim.
+    d.at(Math.max(d.now, fim));
+    ambiente('vale-vento', cena);
+    ambiente('musica-abertura', coragem);
   },
 );

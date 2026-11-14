@@ -1,6 +1,9 @@
 {
   "id": "abner",
   "name": "Abner",
+  "voice": {
+    "id": "Qrdut83w0Cr152Yb4Xn3"
+  },
   "height": 1.84,
   "build": 1.12,
   "skin": "#c78f66",

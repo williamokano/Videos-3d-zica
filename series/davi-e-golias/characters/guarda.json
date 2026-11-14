@@ -1,6 +1,9 @@
 {
   "id": "guarda",
   "name": "Guarda das bagagens",
+  "voice": {
+    "id": "rpNe0HOx7heUulPiOEaG"
+  },
   "height": 1.68,
   "build": 1.06,
   "skin": "#c48b62",

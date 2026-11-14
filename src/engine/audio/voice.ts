@@ -64,6 +64,7 @@ export const TONES: Record<string, string> = {
   bravo: 'angry',
   assustado: 'scared',
   animado: 'excited',
+  surpreso: 'surprised',
   triste: 'sad',
   transe: 'monotone, distant, hypnotized',
   ironico: 'sarcastic',

@@ -1,6 +1,9 @@
 {
   "id": "golias",
   "name": "Golias",
+  "voice": {
+    "id": "GIuLCSVfgJaUuh7hYOY8"
+  },
   "height": 3.1,
   "build": 1.35,
   "headScale": 1.75,

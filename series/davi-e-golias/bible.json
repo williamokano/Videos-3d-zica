@@ -173,6 +173,34 @@
         "duration": 15,
         "loop": true,
         "volume": 0.25
+      },
+      "vale-vento": {
+        "prompt": "wide open valley between two hills, steady dry wind gusting, distant murmur of two armies far apart, faint bronze clinks, no music, no voices up close",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.3
+      },
+      "acampamento-dia": {
+        "prompt": "ancient army camp by day, low murmur of many men talking far away, bronze armor and spears clinking, a donkey braying in the distance, campfire crackling, wind, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.28
+      },
+      "fogueira-noite": {
+        "prompt": "soldiers' campfire outdoors at night, fire crackling and popping close, crickets, wind, quiet, no voices, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "passos-gigante": {
+        "prompt": "a giant walking slowly toward the camera, very heavy footsteps thudding on dry ground, bronze scale armor clanking with each step, low rumble",
+        "duration": 4,
+        "volume": 0.55
+      },
+      "grito-guerra": {
+        "prompt": "ancient army war cry on a hillside, hundreds of men shouting together, spears beating on shields, outdoors, slightly distant, short",
+        "duration": 4,
+        "volume": 0.45
       }
     }
   },
