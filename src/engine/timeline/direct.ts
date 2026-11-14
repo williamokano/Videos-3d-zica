@@ -19,7 +19,7 @@ import { DEFAULT_MODEL, NARRATOR, spokenText, takeKey, type LineVoice, type Take
 import type { ChatMessage, PhoneSetup } from '../ui/phone';
 import type { EndCard } from '../ui/endcard';
 import type { TitleCard } from '../ui/titlecard';
-import type { BuiltLocation } from '../world/build';
+import { clearFraction, type BuiltLocation } from '../world/build';
 import { buildNav, findPath } from '../world/nav';
 import { validateCamera, type CameraKey, type Vec3 } from './camera';
 import type { Episode, EpisodeProp } from './episode';
@@ -469,9 +469,15 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
         const apart = Math.hypot(pb[0] - pa[0], pb[2] - pa[2]);
         // Far enough for both to fit across a narrow vertical picture, with room around them.
         const across = (2 * Math.tan(((fov / 2) * Math.PI) / 180) * 9) / 16;
-        const radius = distance ?? Math.max(2.6, (apart + 1.4) / across);
         // Off the line between them, on the chosen side: heading of the perpendicular, as orbit counts it.
         const facing = (Math.atan2(-(pb[2] - pa[2]) * side, (pb[0] - pa[0]) * side) * 180) / Math.PI + turn;
+        let radius = distance ?? Math.max(2.6, (apart + 1.4) / across);
+        // Indoors, come in rather than go through a wall: the shortest free distance along the whole swing.
+        for (const angle of [facing - swing / 2, facing, facing + swing / 2]) {
+          const a = (angle * Math.PI) / 180;
+          const far: Vec3 = [center[0] + Math.sin(a) * radius, center[1], center[2] + Math.cos(a) * radius];
+          radius = Math.min(radius, Math.max(1.2, clearFraction(built.colliders, center, far) * radius - 0.3));
+        }
         director.camera.orbit({ center, radius, height: 0, from: facing - swing / 2, to: facing + swing / 2, duration, fov });
       },
       orbit: ({ center, radius, height, from, to, duration, fov, lens, shake, cut = true }) => {

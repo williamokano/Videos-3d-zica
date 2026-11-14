@@ -156,29 +156,43 @@
    ],
    "elevation": 10.0,
    "height": 3.0,
+   "rustic": true,
    "floorColor": "#8c7356",
-   "wallColor": "#c9b48e",
+   "wallColor": "#c4ad86",
    "openings": [
     {
      "id": "porta-jesse",
      "wall": "s",
      "type": "door",
      "at": 4.5,
-     "width": 1.4
+     "width": 1.3,
+     "leaf": {
+      "style": "planks",
+      "open": 1,
+      "angle": 100
+     }
     },
     {
+     "id": "janela-leste",
      "wall": "e",
      "type": "window",
      "at": 2.2,
-     "width": 0.7,
-     "frame": false
+     "width": 0.8,
+     "frame": {
+      "kind": "shutters",
+      "open": 0.5
+     }
     },
     {
+     "id": "janela-oeste",
      "wall": "w",
      "type": "window",
      "at": 3.6,
-     "width": 0.7,
-     "frame": false
+     "width": 0.8,
+     "frame": {
+      "kind": "shutters",
+      "open": 0.8
+     }
     }
    ],
    "props": [
@@ -240,8 +254,8 @@
     {
      "asset": "ancient.jar",
      "pos": [
-      8.3,
-      0.7
+      8.5,
+      2.2
      ],
      "params": {
       "count": 3
@@ -250,10 +264,9 @@
     {
      "asset": "ancient.chest",
      "pos": [
-      0.7,
-      4.6
-     ],
-     "rot": 90
+      7.9,
+      0.7
+     ]
     },
     {
      "asset": "ancient.lampStand",
@@ -458,47 +471,51 @@
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.seatStone",
    "pos": [
     -2.2,
-    -24.9
+    -24.3
    ],
    "params": {
     "seed": 80,
-    "size": 0.5
+    "height": 0.42,
+    "width": 0.55
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.seatStone",
    "pos": [
     -1.0,
-    -24.9
+    -24.3
    ],
    "params": {
     "seed": 81,
-    "size": 0.5
+    "height": 0.42,
+    "width": 0.55
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.seatStone",
    "pos": [
     1.6,
-    -24.9
+    -24.3
    ],
    "params": {
     "seed": 82,
-    "size": 0.5
+    "height": 0.42,
+    "width": 0.55
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.seatStone",
    "pos": [
     3.0,
-    -24.9
+    -24.5
    ],
    "params": {
     "seed": 83,
-    "size": 0.5
+    "height": 0.42,
+    "width": 0.55
    }
   },
   {
@@ -1332,6 +1349,18 @@
    "params": {
     "seed": 7,
     "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.seatStone",
+   "pos": [
+    -32.9,
+    34.6
+   ],
+   "params": {
+    "seed": 9,
+    "height": 0.55,
+    "width": 0.65
    }
   },
   {

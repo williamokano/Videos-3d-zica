@@ -98,8 +98,10 @@ for x, rot in ((-26, 90), (26, 90)):
 taken += [(0, MURO_Z, 6), (-15, MURO_Z, 11), (15, MURO_Z, 11)]
 
 # Logo do lado de dentro do portão, no plano, onde os anciãos se sentam: pedras como bancos e uma oliveira de sombra.
-for i, x in enumerate((-2.2, -1.0, 1.6, 3.0)):
-    prop("ancient.rock", x, MURO_Z - 4.9, params={"seed": 80 + i, "size": 0.5})
+# Os bancos: pedras de topo chato onde os anciãos se sentam (os episódios põem cada um em cima de uma).
+ANCIAOS = [(-2.2, -24.3), (-1.0, -24.3), (1.6, -24.3), (3.0, -24.5)]
+for i, (x, z) in enumerate(ANCIAOS):
+    prop("ancient.seatStone", x, z, params={"seed": 80 + i, "height": 0.42, "width": 0.55})
 prop("ancient.oliveTree", -6.5, MURO_Z - 6, params={"seed": 12})
 prop("ancient.jar", 5.2, MURO_Z - 4.2, params={"count": 2})
 taken += [(-1.6, MURO_Z - 4.9, 2), (2.3, MURO_Z - 4.9, 2), (-6.5, MURO_Z - 6, 2.5)]
@@ -126,12 +128,13 @@ casa_jesse = {
     "size": [cw, cd],
     "elevation": TOPO,
     "height": 3.0,
+    "rustic": True,
     "floorColor": "#8c7356",
-    "wallColor": "#c9b48e",
+    "wallColor": "#c4ad86",
     "openings": [
-        {"id": "porta-jesse", "wall": "s", "type": "door", "at": 4.5, "width": 1.4},
-        {"wall": "e", "type": "window", "at": 2.2, "width": 0.7, "frame": False},
-        {"wall": "w", "type": "window", "at": 3.6, "width": 0.7, "frame": False},
+        {"id": "porta-jesse", "wall": "s", "type": "door", "at": 4.5, "width": 1.3, "leaf": {"style": "planks", "open": 1, "angle": 100}},
+        {"id": "janela-leste", "wall": "e", "type": "window", "at": 2.2, "width": 0.8, "frame": {"kind": "shutters", "open": 0.5}},
+        {"id": "janela-oeste", "wall": "w", "type": "window", "at": 3.6, "width": 0.8, "frame": {"kind": "shutters", "open": 0.8}},
     ],
     "props": [
         {"asset": "ancient.rug", "pos": [4.5, 3.4], "params": {"width": 5.4, "depth": 3.4, "color": "#7a3b2a"}},
@@ -139,8 +142,8 @@ casa_jesse = {
         {"asset": "ancient.cushion", "pos": [3.0, 1.0], "params": {"color": "#8a5a2a"}},
         {"asset": "ancient.cushion", "pos": [6.0, 1.0], "params": {"color": "#5a6a3a"}},
         {"asset": "ancient.basket", "pos": [0.8, 0.8], "params": {"bread": 1}},
-        {"asset": "ancient.jar", "pos": [8.3, 0.7], "params": {"count": 3}},
-        {"asset": "ancient.chest", "pos": [0.7, 4.6], "rot": 90},
+        {"asset": "ancient.jar", "pos": [8.5, 2.2], "params": {"count": 3}},
+        {"asset": "ancient.chest", "pos": [7.9, 0.7]},
         {"asset": "ancient.lampStand", "pos": [0.6, 2.6], "params": {"intensity": 7}},
         {"asset": "ancient.lampStand", "pos": [8.4, 3.4], "params": {"intensity": 7}},
         {"asset": "ancient.lampStand", "pos": [7.2, 5.9], "params": {"kind": "stone", "intensity": 6}},
@@ -175,6 +178,9 @@ for i in range(10):
 # ---- O pasto: o rebanho, a pedra do Davi, oliveiras e arbustos ----
 px, pz = PEDRA_DAVI
 prop("ancient.boulder", px, pz, params={"seed": 7, "size": 1.3})
+# Onde o Davi se senta para tocar, ao lado do rochedo.
+ASSENTO = (px + 1.1, pz + 0.6)
+prop("ancient.seatStone", ASSENTO[0], ASSENTO[1], params={"seed": 9, "height": 0.55, "width": 0.65})
 taken.append((px, pz, 1.5))
 prop("ancient.flock", px + 7, pz + 3, params={"count": 22, "width": 18, "depth": 12, "seed": 5})
 taken.append((px + 7, pz + 3, 9))

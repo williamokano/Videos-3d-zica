@@ -35,14 +35,14 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 
 ## 6. Ajustes do autor em "O escolhido" (2026-11-14, ele assistiu a prévia: "99%")
 Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
-- [ ] Davi toca harpa sentado em nada; os anciãos também sentam em nada: sentar em algo de verdade (pedra-assento, banco de pedra)
-- [ ] Uma ovelha do rebanho afunda na terra (rebanho em encosta): cada ovelha no chão sob ela
-- [ ] O filho mais perto do baú se sobrepõe ao baú: tirar o baú do caminho
-- [ ] Câmera que acompanha: quando o Samuel anda, câmera mais afastada que gira e se move para manter ele em quadro (nada de plano travado com gente saindo)
-- [ ] Samá correndo para chamar o Davi: em vez de terceira pessoa de videogame, câmera semifixa de longe, que acompanha e vai na direção dele; a cena não pode perder o foco das pessoas
-- [ ] Câmeras menos coladas em geral
-- [ ] Nuvens no céu
-- [ ] Casa de Jessé menos "moderna": paredes irregulares de pedra e barro, porta e janela de madeira antiga, sem esquadro perfeito
-- [ ] Fogo das fogueiras mais vivo e chama da lamparina melhor
-- [ ] Unção: câmera colada demais e o Davi ajoelhado mal se vê; plano mais aberto, de lado, com uma pequena rotação em volta dos dois
-- [ ] Cenas de duas pessoas: pegar as duas meio de lado, com uma pequena rotação em volta delas
+- [x] Davi toca harpa sentado em nada; os anciãos também sentam em nada: sentar em algo de verdade (pedra-assento, banco de pedra)
+- [x] Uma ovelha do rebanho afunda na terra (rebanho em encosta): cada ovelha no chão sob ela
+- [x] O filho mais perto do baú se sobrepõe ao baú: tirar o baú do caminho
+- [x] Câmera que acompanha: quando o Samuel anda, câmera mais afastada que gira e se move para manter ele em quadro (nada de plano travado com gente saindo)
+- [x] Samá correndo para chamar o Davi: em vez de terceira pessoa de videogame, câmera semifixa de longe, que acompanha e vai na direção dele; a cena não pode perder o foco das pessoas
+- [x] Câmeras menos coladas em geral
+- [x] Nuvens no céu
+- [x] Casa de Jessé menos "moderna": paredes irregulares de pedra e barro, porta e janela de madeira antiga, sem esquadro perfeito
+- [x] Fogo das fogueiras mais vivo e chama da lamparina melhor
+- [x] Unção: câmera colada demais e o Davi ajoelhado mal se vê; plano mais aberto, de lado, com uma pequena rotação em volta dos dois
+- [x] Cenas de duas pessoas: pegar as duas meio de lado, com uma pequena rotação em volta delas

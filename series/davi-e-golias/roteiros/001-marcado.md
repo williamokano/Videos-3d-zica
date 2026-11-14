@@ -9,63 +9,70 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:00.0` *SAMUEL pega chifre*
 - `0:00.0` 🎥  fov 50
 - `0:01.5` *SAMUEL anda até [0.4,-21.6]*
-- `0:01.5` 🎥 corte: câmera fov 34
-- `0:02.9` 🎥  fov 34
+- `0:01.5` 🎥 corte: câmera fov 38
 - `0:04.7` 🎥 corte: câmera fov 50
 - ⏸ **5.3 s sem fala**
 - `0:05.3` **ANCIÃO 1** (assustado): É o profeta. ⚠ sem gravação
 - `0:06.6` **ANCIÃO 2** (sussurro): O que ele quer aqui? ⚠ sem gravação
 - `0:08.4` *SAMUEL passa a: attend*
-- `0:11.2` **ANCIÃO 1** (nervoso): Vens em paz? ⚠ sem gravação
-- `0:11.2` 🎥 corte: câmera fov 40
-- `0:12.5` **SAMUEL** (calmo): Em paz. Vim oferecer sacrifício ao Senhor. Chamem Jessé e os filhos dele. ⚠ sem gravação
-- `0:12.5` 🎥 corte: câmera fov 38
-- `0:17.8` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 1 · O escolhido
-- `0:17.8` *SAMUEL anda até [3.2,-27.0]*
-- `0:17.8` 🎥 corte: câmera fov 46
-- `0:21.4` 🎥 corte: câmera fov 48
+- `0:11.3` **ANCIÃO 1** (nervoso): Vens em paz? ⚠ sem gravação
+- `0:11.3` 🎥 corte: câmera fov 40
+- `0:12.6` **SAMUEL** (calmo): Em paz. Vim oferecer sacrifício ao Senhor. Chamem Jessé e os filhos dele. ⚠ sem gravação
+- `0:15.6` 🎥  fov 40
+- `0:17.9` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 1 · O escolhido
+- `0:17.9` *SAMUEL anda até [3.2,-27.0]*
+- `0:17.9` 🎥 corte: câmera fov 46
+- `0:21.5` 🎥 corte: câmera fov 48
 - ⏸ **4.1 s sem fala**
-- `0:21.9` **Narrador**: Israel tinha um rei. Um exército. Guerreiros. Mas Deus procurava algo diferente. ⚠ sem gravação
-- `0:21.9` 🎥  fov 44
-- `0:27.6` **Narrador**: Não procurava o mais forte. Procurava aquele cujo coração ainda ninguém conhecia. ⚠ sem gravação
-- `0:27.6` 🎥 corte: câmera fov 40
-- `0:33.9` 🌍 rule.noite → 1
-- `0:33.9` 🎥 corte: câmera fov 50
-- `0:33.9` 🎥  fov 50
-- `0:34.9` 🎥  fov 44
+- `0:22.0` **Narrador**: Israel tinha um rei. Um exército. Guerreiros. Mas Deus procurava algo diferente. ⚠ sem gravação
+- `0:22.0` 🎥  fov 44
+- `0:27.7` **Narrador**: Não procurava o mais forte. Procurava aquele cujo coração ainda ninguém conhecia. ⚠ sem gravação
+- `0:27.7` 🎥 corte: câmera fov 40
+- `0:34.0` 🌍 rule.noite → 1
+- `0:34.0` 🎥 corte: câmera fov 50
+- `0:34.0` 🎥  fov 50
+- `0:35.0` 🎥  fov 44
+- `0:35.0` 🎥 corte: câmera fov 46
+- `0:39.0` 🎥  fov 46
 - ⏸ **8.0 s sem fala**
-- `0:41.3` **JESSÉ** (orgulhoso): Este é Eliabe. Meu primogênito. ⚠ sem gravação
-- `0:41.3` 🎥 corte: câmera fov 44
-- `0:43.8` 🎥 corte: câmera fov 40
-- `0:44.7` **SAMUEL** (sussurro): Certamente este é o ungido do Senhor. ⚠ sem gravação
-- `0:47.6` 🎥 corte: câmera fov 36
-- `0:48.4` **SAMUEL** (sussurro): Não. O homem vê o que está diante dos olhos. Porém o Senhor olha para o coração. ⚠ sem gravação
-- `0:54.4` 🎥 corte: câmera fov 46
+- `0:41.4` **JESSÉ** (orgulhoso): Este é Eliabe. Meu primogênito. ⚠ sem gravação
+- `0:41.4` 🎥 corte: câmera fov 44
+- `0:41.4` 🎥  fov 42
+- `0:44.8` **SAMUEL** (sussurro): Certamente este é o ungido do Senhor. ⚠ sem gravação
+- `0:47.7` 🎥 corte: câmera fov 38
+- `0:48.5` **SAMUEL** (sussurro): Não. O homem vê o que está diante dos olhos. Porém o Senhor olha para o coração. ⚠ sem gravação
+- `0:54.5` 🎥 corte: câmera fov 46
 - `0:55.8` **JESSÉ**: Abinadabe. ⚠ sem gravação
 - `0:56.9` **SAMUEL**: Também não é este. ⚠ sem gravação
-- `0:59.8` **JESSÉ**: Samá. ⚠ sem gravação
-- `1:00.8` **SAMUEL**: Nem este. ⚠ sem gravação
-- `1:03.2` 🎥 corte: câmera fov 40
+- `0:59.9` **JESSÉ**: Samá. ⚠ sem gravação
+- `1:00.9` **SAMUEL**: Nem este. ⚠ sem gravação
 - `1:04.2` **SAMÁ** (sussurro): Nenhum de nós? ⚠ sem gravação
+- `1:10.5` 🎥  fov 46
 - ⏸ **10.9 s sem fala**
 - `1:16.5` **SAMUEL**: O Senhor não escolheu nenhum destes. São estes todos os teus filhos? ⚠ sem gravação
 - `1:16.5` 🎥 corte: câmera fov 42
+- `1:21.0` 🎥  fov 42
 - `1:21.4` **JESSÉ** (hesitante): Ainda falta o mais novo. Está cuidando das ovelhas. ⚠ sem gravação
 - `1:25.2` **ELIABE** (ironico): O pastorzinho. ⚠ sem gravação
-- `1:26.6` **SAMUEL** (firme): Mande buscá-lo. Não nos sentaremos à mesa até que ele chegue. ⚠ sem gravação
-- `1:26.6` 🎥 corte: câmera fov 34
-- `1:31.1` 🎥 corte: third_person fov 56
+- `1:25.5` 🎥  fov 42
+- `1:26.7` **SAMUEL** (firme): Mande buscá-lo. Não nos sentaremos à mesa até que ele chegue. ⚠ sem gravação
+- `1:31.1` 🎥 corte: câmera fov 40
 - ⏸ **3.3 s sem fala**
 - `1:34.4` **SAMÁ** (grito): Davi! ⚠ sem gravação
+- `1:35.5` 🎥  fov 40
 - `1:37.0` **SAMÁ** (urgente): O pai te chama. Agora. O profeta está lá em casa. ⚠ sem gravação
 - `1:37.0` 🎥 corte: câmera fov 42
-- `1:40.6` **DAVI** (surpreso): O profeta? Comigo? ⚠ sem gravação
-- `1:42.9` 🎥 corte: câmera fov 46
-- `1:53.4` 🎥 corte: câmera fov 32
+- `1:40.5` 🎥  fov 42
+- `1:40.7` **DAVI** (surpreso): O profeta? Comigo? ⚠ sem gravação
+- `1:42.9` 🎥 corte: câmera fov 44
+- `1:47.9` 🎥  fov 44
+- `1:53.4` 🎥 corte: câmera fov 46
 - ⏸ **13.5 s sem fala**
 - `1:55.8` **SAMUEL** (sussurro): É este. ⚠ sem gravação
 - `2:01.5` 🎥 corte: câmera fov 44
-- `2:06.5` 🎥 corte: câmera fov 30
+- `2:03.3` 🎥  fov 44
+- `2:05.1` 🎥  fov 44
+- `2:06.5` 🎥 corte: câmera fov 40
 - ⏸ **10.0 s sem fala**
 - `2:06.8` **Narrador**: E naquele dia, enquanto todos ainda viam um pastor, Deus havia escolhido um rei. ⚠ sem gravação
 - `2:13.3` 🎥 corte: câmera fov 44
