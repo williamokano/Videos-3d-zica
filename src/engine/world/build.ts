@@ -6,6 +6,7 @@ import { buildDoor } from './doors';
 import { buildWindow } from './windows';
 import { contains, subtractRects, union, type Rect } from './rect';
 import { layoutStairs, partHeight, type StairLayout } from './stairs';
+import { archFill, rusticBlock } from './rustic';
 import { buildTerrainMesh, terrainHeight } from './terrain';
 import type { Location, Prop } from './types';
 import { DEFAULT_ROOM_H, DOOR_H, WALL_T, roomOpenings, roomWalls, sideGeometry, type WallPiece } from './walls';
@@ -118,6 +119,16 @@ function placeProps(
         const floor = typeof elevation === 'number' ? elevation : elevation(x, z);
         obj.position.set(x, floor + (prop.y ?? 0), z);
         obj.rotation.y = THREE.MathUtils.degToRad(prop.rot ?? 0);
+        // Something spread over the ground (a flock) can ask the height of the terrain under each of its parts:
+        // `userData.ground(x, z)`, in its own frame, gives how far the ground is above or below its origin.
+        if (obj.userData.followsGround && typeof elevation === 'function') {
+          obj.updateMatrixWorld(true);
+          const point = new THREE.Vector3();
+          obj.userData.ground = (x: number, z: number): number => {
+            point.set(x, 0, z).applyMatrix4(obj.matrixWorld);
+            return elevation(point.x, point.z) - obj.position.y;
+          };
+        }
         obj.traverse((o) => {
           if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
         });
@@ -397,12 +408,16 @@ export function buildLocation(loc: Location): BuiltLocation {
       const y1 = elevation + piece.y1;
       const isGlass = piece.kind === 'glass';
       if (!framed) {
-        const mesh = box(pieceRect(piece, isGlass ? 0.03 : WALL_T), y0, y1, isGlass ? glass : mat(room.wallColor ?? '#f2ead8'));
+        const mesh = room.rustic && !isGlass
+          ? rusticBlock(pieceRect(piece), y0, y1, room.wallColor ?? '#f2ead8')
+          : box(pieceRect(piece, isGlass ? 0.03 : WALL_T), y0, y1, isGlass ? glass : mat(room.wallColor ?? '#f2ead8'));
         mesh.castShadow = !isGlass;
         g.add(mesh);
       }
       colliders.push({ ...pieceRect(piece), y0, y1 });
     }
+    // A room built by hand has rounded tops on its doorways and windows.
+    if (room.rustic) for (const o of room.openings ?? []) g.add(archFill(room, o, room.wallColor ?? '#f2ead8'));
     (room.openings ?? []).forEach((o, index) => {
       const frame = o.type === 'window' && o.frame !== false ? (o.frame ?? loc.windows) : undefined;
       if (!frame) return;

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { shutterWindow } from './rustic';
 import { mat } from '../assets/registry';
 import type { Opening, Room, WindowFrame } from './types';
 import { DOOR_H, SILL_H, WALL_T, sideGeometry } from './walls';
@@ -14,6 +15,7 @@ import { DOOR_H, SILL_H, WALL_T, sideGeometry } from './walls';
  * - casement: two leaves hinged at the sides, opening outward.
  * - louver:   "veneziana": slats that turn, no glass; closed, nothing is seen through it.
  * - blinds:   fixed glass with a blind on the inside ("persiana") that rolls up as it opens.
+ * - shutters: no glass, two wooden shutters of rough boards that open into the room (old houses; see rustic.ts).
  *
  * The group sits at the start of the opening, at sill height, with local +x along the wall and z across it:
  * +z points into the declaring room on n/e walls and out of it on s/w walls (the same as doors).
@@ -44,6 +46,7 @@ function pane(x: number, y: number, w: number, h: number, z = 0): THREE.Mesh {
 }
 
 export function buildWindow(room: Room, o: Opening, frame: WindowFrame): BuiltWindow {
+  if (frame.kind === 'shutters') return shutterWindow(room, o, frame.color ?? '#7a5232');
   const g = sideGeometry(room, o.wall);
   const start = g.from + o.at - o.width / 2;
   const root = new THREE.Group();

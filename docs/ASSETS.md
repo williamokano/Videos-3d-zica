@@ -176,6 +176,12 @@ Saco de grão de pano grosso, amarrado na boca (70 cm em pé). Com `count` maior
 
 - **knockOver / setUpright**: derrubar e pôr de pé
 
+### `ancient.seatStone`
+
+Pedra baixa de topo chato, para sentar: o banco dos anciãos no portão, a pedra do pastor no campo. Lugar "seat" no topo (params: height — altura do assento, 0,45 —, width, seed, color)
+
+- **sit / standUp**: lugares: seat
+
 ### `ancient.sheep`
 
 Ovelha de lã fofa, cara e pernas escuras, de frente para -z, 75 cm até o lombo. Pasta sozinha com o tempo: baixa a cabeça até o capim e mordisca, levanta e olha em volta, mexe as orelhas; cada `seed` pasta num ritmo seu e tem tamanho e tom de lã um pouco diferentes (params: seed, color — da lã —, face — da cara e das pernas)

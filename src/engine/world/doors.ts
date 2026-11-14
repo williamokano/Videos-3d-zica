@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mat } from '../assets/registry';
 import type { Dir, Opening, Room } from './types';
+import { archRise, plankLeaf } from './rustic';
 import { DOOR_H, WALL_T, sideGeometry } from './walls';
 
 export interface BuiltDoor {
@@ -58,9 +59,18 @@ export function buildDoor(room: Room, o: Opening): BuiltDoor {
     handle = [o.width / 2, 0.45, 0];
   } else {
     const moving = new THREE.Group();
-    const panel = new THREE.Mesh(new THREE.BoxGeometry(o.width - 0.04, DOOR_H - 0.04, 0.05), mat(color));
-    panel.position.set(o.width / 2, DOOR_H / 2, 0);
-    moving.add(panel);
+    if (leaf.style === 'planks') {
+      // Under a rounded top (rustic rooms), the boards stop where the arch begins.
+      const height = room.rustic ? DOOR_H - archRise(o.width) + 0.03 : DOOR_H - 0.04;
+      const boards = plankLeaf(o.width - 0.04, height, leaf.color ?? '#7a5232');
+      boards.position.x = 0.02;
+      moving.add(boards);
+    }
+    else {
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(o.width - 0.04, DOOR_H - 0.04, 0.05), mat(color));
+      panel.position.set(o.width / 2, DOOR_H / 2, 0);
+      moving.add(panel);
+    }
     root.add(moving);
 
     if (kind === 'sliding') {
@@ -84,6 +94,15 @@ export function buildDoor(room: Room, o: Opening): BuiltDoor {
       // Emergency doors (opensFrom "inside") swing outward and get a push bar.
       const bar = leaf.opensFrom === 'inside';
       const handleSides = bar ? [inside] : leaf.opensFrom === 'outside' ? [-inside] : [1, -1];
+      // An old door has an iron ring, not a handle.
+      if (leaf.style === 'planks') {
+        for (const side of handleSides) {
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.009, 6, 16), mat('#3a3631'));
+          ring.position.set(o.width - 0.16, 1.0, side * 0.06);
+          moving.add(ring);
+        }
+        handleSides.length = 0;
+      }
       for (const side of handleSides) {
         const handle = new THREE.Mesh(new THREE.BoxGeometry(bar ? o.width * 0.7 : 0.12, 0.05, 0.05), metal);
         handle.position.set(bar ? o.width / 2 : o.width - 0.14, 1.02, side * 0.05);

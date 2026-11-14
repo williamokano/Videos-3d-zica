@@ -24,6 +24,8 @@ export interface DoorLeaf {
   angle?: number;
   /** sliding only: which end of the opening the leaf slides toward (default "start", the west or north end). */
   slide?: 'start' | 'end';
+  /** swing only: a smooth painted panel (default) or rough wooden boards with crossbars, for old houses. */
+  style?: 'panel' | 'planks';
 }
 
 /**
@@ -33,7 +35,7 @@ export interface DoorLeaf {
  * slats that turn, no glass) and "blinds" (glass with a blind inside that rolls up).
  */
 export interface WindowFrame {
-  kind: 'fixed' | 'sliding' | 'tilt' | 'casement' | 'louver' | 'blinds';
+  kind: 'fixed' | 'sliding' | 'tilt' | 'casement' | 'louver' | 'blinds' | 'shutters';
   /** Color of the frame (each kind has its own default). */
   color?: string;
   /** How open it starts, from 0 (closed) to 1. */
@@ -97,6 +99,11 @@ export interface Room {
   height?: number;
   /** Outdoor areas have a floor but no walls or ceiling. */
   outdoor?: boolean;
+  /**
+   * Built by hand long ago: walls of stone and mud plaster, never quite flat, and openings with a rounded top.
+   * Give its doors `style: "planks"` and its windows `frame: { kind: "shutters" }` to match.
+   */
+  rustic?: boolean;
   floorColor: string;
   wallColor?: string;
   openings?: Opening[];

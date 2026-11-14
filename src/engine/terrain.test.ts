@@ -49,4 +49,13 @@ describe('terrain', () => {
     }
     expect(placementAt(compiled, 'davi', end).pos[1]).toBeCloseTo(-1, 1);
   });
+
+  it('something spread over a slope (a flock) knows the ground under each part', () => {
+    const built = buildLocation({ ...loc, props: [{ asset: 'ancient.flock', pos: [0, -22], params: { count: 6, width: 8, depth: 6 } }] });
+    const flock = built.exterior.children.find((o) => o.userData.followsGround)!;
+    const ground = flock.userData.ground as (x: number, z: number) => number;
+    for (const [x, z] of [[0, 0], [3, 2], [-3, -2]]) {
+      expect(ground(x, z) + flock.position.y).toBeCloseTo(built.groundAt(x, -22 + z), 3);
+    }
+  });
 });

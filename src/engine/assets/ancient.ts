@@ -508,18 +508,16 @@ registerAsset(
       logs.push(rodGeo(v3(Math.cos(a) * 0.32, 0.03, Math.sin(a) * 0.32), v3(Math.cos(a) * 0.04, lit ? 0.36 : 0.12, Math.sin(a) * 0.04), 0.04, 0.03, 7));
     }
     fire.add(merged(logs, '#5e4130', true));
-    const flames: THREE.Mesh[] = [];
+    let burning: ((t: number) => void) | undefined;
     if (lit) {
       const glow = (color: string) => new THREE.MeshBasicMaterial({ color });
       const embers = new THREE.Mesh(merge([0, 1, 2, 3, 4].map(() => new THREE.IcosahedronGeometry(0.06 + rand() * 0.03, 0).translate((rand() - 0.5) * 0.3, 0.04, (rand() - 0.5) * 0.3))), glow('#ff6a1f'));
       fire.add(embers);
-      for (const [r, h, color, x, z] of [[0.18, 0.8, '#ff7b22', 0, 0], [0.12, 0.58, '#ff9f2e', 0.09, 0.05], [0.12, 0.52, '#ff9f2e', -0.08, -0.06], [0.1, 0.45, '#ffd45e', 0, 0.01]] as const) {
-        const f = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7).translate(0, h / 2, 0), glow(color));
-        f.position.set(x, 0.05, z);
-        flames.push(f);
-      }
-      for (const m of [embers, ...flames]) m.userData.noShadow = true;
-      fire.add(...flames);
+      embers.userData.noShadow = true;
+      const flame = flickeringFire(rand, 0.55);
+      flame.fire.position.y = 0.05;
+      fire.add(flame.fire);
+      burning = flame.update;
     }
     if (Number(p.pot ?? 0) > 0) {
       const top = v3(0, 1.05, 0);
@@ -535,13 +533,8 @@ registerAsset(
     fire.scale.setScalar(Number(p.size ?? 1));
     const g = group(fire);
     if (lit) {
-      const phases = flames.map(() => rand() * 10);
       g.userData.animate = (t: number) => {
-        flames.forEach((f, i) => {
-          const k = 1 + 0.2 * Math.sin(t * 9 + phases[i]) + 0.1 * Math.sin(t * 15.7 + phases[i] * 2);
-          f.scale.set(1 / Math.sqrt(k), k, 1 / Math.sqrt(k));
-          f.rotation.set(0.12 * Math.sin(t * 5.3 + phases[i]), t * 0.7 + phases[i], 0.12 * Math.sin(t * 6.1 + phases[i]));
-        });
+        burning?.(t);
         if (light) light.intensity = intensity * (0.85 + 0.1 * Math.sin(t * 11) + 0.05 * Math.sin(t * 23.3));
       };
     }
@@ -837,6 +830,32 @@ registerAsset(
     const m = mesh(rockGeo(rand, size / 2, 0.55 + rand() * 0.3), color);
     m.rotation.y = rand() * 6;
     return group(m);
+  },
+);
+
+registerAsset(
+  'ancient.seatStone',
+  'Pedra baixa de topo chato, para sentar: o banco dos anciãos no portão, a pedra do pastor no campo. Lugar "seat" no topo (params: height — altura do assento, 0,45 —, width, seed, color)',
+  (p) => {
+    const rand = rng(Number(p.seed ?? 1));
+    const height = Number(p.height ?? 0.45);
+    const width = Number(p.width ?? 0.6);
+    const color = String(p.color ?? STONES[Math.floor(rand() * STONES.length)]);
+    const g = lumpGeo(rand, width / 2, 1.1, 1);
+    g.computeBoundingBox();
+    const box = g.boundingBox!;
+    const pos = g.attributes.position;
+    // Stretched to the seat's height and cut flat on top, where one sits.
+    const scale = (height * 1.12) / (box.max.y - box.min.y);
+    const bottom = box.min.y;
+    for (let i = 0; i < pos.count; i++) pos.setY(i, Math.min(height, (pos.getY(i) - bottom) * scale - height * 0.06));
+    pos.needsUpdate = true;
+    g.computeVertexNormals();
+    g.computeBoundingBox();
+    g.computeBoundingSphere();
+    const stone = mesh(g, color);
+    stone.rotation.y = rand() * 6;
+    return group(stone, place('seat', 0, height, 0));
   },
 );
 
@@ -1524,6 +1543,7 @@ registerAsset(
     const base = new THREE.Matrix4();
     const [at, scale, turn] = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Quaternion()];
     const up = v3(0, 1, 0);
+    g.userData.followsGround = true;
     g.userData.animate = (t: number) => {
       flock.forEach((s, i) => {
         // How far along its path: a pure function of t, so any frame can be drawn on its own.
@@ -1537,6 +1557,8 @@ registerAsset(
         const stride = ((along * s.reach * 0.7) / 0.5) * Math.PI * 2;
         const heading = s.reach > 0.01 ? Math.atan2(-dx, -dz) : s.heading;
         at.set(s.home[0] + s.ax * Math.sin(along * s.f1 + s.a1), 0.012 * walk * Math.abs(Math.sin(stride)), s.home[1] + s.az * Math.sin(along * s.f2 + s.a2));
+        // On a hillside, each sheep stands on the ground under it (the location gives the height; see build.ts).
+        at.y += (g.userData.ground as ((x: number, z: number) => number) | undefined)?.(at.x, at.z) ?? 0;
         base.compose(at, turn.setFromAxisAngle(up, heading), scale.setScalar(s.life.size));
         poseSheep(out, base, s.life, t, walk, stride);
         parts[0].mesh.setMatrixAt(i, out[0]);
@@ -1589,7 +1611,10 @@ function oilLamp(p: Record<string, number | string>): THREE.Group {
   const lamp = group(mesh(clay, color), ...small);
   // The flame: an orange drop round a pale core, both their own light.
   const drop = (r: number, h: number) => lathe([[0, 0], [r * 0.7, h * 0.12], [r, h * 0.33], [r * 0.6, h * 0.66], [0.0005, h]], 10);
-  const flame = group(new THREE.Mesh(drop(0.011, 0.05), new THREE.MeshBasicMaterial({ color: '#ff9a35', transparent: true, opacity: 0.7, depthWrite: false })), new THREE.Mesh(drop(0.0065, 0.028), new THREE.MeshBasicMaterial({ color: '#fff1b8' })));
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 8), flameMaterial('#ffa040', 0.07));
+  glow.position.y = 0.03;
+  const flame = group(new THREE.Mesh(tongue(0.014, 0.07), flameMaterial('#ff8a2a', 0.8)), new THREE.Mesh(tongue(0.009, 0.045), flameMaterial('#ffd36b', 0.9)), new THREE.Mesh(drop(0.0055, 0.024), new THREE.MeshBasicMaterial({ color: '#fff6d0' })), glow);
+  flame.traverse((o) => void (o.userData.noOutline = true));
   flame.position.copy(tip).add(v3(0, 0.002, 0));
   flame.traverse((o) => void (o.userData.noShadow = true));
   lamp.add(flame);
@@ -1735,24 +1760,85 @@ registerAsset(
 // ---------------------------------------------------------------------------------------------------------
 // Palace
 
-/** A fire of a few flame cones that flicker by themselves, standing on y = 0 of its group, `size` across. */
+/** Flame material: its own light, see-through at the edges and adding up where flames cross, like real fire. */
+const flameMaterials = new Map<string, THREE.MeshBasicMaterial>();
+function flameMaterial(color: string, opacity: number): THREE.MeshBasicMaterial {
+  const key = `${color}/${opacity}`;
+  let m = flameMaterials.get(key);
+  if (!m) {
+    m = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false });
+    flameMaterials.set(key, m);
+  }
+  return m;
+}
+
+/** A tongue of flame: a drop, wide low down and drawn up to a point, a little twisted. */
+function tongue(r: number, h: number): THREE.BufferGeometry {
+  const g = lathe([[0.0005, 0], [r * 0.75, h * 0.08], [r, h * 0.24], [r * 0.86, h * 0.45], [r * 0.5, h * 0.7], [r * 0.18, h * 0.9], [0.0005, h]], 10);
+  const pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const y = pos.getY(i) / h;
+    const a = y * 1.4;
+    const [x, z] = [pos.getX(i), pos.getZ(i)];
+    pos.setXYZ(i, x * Math.cos(a) - z * Math.sin(a) + y * y * r * 0.4, pos.getY(i), x * Math.sin(a) + z * Math.cos(a));
+  }
+  g.computeVertexNormals();
+  return g;
+}
+
+/**
+ * A fire that lives by itself: tongues of flame in three colors (deep orange outside, yellow, a pale core), each
+ * licking up and swaying on its own, a soft glow round it and sparks that rise and go out. Stands on y = 0 of
+ * its group, `size` across.
+ */
 function flickeringFire(rand: () => number, size: number): { fire: THREE.Group; update(t: number): void } {
   const fire = group();
-  const flames: THREE.Mesh[] = [];
-  for (const [r, h, color, x, z] of [[0.45, 1, '#ff7b22', 0, 0], [0.3, 0.72, '#ff9f2e', 0.22, 0.12], [0.3, 0.66, '#ff9f2e', -0.2, -0.14], [0.25, 0.55, '#ffd45e', 0, 0.02]] as const) {
-    const f = new THREE.Mesh(new THREE.ConeGeometry(r * size, h * size, 7).translate(0, (h * size) / 2, 0), new THREE.MeshBasicMaterial({ color }));
-    f.position.set(x * size, 0, z * size);
-    f.userData.noShadow = true;
-    flames.push(f);
+  const flames: { mesh: THREE.Mesh; phase: number; speed: number }[] = [];
+  const layers: [number, number, string, number, number][] = [
+    [0.42, 1.0, '#ff5a14', 0.55, 6],
+    [0.3, 0.85, '#ff8a1e', 0.7, 5],
+    [0.2, 0.6, '#ffc23d', 0.85, 4],
+    [0.11, 0.38, '#fff0b0', 1, 2],
+  ];
+  for (const [r, h, color, opacity, count] of layers) {
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 + rand();
+      const off = count > 2 ? r * 0.55 : r * 0.2;
+      const f = new THREE.Mesh(tongue(r * size * (0.75 + rand() * 0.4), h * size * (0.7 + rand() * 0.5)), flameMaterial(color, opacity));
+      f.position.set(Math.cos(a) * off * size, 0, Math.sin(a) * off * size);
+      f.userData.noShadow = true;
+      f.userData.noOutline = true;
+      flames.push({ mesh: f, phase: rand() * 10, speed: 0.8 + rand() * 0.6 });
+      fire.add(f);
+    }
   }
-  fire.add(...flames);
-  const phases = flames.map(() => rand() * 10);
-  const update = (t: number) =>
-    flames.forEach((f, i) => {
-      const k = 1 + 0.2 * Math.sin(t * 9 + phases[i]) + 0.1 * Math.sin(t * 15.7 + phases[i] * 2);
-      f.scale.set(1 / Math.sqrt(k), k, 1 / Math.sqrt(k));
-      f.rotation.set(0.12 * Math.sin(t * 5.3 + phases[i]), t * 0.7 + phases[i], 0.12 * Math.sin(t * 6.1 + phases[i]));
-    });
+  // The glow of the fire in the air round it.
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(0.7 * size, 16, 10), flameMaterial('#ff6a1a', 0.05));
+  halo.position.y = 0.45 * size;
+  halo.userData.noShadow = halo.userData.noOutline = true;
+  fire.add(halo);
+  // Sparks rising, each on its own loop.
+  const sparkGeo = new THREE.OctahedronGeometry(0.012 * size + 0.006, 0);
+  const sparks = Array.from({ length: 14 }, () => {
+    const m = new THREE.Mesh(sparkGeo, flameMaterial('#ffb347', 1));
+    m.userData.noShadow = m.userData.noOutline = true;
+    fire.add(m);
+    return { m, phase: rand(), period: 1.4 + rand() * 1.2, a: rand() * Math.PI * 2, r: rand() * 0.3 * size };
+  });
+  const update = (t: number) => {
+    for (const { mesh, phase, speed } of flames) {
+      const k = 1 + 0.22 * Math.sin(t * 9 * speed + phase) + 0.12 * Math.sin(t * 17.3 * speed + phase * 2) + 0.06 * Math.sin(t * 31 + phase * 3);
+      mesh.scale.set(1 / Math.sqrt(k), k, 1 / Math.sqrt(k));
+      mesh.rotation.set(0.16 * Math.sin(t * 4.3 * speed + phase), t * 1.1 * speed + phase, 0.16 * Math.sin(t * 5.7 * speed + phase));
+    }
+    halo.scale.setScalar(1 + 0.08 * Math.sin(t * 7.1) + 0.04 * Math.sin(t * 13.3));
+    for (const sp of sparks) {
+      const u = ((t / sp.period + sp.phase) % 1 + 1) % 1;
+      sp.m.position.set(Math.cos(sp.a + u * 3) * (sp.r + u * 0.15 * size), u * 1.9 * size, Math.sin(sp.a + u * 3) * (sp.r + u * 0.15 * size));
+      sp.m.scale.setScalar(1 - u);
+      sp.m.visible = u < 0.95;
+    }
+  };
   update(0);
   return { fire, update };
 }
