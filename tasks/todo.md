@@ -61,3 +61,10 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [x] Mobília da época: banco de barro encostado na parede, prateleira de tábua com potes, banquinhos de palha, mó de pedra, cestos, panos listrados pendurados, nichos na parede, escada de mão, ervas secas
 - [x] Casa menor e apertada; luz natural do fim da tarde entrando pela porta e pela janela (e pelas frestas do teto)
 - [x] Cena: Samuel sentado num banco baixo, Jessé diante dele, os filhos entrando um por um pela porta; o Davi chega das colinas com a roupa de pastor (contraste com os irmãos)
+
+## 9. Áudio do ep. 1 (próxima sessão)
+
+- [ ] `npm run voz -- --series davi-e-golias --ep 1 --dry`: listar falas e custo, mostrar ao autor antes de gerar.
+- [ ] Sons de cada cena: vento e anciãos no portão, ovelhas e harpa no campo, casa (passos, porta, fogo), sala do Saul (braseiro, eco).
+- [ ] Efeitos nos acontecimentos: chifre, azeite, ajoelhar, o grito do Saul.
+- [ ] Música orquestral (de fora do motor) e conferir que 2:46 ainda cabe em 3:00 com as vozes reais.
