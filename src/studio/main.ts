@@ -14,6 +14,7 @@ import { applyStyle } from '../engine/style';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
 import { cutAt, frameCount, type Episode } from '../engine/timeline/episode';
+import { speakerLabels } from '../engine/timeline/speakers';
 import { buildLocation, type InteractiveObject } from '../engine/world/build';
 import type { Location, Room } from '../engine/world/types';
 import { TimelineBar } from './timeline';
@@ -220,17 +221,38 @@ function applyShot(t: number): void {
   frustum?.update();
 }
 
+let labelsFor: CompiledActions | undefined;
+let labels = new Map<CompiledActions['events'][number], string>();
+/**
+ * The speaker's name on each line of the compiled episode: the cast name, or the name the line carries (someone
+ * heard over a radio), without the extras' numbers unless two of the same name talk together (see speakers.ts).
+ */
+function lineLabels(): Map<CompiledActions['events'][number], string> {
+  if (labelsFor === actions) return labels;
+  const lines = actions.events.filter((e) => e.type === 'line' && e.data.speaker !== NARRATOR);
+  const nameOf = (e: (typeof lines)[number]): string => {
+    const member = episode?.cast?.find((m) => (m.id ?? m.character) === e.target);
+    return (e.data.name as string | undefined) ?? member?.look?.name ?? inSeries(characters).find((c) => c.id === member?.character)?.name ?? e.target;
+  };
+  // A character played by several cast members (one per scene) is one person; an extra named in the cast is its own.
+  const person = (id: string): string => {
+    const member = episode?.cast?.find((m) => (m.id ?? m.character) === id);
+    return member && !member.look?.name ? member.character : id;
+  };
+  const named = speakerLabels(lines.map((e) => ({ speaker: person((e.data.speaker as string | undefined) ?? e.target), name: nameOf(e), t: e.t, end: e.t + (e.data.duration as number) })));
+  labels = new Map(lines.map((e, i) => [e, named[i]]));
+  labelsFor = actions;
+  return labels;
+}
+
 /** Who says what at time t, as a subtitle over the episode camera's picture. */
 function showLine(t: number): void {
   const line = actions.events.find((e) => e.type === 'line' && t >= e.t && t < e.t + (e.data.duration as number));
   const visible = Boolean(line) && showSubtitles && (mode === 'shot' || rendering);
   subtitle.hidden = !visible;
   if (!visible || !line) return;
-  const member = episode?.cast?.find((m) => (m.id ?? m.character) === line.target);
-  const name = member?.look?.name ?? inSeries(characters).find((c) => c.id === member?.character)?.name ?? line.target;
   // The narrator has no name on screen.
-  // Someone heard but not in the scene (over a radio) shows the name the line carries.
-  subtitle.replaceChildren(...(line.data.speaker === NARRATOR ? [] : [el('b', `${(line.data.name as string | undefined) ?? name}: `)]), String(line.data.text));
+  subtitle.replaceChildren(...(line.data.speaker === NARRATOR ? [] : [el('b', `${lineLabels().get(line) ?? line.target}: `)]), String(line.data.text));
   const [x, y, w, h] = fit(0, 0, width, height);
   Object.assign(subtitle.style, { left: `${x + w * 0.06}px`, width: `${w * 0.88}px`, bottom: `${y + h * 0.1}px`, fontSize: `${h * 0.024}px` });
 }

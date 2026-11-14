@@ -15,7 +15,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:04.9` 🎥  fov 48
 - `0:05.3` 🎥  fov 46
 - `0:05.7` 🎥 corte: câmera fov 46
-- `0:06.4` **SOLDADO 6** (sussurro): De novo ele... ⚠ sem gravação
+- `0:06.4` **SOLDADO** (sussurro): De novo ele... ⚠ sem gravação
 - `0:06.4` 🎥  fov 42
 - `0:07.8` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 3 · Quarenta dias
 - `0:07.8` **GOLIAS** (grito): Se ele me vencer, seremos vossos servos. Mas se eu o vencer, sereis nossos servos! ⚠ sem gravação
@@ -40,7 +40,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:22.2` 🎥  fov 40
 - `0:26.0` 🌍 rule.entardecer → 0.35
 - `0:26.0` 🌍 rule.noite → 0.65
-- `0:26.0` **SOLDADO DA FOGUEIRA 2** (cansado): Quarenta dias... e ninguém desceu. ⚠ sem gravação
+- `0:26.0` **SOLDADO DA FOGUEIRA** (cansado): Quarenta dias... e ninguém desceu. ⚠ sem gravação
 - `0:26.0` 🎥 corte: câmera fov 46
 - `0:26.0` 🎥  fov 44
 - `0:29.3` 🌍 rule.noite → 0
@@ -78,9 +78,9 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:12.5` 🎥 corte: câmera fov 48
 - `1:13.0` 🎥  fov 46
 - ⏸ **3.2 s sem fala**
-- `1:15.7` **SOLDADO 6**: O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento. ⚠ sem gravação
+- `1:15.7` **SOLDADO 1**: O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento. ⚠ sem gravação
 - `1:15.7` 🎥 corte: câmera
-- `1:21.2` **SOLDADO 12**: E a casa do pai dele fica livre de impostos. ⚠ sem gravação
+- `1:21.2` **SOLDADO 2**: E a casa do pai dele fica livre de impostos. ⚠ sem gravação
 - `1:25.0` **DAVI** (firme): Quem é esse filisteu, para afrontar os exércitos do Deus vivo? ⚠ sem gravação
 - `1:25.0` 🎥 corte: câmera fov 42
 - `1:25.0` 🎥  fov 40
@@ -93,7 +93,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:44.6` 🎥  fov 42
 - `1:45.0` **DAVI**: É verdade o que dizem do rei? ⚠ sem gravação
 - `1:45.0` 🎥 corte: câmera
-- `1:47.7` **SOLDADO 12** (irônico): É. Por quê? Estás pensando em descer? ⚠ sem gravação
+- `1:47.7` **SOLDADO 2** (irônico): É. Por quê? Estás pensando em descer? ⚠ sem gravação
 - `1:50.9` 🎥 corte: câmera fov 44
 - `1:50.9` 🎥  fov 42
 - `1:52.7` **ABNER**: Majestade, é o rapaz que anda perguntando pela recompensa. ⚠ sem gravação

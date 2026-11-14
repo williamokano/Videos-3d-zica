@@ -18,10 +18,10 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:02.0` 🎥 corte: câmera fov 44
 - `0:02.0` 🎥  fov 42
 - `0:02.3` **REI SAUL** (grito): Fechem as portas! Quem está aí?!
-- `0:04.9` **GUARDA 1** (nervoso): Ninguém, meu senhor. Não há ninguém.
+- `0:04.9` **GUARDA** (nervoso): Ninguém, meu senhor. Não há ninguém.
 - `0:04.9` 🎥 corte: câmera fov 46
 - `0:04.9` 🎥  fov 44
-- `0:07.3` **SOLDADO 2** (sussurro): De novo. Todas as noites.
+- `0:07.3` **SOLDADO** (sussurro): De novo. Todas as noites.
 - `0:07.3` 🎥 corte: câmera fov 46
 - `0:07.3` 🎥  fov 44
 - `0:10.3` 🔊 titulo-impacto
@@ -65,7 +65,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:02.5` 🔊 palacio-noite (36 s)
 - `1:02.5` 🎥 corte: câmera fov 50
 - ⏸ **3.0 s sem fala**
-- `1:03.1` **GUARDA DA PORTA 1**: O rapaz de Belém, meu senhor.
+- `1:03.1` **GUARDA DA PORTA**: O rapaz de Belém, meu senhor.
 - `1:05.5` 🎥 corte: câmera fov 44
 - ⏸ **4.0 s sem fala**
 - `1:09.0` **REI SAUL**: Qual é o teu nome, jovem?

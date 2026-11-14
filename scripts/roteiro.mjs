@@ -53,6 +53,17 @@ try {
     const m = cast.find((c) => (c.id ?? c.character) === id);
     return (m?.look?.name ?? characters.find((c) => c.id === m?.character)?.name ?? id).toUpperCase();
   };
+  // Extras are called by their name without the number, unless two of the same name talk together.
+  const { speakerLabels } = await server.ssrLoadModule('/src/engine/timeline/speakers.ts');
+  const spoken = (episode.actions ?? []).filter((c) => c.action === 'say' || (c.action === 'narrate' && c.params?.as));
+  const castName = (id) => { const m = cast.find((c) => (c.id ?? c.character) === id); return m?.look?.name ?? characters.find((c) => c.id === m?.character)?.name ?? id; };
+  const labelled = speakerLabels(spoken.map((c) => {
+    const id = c.action === 'say' ? c.target : c.params.as;
+    // A character played by several cast members (one per scene) is one person; an extra named in the cast is its own.
+    const m = cast.find((x) => (x.id ?? x.character) === id);
+    return { speaker: m && !m.look?.name ? m.character : id, name: c.params?.name ?? castName(id), t: c.t, end: c.t + (c.duration ?? 0) };
+  }));
+  const labelOf = new Map(spoken.map((c, i) => [c, labelled[i].toUpperCase()]));
   const who = new Set((option('who') ?? (cast[0]?.id ?? cast[0]?.character ?? '')).split(','));
   const all = args.includes('--all');
 
@@ -65,7 +76,7 @@ try {
     const p = clip.params ?? {};
     const end = clip.t + (clip.duration ?? 0);
     if (clip.action === 'say' || clip.action === 'narrate') {
-      rows.push({ t: clip.t, end, line: true, text: `**${nameOf(clip.target)}**${p.tone ? ` (${p.tone})` : ''}: ${p.text}${p.take ? '' : ' ⚠ sem gravação'}` });
+      rows.push({ t: clip.t, end, line: true, text: `**${labelOf.get(clip) ?? nameOf(clip.target)}**${p.tone ? ` (${p.tone})` : ''}: ${p.text}${p.take ? '' : ' ⚠ sem gravação'}` });
     } else if (clip.action === 'screen' && p.event === 'message') {
       rows.push({ t: clip.t, end, text: `📱 ${p.data.from === 'me' ? 'Fernando envia' : 'chega'}: "${p.data.text}"` });
     } else if (clip.action === 'sound') {
