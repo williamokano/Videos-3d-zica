@@ -413,7 +413,7 @@ describe('camera attached to a character', () => {
   it('explains what is wrong with a camera track', () => {
     expect(() => validateCamera([{ t: 0, mode: 'fpv' }], ['ana'])).toThrow(/precisa de "follow"/);
     expect(() => validateCamera([{ t: 0, mode: 'fpv', follow: 'bia' }], ['ana'])).toThrow(/"bia" não está no elenco. Elenco: ana/);
-    expect(() => validateCamera([{ t: 0, pos: [0, 0, 0] }], [])).toThrow(/precisa de "pos" e "lookAt"/);
+    expect(() => validateCamera([{ t: 0, pos: [0, 0, 0] }], [])).toThrow(/precisa de "pos" e de "lookAt" ou "aim"/);
     expect(() => validateCamera([{ t: 0, pos: [0, 0, 0], lookAt: [1, 0, 0] }, { t: 1, mode: 'fpv', follow: 'ana' }], ['ana'])).toThrow(/só podem mudar num corte/);
   });
 
