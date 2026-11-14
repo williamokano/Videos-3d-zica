@@ -1,6 +1,6 @@
-import { MOVE_NAMES } from '../character/motion';
+import { MOVE_NAMES, SLING_RATE, motionSeed } from '../character/motion';
 import { registerAction, type ChannelWrite } from './catalog';
-import { outAndBack, ramp, reach } from './hands';
+import { outAndBack, ramp, reach, reachBody } from './hands';
 
 /**
  * Whole-body moves (MOVES in character/motion.ts) as actions: a plain `move` that sets the weight of one, and
@@ -70,7 +70,8 @@ registerAction({
     hit: { type: 'string', description: 'em vez de "to": id de um personagem; o item acerta a testa dele' },
     speed: { type: 'number', description: 'velocidade do voo em m/s (padrão 20). Mais baixo parece câmera lenta' },
     arc: { type: 'number', description: 'quanto o arco sobe no meio do voo, em metros (padrão 1/20 da distância)' },
-    with: { type: 'string', description: 'id de um item que lança (a funda) na mão de quem arremessa; o item arremessado sai do bolso dele no instante de soltar, e a funda fica vazia (canal "loaded")' },
+    with: { type: 'string', description: 'id de um item que lança (a funda) na mão de quem arremessa; o item arremessado sai do bolso dele no instante de soltar, e a funda fica vazia (canal "loaded") e volta a pender da mão' },
+    stick: { type: 'boolean', description: 'com "hit": o item crava e some no impacto (para mostrar a pedra na testa, ligue uma peça de roupa como "foreheadStone")' },
   },
   duration: 1,
   compile(ctx) {
@@ -112,10 +113,18 @@ registerAction({
     };
     // The arm: a whole throw takes twice the wind-up, the hand letting go halfway.
     const arm = (u: number): number => Math.min(1, (u * total) / (RELEASE * 2));
+    const sling = launcher ? ctx.object(launcher).channels : {};
+    // Once the stone is gone, a sling spun over the head falls back to hanging from the hand.
+    const spun = launcher ? ctx.current('spin', launcher) : 0;
+    const own = ctx.target.channels;
     const writes: ChannelWrite[] = [
       { target: by, channel: 'move.throw', at: (u) => (u >= 1 ? 1 : arm(u)) },
       ...(launcher
-        ? ('loaded' in ctx.object(launcher).channels ? [{ target: launcher, channel: 'loaded', at: (u: number) => (u < release ? 1 : 0) }] : [])
+        ? [
+            ...('loaded' in sling ? [{ target: launcher, channel: 'loaded', at: (u: number) => (u < release ? 1 : 0) }] : []),
+            ...('overhead' in sling ? [{ target: launcher, channel: 'overhead', at: (u: number) => (u < release ? ctx.current('overhead', launcher!) : 0) }] : []),
+            ...('spin' in sling ? [{ target: launcher, channel: 'spin', at: (u: number) => (u < release ? spun : Math.round(spun)) }] : []),
+          ]
         : [
             { target: by, channel: `carry${hand}`, at: (u: number) => 1 - ramp(u, release, Math.min(1, release + 0.05)) },
             { channel: 'held', at: (u: number) => (u < release ? 1 : 0) },
@@ -123,8 +132,79 @@ registerAction({
       { channel: 'x', at: point(0) },
       { channel: 'y', at: point(1) },
       { channel: 'z', at: point(2) },
+      // A stone with a trail shows it while it flies, turned the way it goes.
+      ...('trail' in own
+        ? [
+            { channel: 'trail', at: (u: number) => (u <= release || u >= 1 ? 0 : Math.min(1, (u - release) / 0.06)) },
+            { channel: 'yaw', at: () => (Math.atan2(-(to[0] - from[0]), -(to[2] - from[2])) * 180) / Math.PI },
+          ]
+        : []),
     ];
-    return { duration: total, writes, detach: { at: release } };
+    // Stuck where it hit: the item goes with whoever it hit, out of sight (show the mark with a piece they wear).
+    const stick = ctx.params.stick === true;
+    if (stick && !hit) ctx.fail('"stick" só vale com "hit".');
+    return { duration: total, writes, detach: { at: release }, ...(stick ? { attach: { to: hit!, socket: 'pocket', at: 'end' as const } } : {}) };
+  },
+});
+
+registerAction({
+  id: 'whirl',
+  description: 'Quem segura a funda na mão direita a gira acima da cabeça: a mão dá voltas por cima da cabeça e a funda gira junto, no mesmo compasso. O braço continua girando (move "sling") até um "throw" com "with" soltar a pedra; depois, desfaça com move sling amount 0. Use "ease: linear".',
+  appliesTo: ['item'],
+  params: {},
+  duration: 3,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id);
+    if (link?.socket !== 'handR') ctx.fail('a funda precisa estar na mão direita de alguém; use pickUp com "by" e "hand: right" antes.');
+    if (!('spin' in ctx.target.channels) || !('overhead' in ctx.target.channels)) ctx.fail('o item não gira acima da cabeça (precisa dos canais "spin" e "overhead", como arms.sling).');
+    if (ctx.clip.ease !== 'linear') ctx.fail('use "ease: linear": a funda gira no compasso da mão.');
+    const by = link!.to;
+    const length = ctx.clip.duration ?? 3;
+    // The hand goes round on the mover's own clock (motionSeed); the sling turns on the same one.
+    const clock = ctx.clip.t + motionSeed(by);
+    const from = ctx.current('move.sling', by);
+    return {
+      writes: [
+        { channel: 'overhead', at: () => 1 },
+        { channel: 'spin', at: (u) => SLING_RATE * (clock + u * length) },
+        { target: by, channel: 'move.sling', at: (u) => from + (1 - from) * ramp(u * length, 0, 0.3) },
+      ],
+    };
+  },
+});
+
+registerAction({
+  id: 'load',
+  description: 'Quem segura a funda põe nela a pedra que tem na outra mão: levanta a funda à frente do peito e a outra mão leva a pedra até a bolsinha. A pedra fica na funda (canal "loaded") e com ele, guardada, pronta para um "throw" com "with".',
+  appliesTo: ['item'],
+  params: {
+    with: { type: 'string', description: 'id da pedra, na outra mão de quem segura a funda', required: true },
+  },
+  duration: 1.1,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id);
+    const side = link?.socket.match(/^hand([LR])$/)?.[1] as 'L' | 'R' | undefined;
+    if (!link || !side) ctx.fail('ninguém está segurando a funda; use pickUp com "by" antes.');
+    if (!('loaded' in ctx.target.channels)) ctx.fail('o item não carrega pedra (precisa do canal "loaded", como arms.sling).');
+    const by = link!.to;
+    const stone = ctx.params.with as string;
+    const held = ctx.linkOf(stone);
+    const other = held?.socket.match(/^hand([LR])$/)?.[1] as 'L' | 'R' | undefined;
+    if (held?.to !== by || !other || other === side) ctx.fail(`"${stone}" precisa estar na outra mão de "${by}" (pickUp antes).`);
+    for (const s of [side!, other!]) if (ctx.current(`reach${s}`, by) > 0.01) ctx.fail(`a mão de "${by}" está levantada; use "lower" antes.`);
+    const sign = side === 'R' ? 1 : -1;
+    const IN = 0.55;
+    return {
+      writes: [
+        // The sling comes up in front of the chest; the pouch hangs a cord's length below the hand.
+        ...reachBody(by, side!, [sign * 0.2, 1.4, -0.42], outAndBack(0.3, 0.78)),
+        ...reachBody(by, other!, [sign * 0.16, 0.93, -0.4], outAndBack(0.4, 0.7)),
+        { target: by, channel: `carry${other}`, at: (u) => 1 - ramp(u, IN, IN + 0.1) },
+        { channel: 'loaded', at: (u) => (u < IN ? ctx.current('loaded') : 1) },
+      ],
+      detach: { target: stone, at: IN },
+      attach: { target: stone, to: by, socket: 'pocket', at: IN },
+    };
   },
 });
 

@@ -417,23 +417,37 @@ function kneel(pose: Pose, amount: number): Pose {
   return blendPose(pose, knelt, amount);
 }
 
+/** Turns a second of a sling spun over the head (`sling` below, and the sling's own `spin` in the `whirl` action). */
+export const SLING_RATE = 2.2;
+
 /**
- * Spinning a sling over the head with the right hand: the arm up and out, the hand going round about twice a
- * second. The body leans back a little and the left arm points ahead for aim.
+ * Each character's own clock for the moves, so that two people dancing or spinning are not in step. The `whirl`
+ * action uses it to turn the sling in step with the hand.
+ */
+export const motionSeed = (id: string): number => [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+
+/**
+ * Spinning a sling over the head with the right hand: the hand goes round a small circle above the head, a little
+ * to the right, SLING_RATE times a second, the elbow up and out. The body leans back a little, the head goes up
+ * after the sling and the left arm points ahead for aim. Seen from above the hand goes counterclockwise, starting
+ * at the right of the circle, as the sling's `spin` does with `overhead` on.
  */
 function sling(pose: Pose, amount: number, t: number): Pose {
-  const a = t * Math.PI * 2 * 2.2;
-  const spun: Pose = {
-    lift: pose.lift,
+  if (amount <= 0.001) return pose;
+  const a = t * Math.PI * 2 * SLING_RATE;
+  const lift = pose.lift;
+  let spun: Pose = {
+    lift,
     joints: {
       ...pose.joints,
-      spine: sum(pose, 'spine', [6, -10, 0]),
-      upperArmR: [-20 + 18 * Math.sin(a), 30 * Math.cos(a), 62 + 10 * Math.sin(a)],
-      forearmR: [0, 30 + 25 * Math.cos(a), 0],
-      upperArmL: [-70, 0, 10],
-      forearmL: [0, -10, 0],
+      spine: sum(pose, 'spine', [5, -12, 0]),
+      head: sum(pose, 'head', [-10, 8, 0]),
     },
   };
+  const r = 0.08;
+  spun = reachPose(spun, 'R', new THREE.Vector3(0.12 + r * Math.cos(a), 1.84 + lift, -0.04 - r * Math.sin(a)), new THREE.Vector3(1, 0.35, 0.25));
+  // The left hand points ahead at the target, a little to the left.
+  spun = reachPose(spun, 'L', new THREE.Vector3(-0.14, 1.4 + lift, -0.52));
   return blendPose(pose, spun, amount);
 }
 
@@ -460,8 +474,12 @@ function throwing(pose: Pose, amount: number): Pose {
       thighR: sum(pose, 'thighR', [-15 * fwd, 0, 0]),
     },
   };
-  // Fades in and out at the ends of the throw.
-  return blendPose(pose, out, Math.min(1, amount / 0.1, (1 - amount) / 0.1));
+  return blendPose(pose, out, throwWeight(amount));
+}
+
+/** How much a throw at this point of its progress takes the right arm, from 0 to 1: it fades in and out at the ends. */
+export function throwWeight(amount: number): number {
+  return amount <= 0.001 || amount >= 0.999 ? 0 : Math.min(1, amount / 0.1, (1 - amount) / 0.1);
 }
 
 /** Falling forward stiff, like a tree, and lying face down. The fall action moves the body forward with it. */
@@ -540,7 +558,80 @@ function strum(pose: Pose, amount: number, t: number): Pose {
   return blendPose(pose, played, amount);
 }
 
-export const MOVES: Record<string, Move> = { kneel, sling, throw: throwing, fall, dance, cheer, cower, strum };
+/** The phase of the walk in a pose, from the thighs: 1 with the left leg forward, -1 with the right, 0 standing. */
+const stepPhase = (pose: Pose): number => {
+  const l = pose.joints.thighL?.[0] ?? 0;
+  const r = pose.joints.thighR?.[0] ?? 0;
+  return Math.max(-1, Math.min(1, (l - r) / 52));
+};
+
+/**
+ * Walking heavy and clumsy: in armour too big for him, or a giant carrying his weight. Shorter steps on stiff
+ * knees, the body rolling onto each foot as it lands, the arms held out from the sides and hardly swinging, the
+ * head down. Standing still, only the arms and the head show it.
+ */
+function lumber(pose: Pose, amount: number): Pose {
+  if (amount <= 0.001) return pose;
+  const s = stepPhase(pose);
+  const j = pose.joints;
+  const x = (joint: Joint, k: number): [number, number, number] => {
+    const [a, b, c] = j[joint] ?? [0, 0, 0];
+    return [a * k, b, c];
+  };
+  const heavy: Pose = {
+    lift: pose.lift * 0.5 - 0.02,
+    joints: {
+      ...j,
+      // Rolling over the foot that bears the weight.
+      hips: sum(pose, 'hips', [0, 0, 7 * s]),
+      spine: sum(pose, 'spine', [-6, 0, -4 * s]),
+      chest: sum(pose, 'chest', [0, 0, -3 * s]),
+      head: sum(pose, 'head', [10, 0, -2 * s]),
+      thighL: x('thighL', 0.7), thighR: x('thighR', 0.7),
+      shinL: x('shinL', 0.55), shinR: x('shinR', 0.55),
+      footL: x('footL', 0.6), footR: x('footR', 0.6),
+      upperArmL: [(j.upperArmL?.[0] ?? 0) * 0.35, 0, 58 + 6 * s],
+      upperArmR: [(j.upperArmR?.[0] ?? 0) * 0.35, 0, -58 + 6 * s],
+      forearmL: [0, -32, 0],
+      forearmR: [0, 32, 0],
+    },
+  };
+  return blendPose(pose, heavy, amount);
+}
+
+/**
+ * Staggering after a blow to the head: the head thrown back, the knees going soft, the body swaying over the feet
+ * and the arms hanging loose. It sways by itself while it holds.
+ */
+function stagger(pose: Pose, amount: number, t: number): Pose {
+  if (amount <= 0.001) return pose;
+  const w1 = Math.sin(t * 2.6);
+  const w2 = Math.sin(t * 3.9 + 1.3);
+  const thigh = 22;
+  const knee = 40;
+  const rad = Math.PI / 180;
+  // The hips come down with the bent knees, so the feet stay on the ground (as in crouchPose).
+  const lift = 0.42 * Math.cos(thigh * rad) + 0.4 * Math.cos((knee - thigh) * rad) - 0.82;
+  const reeling: Pose = {
+    lift: pose.lift + lift,
+    joints: {
+      ...pose.joints,
+      hips: [0, 6 * w2, 10 * w1],
+      spine: [10 + 5 * w2, 0, -8 * w1],
+      chest: [4, 6 * w2, -3 * w1],
+      neck: [-8, 0, 0],
+      head: [-30 + 10 * w2, 14 * w1, 12 * w1],
+      thighL: [thigh + 4 * w1, 0, 0], thighR: [thigh - 4 * w1, 0, 0],
+      shinL: [-knee - 6 * w1, 0, 0], shinR: [-knee + 6 * w1, 0, 0],
+      footL: [knee - thigh, 0, 0], footR: [knee - thigh, 0, 0],
+      upperArmL: [-10 + 8 * w2, 0, 62 + 8 * w1], upperArmR: [-10 - 8 * w2, 0, -62 + 8 * w1],
+      forearmL: [0, -25, 0], forearmR: [0, 25, 0],
+    },
+  };
+  return blendPose(pose, reeling, amount);
+}
+
+export const MOVES: Record<string, Move> = { lumber, kneel, sling, throw: throwing, stagger, fall, dance, cheer, cower, strum };
 export const MOVE_NAMES = Object.keys(MOVES);
 
 /** All the moves on a pose, by their weights. */

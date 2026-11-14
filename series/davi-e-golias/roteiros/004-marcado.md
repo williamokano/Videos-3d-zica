@@ -1,0 +1,128 @@
+# Episódio 4 — O gigante (marcado)
+
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:21.8. Tempos já sem os cortes secos.
+
+Pausas sem fala de 3 s ou mais aparecem como ⏸.
+
+- `0:00.0` 🌍 rule.noite → 0
+- `0:00.0` 🌍 rule.amanhecer → 0
+- `0:00.0` 🌍 rule.entardecer → 0
+- `0:00.0` 🌍 rule.fim-de-tarde → 0
+- `0:00.0` *DAVI passa a: attend*
+- `0:00.0` 🎥  fov 34
+- `0:00.5` 🎥  fov 34
+- `0:00.7` **REI SAUL**: Meu capacete. ⚠ sem gravação
+- `0:02.3` *DAVI faz cara de sad*
+- `0:02.6` 🎥 corte: câmera fov 38
+- `0:02.6` 🎥  fov 38
+- `0:03.2` **REI SAUL**: Minha couraça. ⚠ sem gravação
+- `0:05.0` **REI SAUL**: Minha espada. ⚠ sem gravação
+- `0:07.1` *DAVI faz cara de neutral*
+- `0:07.4` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 4 · O gigante
+- `0:07.4` 🎥 corte: câmera fov 50
+- `0:07.4` 🎥  fov 46
+- `0:10.8` *DAVI passa a: idle*
+- `0:10.8` 🎥 corte: câmera fov 44
+- `0:11.2` *DAVI anda até [2.4,-39.5]*
+- `0:15.4` *DAVI vira*
+- `0:15.4` 🎥  fov 42
+- `0:15.8` *DAVI passa a: attend*
+- ⏸ **9.8 s sem fala**
+- `0:16.1` **DAVI** (cansado): Não consigo andar com isto. ⚠ sem gravação
+- `0:16.1` 🎥 corte: câmera
+- `0:18.7` **DAVI**: Não estou acostumado. ⚠ sem gravação
+- `0:20.5` *DAVI passa a: idle*
+- `0:26.5` *DAVI passa a: attend*
+- ⏸ **6.0 s sem fala**
+- `0:26.5` **REI SAUL** (preocupado): Não irás sem proteção. ⚠ sem gravação
+- `0:26.5` 🎥 corte: câmera
+- `0:28.5` *DAVI passa a: idle*
+- `0:28.5` *DAVI anda até [1.8,-40.5]*
+- `0:28.5` 🎥 corte: câmera fov 40
+- `0:29.7` *DAVI pega cajado*
+- `0:30.9` *DAVI vira*
+- `0:31.3` *DAVI passa a: attend*
+- `0:31.3` **DAVI** (firme): Sempre fui assim, meu senhor. ⚠ sem gravação
+- `0:31.3` 🎥  fov 40
+- `0:31.3` 🎥 corte: câmera
+- `0:34.0` **SOLDADO** (urgente): Olhem! Tem alguém descendo! ⚠ sem gravação
+- `0:34.0` 🎥 corte: câmera fov 44
+- `0:34.0` 🎥  fov 42
+- `0:36.3` **ABINADABE** (assustado): É o Davi. ⚠ sem gravação
+- `0:37.4` **ELIABE** (grito): Davi! Volta! ⚠ sem gravação
+- `0:37.4` 🎥 corte: câmera
+- `0:38.7` 🎥 corte: câmera fov 40
+- `0:44.0` 🎥  fov 40
+- `0:44.0` 🎥 corte: câmera fov 40
+- `0:44.0` 🎥  fov 38
+- ⏸ **6.9 s sem fala**
+- `0:45.6` **DAVI** (sussurro): Uma. ⚠ sem gravação
+- `0:45.6` *guarda pedra1*
+- `0:47.2` **DAVI** (sussurro): Duas. ⚠ sem gravação
+- `0:47.2` *guarda pedra2*
+- `0:47.9` 🎥 corte: câmera fov 34
+- `0:48.8` **DAVI** (sussurro): Três. ⚠ sem gravação
+- `0:48.8` *guarda pedra3*
+- `0:50.4` **DAVI** (sussurro): Quatro. ⚠ sem gravação
+- `0:50.4` *guarda pedra4*
+- `0:51.1` **FILISTEU** (laughs): Mandaram um menino! ⚠ sem gravação
+- `0:51.1` 🎥 corte: câmera fov 42
+- `0:52.0` **DAVI** (sussurro): Cinco. ⚠ sem gravação
+- `0:52.0` *guarda pedra5*
+- `0:53.4` 🎥 corte: câmera fov 40
+- `0:53.4` 🎥  fov 40
+- `0:57.7` 🎥 corte: câmera fov 40
+- `0:57.7` 🎥  fov 38
+- ⏸ **6.3 s sem fala**
+- `0:59.3` **GOLIAS** (laughs): Sou eu algum cão, para que venhas a mim com paus? ⚠ sem gravação
+- `0:59.3` 🎥 corte: câmera fov 44
+- `0:59.3` 🎥  fov 43
+- `1:03.0` 🎥 corte: câmera fov 42
+- `1:03.0` 🎥  fov 41
+- `1:03.5` **GOLIAS** (grito): Que os meus deuses te amaldiçoem! ⚠ sem gravação
+- `1:06.5` **GOLIAS** (grito): Vem! Darei a tua carne às aves do céu e aos animais do campo! ⚠ sem gravação
+- `1:11.0` 🎥 corte: câmera fov 34
+- `1:11.0` 🎥  fov 33
+- `1:11.6` **DAVI** (firme): Tu vens contra mim com espada, lança e escudo. ⚠ sem gravação
+- `1:15.1` **DAVI** (firme): Eu, porém, vou contra ti em nome do Senhor dos Exércitos, o Deus dos exércitos de Israel, a quem tens afrontado. ⚠ sem gravação
+- `1:15.1` 🎥 corte: câmera fov 40
+- `1:15.1` 🎥  fov 38
+- `1:22.9` 🎥 corte: câmera fov 40
+- `1:22.9` 🎥  fov 38
+- `1:24.1` 🎥 corte: câmera fov 34
+- `1:24.3` **DAVI** (grito): Hoje todos saberão que há um Deus em Israel! ⚠ sem gravação
+- `1:28.6` 🎥 corte: câmera fov 50
+- `1:28.6` 🎥  fov 50
+- `1:30.5` 🎥 corte: câmera fov 50
+- `1:31.8` 🎥  fov 50
+- `1:31.9` 🎥 corte: câmera fov 44
+- `1:31.9` 🎥  fov 44
+- `1:33.2` 🎥 corte: câmera fov 40
+- `1:34.5` 🎥 corte: câmera fov 44
+- `1:34.7` 🐢 **câmera lenta** (0.9 s do episódio, 5 vezes mais devagar: 4.7 s de vídeo)
+- `1:35.8` 🎥  fov 42
+- `1:37.5` 🎥  fov 38
+- `1:40.0` 🎥 corte: câmera fov 36
+- `1:40.4` 🎥  fov 38
+- `1:42.0` 🎥 corte: câmera fov 46
+- `1:43.7` 🐢 **câmera lenta** (1.2 s do episódio, 2 vezes mais devagar: 2.4 s de vídeo)
+- `1:47.9` 🎥 corte: câmera fov 30
+- `1:49.0` 🎥 corte: câmera fov 28
+- `1:50.1` 🎥 corte: câmera fov 44
+- `1:52.6` 🎥 corte: câmera fov 46
+- `1:53.0` 🎥  fov 46
+- `1:54.1` 🎥 corte: câmera fov 44
+- `1:54.1` 🎥  fov 44
+- `1:54.4` 🎥 corte: câmera fov 46
+- `1:54.4` 🎥  fov 46
+- `1:59.6` 🎥 corte: câmera fov 36
+- ⏸ **32.2 s sem fala**
+- `1:59.9` **SOLDADO 1** (grito): Israel! ⚠ sem gravação
+- `2:01.5` **SOLDADO 2** (grito): Atrás deles! ⚠ sem gravação
+- `2:01.8` **Narrador**: E naquele dia, o gigante que havia aterrorizado Israel por quarenta dias caiu diante de um pastor. ⚠ sem gravação
+- `2:01.8` 🎥 corte: câmera fov 50
+- `2:05.0` 🎥  fov 50
+- `2:08.9` 🟥 cartão final: "Você ia com a armadura do rei ou só com a funda?" — ARMADURA / FUNDA — Comenta ARMADURA ou FUNDA 👇 e marca quem precisa de coragem hoje
+- `2:09.2` **Narrador**: Você ia com a armadura do rei, ou só com a funda? Comenta aí. No próximo episódio: de herói a ameaça. ⚠ sem gravação
+- `2:10.0` 🎥  fov 50
+- ⏸ **5.5 s sem fala até o fim**

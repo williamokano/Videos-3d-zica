@@ -21,6 +21,11 @@ export interface WearSpec {
   accent?: string;
   /** Starts out of sight, to be put on during an episode (`showWear` on the rig). */
   hidden?: boolean;
+  /**
+   * Bigger (or smaller) than made for this body: someone else's armour, a helmet too big that sits low. Each part
+   * grows from where it hangs (a sheath gets longer down from the belt).
+   */
+  size?: number;
 }
 
 /** What a piece is built against: the size of this body. */
@@ -66,6 +71,7 @@ export function buildWear(wear: (string | WearSpec)[] | undefined, body: WearBod
     if (!piece) throw new Error(`Peça de roupa desconhecida "${spec.id}". Existem: ${[...catalog.keys()].join(', ')}.`);
     return piece.build(spec, body).map((p) => {
       if (spec.hidden) p.object.visible = false;
+      if (spec.size !== undefined && spec.size !== 1) p.object.scale.multiplyScalar(spec.size);
       return { ...p, id: spec.id };
     });
   });
@@ -498,7 +504,19 @@ registerWearable('bronzeHelmet', 'Capacete de bronze redondo, com ponta, proteto
     cheek.rotation.z = x * 0.12;
     return part('head', cheek);
   });
-  return [part('head', shell), part('head', knob), part('head', rim), part('head', nape), ...cheeks];
+  const parts = [part('head', shell), part('head', knob), part('head', rim), part('head', nape), ...cheeks];
+  // Too big, it sits lower, down to the eyebrows: every part comes down by what the head is short of filling it.
+  const size = s.size ?? 1;
+  if (size > 1) for (const p of parts) p.object.position.y -= ((size - 1) * r * 1.1) / size;
+  return parts;
+});
+
+registerWearable('foreheadStone', 'Pedra lisa cravada na testa, logo abaixo da borda do capacete: o Golias depois da funda (color)', (s, b) => {
+  const r = b.head;
+  const stone = new THREE.Mesh(new THREE.SphereGeometry(r * 0.13, 12, 8), mat(s.color ?? '#9a958c'));
+  stone.scale.set(1, 0.75, 0.6);
+  stone.position.set(r * 0.05, r * 0.22, -r * 0.97);
+  return [part('head', stone)];
 });
 
 registerWearable('plumedHelmet', 'Capacete filisteu: faixa de bronze com uma coroa de penas ou juncos em pé (color nas penas, accent na faixa)', (s, b) => {

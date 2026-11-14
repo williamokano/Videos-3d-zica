@@ -128,3 +128,11 @@ NARRADOR:
 Corte para preto.
 
 FIM DO EPISÓDIO 4.
+
+---
+
+## Pedido de produção (2026-11-14, ao começar o episódio)
+
+Guardado como o autor escreveu:
+
+> como está em processo de produção, pode começar o episódio 4. Quero que bote bastante ênfase nas animações da luta

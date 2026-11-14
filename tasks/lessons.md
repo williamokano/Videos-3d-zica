@@ -29,3 +29,11 @@
 - **Voz de locutor: nunca, nem em fala curta.** Depois do Adriano, o Diego ("Confident Announcer") também soou explosivo e feliz numa cena tensa. Vozes marcadas na biblioteca como announcer, advertisement, hyped, radio, commercial ficam fora de drama, mesmo para uma fala só. Para voz nova, gere a fala em 3 a 6 vozes candidatas (custa poucos créditos), mande ao autor e deixe ele escolher antes de renderizar e publicar.
 - **Amostra de voz no volume do vídeo.** As falas ficam em -18 LUFS antes da mixagem, e o vídeo sobe para -14: amostras soltas em -18 soam baixas demais para o autor julgar. `npm run testar-voz` já entrega em -14.
 - **Dado fixo em JSON, interpretação em markdown.** Configuração que o código pode ler (voz, papel, família, episódios, vozes vetadas) vai em JSON (`characters/<id>.json` `profile`, `canal/vozes.json`); o `.md` guarda o que precisa ser interpretado (personalidade, arco, cânone). Nunca fazer o código extrair dado de markdown.
+
+## A luta do ep. 4 de Davi
+
+- **Ação com a mão: ver no banco antes de pôr no episódio.** O `doff` (tirar o capacete) e o `load` (pedra na funda) passaram nos testes, mas no banco de três câmeras as mãos subiam antes de a peça sair (parecia espreguiçar) e a mão da funda ia parar na frente do rosto. Só a imagem mostra isso; o banco (`demo-acoes` ep. 6) fica para a próxima ação.
+- **`lookAt` atrás do personagem vira o corpo inteiro.** Para a cabeça dar um tranco para trás com a pedra, o ponto foi posto atrás dele e o roteiro girou o gigante 180°. Ponto de olhar para cima sempre à frente do corpo.
+- **Ação que segura a mão inteira em uma etapa curta.** Correr 1,4 m dura 0,4 s; o `load` foi para depois e o giro da funda começou no meio dele. Liste os tempos das ações (`episode.actions`) da cena de ação antes de olhar os quadros.
+- **Plano que dependia de onde alguém estava fica errado quando a posição muda.** Mexi onde o Golias para e os planos do cambalear e da queda deixaram ele na borda. Calcule câmera a partir das constantes de posição (ou `d.where`), não de números soltos.
+- **Plano por cima do ombro só funciona com distância entre os dois.** Com o Saul a 0,8 m do Davi (para alcançar a cabeça dele), as costas do rei tapavam o quadro; ali o plano é de lado, mais longe.

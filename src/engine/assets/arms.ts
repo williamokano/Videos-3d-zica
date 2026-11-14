@@ -100,7 +100,7 @@ registerAsset('arms.staff', 'Cajado de pastor: vara comprida com a ponta curva e
   return staff;
 });
 
-registerAsset('arms.sling', 'Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas', (p) => {
+registerAsset('arms.sling', 'Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás), `overhead` (1: as cordas saem quase deitadas da mão e `spin` gira em volta dela, como acima da cabeça; é o que a ação `whirl` faz) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas', (p) => {
   const cord = 0.48;
   const sling = new THREE.Group();
   // Everything turns round the hand: the pivot is the grip.
@@ -123,13 +123,23 @@ registerAsset('arms.sling', 'Funda de pastor: duas cordas e a bolsinha de couro,
   sling.add(pivot);
   sling.userData.grip = [0, cord + 0.03, 0];
   sling.userData.pivot = pivot;
+  // Over the head the cords stand out from the hand, nearly level (a little below), and go round it.
+  pivot.rotation.order = 'YZX';
+  const DROOP = (80 * Math.PI) / 180;
+  let spin = 0;
+  let overhead = 0;
+  const turn = (): void => {
+    if (overhead >= 0.5) pivot.rotation.set(0, spin * Math.PI * 2, DROOP);
+    else pivot.rotation.set(spin * Math.PI * 2, 0, 0);
+  };
   return setChannels(sling, {
-    spin: { value: 0, apply: (v) => void (pivot.rotation.x = v * Math.PI * 2) },
+    spin: { value: 0, apply: (v) => void ((spin = v), turn()) },
+    overhead: { value: 0, apply: (v) => void ((overhead = v), turn()) },
     loaded: { value: 0, apply: (v) => void (stone.visible = v > 0.5) },
   });
 });
 
-registerAsset('arms.stone', 'Pedra lisa de riacho, pequena, do tamanho de um ovo; pegável (params: size, color)', (p) => {
+registerAsset('arms.stone', 'Pedra lisa de riacho, pequena, do tamanho de um ovo; pegável. Canal `trail` (0 a 1): um rastro de ar atrás dela, para o voo (o `throw` liga sozinho e vira a pedra para onde ela vai) (params: size, color)', (p) => {
   const size = num(p.size, 0.05);
   const stone = new THREE.Mesh(new THREE.SphereGeometry(size / 2, 14, 10), mat(String(p.color ?? '#9a958c')));
   stone.scale.set(1, 0.72, 0.85);
@@ -137,7 +147,26 @@ registerAsset('arms.stone', 'Pedra lisa de riacho, pequena, do tamanho de um ovo
   const g = new THREE.Group();
   g.add(stone);
   g.userData.grip = [0, size * 0.36, 0];
-  return g;
+  // The trail: a long thin cone of pale air behind the stone (behind is +z, the stone faces where it goes).
+  const length = size * 16;
+  const trail = new THREE.Mesh(
+    new THREE.ConeGeometry(size * 0.42, length, 10, 1, true).rotateX(Math.PI / 2).translate(0, 0, length / 2),
+    new THREE.MeshBasicMaterial({ color: '#fff4dc', transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }),
+  );
+  trail.position.y = size * 0.36;
+  trail.userData.noOutline = true;
+  trail.visible = false;
+  g.add(trail);
+  return setChannels(g, {
+    trail: {
+      value: 0,
+      apply: (v) => {
+        trail.visible = v > 0.01;
+        trail.scale.set(1, 1, Math.max(0.01, v));
+        (trail.material as THREE.MeshBasicMaterial).opacity = 0.55 * Math.min(1, v);
+      },
+    },
+  });
 });
 
 registerAsset('arms.bow', 'Arco de madeira com a corda, em pé; pegável, pelo meio (params: size, a altura, padrão 1.2)', (p) => {
@@ -304,4 +333,41 @@ registerAsset('arms.oilHorn', 'Chifre de carneiro com azeite de unção, tampado
     stream.scale.set(k, Math.max(0.001, flow * length * (1 + 0.03 * Math.sin(t * 9.3))), k);
   };
   return setChannels(g, { pour: { value: 0, apply: pour } });
+});
+
+registerAsset('arms.helmet', 'Capacete de bronze redondo, com ponta e protetor de nuca, solto (o mesmo da peça de roupa bronzeHelmet, para vestir com "don" e tirar com "doff"). Pegável, pela borda (params: size, o raio da cabeça, padrão 0.16; color)', (p) => {
+  const r = num(p.size, 0.16);
+  const color = String(p.color ?? BRONZE);
+  const g = new THREE.Group();
+  const shell = new THREE.Mesh(new THREE.SphereGeometry(r * 1.1, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.45), metal(color));
+  shell.scale.set(1, 1.05, 1.06);
+  shell.position.y = r * 0.1;
+  const knob = new THREE.Mesh(new THREE.ConeGeometry(r * 0.12, r * 0.32, 12), metal(color));
+  knob.position.y = r * 1.28;
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(r * 1.08, r * 0.055, 8, 28).rotateX(Math.PI / 2), metal('#8a5f2a'));
+  rim.position.y = r * 0.42;
+  rim.scale.set(1, 1, 1.07);
+  const inner = new THREE.Group();
+  inner.add(shell, knob, rim);
+  // Standing on its rim.
+  inner.position.y = -r * 0.36;
+  g.add(inner);
+  g.userData.grip = [r * 1.08, r * 0.12, 0];
+  return g;
+});
+
+registerAsset('arms.armor', 'Couraça de escamas de bronze, solta (a peça de roupa scaleArmor fora do corpo, para vestir com "don" e tirar com "doff"): peito, barriga e ombreiras. Pegável, pelos ombros (params: size, a largura, padrão 0.45; color)', (p) => {
+  const w = num(p.size, 0.45);
+  const color = String(p.color ?? BRONZE);
+  const g = new THREE.Group();
+  g.add(
+    rbox(w, w * 0.7, w * 0.55, color, [0, w * 0.82, 0], w * 0.18),
+    rbox(w * 0.84, w * 0.5, w * 0.5, color, [0, w * 0.3, 0], w * 0.14),
+    rbox(w * 0.3, w * 0.1, w * 0.36, '#8a5f2a', [-w * 0.42, w * 1.14, 0], w * 0.04),
+    rbox(w * 0.3, w * 0.1, w * 0.36, '#8a5f2a', [w * 0.42, w * 1.14, 0], w * 0.04),
+  );
+  // Rows of scales on the front.
+  for (let y = 0.1; y < 1.1; y += 0.14) g.add(rbox(w * (y > 0.55 ? 0.92 : 0.76), w * 0.035, 0.012, '#c99550', [0, w * y, -w * (y > 0.55 ? 0.28 : 0.255)], 0.005));
+  g.userData.grip = [w * 0.42, w * 1.18, 0];
+  return g;
 });

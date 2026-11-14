@@ -8,6 +8,7 @@ import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { finalOf } from './tempo.mjs';
 
 /**
  * What plays when, from an episode resolved by src/tools/library.ts. Lines without a take are silent (and reported).
@@ -16,9 +17,9 @@ import { pathToFileURL } from 'node:url';
 export function cuesOf({ series, bible, episode, soundFile, filters = {} }, from = 0, to = episode.duration) {
   const root = resolve('series', series, 'audio');
   const cuts = episode.cuts ?? [];
-  // Jump cuts: times move to where they land in the finished video; a sound that starts inside a cut starts
-  // partway in, where the cut ends.
-  const final = (t) => cuts.reduce((out, [a, b]) => (t > a ? out - (Math.min(t, b) - a) : out), t);
+  // Jump cuts and slow motion: times move to where they land in the finished video; a sound that starts inside a
+  // cut starts partway in, where the cut ends. Sounds play at their own speed in slow motion.
+  const final = finalOf(episode);
   const place = (t0) => {
     const cut = cuts.find(([a, b]) => t0 >= a && t0 < b);
     return { t: final(t0) - final(from), skip: cut ? cut[1] - t0 : 0 };
@@ -131,8 +132,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     const folder = episodeFolder(data.series, data.episode.episode, { dir: option('dir'), output: data.bible.output });
     mkdirSync(folder, { recursive: true });
     const out = resolve(option('out', join(folder, episodeFile(data.series, data.episode.episode, 'wav'))));
-    const cut = (data.episode.cuts ?? []).reduce((sum, [a, b]) => sum + b - a, 0);
-    await mix(cues, data.episode.duration - cut, out);
+    await mix(cues, finalOf(data.episode)(data.episode.duration), out);
     console.log(out);
   } finally {
     await server.close();
