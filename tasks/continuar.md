@@ -19,11 +19,11 @@ O Instagram do canal ainda não está no publicador: lá a postagem é manual.
   - `episodes/004.ts`, `roteiros/004-pedido.md`, `004-roteiro.md` e `004-marcado.md`.
 - `0a56949`: as vozes dos figurantes que falam e a trilha.
   - Vozes, todas já aprovadas pelo autor: israel-2 = Guilherme, israel-6 = Arnold, israel-4 = Papai Noel, filisteu-6 = Manoel Lopes.
-  - Trilha: as músicas CC0 de sempre, mais 10 efeitos novos em `bible.json` (armadura, riacho, pedras, funda, pedra voando, impacto, queda, espada, fuga, exército correndo), **ainda não gerados**.
+  - Trilha: as músicas CC0 de sempre, mais 11 efeitos novos em `bible.json` (armadura, riacho, pedras, funda, pedra voando, impacto, queda, espada, golpe, fuga, exército correndo), **ainda não gerados**.
 - Prévia muda nova, renderizada da main com `--no-audio`: `Videos Curtos/Davi/ep04/previa.mp4` no NAS.
 - Próximos passos:
   1. **O autor revisa a prévia.** Não gere áudio antes: os créditos da ElevenLabs são caros e o roteiro pode mudar.
-  2. Com a aprovação, rode `npm run voz -- --series davi-e-golias --ep 4`: 26 falas (~1.030 caracteres) e os 10 efeitos. As falas saem niveladas.
+  2. Com a aprovação, rode `npm run voz -- --series davi-e-golias --ep 4`: 26 falas (~1.030 caracteres) e os 11 efeitos. As falas saem niveladas.
   3. Rode `npm run render -- --series davi-e-golias --ep 4`. Confira:
      - loudness em torno de -14 LUFS;
      - nenhum silêncio longo, exceto o silêncio de propósito depois da queda;
