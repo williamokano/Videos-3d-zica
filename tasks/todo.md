@@ -46,3 +46,11 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [x] Fogo das fogueiras mais vivo e chama da lamparina melhor
 - [x] Unção: câmera colada demais e o Davi ajoelhado mal se vê; plano mais aberto, de lado, com uma pequena rotação em volta dos dois
 - [x] Cenas de duas pessoas: pegar as duas meio de lado, com uma pequena rotação em volta delas
+
+## 7. Segunda rodada de ajustes em "O escolhido" (texto em roteiros/001-ajustes.md)
+- [x] A novilha entra no degrau do portão: parar antes
+- [x] Plano por cima dos ombros mais alto
+- [x] Conversa Samá e Davi: o Davi de frente, os dois no quadro
+- [x] Ritmo menos seco: o Samuel examina cada filho com mais calma (e o Jessé apresenta), até 2:50
+- [x] O Davi chega acanhado ("Mandaste me chamar, pai?"), o Samuel diz "Aproxima-te", examina o Davi em silêncio, e só então "É este"
+- [x] O azeite cai na cabeça do Davi, não ao lado

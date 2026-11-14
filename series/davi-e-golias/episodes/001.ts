@@ -51,7 +51,7 @@ export default direct(
       { id: 'samuel-casa', character: 'samuel', at: [12.5, -34.6], yaw: 180 },
       { character: 'jesse', at: [10.6, -33.2], yaw: 150 },
       ...FILHOS.map((id, i): CastMember => ({ character: id, at: [FILA_X[i], FILA_Z], yaw: 0 })),
-      { id: 'davi-casa', character: 'davi', at: [19.5, -24.5], yaw: 90 },
+      { id: 'davi-casa', character: 'davi', at: [15.5, -27.3], yaw: 90 },
       // O canto do palácio do Saul (a sala "sala-saul", longe de tudo).
       { id: 'saul', character: 'saul', at: [100, -101.78], yaw: 180, seated: 0.64 },
     ],
@@ -98,7 +98,7 @@ export default direct(
     d.camera.track('samuel', { from: sobre(4.6, -12.6, 1.9), to: sobre(3.8, -17.4, 2.0), duration: 3.4, fov: 38 });
     const chegada = d.together(
       () => samuel.walkTo([0.4, -21.6], { speed: 1.05 }),
-      () => d.do('novilha', 'moveTo', { to: [1.2, -19.0] }, { duration: 6.6, ease: 'linear' }),
+      () => d.do('novilha', 'moveTo', { to: [2.1, -17.0] }, { duration: 5.0, ease: 'linear' }),
     );
     d.at(chegada.start + 3.2);
     // Os anciãos se levantam de uma vez.
@@ -154,11 +154,16 @@ export default direct(
     d.camera.cut({ pos: [11.0, TOPO + 1.75, -34.7], lookAt: [8.9, TOPO + 1.45, -31.6], fov: 44 });
     d.camera.moveTo({ pos: [10.6, TOPO + 1.7, -34.5], lookAt: [8.9, TOPO + 1.45, -31.6], fov: 42 });
     jesse.say('Este é Eliabe. Meu primogênito.', { tone: 'orgulhoso', to: samuelC, gesture: 0.4 });
+    // [Liberdade] O pai elogia o primogênito; o Samuel o olha de alto a baixo, devagar.
+    jesse.say('É o mais forte de nós. Já serve no exército do rei.', { tone: 'orgulhoso', to: samuelC, gesture: 0.4 });
+    samuelC.lookAt([FILA_X[0], TOPO + 1.75, FILA_Z], { duration: 0.8 });
+    samuelC.lookAt([FILA_X[0], TOPO + 0.6, FILA_Z], { duration: 1.1 });
+    samuelC.lookAt([FILA_X[0], TOPO + 1.7, FILA_Z], { duration: 0.9 });
     samuelC.pickUp('chifre-casa', { hand: 'right' });
     samuelC.say('Certamente este é o ungido do Senhor.', { tone: 'sussurro', gesture: 0 });
     // Ele para. Abaixa o chifre devagar.
     d.camera.track('samuel-casa', { from: [10.6, TOPO + 1.7, -34.2], to: [10.3, TOPO + 1.65, -34.0], duration: 7, fov: 38, aimHeight: -0.05 });
-    d.wait(0.8);
+    d.wait(1.6);
     samuelC.say('Não. O homem vê o que está diante dos olhos. Porém o Senhor olha para o coração.', { tone: 'sussurro', gesture: 0 });
     // O Eliabe fica rígido. [Liberdade]
     filho('eliabe').express('angry', { amount: 0.5 });
@@ -166,20 +171,19 @@ export default direct(
 
     // Os outros, um por um. Cortes rápidos; a cada um, o Samuel balança a cabeça.
     // A câmera acompanha o Samuel ao longo da fila.
-    d.camera.track('samuel-casa', { from: [13.8, TOPO + 1.9, -35.4], to: [15.6, TOPO + 1.9, -35.3], duration: 16, fov: 46 });
+    d.camera.track('samuel-casa', { from: [13.8, TOPO + 1.9, -35.4], to: [15.6, TOPO + 1.9, -35.3], duration: 26, fov: 46 });
     for (let i = 1; i < FILHOS.length; i++) {
       const [id, x] = [FILHOS[i], FILA_X[i]];
-      samuelC.walkTo([x, FRENTE_Z], { speed: 1.1 });
+      samuelC.walkTo([x, FRENTE_Z], { speed: i <= 2 ? 1.0 : 1.4 });
       samuelC.turnTo(180);
       samuelC.behave('attend', { object: id });
-      if (i <= 2) {
-        jesse.say(NOMES[id] + '.', { to: samuelC, gesture: 0.2 });
-        samuelC.say(i === 1 ? 'Também não é este.' : 'Nem este.', { gesture: 0 });
-      } else {
-        samuelC.lookAt([x, TOPO + 1.4, FILA_Z], { duration: 0.3 });
-        samuelC.lookAt([x - 0.4, TOPO + 1.4, FILA_Z], { duration: 0.35 });
-        samuelC.lookAt([x + 0.4, TOPO + 1.4, FILA_Z], { duration: 0.35 });
-      }
+      // Os dois primeiros com calma; os outros, mais depressa, como quem já sabe a resposta.
+      const calm = i <= 2 ? 1 : 0.55;
+      jesse.say(NOMES[id] + '.', { to: samuelC, gesture: 0.2 });
+      samuelC.lookAt([x, TOPO + 1.65, FILA_Z], { duration: 0.6 * calm });
+      samuelC.lookAt([x, TOPO + 0.8, FILA_Z], { duration: 0.8 * calm });
+      samuelC.lookAt([x, TOPO + 1.6, FILA_Z], { duration: 0.6 * calm });
+      if (i <= 2) samuelC.say(i === 1 ? 'Também não é este.' : 'Nem este.', { gesture: 0 });
       if (i === 3) filho('sama').say('Nenhum de nós?', { tone: 'sussurro', to: 'abinadabe', gesture: 0 });
     }
     // [GANCHO] Nenhum dos sete.
@@ -205,35 +209,55 @@ export default direct(
     samaC.turnTo(ASSENTO);
     d.do('davi', 'move', { name: 'strum', amount: 0 }, { duration: 0.4 });
     davi.lookAt(samaC, { duration: 0.4 });
-    d.camera.twoShot('sama-campo', 'davi', { duration: 7, swing: 16, fov: 42, side: -1, height: 1.2 });
+    // De frente para o Davi, os dois no quadro, girando devagar.
+    d.camera.twoShot('sama-campo', 'davi', { duration: 7, swing: 14, fov: 42, side: 1, height: 1.1 });
     samaC.say('O pai te chama. Agora. O profeta está lá em casa.', { tone: 'urgente', to: davi, gesture: 0.6 });
     davi.say('O profeta? Comigo?', { tone: 'surpreso', to: samaC });
 
-    // A casa. A porta. O Davi entra com a roupa de pastor e o cajado. Todos se viram.
+    // A casa. A porta. O Davi entra com a roupa de pastor e o cajado, sem jeito, e para atrás dos irmãos.
     d.background(() => daviC.pickUp('cajado-casa', { hand: 'right' }));
-    const entra = daviC.walkTo([12.5, -31.0], { speed: 1.0, via: [[12.5, -27.6]] });
+    const entra = daviC.walkTo([12.5, -30.5], { speed: 0.95, via: [[12.5, -27.6]] });
     d.at(entra.start + 0.6);
-    d.camera.track('davi-casa', { from: [15.6, TOPO + 2.0, -35.0], to: [15.2, TOPO + 1.9, -34.6], duration: 5, fov: 44 });
+    d.camera.track('davi-casa', { from: [15.6, TOPO + 2.0, -35.0], to: [15.2, TOPO + 1.9, -34.6], duration: 6, fov: 44 });
     d.at(entra.end - 2.4);
     for (const id of [...FILHOS, 'jesse']) filho(id).behave('attend', { object: 'davi-casa', mood: 'calm' });
     samuelC.behave('attend', { object: 'davi-casa' });
     d.waitFor(entra);
-    daviC.behave('attend', { object: 'samuel-casa' });
-    // Longo silêncio. O Samuel olha para ele.
-    d.camera.cut({ pos: [16.5, TOPO + 2.3, -30.0], lookAt: [12.5, TOPO + 1.25, -32.2], fov: 46 });
-    d.wait(2.4);
-    samuelC.say('É este.', { tone: 'sussurro', gesture: 0 });
-    // O Davi olha para o pai, que faz um sinal com a cabeça. Ele se ajoelha.
-    daviC.lookAt(jesse, { duration: 0.5 });
-    d.wait(0.8);
-    daviC.walkTo([12.5, -32.4], { speed: 0.7 });
+    daviC.behave('attend', { object: 'jesse', mood: 'worried' });
+    // Por cima dos ombros dos irmãos, do alto.
+    d.camera.cut({ pos: [16.4, TOPO + 2.8, -29.9], lookAt: [12.5, TOPO + 1.3, -32.0], fov: 46 });
+    daviC.say('Mandaste me chamar, pai?', { tone: 'tímido', to: jesse, gesture: 0 });
+    jesse.say('O profeta quer te ver.', { to: daviC, gesture: 0.3 });
+    // O Samuel, de lado: chama o rapaz para perto.
+    d.camera.cut({ pos: [15.6, TOPO + 1.9, -31.9], lookAt: [12.5, TOPO + 1.45, -33.0], fov: 42 });
+    samuelC.say('Aproxima-te, filho.', { tone: 'calmo', to: daviC, gesture: 0.4 });
+    daviC.walkTo([12.5, -31.85], { speed: 0.6 });
     daviC.turnTo(0);
+    daviC.behave('attend', { object: 'samuel-casa', mood: 'worried' });
+    // Longo silêncio. O Samuel o examina devagar, dando a volta nele; a câmera gira devagar em volta dos dois.
+    d.camera.twoShot('samuel-casa', 'davi-casa', { duration: 9, swing: 30, fov: 44, side: 1, height: 1.3, distance: 3.2 });
+    samuelC.walkTo([13.2, -31.9], { speed: 0.45 });
+    samuelC.lookAt(daviC, { duration: 0.6 });
+    d.wait(0.6);
+    samuelC.walkTo([12.5, -32.6], { speed: 0.45 });
+    samuelC.turnTo(180);
+    samuelC.lookAt(daviC, { duration: 0.5 });
+    d.wait(1.0);
+    samuelC.say('É este.', { tone: 'sussurro', gesture: 0 });
+    // O Davi olha para o pai, que faz que sim. Ele se ajoelha.
+    daviC.lookAt(jesse, { duration: 0.5 });
+    jesse.express('happy', { amount: 0.4 });
+    d.wait(0.8);
+    daviC.lookAt(samuelC, { duration: 0.4 });
     d.do('davi-casa', 'move', { name: 'kneel' }, { duration: 1 });
+    // O Samuel chega perto, para alcançar a cabeça dele.
+    samuelC.walkTo([12.5, -32.35], { speed: 0.4 });
+    samuelC.turnTo(180);
     // De lado, aberto, a câmera girando devagar em volta dos dois: o azeite cai sobre a cabeça dele.
     d.camera.twoShot('samuel-casa', 'davi-casa', { duration: 5.5, swing: 28, fov: 44, side: 1, height: 1.2, distance: 3.4 });
     d.do('chifre-casa', 'pour', { over: 'davi-casa' }, { duration: 5 });
     // O rosto do Davi, confuso, sem colar: de frente e um pouco de lado; atrás, os irmãos.
-    d.camera.cut({ pos: [13.6, TOPO + 1.35, -33.9], lookAt: [12.5, TOPO + 1.05, -32.4], fov: 40 });
+    d.camera.cut({ pos: [14.7, TOPO + 1.15, -32.1], lookAt: [12.5, TOPO + 1.0, -31.9], fov: 40 });
     daviC.express('surprised', { amount: 0.5 });
     d.narrate('E naquele dia, enquanto todos ainda viam um pastor, Deus havia escolhido um rei.');
     d.wait(0.8);

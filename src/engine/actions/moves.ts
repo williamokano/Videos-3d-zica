@@ -133,6 +133,7 @@ registerAction({
   appliesTo: ['item'],
   params: {
     over: { type: 'string', description: 'id do personagem sobre cuja cabeça derramar', required: true },
+    spout: { type: 'number', description: 'quanto a boca do item inclinado fica à frente da mão, em metros (padrão 0,2, o chifre de azeite)' },
   },
   duration: 4,
   compile(ctx) {
@@ -149,7 +150,16 @@ registerAction({
     // The top of the head, a little lower when kneeling, and a hand's width above it.
     const kneeling = ctx.current('move.kneel', over);
     const top = place.pos[1] + ((who.traits.eyeHeight ?? 1.6) + 0.14 * scale) - 0.4 * scale * kneeling;
-    const point: [number, number, number] = [place.pos[0], top + 0.22, place.pos[2]];
+    // Kneeling, the body leans forward and the head with it, a hand's width ahead of the feet.
+    const [fx, fz] = facing(place.yaw);
+    const ahead = 0.14 * scale * kneeling;
+    // The horn tips forward, away from whoever holds it: its mouth ends up ahead of the hand. The hand stays that
+    // much nearer the one who pours, so the oil falls on the head.
+    const pourer = ctx.placeOf(by);
+    const [dx, dz] = [place.pos[0] - pourer.pos[0], place.pos[2] - pourer.pos[2]];
+    const apart = Math.hypot(dx, dz) || 1;
+    const spout = (ctx.params.spout as number | undefined) ?? 0.2;
+    const point: [number, number, number] = [place.pos[0] + fx * ahead - (dx / apart) * spout, top + 0.22, place.pos[2] + fz * ahead - (dz / apart) * spout];
     const tilt = (u: number): number => Math.min(ramp(u, 0.25, 0.4), 1 - ramp(u, 0.75, 0.85));
     return {
       writes: [
