@@ -76,6 +76,8 @@ export const outAndBack = (out: number, back: number) => (u: number): number => 
 /** Places on the body, in meters of the standard 1.7 m body: x to the character's right, y up from the feet, -z ahead. */
 export const BODY = {
   pocket: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.17 : -0.17, 0.86, -0.02],
+  /** The mouth of a bag on the left hip (the shepherd's bag): either hand goes there, the right one across the body. */
+  bag: (side: 'L' | 'R'): Point3 => [side === 'R' ? -0.17 : -0.22, 0.95, -0.1],
   /** Where a hand holds something to be read. */
   eyes: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.05 : -0.05, 1.4, -0.36],
   chest: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.08 : -0.08, 1.2, -0.3],

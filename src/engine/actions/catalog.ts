@@ -152,6 +152,8 @@ export interface ActionContext {
   services: ActionServices;
   target: ActionTarget;
   params: Record<string, unknown>;
+  /** The clip as written: when it starts, and the length and ease it asks for, if any. */
+  clip: { t: number; duration?: number; ease?: string };
   /** Value of a channel when the clip starts. `of` names another object. */
   current(channel: string, of?: string): number;
   /** Another object of the scene; fails with a clear message when it does not exist. */
@@ -343,7 +345,7 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
     const riderOn = (to: string, socket: string) => links.find((l) => l.to === to && l.socket === socket && l.t1 > clip.t)?.target;
     const placeOf = (id: string) => placementAt(out, id, clip.t);
 
-    const result = def.compile({ services, target, params, current, object, linkOf, riderOn, placeOf, fail });
+    const result = def.compile({ services, target, params, clip: { t: clip.t, duration: clip.duration, ease: clip.ease }, current, object, linkOf, riderOn, placeOf, fail });
     const duration = clip.duration ?? result.duration ?? def.duration;
     if (!isNumber(duration) || duration < 0) fail('"duration" precisa ser um número de segundos maior ou igual a zero.');
     const ease = EASES[clip.ease ?? 'inOut'];

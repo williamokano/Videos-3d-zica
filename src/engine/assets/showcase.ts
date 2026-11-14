@@ -90,9 +90,12 @@ export function assetActions(id: string): { actions: AssetAction[]; uses: string
   const surfaces = places.filter((n) => SURFACES.test(n));
   if (surfaces.length) add('putDown (com "on")', `onde pôr coisas: ${surfaces.join(', ')}`, surfaces);
   if (id.startsWith('item.') || id.startsWith('arms.')) add('pickUp / putDown / putAway', 'pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")', []);
-  // A sling turns and carries a stone, a horn of oil pours: no action of their own yet, `set` moves them.
-  const settable = channels.filter((c) => c === 'spin' || c === 'loaded' || c === 'pour');
+  // A sling turns and carries a stone, a horn of oil pours: `set` moves them; the sling also spins over the head
+  // with `whirl` and lets the stone go with `throw`, which shows a stone's trail while it flies.
+  const settable = channels.filter((c) => c === 'spin' || c === 'loaded' || c === 'pour' || c === 'puff');
   if (settable.length) add('set', `canais: ${settable.join(', ')}`, settable);
+  if (channels.includes('overhead')) add('whirl', 'girar acima da cabeça, no compasso da mão (depois, "throw" com "with" solta a pedra)', ['overhead', 'spin']);
+  if (channels.includes('trail')) add('throw', 'arremessar; o rastro aparece no voo', ['trail']);
   if (id === 'item.phone' || id === 'item.radio' || id === 'arms.lyre') add('raise / lower', 'levar à frente do rosto ou do peito', []);
   if (kind === 'phone') add('screen', 'mensagens, digitando, tela acesa ou apagada', ['network']);
   if (asset.userData.loose) add('knockOver / setUpright', 'derrubar e pôr de pé', []);

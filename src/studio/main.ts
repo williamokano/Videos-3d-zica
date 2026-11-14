@@ -629,6 +629,7 @@ if (rendering) {
       episode: episodeNumber,
       error: actionsError,
       cuts: episode?.cuts ?? [],
+      slow: episode?.slow ?? [],
       output: bible.output,
       gpu: info ? String(renderer.getContext().getParameter(info.UNMASKED_RENDERER_WEBGL)) : 'desconhecida',
       /**
@@ -636,7 +637,7 @@ if (rendering) {
        * scene while writing it: scripts/look.mjs); the picture then has no subtitles and no end card.
        */
       async frame(n: number, wait = true, view?: { pos: [number, number, number]; lookAt: [number, number, number]; fov?: number; level?: number }): Promise<void> {
-        timeline!.seek(n);
+        timeline!.seek(n, true);
         renderer.setScissorTest(false);
         renderer.clear();
         if (view) {

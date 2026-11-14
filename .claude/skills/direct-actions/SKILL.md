@@ -55,7 +55,14 @@ export default direct(
 | `shake` (0 a 1) em `cut`, `moveTo`, `thirdPerson`, `orbit` | tremor: câmera na mão correndo (~0.3), chão tremendo com passos de gigante (picos perto de 1). Varia entre keyframes |
 | `d.do(ana, 'move', { name, amount })` | movimento do corpo inteiro que fica até outro `move` com `amount: 0`: `kneel` (ajoelhar), `sling` (girar a funda sobre a cabeça), `dance`, `cheer` (braços para cima), `cower` (encolher) |
 | `d.do(ana, 'fall', {}, { ease: 'linear' })` | cai duro de frente, girando nos pés, e fica de bruços |
-| `d.do('pedra', 'throw', { hit: 'golias', speed }, { ease: 'linear' })` | quem segura o item o arremessa (braço por cima do ombro); voa em arco até `to` ou até a testa de `hit`. `speed` baixo parece câmera lenta |
+| `d.do('pedra', 'throw', { hit: 'golias', speed }, { ease: 'linear' })` | quem segura o item o arremessa (braço por cima do ombro); voa em arco até `to` ou até a testa de `hit`, com rastro se for `arms.stone`. `with: 'funda'` solta da funda; `stick: true` crava (some no impacto: mostre a peça `foreheadStone`) |
+| `d.do(ana, 'move', { name: 'lumber' })` / `'stagger'` | andar pesado e desajeitado (armadura grande, passo de gigante); cambalear depois de um golpe (cabeça para trás, joelhos moles), antes do `fall` |
+| `d.do('capacete', 'don', { on: 'davi', wear: 'bronzeHelmet' })` / `d.do('capacete', 'doff', { wear })` | quem segura veste outra pessoa (a mão desce o item na cabeça; a peça da ficha aparece); quem veste tira com as duas mãos por cima da cabeça e fica com o item na mão direita. Props `arms.helmet` e `arms.armor`; peça com `size` (ex.: 1.2) fica grande demais |
+| `pickUp(item, { bag: true })`, `putAway(item, { bag: true })` | tira ou guarda no alforje do quadril esquerdo, não no bolso |
+| `d.do('funda', 'load', { with: 'pedra' })`, `d.do('funda', 'whirl', {}, { duration, ease: 'linear' })` | põe na funda a pedra da outra mão; gira a funda acima da cabeça no compasso da mão (depois `throw` com `with`; desfaça com move `sling` 0) |
+| `d.do('espada', 'draw', { by: 'davi', from: 'golias' })` | tira a espada da bainha de alguém (de pé ou caído) e a ergue; a ficha dele precisa de `scabbard` e `scabbardEmpty` escondida |
+| `nature.dust` com `d.do('poeira', 'set', { channel: 'puff', value: 1 }, { duration: 2.5, ease: 'out' })` | nuvem de poeira: passo pesado, queda, impacto |
+| `d.slowMo(de, até, fator)` | câmera lenta de verdade (fator inteiro 2 a 8): tudo no trecho fica mais lento no vídeo; ninguém fala nele. O estúdio toca em velocidade normal |
 
 - Os passos de um mesmo personagem são um depois do outro; para dois personagens ao mesmo tempo use `together` ou `background`.
 - Chamadas de câmera não andam o relógio. Para um corte no meio de uma ação longa: `d.background(() => { d.wait(1); d.camera.cut(...); })` antes da ação.

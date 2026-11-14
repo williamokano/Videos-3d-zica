@@ -16,6 +16,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { createServer } from 'vite';
+import { finalOf } from './tempo.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -68,10 +69,11 @@ try {
   const all = args.includes('--all');
 
   const cuts = episode.cuts ?? [];
-  // Times as in the finished video: jump cuts taken out.
-  const final = (t) => cuts.reduce((out, [a, b]) => (t > a ? out - (Math.min(t, b) - a) : out), t);
+  // Times as in the finished video: jump cuts taken out, slow motion stretched.
+  const final = finalOf(episode);
   const rows = [];
   for (const [a, b] of cuts) rows.push({ t: a, end: a, text: `✂ **corte seco** (${(b - a).toFixed(1)} s de caminhada saem do vídeo)` });
+  for (const [a, b, k] of episode.slow ?? []) rows.push({ t: a, end: a, text: `🐢 **câmera lenta** (${(b - a).toFixed(1)} s do episódio, ${k} vezes mais devagar: ${((b - a) * k).toFixed(1)} s de vídeo)` });
   for (const clip of episode.actions ?? []) {
     const p = clip.params ?? {};
     const end = clip.t + (clip.duration ?? 0);

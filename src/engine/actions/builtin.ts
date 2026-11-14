@@ -358,6 +358,7 @@ registerAction({
     by: { type: 'string', description: 'personagem que pega; ele precisa estar a um braço do item' },
     hand: HAND,
     to: { type: 'point3', description: 'sem "by": onde o item fica seguro, [x, y, z] em coordenadas do local' },
+    bag: { type: 'boolean', description: 'com o item guardado: a mão vai à bolsa do quadril esquerdo (o alforje), não ao bolso' },
   },
   duration: 0.6,
   compile(ctx) {
@@ -376,7 +377,7 @@ registerAction({
       return {
         duration: 0.9,
         writes: [
-          ...reachBody(by, side, BODY.pocket(side), outAndBack(0.45, 0.55)),
+          ...reachBody(by, side, (ctx.params.bag ? BODY.bag : BODY.pocket)(side), outAndBack(0.45, 0.55)),
           { target: by, channel: `carry${side}`, at: (u) => ramp(u, 0.5, 1) },
           { channel: 'held', at: () => 1 },
         ],
@@ -447,9 +448,11 @@ registerAction({
 
 registerAction({
   id: 'putAway',
-  description: 'Quem segura o item guarda no bolso. Ele some até ser tirado de novo com pickUp.',
+  description: 'Quem segura o item guarda no bolso (ou, com "bag", no alforje do quadril esquerdo). Ele some até ser tirado de novo com pickUp.',
   appliesTo: ['item', 'phone'],
-  params: {},
+  params: {
+    bag: { type: 'boolean', description: 'a mão vai à bolsa do quadril esquerdo (o alforje), não ao bolso' },
+  },
   duration: 0.9,
   compile(ctx) {
     const link = ctx.linkOf(ctx.target.id);
@@ -459,7 +462,7 @@ registerAction({
     if (ctx.current(`reach${hand}`, by) > 0.01) ctx.fail(`a mão de "${by}" está levantada; use "lower" antes de guardar.`);
     return {
       writes: [
-        ...reachBody(by, hand!, BODY.pocket(hand!), outAndBack(0.45, 0.55)),
+        ...reachBody(by, hand!, (ctx.params.bag ? BODY.bag : BODY.pocket)(hand!), outAndBack(0.45, 0.55)),
         { target: by, channel: `carry${hand}`, at: (u) => 1 - ramp(u, 0, 0.5) },
       ],
       detach: { at: 0.5 },

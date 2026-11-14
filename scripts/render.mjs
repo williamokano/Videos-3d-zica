@@ -34,6 +34,7 @@ import { dirname, join, resolve } from 'node:path';
 import { createServer } from 'vite';
 import { cuesOf, episodeAudio, mix, mux } from './mix.mjs';
 import { episodeFile, episodeFolder } from './paths.mjs';
+import { frameList } from './tempo.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -167,10 +168,8 @@ try {
   const first = Math.max(0, Math.round(Number(option('from', 0)) * info.fps));
   const last = Math.min(info.frames, option('to') ? Math.round(Number(option('to')) * info.fps) : info.frames);
   if (last <= first) throw new Error('"--to" precisa ser maior que "--from".');
-  const frames = [];
-  // Frames in a jump cut stay out of the video.
-  const inCut = (n) => info.cuts.some(([a, b]) => n / info.fps >= a && n / info.fps < b);
-  for (let n = first; n < last; n += step) if (!inCut(n)) frames.push(n);
+  // Frames in a jump cut stay out of the video; in slow motion each one is drawn several times, a fraction apart.
+  const frames = frameList({ cuts: info.cuts, slow: info.slow }, info.fps, first, last, step);
   const workers = Math.min(workersWanted, frames.length);
   const preview = scale !== 1 || step > 1 || option('from') !== undefined || option('to') !== undefined;
   const out = resolve(option('out', join(episodeFolder(info.series, info.episode, { dir: option('dir'), output: info.output }), episodeFile(info.series, info.episode, 'mp4', preview ? '-previa' : ''))));

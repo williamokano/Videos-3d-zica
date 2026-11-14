@@ -305,9 +305,21 @@ Mesa rústica de tábuas grossas sobre dois cavaletes (62 cm, a altura de comer 
 
 ## arms
 
+### `arms.armor`
+
+Couraça de escamas de bronze, solta (a peça de roupa scaleArmor fora do corpo, para vestir com "don" e tirar com "doff"): peito, barriga e ombreiras. Pegável, pelos ombros (params: size, a largura, padrão 0.45; color)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
 ### `arms.bow`
 
 Arco de madeira com a corda, em pé; pegável, pelo meio (params: size, a altura, padrão 1.2)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.helmet`
+
+Capacete de bronze redondo, com ponta e protetor de nuca, solto (o mesmo da peça de roupa bronzeHelmet, para vestir com "don" e tirar com "doff"). Pegável, pela borda (params: size, o raio da cabeça, padrão 0.16; color)
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
 
@@ -334,11 +346,12 @@ Escudo: redondo de couro com borda e umbo de bronze, ou o grande escudo filisteu
 
 ### `arms.sling`
 
-Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas
+Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás), `overhead` (1: as cordas saem quase deitadas da mão e `spin` gira em volta dela, como acima da cabeça; é o que a ação `whirl` faz) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
 - **set**: canais: spin, loaded
-- Canais: `spin`, `loaded`
+- **whirl**: girar acima da cabeça, no compasso da mão (depois, "throw" com "with" solta a pedra)
+- Canais: `spin`, `overhead`, `loaded`
 
 ### `arms.spear`
 
@@ -354,9 +367,11 @@ Cajado de pastor: vara comprida com a ponta curva em gancho; pegável, pela vara
 
 ### `arms.stone`
 
-Pedra lisa de riacho, pequena, do tamanho de um ovo; pegável (params: size, color)
+Pedra lisa de riacho, pequena, do tamanho de um ovo; pegável. Canal `trail` (0 a 1): um rastro de ar atrás dela, para o voo (o `throw` liga sozinho e vira a pedra para onde ela vai) (params: size, color)
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+- **throw**: arremessar; o rastro aparece no voo
+- Canais: `trail`
 
 ### `arms.sword`
 
@@ -432,6 +447,13 @@ Luminária de barra (calha com duas lâmpadas tubulares), de teto, como em sala 
 Arbusto baixo (params: seed)
 
 - Cenário: sem ação própria.
+
+### `nature.dust`
+
+Nuvem de poeira que sobe do chão: um passo pesado, um corpo que cai, um impacto. Canal `puff` de 0 (nada) a 1 (já assentou): a poeira cresce, se espalha, sobe um pouco e some. Faça com `set` de 0 a 1 em 1 a 3 s, `ease: "out"`; o mesmo prop sobe de novo voltando a 0 (params: size, o raio quando cresce, em metros, padrão 1; color; seed)
+
+- **set**: canais: puff
+- Canais: `puff`
 
 ### `nature.grass`
 
@@ -669,6 +691,7 @@ Viatura de polícia: o carro com pintura, giroflex no teto e rádio no painel. C
 - `scaleArmor`: Couraça de escamas de bronze sobre o peito e a barriga, com ombreiras (color, accent nas escamas)
 - `greaves`: Caneleiras de bronze, do joelho ao tornozelo (color)
 - `bronzeHelmet`: Capacete de bronze redondo, com ponta, protetor de nuca e de rosto dos lados (color, accent na borda)
+- `foreheadStone`: Pedra lisa cravada na testa, logo abaixo da borda do capacete: o Golias depois da funda (color)
 - `plumedHelmet`: Capacete filisteu: faixa de bronze com uma coroa de penas ou juncos em pé (color nas penas, accent na faixa)
 - `crown`: Coroa simples de ouro: um aro com pontas baixas (color)
 - `headband`: Faixa de pano em volta da cabeça, na testa, com o nó atrás (color)

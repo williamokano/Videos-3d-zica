@@ -99,8 +99,9 @@ export class TimelineBar {
     this.refresh();
   }
 
-  seek(frame: number): void {
-    this.frame = Math.max(0, Math.min(this.frames, Math.round(frame)));
+  /** Go to a frame; `exact` keeps a fraction of one (a frame of slow motion, when rendering). */
+  seek(frame: number, exact = false): void {
+    this.frame = Math.max(0, Math.min(this.frames, exact ? frame : Math.round(frame)));
     this.refresh();
     this.onChange();
   }

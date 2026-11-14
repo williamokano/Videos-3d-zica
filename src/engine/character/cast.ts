@@ -3,7 +3,7 @@ import type { Ambient } from '../actions/ambient';
 import type { InteractiveObject } from '../world/build';
 import { buildBody } from './body';
 import { palmToward, reachPose, wristPosition, type Side } from './ik';
-import { EXPRESSIONS, HAND_POSE_NAMES, MOVE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, movePose, resolveFace, resolveHand, ridePose, sitPose, splitGaze } from './motion';
+import { EXPRESSIONS, HAND_POSE_NAMES, MOVE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, motionSeed, movePose, resolveFace, resolveHand, ridePose, sitPose, splitGaze, throwWeight } from './motion';
 import type { CharacterDef, CharacterRig, HandShape, Joint } from './types';
 
 /** A character placed in an episode. */
@@ -61,7 +61,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const worn = Object.keys(state).filter((c) => c.startsWith('wear.'));
   const scale = (def.height ?? 1.7) / 1.7;
   // Each character blinks at its own moments.
-  const seed = [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const seed = motionSeed(id);
 
   let ambient: Ambient | undefined;
   const hand = new THREE.Vector3();
@@ -81,9 +81,11 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     // What each hand does because of what the arm is doing: open when it talks, closed on what it holds.
     const busy = { L: { open: 0, grip: 0 }, R: { open: 0, grip: 0 } };
     const crossed = { L: 0, R: 0 };
+    // Spinning a sling or throwing, the right arm is the move's, even with the sling in the hand.
+    const armMove = Math.min(1, Math.max(state['move.sling'], throwWeight(state['move.throw'])));
     for (const side of ['L', 'R'] as Side[]) {
       busy[side].grip = state[`carry${side}`];
-      pose = carryPose(pose, side, state[`carry${side}`]);
+      pose = carryPose(pose, side, state[`carry${side}`] * (side === 'R' ? 1 - armMove : 1));
       const reach = state[`reach${side}`];
       if (reach <= 0.001 && state[`carry${side}`] <= 0.001) {
         // A free hand does what the body does by itself: arms crossed, a hand that talks, writing on the board.

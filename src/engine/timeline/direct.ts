@@ -7,6 +7,7 @@
 import '../actions/builtin';
 import '../actions/character';
 import '../actions/moves';
+import '../actions/gear';
 import '../actions/phone';
 import '../actions/audio';
 import '../actions/endcard';
@@ -76,7 +77,7 @@ export interface Actor {
   /** Turn the head to another character, an object by id, or a point. */
   lookAt(target: Actor | string | Vec3, options?: StepOptions): Step;
   lookAhead(options?: StepOptions): Step;
-  pickUp(item: string, options?: StepOptions & { hand?: 'left' | 'right' }): Step;
+  pickUp(item: string, options?: StepOptions & { hand?: 'left' | 'right'; bag?: boolean }): Step;
   /** Put a held item on a point, or on a seat of an object that then carries it. */
   putDown(item: string, where: Vec3 | { on: string; seat: string }, options?: StepOptions): Step;
   /** Open a door, or a `part` of a vehicle, by hand. */
@@ -97,7 +98,7 @@ export interface Actor {
    */
   behave(mode: 'chat' | 'attend' | 'watch' | 'trance' | 'write' | 'idle' | 'none', options?: { group?: string; object?: Actor | string; point?: Vec3; mood?: 'calm' | 'worried' | 'scared' | 'happy' }): void;
   /** Put a held item in the pocket; `pickUp` takes it out again. */
-  putAway(item: string, options?: StepOptions): Step;
+  putAway(item: string, options?: StepOptions & { bag?: boolean }): Step;
   /** Lift what is in the hand to the eyes (to read a phone) or to the chest; stays up until `lower`. */
   raise(to?: 'eyes' | 'chest', options?: StepOptions): Step;
   lower(options?: StepOptions): Step;
@@ -160,6 +161,12 @@ export interface Director {
    * video. For long walks between moments. Takes no time.
    */
   cutOut(from: number | Step, to: number | Step): void;
+  /**
+   * Slow motion: what happens from `from` to `to` (times or steps) lasts `factor` times longer in the finished video
+   * (a whole number, 2 to 8), everything in it slowed alike: bodies, things flying, the camera. Nobody may speak in it.
+   * Takes no time. The studio plays it at normal speed; the render and `npm run roteiro` stretch it.
+   */
+  slowMo(from: number | Step, to: number | Step, factor: number): void;
   /**
    * The narrator speaks (the bible's `audio.narrator` voice). Takes as long as the take.
    * With `as`, it is the voice of a character of the series who is not in the scene (by its file id), heard
@@ -249,6 +256,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   const clips: ActionClip[] = [];
   const lines: LineVoice[] = [];
   const cuts: [number, number][] = [];
+  const slow: [number, number, number][] = [];
   const model = bible?.audio?.model ?? DEFAULT_MODEL;
   /** The voice of a cast member: its own look, else its character's. */
   const voiceOf = (id: string) => {
@@ -348,7 +356,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
         return run(id, 'lookAt', Array.isArray(target) ? { point: target } : { object: typeof target === 'string' ? target : target.id }, options);
       },
       lookAhead: (options) => run(id, 'lookAt', {}, options),
-      pickUp: (item, options) => run(item, 'pickUp', { by: id, hand: options?.hand }, options),
+      pickUp: (item, options) => run(item, 'pickUp', { by: id, hand: options?.hand, bag: options?.bag }, options),
       putDown: (item, where, options) => run(item, 'putDown', Array.isArray(where) ? { at: where } : where, options),
       open: (object, options) => run(object, 'open', { by: id, part: options?.part, amount: options?.amount, hand: options?.hand }, options),
       close: (object, options) => run(object, 'close', { by: id, part: options?.part, hand: options?.hand }, options),
@@ -356,7 +364,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       standUp: (to, options) => run(id, 'standUp', { to, yaw: options?.yaw }, options),
       say: (text, options) => (options?.to !== undefined && faceFor(id, options.to), run(id, 'say', { text, to: options?.to === undefined ? undefined : idOf(options.to), tone: options?.tone, gesture: options?.gesture, filter: options?.filter, take: voiced(id, text, options?.tone) }, options)),
       behave: (mode, options) => instant(id, 'behave', { mode, group: options?.group, object: options?.object === undefined ? undefined : idOf(options.object), point: options?.point, mood: options?.mood }),
-      putAway: (item, options) => run(item, 'putAway', {}, options),
+      putAway: (item, options) => run(item, 'putAway', { bag: options?.bag }, options),
       raise: (to, options) => run(id, 'raise', { to }, options),
       lower: (options) => run(id, 'lower', {}, options),
       pointAt: (target, options) => run(id, 'pointAt', { ...(Array.isArray(target) ? { point: target } : { object: idOf(target) }), hand: options?.hand }, options),
@@ -434,6 +442,14 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       const [a, b] = [typeof from === 'number' ? from : from.start, typeof to === 'number' ? to : to.end];
       if (!(b > a)) throw new Error(`cutOut: o fim (${b}) precisa vir depois do começo (${a}).`);
       cuts.push([round(a), round(b)]);
+    },
+    slowMo(from, to, factor) {
+      const [a, b] = [typeof from === 'number' ? from : from.start, typeof to === 'number' ? to : to.end];
+      if (!(b > a)) throw new Error(`slowMo: o fim (${b}) precisa vir depois do começo (${a}).`);
+      if (!Number.isInteger(factor) || factor < 2 || factor > 8) throw new Error(`slowMo: o fator precisa ser um número inteiro de 2 a 8 (veio ${factor}).`);
+      // On whole frames, so the stretched stretch lasts exactly factor times as long.
+      const fps = bible?.format?.fps ?? 30;
+      slow.push([Math.round(a * fps) / fps, Math.round(b * fps) / fps, factor].map(round) as [number, number, number]);
     },
     narrate: (text, options) => {
       const who = options?.as === undefined ? undefined : characters.find((c) => c.id === options.as);
@@ -514,10 +530,19 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     const end = clip.t + (clip.duration ?? 0);
     const cut = cuts.find(([a, b]) => clip.t < b && end > a);
     if (cut) throw new Error(`cutOut [${cut}] corta a fala "${(clip.params as { text: string }).text}" (${clip.t.toFixed(1)}–${end.toFixed(1)} s).`);
+    // A voice cannot be slowed down with the picture.
+    const slowed = slow.find(([a, b]) => clip.t < b && end > a);
+    if (slowed) throw new Error(`slowMo [${slowed.slice(0, 2)}] pega a fala "${(clip.params as { text: string }).text}" (${clip.t.toFixed(1)}–${end.toFixed(1)} s): ninguém fala em câmera lenta.`);
+  }
+  slow.sort((x, y) => x[0] - y[0]);
+  for (let i = 1; i < slow.length; i++) if (slow[i][0] < slow[i - 1][1]) throw new Error(`slowMo: [${slow[i - 1].slice(0, 2)}] e [${slow[i].slice(0, 2)}] se sobrepõem.`);
+  for (const [a, b] of slow) {
+    const cut = cuts.find(([c, e]) => a < e && b > c);
+    if (cut) throw new Error(`slowMo [${a},${b}] e cutOut [${cut}] se sobrepõem.`);
   }
   const length = duration ?? round(last + (tail ?? 1));
   const warnings = stillWithNothingToDo(clips, cast.map((c) => c.id), camera.filter((k) => k.mode === 'fpv').map((k) => k.follow!), length);
-  return { ...header, duration: length, camera, actions: clips, lines, ...(cuts.length ? { cuts } : {}), ...(warnings.length ? { warnings } : {}) };
+  return { ...header, duration: length, camera, actions: clips, lines, ...(cuts.length ? { cuts } : {}), ...(slow.length ? { slow } : {}), ...(warnings.length ? { warnings } : {}) };
 }
 
 /** Longest a character may stand with no behaviour and no action before it looks frozen, in seconds. */
