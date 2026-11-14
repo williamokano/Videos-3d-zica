@@ -86,3 +86,30 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [x] `episodes/003.ts` reescrito: 2:43.9 sem vozes; planos por cima do ombro, altos, quem fala no meio do quadro; nada dentro da tenda.
 - [ ] Revisão do autor.
 - [ ] Vozes que faltam: Golias, Abner, guarda das bagagens (fichas) e os soldados 6, 12 e da fogueira 2 (figurantes da ficha soldado, sem voz; precisam de look.voice ou de voz na ficha soldado).
+
+## 12. Episódio 4 — O gigante (pedido de 2026-11-14: "bastante ênfase nas animações da luta")
+
+Motor (cada pose nova conferida de frente, 3/4 e lado na vitrine, num personagem de manga curta):
+- [x] `lumber`: andar pesado e desajeitado (armadura grande demais; passo de gigante com menos peso)
+- [x] `stagger`: cambalear depois da pedra, antes de cair
+- [x] Peça de roupa com `size` (a armadura do Saul fica grande no Davi; a espada arrasta)
+- [x] `don` / `doff`: vestir alguém com um item (o capacete desce na cabeça) e tirar com as duas mãos; props `arms.helmet` e `arms.armor`
+- [x] Alforje: `putAway` / `pickUp` com `bag` (a pedra vai para a bolsa do lado esquerdo)
+- [x] Funda girando acima da cabeça (`overhead` na funda, ação `whirl` em sincronia com a mão; o braço não volta para "segurar" enquanto gira ou arremessa)
+- [x] Pedra com rastro no voo
+- [x] Poeira (`nature.dust`, canal `puff`): passos do gigante, impacto, queda
+- [x] `draw`: tirar a espada da bainha de quem está caído e erguer
+- [x] Câmera lenta de verdade: `d.slowMo(de, até, fator)` (render, mixagem e roteiro marcado)
+- [x] Testes de cada um; `npm test` e `npm run typecheck`
+
+Episódio:
+- [x] `roteiros/004-pedido.md` com o pedido novo; `004-roteiro.md` v2 com a luta detalhada
+- [x] `episodes/004.ts` (~2:30), `npm run roteiro`, pausas ⏸ conferidas
+- [x] Golias com voz: já está no main (coordenador); nesta branch a ficha ficou como estava
+- [x] Prévia muda em tamanho cheio, quadros-chave da luta conferidos e varredura inteira
+- [x] Lições em `tasks/lessons.md`
+
+- [ ] Revisão do autor (prévia muda)
+- [ ] Vozes dos figurantes (escolha do autor) e `npm run voz`
+- [ ] Sons da luta (funda girando, impacto, queda, passos do gigante, vento) e trilha
+- [ ] `005.ts` ainda mostra a pedra, a queda e a espada (é a versão antiga, "Dez milhares"): reescrever pelo `005-roteiro.md` v2

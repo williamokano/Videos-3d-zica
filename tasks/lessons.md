@@ -26,3 +26,11 @@
 - **Rosto falando: sorriso de descanso vira risada.** Boca aberta com o canto para cima lê como risada; numa fala séria, como arrogância. O motor agora tira o sorriso de descanso durante a fala e põe o rosto do tom (`TONE_FACES`). Ao escrever uma fala séria, dê o tom (`firme`, `preocupado`, `cansado`) e confira um quadro no meio dela, não só o rosto parado.
 - **Gesto de quem não fala sozinho não pode brigar com a fala.** Braço cruzado + mão que gesticula = movimento estranho. O comportamento (`ambient.ts`) recebe as falas e não cruza o braço nem dá sorriso de passagem perto de uma fala do personagem.
 - **Pose do corpo: conferir de frente e de lado, com manga curta.** Os braços cruzados ficaram errados desde a demo do céu vermelho porque só eram vistos de longe e com manga larga. Toda pose nova ganha um banco de teste com três câmeras (frente, 3/4, lado) num personagem de manga curta.
+
+## A luta do ep. 4 de Davi
+
+- **Ação com a mão: ver no banco antes de pôr no episódio.** O `doff` (tirar o capacete) e o `load` (pedra na funda) passaram nos testes, mas no banco de três câmeras as mãos subiam antes de a peça sair (parecia espreguiçar) e a mão da funda ia parar na frente do rosto. Só a imagem mostra isso; o banco (`demo-acoes` ep. 6) fica para a próxima ação.
+- **`lookAt` atrás do personagem vira o corpo inteiro.** Para a cabeça dar um tranco para trás com a pedra, o ponto foi posto atrás dele e o roteiro girou o gigante 180°. Ponto de olhar para cima sempre à frente do corpo.
+- **Ação que segura a mão inteira em uma etapa curta.** Correr 1,4 m dura 0,4 s; o `load` foi para depois e o giro da funda começou no meio dele. Liste os tempos das ações (`episode.actions`) da cena de ação antes de olhar os quadros.
+- **Plano que dependia de onde alguém estava fica errado quando a posição muda.** Mexi onde o Golias para e os planos do cambalear e da queda deixaram ele na borda. Calcule câmera a partir das constantes de posição (ou `d.where`), não de números soltos.
+- **Plano por cima do ombro só funciona com distância entre os dois.** Com o Saul a 0,8 m do Davi (para alcançar a cabeça dele), as costas do rei tapavam o quadro; ali o plano é de lado, mais longe.
