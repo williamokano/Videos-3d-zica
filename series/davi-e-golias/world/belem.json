@@ -607,6 +607,16 @@
      }
     },
     {
+     "asset": "ancient.brazier",
+     "pos": [
+      8.6,
+      5.0
+     ],
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
      "asset": "ancient.wallTorch",
      "pos": [
       7.0,

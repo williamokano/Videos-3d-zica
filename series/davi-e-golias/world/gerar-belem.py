@@ -260,6 +260,8 @@ sala_saul = {
         {"asset": "ancient.wallTorch", "pos": [9.4, 0.0], "y": 1.7, "params": {"intensity": 5}},
         {"asset": "ancient.brazier", "pos": [11.2, 4.4], "params": {"intensity": 7}},
         {"asset": "ancient.brazier", "pos": [5.3, 3.4], "params": {"intensity": 10}},
+        # De frente para o trono, fora do quadro do ep. 1: ilumina o rosto e o manto do rei.
+        {"asset": "ancient.brazier", "pos": [8.6, 5.0], "params": {"intensity": 9}},
         # Uma tocha mais alta bem atrás do trono: a parede do fundo não some no escuro.
         {"asset": "ancient.wallTorch", "pos": [7.0, 0.0], "y": 2.7, "params": {"intensity": 7}},
         *torches,

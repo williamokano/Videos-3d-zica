@@ -109,6 +109,8 @@ export default direct(
       d.at(end);
     };
     let cena = d.now;
+    // Música (CC0, ver audio/sons/CREDITOS.md): cada faixa já cortada no tamanho da sua cena.
+    d.sound('musica-abertura');
 
     // ---- 1. A chegada (0:00) ----
     // Os anciãos conversam no portão; o vento levanta poeira. Depois, o chifre na mão velha e o rosto do Samuel.
@@ -163,6 +165,7 @@ export default direct(
     ambiente('campo-ovelhas', cena);
     ambiente('harpa-pastor', cena);
     cena = d.now;
+    d.sound('musica-escolha');
 
     // ---- 3. Os filhos de Jessé (0:34) ----
     // Fim de tarde. A casa de Jessé, pequena: o Samuel sentado no banco baixo do fundo, o Jessé diante dele. A luz
@@ -320,6 +323,7 @@ export default direct(
     ambiente('harpa-pastor', cena, 0.2);
     cena = d.now;
     d.sound('porta-madeira-passos');
+    d.sound('musica-uncao');
     // A casa. A porta. O Davi entra com a roupa de pastor, o cajado e a palha das colinas, sem jeito, e para logo
     // depois da porta, entre os irmãos de túnica limpa.
     d.background(() => daviC.pickUp('cajado-casa', { hand: 'right' }));
@@ -382,6 +386,7 @@ export default direct(
     const saul = d.actor('saul');
     d.camera.cut({ pos: [100.6, 1.5, -98.6], lookAt: [100, 1.2, -101.6], fov: 44 });
     d.sound('tensao-saul');
+    d.sound('musica-saul');
     d.do('saul', 'move', { name: 'cower', amount: 0.8 }, { duration: 0.8 });
     d.wait(0.7);
     d.camera.moveTo({ pos: [100.2, 1.35, -99.4], lookAt: [100, 1.2, -101.6], fov: 36 });

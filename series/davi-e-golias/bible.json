@@ -76,6 +76,34 @@
         "prompt": "sandals stepping on a packed earth floor indoors, a few slow steps, close",
         "duration": 3,
         "volume": 0.35
+      },
+      "musica-abertura": {
+        "file": "musica-abertura.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/Daniel%20Prellball/sounds/701688",
+        "author": "Daniel Prellball",
+        "volume": 0.22
+      },
+      "musica-escolha": {
+        "file": "musica-escolha.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/Magmi.Soundtracks/sounds/475737",
+        "author": "Magmi.Soundtracks",
+        "volume": 0.16
+      },
+      "musica-uncao": {
+        "file": "musica-uncao.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/MusicByMisterbates/sounds/603711",
+        "author": "MusicByMisterbates",
+        "volume": 0.26
+      },
+      "musica-saul": {
+        "file": "musica-saul.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/Magmi.Soundtracks/sounds/507741",
+        "author": "Magmi.Soundtracks",
+        "volume": 0.18
       }
     }
   },

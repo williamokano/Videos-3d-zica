@@ -8,6 +8,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:00.0` 🌍 rule.amanhecer → 0
 - `0:00.0` 🌍 rule.entardecer → 0
 - `0:00.0` *SAMUEL pega chifre*
+- `0:00.0` 🔊 vento-portao (25 s)
 - `0:00.0` 🎥  fov 50
 - `0:01.0` *SAMUEL anda até [0.4,-21.6]*
 - `0:01.0` 🎥 corte: câmera fov 38
@@ -21,9 +22,12 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:14.2` **SAMUEL** (calmo): Em paz. Vim oferecer sacrifício ao Senhor. Chamem Jessé e os filhos dele.
 - `0:15.7` 🎥  fov 40
 - `0:20.0` 🎥  fov 40
+- `0:21.8` 🔊 titulo-impacto
 - `0:21.8` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 1 · O escolhido
 - `0:21.8` *SAMUEL anda até [3.2,-27.0]*
 - `0:21.8` 🎥 corte: câmera fov 46
+- `0:25.4` 🔊 campo-ovelhas (14 s)
+- `0:25.4` 🔊 harpa-pastor (14 s)
 - `0:25.4` 🎥 corte: câmera fov 48
 - ⏸ **4.1 s sem fala**
 - `0:25.9` **Narrador**: Israel tinha um rei. Um exército. Guerreiros. Mas Deus procurava algo diferente.
@@ -31,6 +35,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:32.6` **Narrador**: Não procurava o mais forte. Procurava aquele cujo coração ainda ninguém conhecia.
 - `0:32.6` 🎥 corte: câmera fov 40
 - `0:39.2` 🌍 rule.entardecer → 1
+- `0:39.2` 🔊 casa-entardecer (71 s)
 - `0:39.2` 🎥 corte: câmera fov 52
 - `0:39.2` 🎥  fov 50
 - `0:40.0` 🎥 corte: câmera fov 44
@@ -74,14 +79,19 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:41.4` **JESSÉ** (hesitante): Ainda falta o mais novo. Está cuidando das ovelhas.
 - `1:44.6` **ELIABE** (ironico): O pastorzinho.
 - `1:46.1` **SAMUEL** (firme): Mande buscá-lo. Não nos sentaremos à mesa até que ele chegue.
+- `1:50.0` 🔊 campo-ovelhas (13 s)
+- `1:50.0` 🔊 harpa-pastor (13 s)
 - `1:50.0` 🎥 corte: câmera fov 40
 - ⏸ **3.2 s sem fala**
 - `1:53.3` **SAMÁ** (grito): Davi!
 - `1:54.4` 🎥  fov 40
+- `1:54.7` 🔊 corrida-capim
 - `1:57.0` **SAMÁ** (urgente): O pai te chama. Agora. O profeta está lá em casa.
 - `1:57.0` 🎥 corte: câmera fov 42
 - `2:00.5` 🎥  fov 42
 - `2:01.3` **DAVI** (surpreso): O profeta? Comigo?
+- `2:03.3` 🔊 porta-madeira-passos
+- `2:03.3` 🔊 casa-entardecer (37 s)
 - `2:03.7` 🎥 corte: câmera fov 44
 - ⏸ **4.7 s sem fala**
 - `2:08.0` **DAVI** (tímido): Mandaste me chamar, pai?
@@ -93,6 +103,8 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - ⏸ **11.7 s sem fala**
 - `2:25.2` **SAMUEL** (sussurro): É este.
 - `2:25.2` 🎥  fov 52
+- `2:27.8` 🔊 ajoelhar
+- `2:28.8` 🔊 azeite
 - `2:28.8` 🎥 corte: câmera fov 44
 - `2:30.3` 🎥  fov 44
 - `2:31.8` 🎥  fov 44
@@ -101,6 +113,8 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `2:33.3` **Narrador**: E naquele dia, enquanto todos ainda viam um pastor, Deus havia escolhido um rei.
 - `2:40.3` 🌍 rule.entardecer → 0
 - `2:40.3` 🌍 rule.noite → 1
+- `2:40.3` 🔊 tensao-saul
+- `2:40.3` 🔊 palacio-noite (13 s)
 - `2:40.3` 🎥 corte: câmera fov 44
 - `2:41.8` 🎥  fov 36
 - `2:42.1` **REI SAUL** (sussurro): Quem está aí?
