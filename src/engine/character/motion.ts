@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+import { reachPose } from './ik';
 import type { FaceParams, HandShape, Joint, Pose } from './types';
 import { JOINTS } from './types';
 
@@ -511,7 +513,23 @@ function cower(pose: Pose, amount: number): Pose {
   return blendPose(pose, low, amount);
 }
 
-export const MOVES: Record<string, Move> = { kneel, sling, throw: throwing, fall, dance, cheer, cower };
+/**
+ * Playing a small lyre held against the chest with the left hand: the left forearm up holding it, the right hand
+ * across the strings, plucking in a gentle rhythm, the head tilted toward the music.
+ */
+function strum(pose: Pose, amount: number, t: number): Pose {
+  if (amount <= 0.001) return pose;
+  const pluck = Math.sin(t * Math.PI * 2 * 1.6);
+  // The hands are placed where the lyre is (in meters of the standard body, origin at the feet, -z ahead): the
+  // left one holds it up at the chest, the right one plucks across its strings.
+  const lift = pose.lift;
+  let played: Pose = { lift, joints: { ...pose.joints, head: sum(pose, 'head', [10, -8, 6]) } };
+  played = reachPose(played, 'L', new THREE.Vector3(-0.1, 1.12 + lift, -0.3));
+  played = reachPose(played, 'R', new THREE.Vector3(-0.02 + 0.03 * pluck, 1.02 + lift + 0.02 * pluck, -0.3));
+  return blendPose(pose, played, amount);
+}
+
+export const MOVES: Record<string, Move> = { kneel, sling, throw: throwing, fall, dance, cheer, cower, strum };
 export const MOVE_NAMES = Object.keys(MOVES);
 
 /** All the moves on a pose, by their weights. */

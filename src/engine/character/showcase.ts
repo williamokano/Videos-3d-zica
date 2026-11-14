@@ -95,6 +95,7 @@ export const SHOWCASE_POSES: Record<string, ShowcasePose> = {
   dance: { label: 'Dançar', channels: () => ({ 'move.dance': 1 }) },
   cheer: { label: 'Comemorar', channels: () => ({ 'move.cheer': 1 }) },
   cower: { label: 'Encolher', channels: () => ({ 'move.cower': 1 }) },
+  strum: { label: 'Tocar harpa', channels: () => ({ 'move.strum': 1 }) },
 };
 
 /** Channels of a character doing a pose at time t. The stage floor is at height 0, so `y` is the height of the stool. */
