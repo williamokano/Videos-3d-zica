@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { placementAt } from './actions/catalog';
 import { evaluateCamera } from './timeline/camera';
+import { buildCast, cameraStage, compileEpisode } from './timeline/stage';
 import { direct, resolveScript } from './timeline/direct';
 import { buildLocation } from './world/build';
 
@@ -38,5 +40,28 @@ describe('camera orbit and shake', () => {
       d.wait(9);
     }), location, []);
     for (const t of [3, 6, 9, 11]) expect(evaluateCamera(episode.camera, t).pos).toEqual([9, 2, 9]);
+  });
+
+  it('a tracking shot keeps looking at someone walking, and a two-shot sees both from the side', () => {
+    const loc = buildLocation({ id: 't', name: 't', ground: { color: '#fff', size: 60 }, rooms: [{ id: 'r', name: 'r', origin: [-10, -10], size: [20, 20], floorColor: '#ccc', outdoor: true }] });
+    const defs = [{ id: 'ana', name: 'Ana' }, { id: 'beto', name: 'Beto' }];
+    const episode = resolveScript(direct({ episode: 1, title: 't', location: 't', cast: [{ character: 'ana', at: [0, 5], yaw: 0 }, { character: 'beto', at: [2, -5], yaw: 180 }] }, (d) => {
+      d.camera.track('ana', { from: [6, 1.6, 0], to: [6, 1.6, -3], duration: 6 });
+      d.actor('ana').walkTo([0, -3]);
+      d.camera.twoShot('ana', 'beto', { duration: 4 });
+      d.wait(4);
+    }), loc, defs);
+    const compiled = compileEpisode(episode, loc, buildCast(episode, defs));
+    const stage = cameraStage(compiled, loc, buildCast(episode, defs));
+    for (const t of [0.5, 2, 4]) {
+      const pose = evaluateCamera(episode.camera, t, stage);
+      const ana = placementAt(compiled, 'ana', t).pos;
+      expect(pose.lookAt[0]).toBeCloseTo(ana[0], 1);
+      expect(pose.lookAt[2]).toBeCloseTo(ana[2], 1);
+    }
+    // The two-shot: the camera off the line between them (x is 0 to 2, z is -3 to -5), looking at the middle.
+    const end = evaluateCamera(episode.camera, episode.duration - 1.5, stage);
+    expect(end.lookAt[2]).toBeCloseTo(-4, 0);
+    expect(Math.abs(end.pos[0] - 1)).toBeGreaterThan(2);
   });
 });

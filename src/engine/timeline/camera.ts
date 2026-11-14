@@ -17,6 +17,13 @@ export interface CameraKey {
   pos?: Vec3;
   /** Cinematic shots: the point it looks at. */
   lookAt?: Vec3;
+  /**
+   * Cinematic shots: instead of a fixed `lookAt`, keep looking at this cast member as they move (at the height
+   * of the eyes plus `aimHeight`). The camera itself stays where `pos` puts it, so it pans to follow.
+   */
+  aim?: string;
+  /** With `aim`: meters above (or below, negative) the eyes to look at (default -0.15). */
+  aimHeight?: number;
   /** Vertical field of view in degrees. */
   fov?: number;
   /**
@@ -141,7 +148,8 @@ export function validateCamera(keys: CameraKey[], castIds: string[] = []): void 
     const mode = shot.mode ?? 'cinematic';
     if (mode === 'cinematic') {
       if (shot.follow) fail('"follow" só vale com "mode": "fpv" ou "third_person".');
-      if (!key.pos || !key.lookAt) fail('plano cinematic precisa de "pos" e "lookAt".');
+      if (!key.pos || (!key.lookAt && !key.aim)) fail('plano cinematic precisa de "pos" e de "lookAt" ou "aim".');
+      if (key.aim && !castIds.includes(key.aim)) fail(`"aim": "${key.aim}" não está no elenco.`);
     } else {
       if (mode !== 'fpv' && mode !== 'third_person') fail(`"mode" precisa ser cinematic, fpv ou third_person, não "${mode}".`);
       if (!shot.follow) fail(`plano ${mode} precisa de "follow" com o id de um personagem do elenco.`);
@@ -244,13 +252,23 @@ function steadyCamera(keys: CameraKey[], t: number, stage?: CameraStage): Camera
   if (mode !== 'cinematic') return attached(shot, a, b, t, stage);
 
   const fa = a.fov ?? DEFAULT_FOV;
-  if (!b) return { pos: a.pos!, lookAt: a.lookAt!, fov: fa, lens: a.lens ?? 0, mode };
+  /** Where a key looks at time t: its fixed point, or the cast member it aims at, where they are now. */
+  const target = (k: CameraKey): Vec3 => {
+    if (!k.aim) return k.lookAt!;
+    const subject = stage?.subject(k.aim, t);
+    if (!subject) throw new Error(`Câmera: "aim" precisa do elenco, e "${k.aim}" não está nele.`);
+    return [subject.pos[0], subject.pos[1] + subject.eyeHeight + (k.aimHeight ?? -0.15), subject.pos[2]];
+  };
+  if (!b) return { pos: a.pos!, lookAt: target(a), fov: fa, lens: a.lens ?? 0, mode };
   const prev = i > 0 && !a.cut ? keys[i - 1] : a;
   const next = keys[i + 2] && !keys[i + 2].cut ? keys[i + 2] : b;
   const u = (t - a.t) / (b.t - a.t);
+  const aiming = a.aim || b.aim;
+  const eased = u * u * (3 - 2 * u);
+  const [ta, tb] = aiming ? [target(a), target(b)] : [[0, 0, 0], [0, 0, 0]];
   return {
     pos: hermite(prev, a, b, next, t, (k) => k.pos!),
-    lookAt: hermite(prev, a, b, next, t, (k) => k.lookAt!),
+    lookAt: aiming ? [0, 1, 2].map((i) => ta[i] + (tb[i] - ta[i]) * eased) as Vec3 : hermite(prev, a, b, next, t, (k) => k.lookAt!),
     fov: fa + ((b.fov ?? DEFAULT_FOV) - fa) * u,
     lens: (a.lens ?? 0) + ((b.lens ?? 0) - (a.lens ?? 0)) * u,
     mode,

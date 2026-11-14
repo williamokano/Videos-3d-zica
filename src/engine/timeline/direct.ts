@@ -58,6 +58,10 @@ export interface Step {
 
 type Point2 = [number, number];
 type Shot = { pos: Vec3; lookAt: Vec3; fov?: number; lens?: number; shake?: number };
+/** A camera that keeps a cast member in the middle of the picture while it moves from `from` to `to`. */
+type Track = { from: Vec3; to?: Vec3; duration?: number; fov?: number; lens?: number; shake?: number; aimHeight?: number; cut?: boolean };
+/** Two people seen from the side, both in the picture, the camera turning a little round them. */
+type TwoShot = { distance?: number; height?: number; swing?: number; duration?: number; side?: 1 | -1; fov?: number; turn?: number };
 
 /** A character of the cast, as the script sees it. Every method is one step: it starts now and the clock moves to its end. */
 export interface Actor {
@@ -187,7 +191,22 @@ export interface Director {
      * point, 90 east, as seen from above). Starts with a cut unless `cut: false`. The clock does not move.
      */
     orbit(options: { center: Vec3; radius: number; height: number; from: number; to: number; duration: number; fov?: number; lens?: number; shake?: number; cut?: boolean }): void;
+    /**
+     * Follow someone like a film camera does: from a place set apart (`from`), turning to keep them in frame as
+     * they walk, and drifting to `to` over `duration` seconds if given. Starts with a cut unless `cut: false`.
+     * The clock does not move.
+     */
+    track(who: Actor | string, options: Track): void;
+    /**
+     * Two people talking, from the side, both in the picture: the camera sits off the line between them, at
+     * `distance` (default fits both), and turns `swing` degrees round them (default 14) over `duration` seconds
+     * (default 8). `side` picks which side of them (1 or -1); `turn` shifts the whole shot round, in degrees.
+     * The clock does not move.
+     */
+    twoShot(a: Actor | string, b: Actor | string, options?: TwoShot): void;
   };
+  /** Where a cast member is now (their feet), as the script stands: [x, y, z]. */
+  where(who: Actor | string): Vec3;
 }
 
 /** Declare an episode as a script. */
@@ -278,6 +297,11 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   };
 
   const idOf = (who: Actor | string): string => (typeof who === 'string' ? who : who.id);
+  /** Where a cast member's feet are at the current time of the script. */
+  const whereNow = (id: string): Vec3 => {
+    if (!targets.some((t) => t.id === id && t.kind === 'character')) throw new Error(`"${id}" não está no elenco.`);
+    return placementAt(compileActions(clips, targets, services, initial), id, now).pos;
+  };
   /**
    * A head turns 75° at most. To look at (or talk to) someone further round, a person turns the body too: when
    * the target is more than 70° from where the character faces, the body turns toward it while the head does.
@@ -397,6 +421,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       return { start, end };
     },
     ground: (x, z) => round(built.groundAt(x, z)),
+    where: (who) => whereNow(idOf(who)),
     endCard: (card, options) => run(WORLD, 'endCard', { card }, options),
     titleCard: (card, options) => {
       const start = now;
@@ -427,6 +452,28 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       moveTo: (shot) => key(shot),
       fpv: (who, options) => key({ ...options, cut: keys.length > 0 || undefined, mode: 'fpv', follow: idOf(who) }),
       thirdPerson: (who, options) => key({ ...options, cut: keys.length > 0 || undefined, mode: 'third_person', follow: idOf(who) }),
+      track: (who, { from, to, duration, fov, lens, shake, aimHeight, cut = true }) => {
+        const aim = idOf(who);
+        key({ pos: from, aim, aimHeight, fov, lens, shake, ...(cut && keys.length > 0 ? { cut: true } : {}) });
+        if (to && duration) {
+          const start = now;
+          now = start + duration;
+          key({ pos: to, aim, aimHeight, fov, lens, shake });
+          planned.set(keys[keys.length - 1], round(start));
+          now = start;
+        }
+      },
+      twoShot: (a, b, { distance, height = 1.5, swing = 14, duration = 8, side = 1, fov = 40, turn = 0 } = {}) => {
+        const [pa, pb] = [whereNow(idOf(a)), whereNow(idOf(b))];
+        const center: Vec3 = [(pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2 + height, (pa[2] + pb[2]) / 2];
+        const apart = Math.hypot(pb[0] - pa[0], pb[2] - pa[2]);
+        // Far enough for both to fit across a narrow vertical picture, with room around them.
+        const across = (2 * Math.tan(((fov / 2) * Math.PI) / 180) * 9) / 16;
+        const radius = distance ?? Math.max(2.6, (apart + 1.4) / across);
+        // Off the line between them, on the chosen side: heading of the perpendicular, as orbit counts it.
+        const facing = (Math.atan2(-(pb[2] - pa[2]) * side, (pb[0] - pa[0]) * side) * 180) / Math.PI + turn;
+        director.camera.orbit({ center, radius, height: 0, from: facing - swing / 2, to: facing + swing / 2, duration, fov });
+      },
       orbit: ({ center, radius, height, from, to, duration, fov, lens, shake, cut = true }) => {
         if (!(duration > 0)) throw new Error('d.camera.orbit: "duration" precisa ser maior que zero.');
         // A key every 10 degrees or so keeps the curve between keys close to a circle.
