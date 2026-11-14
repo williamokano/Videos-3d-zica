@@ -1,6 +1,6 @@
 # Episódio 2 — O rei e o pastor (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:07.3. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:07.7. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -9,84 +9,104 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:00.0` 🌍 rule.noite → 1
 - `0:00.0` *REI SAUL passa a: idle (scared)*
 - `0:00.0` *REI SAUL pega jarro*
+- `0:00.0` 🔊 musica-trono
+- `0:00.0` 🔊 tensao-saul
+- `0:00.0` 🔊 palacio-noite (43 s)
 - `0:00.0` 🎥  fov 46
+- `0:02.0` 🔊 jarro-quebra
 - `0:02.0` *REI SAUL faz cara de angry*
 - `0:02.0` 🎥 corte: câmera fov 44
 - `0:02.0` 🎥  fov 42
 - `0:02.3` **REI SAUL** (grito): Fechem as portas! Quem está aí?!
-- `0:04.3` **GUARDA 1** (sussurro): Ninguém, meu senhor. Não há ninguém.
-- `0:04.3` 🎥 corte: câmera fov 46
-- `0:04.3` 🎥  fov 44
-- `0:07.4` **SOLDADO 2** (sussurro): De novo. Todas as noites.
-- `0:07.4` 🎥 corte: câmera fov 46
-- `0:07.4` 🎥  fov 44
-- `0:10.4` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 2 · O rei e o pastor
-- `0:10.4` 🎥 corte: câmera fov 48
-- `0:10.4` 🎥  fov 46
-- `0:10.4` 🎥 corte: câmera fov 44
-- `0:16.1` 🎥  fov 44
+- `0:04.9` **GUARDA 1** (nervoso): Ninguém, meu senhor. Não há ninguém.
+- `0:04.9` 🎥 corte: câmera fov 46
+- `0:04.9` 🎥  fov 44
+- `0:07.3` **SOLDADO 2** (sussurro): De novo. Todas as noites.
+- `0:07.3` 🎥 corte: câmera fov 46
+- `0:07.3` 🎥  fov 44
+- `0:10.3` 🔊 titulo-impacto
+- `0:10.3` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 2 · O rei e o pastor
+- `0:10.3` 🎥 corte: câmera fov 48
+- `0:10.3` 🎥  fov 46
+- `0:10.3` 🎥 corte: câmera fov 44
+- `0:16.0` 🔊 ajoelhar
+- `0:16.0` 🎥  fov 44
 - ⏸ **7.1 s sem fala**
-- `0:17.6` **SERVO** (cuidadoso): Meu senhor. Um espírito mau te atormenta. Deixa que procuremos alguém que saiba tocar harpa. Quando a música tocar, tu ficarás melhor.
-- `0:17.6` 🎥 corte: câmera fov 52
-- `0:17.6` 🎥  fov 48
-- `0:25.2` *REI SAUL faz cara de angry*
-- `0:25.5` **REI SAUL** (cansado): Encontrem esse homem. E tragam-no a mim.
-- `0:29.0` **SERVO**: Há um jovem em Belém. Filho de Jessé. Sabe tocar.
+- `0:17.5` **SERVO** (cuidadoso): Meu senhor. Um espírito mau te atormenta. Deixa que procuremos alguém que saiba tocar harpa. Quando a música tocar, tu ficarás melhor.
+- `0:17.5` 🎥 corte: câmera fov 52
+- `0:17.5` 🎥  fov 48
+- `0:25.1` *REI SAUL faz cara de angry*
+- `0:25.4` **REI SAUL** (cansado): Encontrem esse homem. E tragam-no a mim.
+- `0:29.1` **SERVO**: Há um jovem em Belém. Filho de Jessé. Sabe tocar.
 - `0:33.8` 🎥 corte: câmera fov 38
 - `0:33.8` 🎥  fov 34
 - `0:34.4` **SERVO**: É valente. Sabe guerrear. É sábio nas palavras e de boa aparência. E o Senhor está com ele.
-- `0:40.9` **REI SAUL** (firme): Tragam-no.
-- `0:42.8` 🌍 rule.noite → 0
-- `0:42.8` 🎥 corte: câmera fov 55
-- `0:42.8` 🎥  fov 46
-- `0:45.7` 🎥 corte: câmera fov 44
-- `0:45.7` 🎥  fov 40
+- `0:41.0` **REI SAUL** (firme): Tragam-no.
+- `0:43.1` 🔊 musica-partida
+- `0:43.1` 🌍 rule.noite → 0
+- `0:43.1` 🔊 manha-belem (19 s)
+- `0:43.1` 🎥 corte: câmera fov 55
+- `0:43.1` 🎥  fov 46
+- `0:46.0` 🎥 corte: câmera fov 44
+- `0:46.0` 🎥  fov 40
 - ⏸ **3.7 s sem fala**
-- `0:46.5` **JESSÉ** (firme): O rei mandou te chamar. Leva isto como presente. E fala pouco.
-- `0:50.1` **DAVI**: Sim, pai.
-- `0:51.6` **JESSÉ**: E volta pras ovelhas quando ele te deixar.
-- `0:54.1` 🎥 corte: câmera fov 50
+- `0:46.8` **JESSÉ** (firme): O rei mandou te chamar. Leva isto como presente. E fala pouco.
+- `0:50.4` **DAVI**: Sim, pai.
+- `0:51.9` **JESSÉ**: E volta pras ovelhas quando ele te deixar.
+- `0:54.4` 🎥 corte: câmera fov 50
+- `0:55.3` 🔊 jumento-passos (10 s)
 - ⏸ **3.5 s sem fala**
-- `0:57.6` **ELIABE** (irônico): Agora toca pro rei.
-- `1:01.6` 🎥  fov 50
-- `1:02.3` 🌍 rule.noite → 1
-- `1:02.3` *REI SAUL passa a: attend (worried)*
-- `1:02.3` 🎥 corte: câmera fov 50
-- `1:05.3` 🎥 corte: câmera fov 44
-- ⏸ **8.9 s sem fala**
-- `1:08.8` **REI SAUL**: Qual é o teu nome, jovem?
-- `1:10.3` 🎥  fov 44
-- `1:12.2` **GUARDA DA PORTA 1**: O rapaz de Belém, meu senhor.
-- `1:12.2` **DAVI** (tímido): Davi, filho de Jessé, meu senhor.
-- `1:12.2` 🎥 corte: câmera fov 46
-- `1:12.2` 🎥  fov 44
-- `1:14.4` **REI SAUL** (desconfiado): Disseram-me que sabes tocar.
-- `1:16.3` **DAVI**: Sim, meu senhor.
-- `1:18.8` 🎥 corte: câmera fov 42
-- `1:18.8` 🎥  fov 40
-- `1:21.8` *REI SAUL passa a: attend (calm)*
-- `1:21.8` *REI SAUL faz cara de happy*
-- `1:23.4` 🎥 corte: câmera fov 40
+- `0:57.9` **ELIABE** (irônico): Agora toca pro rei.
+- `1:01.9` 🎥  fov 50
+- `1:02.5` 🔊 musica-entrada
+- `1:02.5` 🔊 porta-madeira-passos
+- `1:02.5` 🌍 rule.noite → 1
+- `1:02.5` *REI SAUL passa a: attend (worried)*
+- `1:02.5` 🔊 palacio-noite (36 s)
+- `1:02.5` 🎥 corte: câmera fov 50
+- ⏸ **3.0 s sem fala**
+- `1:03.1` **GUARDA DA PORTA 1**: O rapaz de Belém, meu senhor.
+- `1:05.5` 🎥 corte: câmera fov 44
+- ⏸ **4.0 s sem fala**
+- `1:09.0` **REI SAUL**: Qual é o teu nome, jovem?
+- `1:10.5` 🎥  fov 44
+- `1:12.4` **DAVI** (tímido): Davi, filho de Jessé, meu senhor.
+- `1:12.4` 🎥 corte: câmera fov 46
+- `1:12.4` 🎥  fov 44
+- `1:14.7` **REI SAUL** (desconfiado): Disseram-me que sabes tocar.
+- `1:16.8` **DAVI**: Sim, meu senhor.
+- `1:19.3` 🔊 harpa-pastor (12 s)
+- `1:19.3` 🎥 corte: câmera fov 42
+- `1:19.3` 🎥  fov 40
+- `1:22.3` *REI SAUL passa a: attend (calm)*
+- `1:22.3` *REI SAUL faz cara de happy*
+- `1:23.9` 🎥 corte: câmera fov 40
 - ⏸ **8.1 s sem fala**
-- `1:25.3` **Narrador**: Um rei que perdera a paz.
-- `1:25.3` 🎥 corte: câmera fov 36
-- `1:27.4` **Narrador**: Um jovem que não sabia o que o esperava.
-- `1:27.4` 🎥 corte: câmera fov 36
-- `1:30.8` *REI SAUL faz cara de happy*
-- `1:30.8` 🎥 corte: câmera fov 46
-- `1:30.8` 🎥  fov 42
-- `1:32.9` **REI SAUL** (firme): Fica comigo. Serás meu escudeiro.
-- `1:38.3` 🌍 rule.noite → 0
-- `1:38.3` 🌍 rule.amanhecer → 1
-- `1:38.3` 🎥 corte: câmera fov 44
-- `1:39.9` 🎥 corte: câmera fov 42
+- `1:25.8` **Narrador**: Um rei que perdera a paz.
+- `1:25.8` 🎥 corte: câmera fov 36
+- `1:27.9` **Narrador**: Um jovem que não sabia o que o esperava.
+- `1:27.9` 🎥 corte: câmera fov 36
+- `1:31.3` 🔊 musica-escudeiro
+- `1:31.3` *REI SAUL faz cara de happy*
+- `1:31.3` 🎥 corte: câmera fov 46
+- `1:31.3` 🎥  fov 42
+- `1:33.4` **REI SAUL** (firme): Fica comigo. Serás meu escudeiro.
+- `1:37.0` 🔊 ajoelhar
+- `1:38.8` 🌍 rule.noite → 0
+- `1:38.8` 🌍 rule.amanhecer → 1
+- `1:38.8` 🔊 patio-amanhecer (8 s)
+- `1:38.8` 🎥 corte: câmera fov 44
+- `1:40.4` 🔊 corrida-pedra
+- `1:40.4` 🎥 corte: câmera fov 42
 - ⏸ **6.4 s sem fala**
-- `1:42.0` **MENSAGEIRO** (grito): Os filisteus!
-- `1:43.6` **MENSAGEIRO** (sem fôlego): Estão reunindo seus homens em Socó!
-- `1:43.6` 🎥 corte: câmera fov 44
-- `1:46.5` **Narrador**: Enquanto Davi aprendia a servir ao rei, uma ameaça se aproximava de Israel. Uma ameaça que faria até os mais valentes tremerem.
-- `1:46.5` 🎥 corte: câmera fov 50
-- `1:46.5` 🎥  fov 46
-- `1:55.8` 🟥 cartão final: "Você teria coragem de tocar para um rei assim?" — TOCAVA / FUGIA — Comenta TOCAVA ou FUGIA 👇 e marca quem ia tremer na frente do rei
-- `1:55.8` **Narrador**: No próximo episódio: quarenta dias.
+- `1:42.4` **MENSAGEIRO** (grito): Os filisteus!
+- `1:44.0` **MENSAGEIRO** (sem fôlego): Estão reunindo seus homens em Socó!
+- `1:44.0` 🎥 corte: câmera fov 44
+- `1:47.0` 🔊 musica-ameaca
+- `1:47.0` **Narrador**: Enquanto Davi aprendia a servir ao rei, uma ameaça se aproximava de Israel. Uma ameaça que faria até os mais valentes tremerem.
+- `1:47.0` 🔊 marcha-exercito (15 s)
+- `1:47.0` 🎥 corte: câmera fov 50
+- `1:47.0` 🎥  fov 46
+- `1:56.2` 🟥 cartão final: "Você teria coragem de tocar para um rei assim?" — TOCAVA / FUGIA — Comenta TOCAVA ou FUGIA 👇 e marca quem ia tremer na frente do rei
+- `1:56.2` **Narrador**: No próximo episódio: quarenta dias.
 - ⏸ **8.3 s sem fala até o fim**

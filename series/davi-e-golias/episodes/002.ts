@@ -52,11 +52,11 @@ export default direct(
     cast: [
       // O salão do trono.
       { character: 'saul', at: TRONO, yaw: 180, seated: 0.64 },
-      voz(guarda('guarda-1', [97.3, -99.6], -90, 21, 'Guarda 1'), 'zoe2cQFqDDW4DteHDEWI'),
+      voz(guarda('guarda-1', [97.3, -99.6], -90, 21, 'Guarda 1'), 'hwnuNyWkl9DjdTFykrN6'),
       guarda('guarda-2', [102.7, -99.6], 90, 34, 'Guarda 2'),
       guarda('soldado-1', [97.2, -89.3], -120, 47, 'Soldado 1'),
       voz(guarda('soldado-2', [97.6, -90.3], -20, 58, 'Soldado 2'), 'mBxe7tYxRAMLpIP3fPEp'),
-      voz(guarda('porta-1', [97.0, -85.6], -90, 63, 'Guarda da porta 1'), 'hXur2dqIXKGl3IhDPHnb'),
+      voz(guarda('porta-1', [97.0, -85.6], -90, 63, 'Guarda da porta 1'), 'rpNe0HOx7heUulPiOEaG'),
       guarda('porta-2', [103.0, -85.6], 90, 72, 'Guarda da porta 2'),
       voz(gente('servo', [104.2, -95.6], 120, 81, 'Servo', '#c9b896', [{ id: 'headwrap', color: '#e2d6b8' }]), 'GnDrTQvdzZ7wqAKfLzVQ', 1.08),
       { character: 'davi', at: [100, -85.4], yaw: 0 },
@@ -148,7 +148,7 @@ export default direct(
     d.camera.cut({ pos: [95.8, 1.8, -98.0], lookAt: [99.6, 1.3, -101.4], fov: 46 });
     d.camera.moveTo({ pos: [96.0, 1.78, -98.3], lookAt: [99.6, 1.3, -101.4], fov: 44 });
     for (const id of guardas) d.background(() => d.do(id, 'move', { name: 'cower', amount: 0 }, { duration: 0.6 }));
-    d.actor('guarda-1').say('Ninguém, meu senhor. Não há ninguém.', { tone: 'sussurro', to: saul, gesture: 0 });
+    d.actor('guarda-1').say('Ninguém, meu senhor. Não há ninguém.', { tone: 'nervoso', to: saul, gesture: 0 });
     // [Liberdade] Lá atrás, junto da coluna, dois soldados trocam um olhar.
     d.camera.cut({ pos: [99.6, 1.75, -91.6], lookAt: [97.3, 1.5, -89.7], fov: 46 });
     d.camera.moveTo({ pos: [99.4, 1.75, -91.4], lookAt: [97.3, 1.5, -89.7], fov: 44 });
@@ -244,7 +244,8 @@ export default direct(
     d.actor('soldado-1').behave('attend', { object: 'davi', mood: 'calm' });
     d.actor('soldado-2').behave('attend', { object: 'davi', mood: 'calm' });
     d.camera.cut({ pos: [101.6, 5.4, -100.6], lookAt: [100, 1.0, -84.0], fov: 50 });
-    const entra = davi.walkTo(DIANTE, { speed: 1.1 });
+    const entra = d.background(() => davi.walkTo(DIANTE, { speed: 1.1 }));
+    d.wait(0.6);
     // [Liberdade] O guarda da porta anuncia.
     d.actor('porta-1').say('O rapaz de Belém, meu senhor.', { to: saul, gesture: 0.2 });
     d.at(entra.start + 3.0);
@@ -253,7 +254,7 @@ export default direct(
     d.at(entra.end - 4.0);
     saul.lookAt(davi, { duration: 0.6 });
     saul.say('Qual é o teu nome, jovem?', { to: davi, gesture: 0.2 });
-    d.waitFor(entra);
+    d.waitFor(entra.end);
     davi.behave('attend', { object: 'saul', mood: 'worried' });
     // Os dois de lado: o rei no trono, o rapaz em pé.
     // Por cima do ombro do Davi, alto, o rei no trono.
@@ -264,6 +265,8 @@ export default direct(
     davi.say('Sim, meu senhor.', { to: saul, gesture: 0 });
     // O Davi se senta no banco baixo e começa a tocar.
     davi.sit('banco-davi', 'seat');
+    // Tocando, ele se acalma: concentrado na música, não com medo.
+    davi.behave('attend', { object: 'saul', mood: 'calm' });
     d.do('davi', 'move', { name: 'strum' }, { duration: 0.6 });
     const harpa = d.now;
     // [GANCHO] Travelling lento do Davi até o rei.

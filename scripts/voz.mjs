@@ -16,6 +16,8 @@
  *   --dry           list and estimate, make nothing
  *   --again <key>   make a take again even if it exists (another reading of the same line); repeatable
  *
+ * New takes are levelled to one loudness (scripts/nivel.mjs).
+ *
  * The key is read from ELEVEN_API_KEY (or ELEVENLABS_API_KEY) and is never written anywhere.
  */
 import { spawnSync } from 'node:child_process';
@@ -23,6 +25,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, w
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createServer } from 'vite';
+import { levelTake } from './nivel.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -81,6 +84,8 @@ try {
     const t = voice.takeFromAlignment(line.key, take.duration, take.chars, take.starts, take.ends, take.tempo);
     writeFileSync(join(voz, `${line.key}.mp3`), take.audio);
     writeFileSync(join(voz, `${line.key}.json`), `${JSON.stringify({ ...t, speaker: line.speaker, spoken: line.spoken }, null, 1)}\n`);
+    // Every take at the same loudness (see scripts/nivel.mjs).
+    levelTake(join(voz, `${line.key}.mp3`));
     console.log(`✓ ${line.speaker}: ${line.text}  (${t.duration.toFixed(2)} s, ${take.cost ?? '?'} créditos)`);
   }
   for (const s of toMake) {

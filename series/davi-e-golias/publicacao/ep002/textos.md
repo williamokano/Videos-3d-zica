@@ -1,6 +1,6 @@
 # Episódio 2 — O rei e o pastor · textos de lançamento
 
-Vídeo: `out/davi-e-golias/ep002/davi-e-golias-ep002.mp4` (2:07.3, 1080×1920, com áudio). Capa: `capa_ep002.png`.
+Vídeo: `out/davi-e-golias/ep002/davi-e-golias-ep002.mp4` (2:07.7, 1080×1920, com áudio). Capa: `capa_ep002.png`.
 Horário proposto: **sábado seguinte ao ep. 1, 10:00 (Brasília)**. Ainda não foi confirmado.
 
 ## Legenda (Instagram e TikTok)
@@ -69,7 +69,7 @@ Resposta-semente: `A gente levava um bolo de fubá, com certeza 😄`
 
 ## Checklist
 
-- [x] Vídeo 1080×1920 com áudio, 2:07.3 (limite de 3:00)
+- [x] Vídeo 1080×1920 com áudio, 2:07.7 (limite de 3:00)
 - [x] Capa e artes prontas, zonas conferidas (`capa_ep002-zonas.png`)
 - [x] Legenda e 8 hashtags
 - [ ] Escolher o comentário fixado e **fixá-lo logo depois de postar**
