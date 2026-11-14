@@ -11,6 +11,8 @@ export interface Environment {
   ambientIntensity: number;
   fogNear: number;
   fogFar: number;
+  /** How much of the sky has clouds, from 0 (clear) to 1 (overcast). */
+  clouds: number;
 }
 
 export const DEFAULT_ENVIRONMENT: Environment = {
@@ -21,6 +23,7 @@ export const DEFAULT_ENVIRONMENT: Environment = {
   ambientIntensity: 1.0,
   fogNear: 70,
   fogFar: 260,
+  clouds: 0,
 };
 
 /**

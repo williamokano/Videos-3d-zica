@@ -38,7 +38,8 @@
           "sunIntensity": 2.8,
           "ambientIntensity": 1.2,
           "fogNear": 90,
-          "fogFar": 420
+          "fogFar": 420,
+          "clouds": 0.6
         }
       }
     },
@@ -53,7 +54,8 @@
           "skyHorizon": "#f0a868",
           "sunColor": "#ffb072",
           "sunIntensity": 2.2,
-          "ambientIntensity": 1.0
+          "ambientIntensity": 1.0,
+          "clouds": 0.6
         },
         "grade": {
           "tint": "#ff9a52",
@@ -74,7 +76,8 @@
           "sunIntensity": 0.55,
           "ambientIntensity": 0.32,
           "fogNear": 40,
-          "fogFar": 260
+          "fogFar": 260,
+          "clouds": 0.35
         },
         "grade": {
           "tint": "#4a6aa8",
@@ -96,7 +99,8 @@
           "skyHorizon": "#f2b48c",
           "sunColor": "#ffc79a",
           "sunIntensity": 1.9,
-          "ambientIntensity": 0.85
+          "ambientIntensity": 0.85,
+          "clouds": 0.6
         },
         "grade": {
           "tint": "#ff9f7a",

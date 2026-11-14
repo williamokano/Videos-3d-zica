@@ -38,7 +38,7 @@ stage.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 1000);
 const environment = new EnvironmentRig(scene);
-environment.apply({ skyTop: '#3f86d6', skyHorizon: '#d4ebff', sunColor: '#fff3dc', sunIntensity: 2.6, ambientIntensity: 1, fogNear: 70, fogFar: 260 });
+environment.apply({ skyTop: '#3f86d6', skyHorizon: '#d4ebff', sunColor: '#fff3dc', sunIntensity: 2.6, ambientIntensity: 1, fogNear: 70, fogFar: 260, clouds: 0 });
 const floor = new THREE.Mesh(new THREE.CircleGeometry(60, 64), mat('#9aa0a8'));
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
