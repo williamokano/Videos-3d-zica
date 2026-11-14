@@ -18,6 +18,12 @@ Cesto de vime redondo e baixo (50 cm), com pães redondos dentro (params: bread 
 
 - **knockOver / setUpright**: derrubar e pôr de pé
 
+### `ancient.basketGroup`
+
+Cestos de vime trançado de tamanhos diferentes (um alto de alças, um largo e baixo, um pequeno...), juntos no chão sem se encostar; um com lã crua e outro com grão. `fill`: "mixed" (padrão), "wool", "grain" ou "none" (params: count — 3 —, spread — raio do grupo, 0,5 —, fill, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.boulder`
 
 Rochedo grande com pedras menores no pé, para os montes (params: size — largura, 2,2 m —, seed, color)
@@ -92,9 +98,21 @@ Escudos redondos de couro com borda e umbo de bronze, no chão (não na mão). `
 
 - Cenário: sem ação própria.
 
+### `ancient.hangingCloth`
+
+Pano de lã tecido e listrado (faixas de outra cor perto das pontas, franja embaixo) pendurado numa vara presa em duas cavilhas na parede; balança de leve sozinho. Costas em z = 0, olha para +z; a origem é a vara: ponha na altura com `y` (1,8 m para um pano, a altura do vão para cortina). Serve de cortina numa porta: não bloqueia a passagem (params: width — 0,7 —, length — 1,2 —, color — "linen", "brown", "dark" ou uma cor —, stripe — cor das listras —, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.heifer`
 
 Novilha (vaca nova), de frente para -z, 1,2 m na cernelha, com cabresto. Mexe a cauda, as orelhas e a cabeça sozinha com o tempo. `rope: 1` põe a corda de puxar pendurada do cabresto até o chão, para alguém levar pelo caminho (`moveTo`) (params: color — do pelo, castanho claro —, rope, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.herbBundle`
+
+Maços de ervas secas pendurados de cabeça para baixo numa cordinha esticada, para debaixo de uma viga; balançam de leve sozinhos. A origem é a corda, ao longo de x: ponha na altura com `y` (logo abaixo da viga). Não bloqueia a passagem (params: count — 3 —, seed)
 
 - Cenário: sem ação própria.
 
@@ -116,6 +134,12 @@ Jarro de barro. `shape`: "storage" (talha alta de gargalo com colar e duas alça
 
 - **knockOver / setUpright**: derrubar e pôr de pé
 
+### `ancient.ladder`
+
+Escada de mão rústica: dois varões tortos e degraus de galho amarrados com corda, encostada. O alto encosta na parede em z = 0 e os pés ficam para +z (a escada olha para +z; quem sobe olha para -z). Para subir ao terraço ou ao sótão (params: height — altura do alto, 2,6 —, lean — inclinação em graus, 15 —, color, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.lampStand`
 
 Candeia acesa num suporte. `kind`: "wood" (pé de madeira de três pernas, 1,1 m), "stone" (coluna baixa de pedra, 90 cm) ou "shelf" (prateleira de parede com mão-francesa: costas em z = 0, olha para +z; a origem é o tampo, ponha na altura com `y`). Mesma luz da `ancient.oilLamp` (params: kind, intensity, shadow, range, color — da madeira ou da pedra —, seed)
@@ -126,6 +150,13 @@ Candeia acesa num suporte. `kind`: "wood" (pé de madeira de três pernas, 1,1 m
 
 Mesa baixa de madeira (35 cm, para comer sentado no chão), com jarra, copos e uma tigela de frutas em cima; põe-se coisas em `top` (params: width, depth, jar — 0 ou 1 —, cups, fruit — 0 ou 1 —, color)
 
+- **putDown (com "on")**: onde pôr coisas: top
+
+### `ancient.mudBench`
+
+Banco baixo de barro (tijolo de barro rebocado) encostado na parede, de bordas arredondadas e irregulares, feito à mão, com pedras aparecendo no pé. Costas em z = 0, a frente olha para +z: ponha rente à parede. Assentos `seat1`, `seat2`, ... a cada ~0,6 m ao longo dele (quem senta olha para +z, para fora da parede) e `top` no meio, para pôr coisas (params: length — 2 —, height — 0,42 —, depth — 0,45 —, color — do reboco —, seed)
+
+- **sit / standUp**: lugares: seat1, seat2, seat3
 - **putDown (com "on")**: onde pôr coisas: top
 
 ### `ancient.oilLamp`
@@ -149,6 +180,30 @@ Tamareira: tronco anelado levemente curvo, coroa de folhas compridas caindo e ca
 ### `ancient.pebbles`
 
 Seixos lisos de riacho espalhados num retângulo centrado na origem; pisa-se neles (params: width, depth, density — por m² —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.plankShelf`
+
+Prateleira de uma tábua rústica sobre duas cavilhas na parede, com potes, tigelas, jarrinhas e uma jarra de barro escolhidos pelo `seed`. Costas em z = 0, olha para +z; a origem é o tampo da tábua: ponha na altura com `y` (1,5 m numa sala). Não bloqueia a passagem (params: length — 1,2 —, count — quantas peças, 5 —, color — da madeira —, seed)
+
+- **putDown (com "on")**: onde pôr coisas: top
+
+### `ancient.post`
+
+Esteio de tronco de árvore bruto, que segura a viga do teto: torto, mais fino em cima, com nós e um toco de galho, o topo cortado reto. Bloqueia só o tronco (params: height — 2,7 —, radius — 0,11 —, color, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.potteryGroup`
+
+Grupo de vasilhas de barro para o chão ou um banco: talha de guardar, panela de cozinhar, tigelas empilhadas, jarra de alça e jarrinhas, em vermelhos e marrons de barro um pouco diferentes. Arrumadas pelo `seed` sem se encostar (params: count — 7 —, spread — raio do grupo, 0,6 —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.quern`
+
+Moinho de mão (mó de sela): pedra de baixo comprida e côncava no chão, ao longo de x, com a pedra de cima em forma de pão atravessada nela, grãos espalhados, farinha no chão e uma tigela com farinha na ponta. Quem mói ajoelha do lado -x (params: bowl — 0 ou 1 —, color — da pedra —, seed)
 
 - Cenário: sem ação própria.
 
@@ -194,6 +249,12 @@ Suporte de lanças: travessa sobre dois cavaletes em X, com lanças encostadas d
 
 - Cenário: sem ação própria.
 
+### `ancient.stool`
+
+Banquinho baixo de assento de palha trançada (35 cm): quatro pés de madeira com travessas e o assento de tiras de palha em quadrados um dentro do outro, com o X das emendas. De frente para -z como os móveis. Assento `seat` (params: height — 0,35 —, width — 0,36 —, color — da madeira)
+
+- **sit / standUp**: lugares: seat
+
 ### `ancient.stream`
 
 Riacho raso ao longo de x: água azul meio transparente que brilha e corre (para +x), leito de pedras lisas, margens de cascalho e capim verde. Plano: ponha no fundo do vale, onde o chão é reto; pisa-se nele (params: length, width — da água —, curve — quanto a linha se afasta do eixo, em metros —, bends — quantas curvas —, bank — largura de cada margem —, seed)
@@ -218,6 +279,12 @@ Trecho de muralha de pedra ao longo de x, com ameias, base mais larga e pedras a
 
 - Cenário: sem ação própria.
 
+### `ancient.wallNiche`
+
+Nicho na parede: um vão raso e escuro de topo arredondado, com o peitoril de reboco e uma candeia (acesa) ou uma jarrinha dentro. É uma peça fina para pôr rente à face da parede (costas em z = 0, olha para +z, saindo um pouco da parede para se ler como nicho); a origem é o pé do nicho: ponha na altura com `y` (1,1 m). Com `intensity` a candeia ilumina de verdade (params: width — 0,35 —, height — 0,45 —, item — "lamp", "jug" ou "none" —, color — do reboco —, intensity, seed)
+
+- Cenário: sem ação própria.
+
 ### `ancient.wallTorch`
 
 Tocha num suporte de ferro preso na parede: costas em z = 0, olha para +z, a tocha inclinada para fora com a chama tremendo sozinha. A origem é o pé da tocha: ponha na altura com `y` (1,6 m numa sala). Com `intensity` maior que 0 ilumina de verdade, quente e tremendo (alcance 8 m; `shadow: 1` para sombra) (params: intensity, shadow, range, seed)
@@ -229,6 +296,12 @@ Tocha num suporte de ferro preso na parede: costas em z = 0, olha para +z, a toc
 Poço redondo de pedra, com água escura lá dentro, dois esteios e um sarilho com corda e balde (params: radius — por fora, 0,75 —, color)
 
 - Cenário: sem ação própria.
+
+### `ancient.woodTable`
+
+Mesa rústica de tábuas grossas sobre dois cavaletes (62 cm, a altura de comer sentado em banquinho ou no banco de barro), as tábuas desiguais; `cloth: 1` põe um caminho de pano listrado ao longo dela, caindo nas pontas. Põe-se coisas em `top` (params: width — 1,4 —, depth — 0,6 —, height — 0,62 —, cloth — 0 ou 1 —, color — da madeira —, clothColor, stripe, seed)
+
+- **putDown (com "on")**: onde pôr coisas: top
 
 ## arms
 

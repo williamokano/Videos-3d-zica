@@ -16,9 +16,16 @@ const blocked = (built: ReturnType<typeof place>, x: number, z: number) => built
 
 describe('ancient kit', () => {
   it('every asset builds with its defaults and stands on the ground', () => {
+    // Things that hang have their origin where they hang from (the episode sets their height): they hang below it.
+    const hanging = ['ancient.hangingCloth', 'ancient.herbBundle'];
     const ids = listAssets().map((a) => a.id).filter((id) => id.startsWith('ancient.'));
-    expect(ids.length).toBeGreaterThanOrEqual(27);
-    for (const id of ids) {
+    expect(ids.length).toBeGreaterThanOrEqual(39);
+    for (const id of hanging) {
+      const box = new THREE.Box3().setFromObject(createAsset(id));
+      expect(box.max.y, id).toBeLessThan(0.05);
+      expect(box.min.y, id).toBeLessThan(-0.3);
+    }
+    for (const id of ids.filter((id) => !hanging.includes(id))) {
       const box = new THREE.Box3().setFromObject(createAsset(id));
       expect(box.min.y, id).toBeGreaterThan(-0.25);
       expect(box.min.y, id).toBeLessThan(0.05);
@@ -190,5 +197,118 @@ describe('ancient kit', () => {
     const [, y, , facing] = throne.traits.sockets!['seat.throne'];
     expect(y).toBeCloseTo(0.57, 2);
     expect(facing).toBe(0);
+  });
+
+  it('the house: a mud bench and a stool to sit on, at the heights asked', () => {
+    const seats = (o: THREE.Object3D) => {
+      const found: Record<string, THREE.Object3D> = {};
+      o.traverse((c) => void (c.name.startsWith('seat.') && (found[c.name] = c)));
+      return found;
+    };
+    // A seat every 0.6 m or so along the bench, on its top, whoever sits facing out from the wall (+z).
+    const bench = seats(createAsset('ancient.mudBench'));
+    expect(Object.keys(bench).sort()).toEqual(['seat.seat1', 'seat.seat2', 'seat.seat3', 'seat.top']);
+    expect(Object.keys(seats(createAsset('ancient.mudBench', { length: 3.6 })))).toHaveLength(7);
+    for (const name of ['seat.seat1', 'seat.seat2', 'seat.seat3']) {
+      expect(bench[name].position.y).toBeCloseTo(0.42);
+      expect(bench[name].position.z).toBeGreaterThan(0.1);
+      expect(bench[name].position.z).toBeLessThan(0.4);
+      expect(THREE.MathUtils.radToDeg(bench[name].rotation.y)).toBeCloseTo(180);
+    }
+    expect(bench['seat.seat1'].position.x).toBeLessThan(bench['seat.seat2'].position.x);
+    expect(seats(createAsset('ancient.mudBench', { height: 0.5 }))['seat.seat1'].position.y).toBeCloseTo(0.5);
+    // Against the wall: its back at z = 0, its size what was asked.
+    const box = new THREE.Box3().setFromObject(createAsset('ancient.mudBench', { length: 3 }));
+    expect(box.max.x - box.min.x).toBeCloseTo(3, 1);
+    expect(box.min.z).toBeGreaterThan(-0.02);
+    expect(box.max.z).toBeLessThan(0.52);
+    expect(box.max.y).toBeCloseTo(0.42, 1);
+    const stool = createAsset('ancient.stool');
+    expect(seats(stool)['seat.seat'].position.y).toBeCloseTo(0.35);
+    expect(size(stool).y).toBeCloseTo(0.36, 1);
+    expect(seats(createAsset('ancient.woodTable'))['seat.top'].position.y).toBeCloseTo(0.624, 2);
+    expect(seats(createAsset('ancient.woodTable', { cloth: 1 }))['seat.top'].position.y).toBeGreaterThan(0.627);
+
+    // Someone walks up to the bench and sits on its second seat, facing out into the room.
+    const location = buildLocation({ id: 't', name: 't', ground: { color: '#fff', size: 40 }, rooms: [{ id: 'r', name: 'r', origin: [0, 0], size: [12, 12], outdoor: true, floorColor: '#ccc', props: [{ id: 'banco', asset: 'ancient.mudBench', pos: [6, 6] }] }] });
+    const jesse = { id: 'jesse', name: 'Jessé' };
+    const episode = resolveScript(direct({ episode: 1, title: 't', location: 't', cast: [{ character: 'jesse', at: [6, 7.2], yaw: 0 }] }, (d) => {
+      d.camera.cut({ pos: [6, 3, 12], lookAt: [6, 1, 6] });
+      d.do('jesse', 'sit', { on: 'banco', seat: 'seat2' });
+    }), location, [jesse]);
+    const compiled = compileEpisode(episode, location, buildCast(episode, [jesse]));
+    expect(evaluateActions(compiled, episode.duration).jesse.sit).toBeCloseTo(1);
+    expect(compiled.links).toEqual([expect.objectContaining({ target: 'jesse', to: 'banco', socket: 'seat.seat2' })]);
+  });
+
+  it('the house: sizes follow the params', () => {
+    expect(size(createAsset('ancient.plankShelf', { length: 1.6 })).x).toBeCloseTo(1.6, 1);
+    expect(size(createAsset('ancient.post')).y).toBeCloseTo(2.7, 1);
+    expect(size(createAsset('ancient.post', { height: 2 })).y).toBeCloseTo(2, 1);
+    expect(size(createAsset('ancient.post', { radius: 0.2 })).x).toBeGreaterThan(size(createAsset('ancient.post')).x + 0.1);
+    const table = size(createAsset('ancient.woodTable', { width: 2, depth: 0.8 }));
+    expect(table.x).toBeCloseTo(2, 1);
+    expect(table.z).toBeCloseTo(0.8, 1);
+    const cloth = size(createAsset('ancient.hangingCloth', { width: 1, length: 1.8 }));
+    expect(cloth.x).toBeGreaterThan(1);
+    expect(cloth.x).toBeLessThan(1.2);
+    expect(cloth.y).toBeCloseTo(1.88, 1);
+    const niche = size(createAsset('ancient.wallNiche', { width: 0.4, height: 0.6, item: 'none' }));
+    expect(niche.y).toBeCloseTo(0.6, 2);
+    expect(niche.x).toBeCloseTo(0.46, 1);
+    // The ladder: its top at the height asked against the wall (z = 0), its feet out at the lean.
+    const ladder = new THREE.Box3().setFromObject(createAsset('ancient.ladder', { height: 3, lean: 20 }));
+    expect(ladder.max.y).toBeCloseTo(3, 1);
+    expect(ladder.min.z).toBeGreaterThan(-0.02);
+    const run = 3 * Math.tan(THREE.MathUtils.degToRad(20));
+    expect(ladder.max.z).toBeGreaterThan(run);
+    expect(ladder.max.z).toBeLessThan(run + 0.12);
+    expect(new THREE.Box3().setFromObject(createAsset('ancient.ladder', { lean: 5 })).max.z).toBeLessThan(0.35);
+    // Seeded groups: as many pieces as asked, and another seed lays them out otherwise.
+    expect(createAsset('ancient.potteryGroup', { count: 9 }).children).toHaveLength(9);
+    expect(createAsset('ancient.basketGroup', { count: 5 }).children).toHaveLength(5);
+    expect(createAsset('ancient.herbBundle', { count: 4 }).children).toHaveLength(5);
+    const spot = (seed: number) => createAsset('ancient.potteryGroup', { seed }).children[1].position.toArray();
+    expect(spot(1)).toEqual(spot(1));
+    expect(spot(1)).not.toEqual(spot(2));
+    // Wall pieces have their back at z = 0 and come out toward +z.
+    for (const id of ['ancient.plankShelf', 'ancient.hangingCloth', 'ancient.wallNiche']) {
+      const box = new THREE.Box3().setFromObject(createAsset(id));
+      expect(box.min.z, id).toBeGreaterThan(-0.03);
+      expect(box.max.z, id).toBeGreaterThan(0.05);
+    }
+    // Nothing on the shelf hangs off it.
+    const shelf = new THREE.Box3().setFromObject(createAsset('ancient.plankShelf', { length: 0.8, count: 9 }));
+    expect(shelf.max.x - shelf.min.x).toBeLessThan(0.82);
+  });
+
+  it('the house: a post blocks with its trunk, wall and hanging things do not block', () => {
+    const post = place([{ asset: 'ancient.post', pos: [0, 0] }]);
+    expect(blocked(post, 0, 0)).toBe(true);
+    expect(blocked(post, 0.35, 0)).toBe(false);
+    expect(blocked(post, 0, 0.35)).toBe(false);
+    expect(place([{ asset: 'ancient.hangingCloth', pos: [0, 0], y: 2 }, { asset: 'ancient.herbBundle', pos: [3, 0], y: 2.4 }, { asset: 'ancient.plankShelf', pos: [6, 0], y: 1.5 }, { asset: 'ancient.wallNiche', pos: [9, 0], y: 1.1 }]).colliders).toHaveLength(0);
+    expect(place([{ asset: 'ancient.mudBench', pos: [0, 0] }, { asset: 'ancient.woodTable', pos: [5, 0] }, { asset: 'ancient.potteryGroup', pos: [10, 0] }]).colliders).toHaveLength(3);
+  });
+
+  it('the house: cloth and herbs sway by themselves, a lamp in a niche flickers', () => {
+    const anim = (o: THREE.Object3D) => o.userData.animate as (t: number) => void;
+    const cloth = createAsset('ancient.hangingCloth');
+    const fabric = cloth.children[0] as THREE.Mesh;
+    const at = (t: number) => (anim(cloth)(t), Array.from(fabric.geometry.attributes.position.array));
+    const [a, b] = [at(0.4), at(1.9)];
+    expect(a).not.toEqual(b);
+    // It sways out from the wall, never into it.
+    for (let t = 0; t < 12; t += 0.7) {
+      at(t);
+      expect(new THREE.Box3().setFromObject(fabric).min.z).toBeGreaterThan(0);
+    }
+    const herbs = createAsset('ancient.herbBundle');
+    const swing = (t: number) => (anim(herbs)(t), herbs.children[1].rotation.z);
+    expect(swing(0.3)).not.toBeCloseTo(swing(1.7));
+    expect(Math.abs(swing(5))).toBeLessThan(0.1);
+    expect(typeof createAsset('ancient.wallNiche').userData.animate).toBe('function');
+    expect(createAsset('ancient.wallNiche', { item: 'jug' }).userData.animate).toBeUndefined();
+    for (const id of ['ancient.mudBench', 'ancient.stool', 'ancient.post', 'ancient.ladder']) expect(createAsset(id).userData.animate, id).toBeUndefined();
   });
 });
