@@ -72,6 +72,25 @@ export const TONES: Record<string, string> = {
 };
 
 /**
+ * The face a tone puts on while the line is said, as expression weights. The tone already shapes the voice; without
+ * this the face kept its resting look, and a firm or tired line came out with a grin. Tones not here (whisper,
+ * shouting, trance...) leave the face to the scene.
+ */
+export const TONE_FACES: Record<string, Record<string, number>> = {
+  firme: { angry: 0.18 },
+  decidido: { angry: 0.15 },
+  bravo: { angry: 0.6 },
+  preocupada: { sad: 0.35 },
+  preocupado: { sad: 0.35 },
+  triste: { sad: 0.55 },
+  cansado: { sad: 0.3 },
+  nervoso: { scared: 0.25 },
+  assustado: { scared: 0.55 },
+  surpreso: { surprised: 0.45 },
+  animado: { happy: 0.45 },
+};
+
+/**
  * How a voice reaches the listener, applied to the take when the sound is mixed (the take itself stays clean,
  * so the same line can be heard in the room and over a radio). Each is an ffmpeg filter chain, and a band of
  * frequencies for the studio's preview.

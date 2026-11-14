@@ -1,6 +1,6 @@
 # Episódio 3 — Quarenta dias (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:43.9. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:45.2. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -49,76 +49,76 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:29.3` *GOLIAS anda até [0.0,13.2]*
 - `0:29.3` 🎥 corte: câmera fov 46
 - `0:29.3` 🎥  fov 44
-- `0:30.7` **JESSÉ**: Davi. Leva este grão e estes dez pães aos teus irmãos, no acampamento. ⚠ sem gravação
 - `0:30.7` 🎥 corte: câmera
+- `0:31.0` **JESSÉ**: Davi. Leva este grão e estes dez pães aos teus irmãos, no acampamento. ⚠ sem gravação
 - `0:31.7` *GOLIAS vira*
 - `0:32.1` *GOLIAS passa a: attend (happy)*
-- `0:35.8` **JESSÉ**: E estes dez queijos, ao comandante deles. ⚠ sem gravação
-- `0:39.0` **JESSÉ** (preocupada): Vê se teus irmãos estão bem. E traz-me notícia. ⚠ sem gravação
-- `0:42.5` **DAVI**: Deixei as ovelhas com um guarda, pai. Eu vou. ⚠ sem gravação
-- `0:42.5` 🎥 corte: câmera
-- `0:45.9` 🎥 corte: câmera fov 46
-- `0:48.9` 🌍 rule.amanhecer → 0
-- `0:48.9` 🎥 corte: câmera fov 50
-- `0:51.5` 🎥  fov 50
+- `0:36.1` **JESSÉ**: E estes dez queijos, ao comandante deles. ⚠ sem gravação
+- `0:39.3` **JESSÉ** (preocupado): Vê se teus irmãos estão bem. E traz-me notícia. ⚠ sem gravação
+- `0:42.8` **DAVI**: Deixei as ovelhas com um guarda, pai. Eu vou. ⚠ sem gravação
+- `0:42.8` 🎥 corte: câmera
+- `0:46.2` 🎥 corte: câmera fov 46
+- `0:49.2` 🌍 rule.amanhecer → 0
+- `0:49.2` 🎥 corte: câmera fov 50
+- `0:51.8` 🎥  fov 50
 - ⏸ **6.4 s sem fala**
-- `0:52.3` **DAVI**: É pros filhos de Jessé. Onde eles estão? ⚠ sem gravação
-- `0:52.3` 🎥 corte: câmera
-- `0:56.3` **GUARDA DAS BAGAGENS** (cansado): Na linha de frente. ⚠ sem gravação
-- `0:58.1` 🎥 corte: câmera fov 46
+- `0:52.6` **DAVI**: É pros meus irmãos, os filhos de Jessé. Onde eles estão? ⚠ sem gravação
+- `0:52.6` 🎥 corte: câmera
+- `0:57.7` **GUARDA DAS BAGAGENS** (cansado): Na linha de frente. ⚠ sem gravação
+- `0:59.4` 🎥 corte: câmera fov 46
 - ⏸ **3.0 s sem fala**
-- `1:01.1` **DAVI** (animado): Eliabe! Abinadabe! Samá! ⚠ sem gravação
-- `1:02.9` 🎥  fov 46
-- `1:03.5` **SAMÁ** (surprised): Davi?! ⚠ sem gravação
-- `1:03.5` 🎥 corte: câmera
-- `1:04.5` **DAVI**: O pai mandou saber como estais. ⚠ sem gravação
-- `1:07.1` **GOLIAS** (grito): Hoje eu afronto as fileiras de Israel! Dai-me um homem, e lutaremos os dois! ⚠ sem gravação
-- `1:07.1` 🎥 corte: câmera fov 42
-- `1:07.1` 🎥  fov 40
-- `1:12.5` 🎥 corte: câmera fov 48
-- `1:13.0` 🎥  fov 46
+- `1:02.4` **DAVI** (animado): Eliabe! Abinadabe! Samá! ⚠ sem gravação
+- `1:04.2` 🎥  fov 46
+- `1:04.9` **SAMÁ** (surprised): Davi?! ⚠ sem gravação
+- `1:04.9` 🎥 corte: câmera
+- `1:05.9` **DAVI**: O pai mandou saber como estais. ⚠ sem gravação
+- `1:08.4` **GOLIAS** (grito): Hoje eu afronto as fileiras de Israel! Dai-me um homem, e lutaremos os dois! ⚠ sem gravação
+- `1:08.4` 🎥 corte: câmera fov 42
+- `1:08.4` 🎥  fov 40
+- `1:13.8` 🎥 corte: câmera fov 48
+- `1:14.3` 🎥  fov 46
 - ⏸ **3.2 s sem fala**
-- `1:15.7` **SOLDADO 1**: O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento. ⚠ sem gravação
-- `1:15.7` 🎥 corte: câmera
-- `1:21.2` **SOLDADO 2**: E a casa do pai dele fica livre de impostos. ⚠ sem gravação
-- `1:25.0` **DAVI** (firme): Quem é esse filisteu, para afrontar os exércitos do Deus vivo? ⚠ sem gravação
-- `1:25.0` 🎥 corte: câmera fov 42
-- `1:25.0` 🎥  fov 40
-- `1:30.0` **ELIABE** (bravo): Por que desceste aqui? Com quem deixaste aquelas poucas ovelhas no deserto? ⚠ sem gravação
-- `1:30.0` 🎥 corte: câmera
-- `1:35.3` **ELIABE** (bravo): Eu conheço o teu orgulho. Vieste só pra ver a batalha. ⚠ sem gravação
-- `1:39.4` **DAVI**: Que fiz eu agora? Foi só uma pergunta. ⚠ sem gravação
-- `1:39.4` 🎥 corte: câmera
-- `1:42.6` 🎥 corte: câmera fov 42
-- `1:44.6` 🎥  fov 42
-- `1:45.0` **DAVI**: É verdade o que dizem do rei? ⚠ sem gravação
-- `1:45.0` 🎥 corte: câmera
-- `1:47.7` **SOLDADO 2** (irônico): É. Por quê? Estás pensando em descer? ⚠ sem gravação
-- `1:50.9` 🎥 corte: câmera fov 44
-- `1:50.9` 🎥  fov 42
-- `1:52.7` **ABNER**: Majestade, é o rapaz que anda perguntando pela recompensa. ⚠ sem gravação
-- `1:57.0` 🎥 corte: câmera
-- `1:57.3` **REI SAUL** (surpreso): Davi? O meu escudeiro? ⚠ sem gravação
-- `1:59.5` **DAVI** (decidido): Que ninguém desanime por causa desse filisteu. Teu servo irá lutar contra ele. ⚠ sem gravação
-- `1:59.5` 🎥 corte: câmera
-- `2:05.1` **REI SAUL** (cansado): Não podes. És apenas um jovem, e ele é guerreiro desde a juventude. ⚠ sem gravação
-- `2:05.1` 🎥 corte: câmera
-- `2:09.9` **DAVI**: Quando um leão ou um urso levava uma ovelha, eu ia atrás dele e a tirava da sua boca. ⚠ sem gravação
-- `2:09.9` 🎥 corte: câmera fov 40
-- `2:15.9` 🎥  fov 40
-- `2:16.0` **DAVI**: Teu servo matou o leão e o urso. Esse filisteu será como um deles. ⚠ sem gravação
-- `2:20.7` **DAVI** (firme): O Senhor, que me livrou das garras do leão e do urso, me livrará das mãos desse filisteu. ⚠ sem gravação
-- `2:20.7` 🎥 corte: câmera fov 40
-- `2:20.7` 🎥  fov 38
-- `2:27.0` 🎥 corte: câmera
-- `2:28.9` 🎥 corte: câmera
-- `2:29.2` **REI SAUL**: Vai. E que o Senhor esteja contigo. ⚠ sem gravação
-- `2:32.0` 🎥 corte: câmera fov 44
-- `2:35.2` 🎥 corte: câmera fov 42
-- `2:35.2` 🎥  fov 40
-- `2:36.1` 🎥 corte: câmera fov 46
-- `2:36.1` 🎥  fov 44
-- `2:36.9` 🟥 cartão final: "Se você fosse o rei, deixava o Davi ir?" — DEIXAVA / SEGURAVA — Comenta DEIXAVA ou SEGURAVA 👇 e marca o amigo que encarava um gigante
+- `1:17.1` **SOLDADO 1**: O rei vai dar riquezas a quem matar esse homem. E a filha dele em casamento. ⚠ sem gravação
+- `1:17.1` 🎥 corte: câmera
+- `1:22.5` **SOLDADO 2**: E a casa do pai dele fica livre de impostos. ⚠ sem gravação
+- `1:26.4` **DAVI** (firme): Quem é esse filisteu, para afrontar os exércitos do Deus vivo? ⚠ sem gravação
+- `1:26.4` 🎥 corte: câmera fov 42
+- `1:26.4` 🎥  fov 40
+- `1:31.3` **ELIABE** (bravo): Por que desceste aqui? Com quem deixaste aquelas poucas ovelhas no deserto? ⚠ sem gravação
+- `1:31.3` 🎥 corte: câmera
+- `1:36.7` **ELIABE** (bravo): Eu conheço o teu orgulho. Vieste só pra ver a batalha. ⚠ sem gravação
+- `1:40.7` **DAVI**: Que fiz eu agora? Foi só uma pergunta. ⚠ sem gravação
+- `1:40.7` 🎥 corte: câmera
+- `1:44.0` 🎥 corte: câmera fov 42
+- `1:46.0` 🎥  fov 42
+- `1:46.4` **DAVI**: É verdade o que dizem do rei? ⚠ sem gravação
+- `1:46.4` 🎥 corte: câmera
+- `1:49.0` **SOLDADO 2** (irônico): É. Por quê? Estás pensando em descer? ⚠ sem gravação
+- `1:52.2` 🎥 corte: câmera fov 44
+- `1:52.2` 🎥  fov 42
+- `1:54.0` **ABNER**: Majestade, é o rapaz que anda perguntando pela recompensa. ⚠ sem gravação
+- `1:58.3` 🎥 corte: câmera
+- `1:58.6` **REI SAUL** (surpreso): Davi? O meu escudeiro? ⚠ sem gravação
+- `2:00.8` **DAVI** (decidido): Que ninguém desanime por causa desse filisteu. Teu servo irá lutar contra ele. ⚠ sem gravação
+- `2:00.8` 🎥 corte: câmera
+- `2:06.4` **REI SAUL** (cansado): Não podes. És apenas um jovem, e ele é guerreiro desde a juventude. ⚠ sem gravação
+- `2:06.4` 🎥 corte: câmera
+- `2:11.3` **DAVI**: Quando um leão ou um urso levava uma ovelha, eu ia atrás dele e a tirava da sua boca. ⚠ sem gravação
+- `2:11.3` 🎥 corte: câmera fov 40
+- `2:17.3` 🎥  fov 40
+- `2:17.3` **DAVI**: Teu servo matou o leão e o urso. Esse filisteu será como um deles. ⚠ sem gravação
+- `2:22.1` **DAVI** (firme): O Senhor, que me livrou das garras do leão e do urso, me livrará das mãos desse filisteu. ⚠ sem gravação
+- `2:22.1` 🎥 corte: câmera fov 40
+- `2:22.1` 🎥  fov 38
+- `2:28.4` 🎥 corte: câmera
+- `2:30.3` 🎥 corte: câmera
+- `2:30.6` **REI SAUL**: Vai. E que o Senhor esteja contigo. ⚠ sem gravação
+- `2:33.3` 🎥 corte: câmera fov 44
+- `2:36.5` 🎥 corte: câmera fov 42
+- `2:36.5` 🎥  fov 40
+- `2:37.4` 🎥 corte: câmera fov 46
+- `2:37.4` 🎥  fov 44
+- `2:38.2` 🟥 cartão final: "Se você fosse o rei, deixava o Davi ir?" — DEIXAVA / SEGURAVA — Comenta DEIXAVA ou SEGURAVA 👇 e marca o amigo que encarava um gigante
 - ⏸ **4.9 s sem fala**
-- `2:36.9` **Narrador**: No próximo episódio: o gigante. ⚠ sem gravação
+- `2:38.2` **Narrador**: No próximo episódio: o gigante. ⚠ sem gravação
 - ⏸ **4.5 s sem fala até o fim**

@@ -1,5 +1,5 @@
 import { HAND_POSE_NAMES, VISEME_NAMES, mouthOpenOf, visemeTrack } from '../character/motion';
-import { VOICE_FILTERS, takeVisemes, type Take } from '../audio/voice';
+import { TONE_FACES, VOICE_FILTERS, takeVisemes, type Take } from '../audio/voice';
 import { BEHAVIOURS, MOODS, type Mood } from './ambient';
 import { registerAction, type WalkPath } from './catalog';
 import { BODY, outAndBack, reachBody, type Point3 } from './hands';
@@ -366,6 +366,13 @@ registerAction({
         ...VISEME_NAMES.map((name) => ({ channel: `vis.${name}`, at: (u: number) => shapes(u)[name] })),
         // For faces with a single control for the mouth.
         { channel: 'talk', at: (u: number) => mouthOpenOf(shapes(u)) },
+        // In the middle of a line, steady between the words (soft for 0.3 s at each end).
+        { channel: 'line', at: (u: number) => Math.min(1, (u * duration) / 0.3, ((1 - u) * duration) / 0.3) },
+        // The face of the tone, for the length of the line (cast.ts adds it to the expressions).
+        ...Object.entries(TONE_FACES[ctx.params.tone as string] ?? {}).map(([name, weight]) => ({
+          channel: `tone.${name}`,
+          at: (u: number) => weight * Math.min(1, (u * duration) / 0.4, ((1 - u) * duration) / 0.4),
+        })),
         ...(gesture > 0 ? [{ channel: 'gesture', at: (u: number) => gesture * Math.min(1, u * 4, (1 - u) * 4) }] : []),
       ],
       events: [{ type: 'line', data: { text, duration, take: take?.key } }],

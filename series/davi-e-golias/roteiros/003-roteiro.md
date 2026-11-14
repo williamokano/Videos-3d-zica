@@ -60,7 +60,7 @@ Duração da prévia: 2:43.9 sem as vozes reais (com elas, perto de 2:50–2:55)
 
 *Ele deixa o jumento com o guarda das bagagens (e o cajado fica com a carga).*
 
-- **DAVI**: É pros filhos de Jessé. Onde eles estão?
+- **DAVI**: É pros meus irmãos, os filhos de Jessé. Onde eles estão?
 - **GUARDA** (cansado, apontando): Na linha de frente. *(17:22)*
 
 *O Davi corre até a fila.* **Câmera** acompanha do alto, de longe.

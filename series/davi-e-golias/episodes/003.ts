@@ -217,9 +217,11 @@ export default direct(
     jesse.pointAt('jumento-belem', { duration: 1.0 });
     d.camera.cut(conversa);
     d.camera.moveTo(perto(conversa, 0.22));
+    // Um pai mandando o caçula para perto da guerra: sério, sem o sorriso de descanso.
+    jesse.express('sad', { amount: 0.3 });
     jesse.say('Davi. Leva este grão e estes dez pães aos teus irmãos, no acampamento.', { to: daviB, gesture: 0.4 });
     jesse.say('E estes dez queijos, ao comandante deles.', { to: daviB, gesture: 0.3 });
-    jesse.say('Vê se teus irmãos estão bem. E traz-me notícia.', { tone: 'preocupada', to: daviB, gesture: 0.3 });
+    jesse.say('Vê se teus irmãos estão bem. E traz-me notícia.', { tone: 'preocupado', to: daviB, gesture: 0.3 });
     const resposta = ombro(d, 'jesse', 'davi-belem', { side: -0.55 });
     d.camera.cut(resposta);
     d.camera.moveTo(perto(resposta));
@@ -262,7 +264,7 @@ export default direct(
     const bagagem = ombro(d, 'davi', 'guarda');
     d.camera.cut(bagagem);
     d.camera.moveTo(perto(bagagem));
-    davi.say('É pros filhos de Jessé. Onde eles estão?', { to: guarda, gesture: 0.3 });
+    davi.say('É pros meus irmãos, os filhos de Jessé. Onde eles estão?', { to: guarda, gesture: 0.3 });
     guarda.pointAt([3, TOPO + 1.5, -36], { duration: 0.9 });
     guarda.say('Na linha de frente.', { tone: 'cansado', to: davi, gesture: 0.3 });
     guarda.behave('attend', { object: 'davi' });

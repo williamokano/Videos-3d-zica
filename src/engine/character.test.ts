@@ -9,7 +9,7 @@ import './assets/nature';
 import './assets/school';
 import { buildBody } from './character/body';
 import { buildCharacter } from './character/cast';
-import { NO_VISEMES, VISEMES, VISEME_NAMES, blink, locomotionPose, mouthOpenOf, resolveFace, splitGaze, visemeTrack, walkPose } from './character/motion';
+import { NO_VISEMES, TALKING_CURVE, VISEMES, VISEME_NAMES, blink, locomotionPose, mouthOpenOf, resolveFace, splitGaze, visemeTrack, walkPose } from './character/motion';
 import { mapBones, retarget } from './character/retarget';
 import { JOINTS, PARENT, type CharacterDef, type Joint } from './character/types';
 import { buildLocation } from './world/build';
@@ -61,6 +61,13 @@ describe('motion', () => {
     expect(resolveFace({}, 0, 0, { F: 1 }).teeth).toBe(1);
     // No shape at all leaves the face as the expression has it.
     expect(resolveFace({ happy: 1 }, 0, 0, NO_VISEMES)).toEqual(smiling);
+  });
+
+  it('drops the resting smile while a line is said, but not a happy one', () => {
+    const resting = resolveFace({}, 0, 0).mouthCurve;
+    expect(resolveFace({}, 0, 0.5, { A: 0.5 }, undefined, 1).mouthCurve).toBeCloseTo(TALKING_CURVE);
+    expect(resolveFace({}, 0, 0, {}, undefined, 0.5).mouthCurve).toBeCloseTo((resting + TALKING_CURVE) / 2);
+    expect(resolveFace({ happy: 1 }, 0, 0, {}, undefined, 1).mouthCurve).toBe(1);
   });
 
   it('puts the eyes where they are told to look', () => {
@@ -429,5 +436,16 @@ describe('camera attached to a character', () => {
     expect(visibleMeshes()).toBeLessThan(all);
     character.firstPerson!(false);
     expect(visibleMeshes()).toBe(all);
+  });
+});
+
+describe('tone faces', () => {
+  it('only uses expressions that exist, for tones the voice knows', async () => {
+    const { TONE_FACES, TONES } = await import('./audio/voice');
+    const { EXPRESSIONS } = await import('./character/motion');
+    for (const [tone, face] of Object.entries(TONE_FACES)) {
+      expect(TONES[tone] ?? tone, tone).toBeTruthy();
+      for (const name of Object.keys(face)) expect(EXPRESSIONS[name], `${tone}: ${name}`).toBeDefined();
+    }
   });
 });

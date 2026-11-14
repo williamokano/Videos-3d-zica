@@ -118,8 +118,30 @@ export function behaviourAt(behaviours: Behaviour[], id: string, t: number): Beh
   return found && found.mode !== 'none' ? found : undefined;
 }
 
-/** What a character does by itself at time t. */
-export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambient {
+/** A line someone says: who, from when, for how long (the compiled `line` events). */
+export interface SpokenSpan {
+  type: string;
+  target: string;
+  t: number;
+  data: Record<string, unknown>;
+}
+
+/**
+ * 1 away from any line of this character, 0 while saying one and for a moment around it: arms that were crossed
+ * open before the character speaks (so the talking hands never shake crossed arms), and a passing smile waits.
+ */
+function quietAt(lines: readonly SpokenSpan[], id: string, t: number): number {
+  let near = Infinity;
+  for (const e of lines) {
+    if (e.type !== 'line' || e.target !== id) continue;
+    const end = e.t + ((e.data.duration as number | undefined) ?? 0);
+    near = Math.min(near, t < e.t ? e.t - t : t > end ? t - end : 0);
+  }
+  return smooth((near - 0.3) / 0.9);
+}
+
+/** What a character does by itself at time t. `lines`: the episode's spoken lines, so it does not fidget while talking. */
+export function ambientAt(behaviours: Behaviour[], id: string, t: number, lines: readonly SpokenSpan[] = []): Ambient {
   const mine = behaviourAt(behaviours, id, t);
   if (!mine) return NO_AMBIENT;
   const seed = seedOf(id);
@@ -129,7 +151,7 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
 
   const long = windowAt(t, 9.5, seed + 11);
   const crossChance = { chat: 0.3, idle: 0.3, attend: 0.12, watch: 0.15, write: 0, trance: 0 }[mine.mode] ?? 0;
-  if (hash(long.k, seed + 1) < crossChance) out.cross = bell(long.u, 0.07) * settle;
+  if (hash(long.k, seed + 1) < crossChance) out.cross = bell(long.u, 0.07) * settle * quietAt(lines, id, t);
   const short = windowAt(t, 3.3, seed + 23);
   if (mine.mode !== 'trance' && hash(short.k, seed + 2) < 0.28) out.nod = Math.sin(short.u * Math.PI * 4) * bell(short.u, 0.25) * settle;
   const mood = windowAt(t, 5.2, seed + 37);
@@ -189,7 +211,8 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
     const feel = mine.mood ?? 'calm';
     const swell = bell(mood.u) * settle;
     if (feel === 'calm') {
-      if (feeling < (mine.mode === 'chat' ? 0.1 : 0.05)) out.expressions.happy = 0.45 * swell;
+      // The passing smile of a calm face waits for the line to end: said smiling, a serious line sounds arrogant.
+      if (feeling < (mine.mode === 'chat' ? 0.1 : 0.05)) out.expressions.happy = 0.45 * swell * quietAt(lines, id, t);
       else if (mine.mode === 'chat' && feeling < 0.18) out.expressions.surprised = 0.35 * swell;
     } else if (feel === 'worried') {
       // Concern, not fear: a little sad most of the time, a flash of fright only now and then.

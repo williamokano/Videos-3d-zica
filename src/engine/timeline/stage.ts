@@ -146,7 +146,7 @@ export function applyStage(compiled: CompiledActions, objects: Map<string, Inter
     objects.get(id)!.set('z', pos[2] + dz);
   }
   const undirected = new Set(compiled.behaviours.map((b) => b.target));
-  for (const id of undirected) objects.get(id)!.ambient?.(behaviourAt(compiled.behaviours, id, t) ? ambientAt(compiled.behaviours, id, t) : undefined);
+  for (const id of undirected) objects.get(id)!.ambient?.(behaviourAt(compiled.behaviours, id, t) ? ambientAt(compiled.behaviours, id, t, compiled.events) : undefined);
   for (const id of new Set([...compiled.gazes.map((g) => g.target), ...undirected])) {
     const { yaw, pitch } = gazeAt(compiled, id, t);
     objects.get(id)!.set('look.yaw', yaw);

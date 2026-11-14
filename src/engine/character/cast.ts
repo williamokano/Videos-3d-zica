@@ -43,11 +43,12 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const state: Record<string, number> = {
     x: member.at[0], y: (member.elevation ?? 0) + (member.seated ?? 0), z: member.at[1], yaw: member.yaw ?? 0,
     // `seat` is how far above the floor the seat under the character is.
-    stride: 0, gait: 0, talk: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0, ride: 0, pedal: 0, holding: 0,
+    stride: 0, gait: 0, talk: 0, line: 0, gesture: 0, crouch: 0, sit: member.seated ? 1 : 0, seat: member.seated ?? 0, attached: 0, 'look.yaw': 0, 'look.pitch': 0, lead: 0, ride: 0, pedal: 0, holding: 0,
     carryL: 0, carryR: 0,
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
+    ...Object.fromEntries(names.map((n) => [`tone.${n}`, 0])),
     ...Object.fromEntries(MOVE_NAMES.map((n) => [`move.${n}`, 0])),
     // One channel per worn piece: shown from 0.5 up, so an episode can put armor on and take it off.
     ...Object.fromEntries((def.wear ?? []).map((w) => (typeof w === 'string' ? { id: w } : w)).map((w) => [`wear.${w.id}`, w.hidden ? 0 : 1])),
@@ -148,7 +149,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     for (const channel of worn) rig.showWear?.(channel.slice(5), state[channel] >= 0.5);
     rig.applyPose(pose);
     rig.setHands?.(shapes.L, shapes.R);
-    const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], ambient?.expressions[n] ?? 0)]));
+    const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], state[`tone.${n}`], ambient?.expressions[n] ?? 0)]));
     // A fixed stare blinks only now and then.
     const stare = ambient?.stare ?? 0;
     const closed = blink(t, seed) * (stare > 0 && Math.floor(t / 3.4) % 4 !== 0 ? 1 - stare : 1);
@@ -156,7 +157,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     const visemes = Object.fromEntries(VISEME_NAMES.map((n) => [n, Math.max(state[`vis.${n}`], ambient?.visemes[n] ?? 0)]));
     // Eyes nobody directs wander a little by themselves.
     const eyes = { x: gaze.eyes.x + (ambient?.dart[0] ?? 0), y: gaze.eyes.y + (ambient?.dart[1] ?? 0) };
-    rig.setFace(resolveFace(expressions, closed, talk, visemes, eyes), { blink: closed, talk, expressions, visemes });
+    rig.setFace(resolveFace(expressions, closed, talk, visemes, eyes, state.line), { blink: closed, talk, expressions, visemes });
   };
   tick(0);
 

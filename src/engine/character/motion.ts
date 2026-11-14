@@ -188,7 +188,8 @@ type MouthShape = Pick<FaceParams, 'mouthOpen' | 'mouthWidth' | 'mouthRound' | '
 
 export const VISEMES: Record<Viseme, MouthShape> = {
   A: { mouthOpen: 0.75, mouthWidth: 1, mouthRound: 0, teeth: 0.45 },
-  E: { mouthOpen: 0.34, mouthWidth: 1.22, mouthRound: 0, teeth: 0.9 },
+  // Not too wide nor too many teeth: on a cartoon face that is a grin, not a vowel.
+  E: { mouthOpen: 0.36, mouthWidth: 1.08, mouthRound: 0, teeth: 0.55 },
   O: { mouthOpen: 0.62, mouthWidth: 0.7, mouthRound: 0.8, teeth: 0.1 },
   U: { mouthOpen: 0.3, mouthWidth: 0.55, mouthRound: 1, teeth: 0 },
   // Upper teeth on the lower lip.
@@ -309,9 +310,13 @@ export function splitGaze(yaw: number, pitch: number): { head: { yaw: number; pi
   return { head: { yaw: yaw - eyeYaw, pitch: pitch - eyePitch }, eyes: { x: eyeYaw / EYE_EDGE.yaw, y: eyePitch / EYE_EDGE.pitch } };
 }
 
+/** How much the mouth still curves up while a line is said with no expression (the rest is NEUTRAL_FACE's). */
+export const TALKING_CURVE = 0.1;
+
 /**
  * Face from expression weights, a blink amount, how open speech holds the mouth, the mouth shapes of speech
- * and where the eyes look. Speech shapes the mouth on top of the expression: who talks smiling keeps smiling.
+ * and where the eyes look. Speech shapes the mouth on top of the expression: who talks smiling keeps smiling,
+ * but the slight smile of a face at rest goes while a line is said (`line`).
  */
 export function resolveFace(
   weights: Record<string, number>,
@@ -319,6 +324,7 @@ export function resolveFace(
   talk: number,
   visemes: Partial<VisemeWeights> = {},
   eyes: { x: number; y: number } = { x: 0, y: 0 },
+  line = 0,
 ): FaceParams {
   const face = { ...NEUTRAL_FACE };
   for (const [name, w] of Object.entries(weights)) {
@@ -340,6 +346,11 @@ export function resolveFace(
     face.mouthWidth *= 1 + (shape.mouthWidth - 1) * speaking;
   }
   face.mouthOpen = Math.max(face.mouthOpen, talk);
+  // The resting smile goes while the character talks (`line`: 0 to 1 across a spoken line): an open mouth that
+  // still curves up reads as laughing. A little curve stays, or the mouth bends down seen from below. A happy face
+  // keeps its smile.
+  const rest = (NEUTRAL_FACE.mouthCurve - TALKING_CURVE) * line * (1 - Math.min(1, weights.happy ?? 0));
+  face.mouthCurve -= rest;
   face.gazeX = eyes.x;
   face.gazeY = eyes.y;
   return face;
