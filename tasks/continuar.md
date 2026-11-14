@@ -13,23 +13,24 @@ Leia antes: `tasks/lessons.md`, `canal/vozes.json` e as skills em `.claude/skill
 
 O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 
-### Episódio 4, "O gigante" (a luta): EM REVISÃO
-- O trabalho está na branch **`worktree-agent-ab28c9c39b577f3e5`** (no GitHub). Dois commits:
-  - `9c74632`: movimentos novos no motor (`lumber`, `stagger`, armadura com `size`, `don`/`doff`, alforje, funda girando com `whirl`, pedra com rastro, poeira, `draw`, câmera lenta `d.slowMo`) com `src/engine/fight.test.ts`;
-  - `095a598`: o episódio (`episodes/004.ts`, `roteiros/004-*.md`). O agente foi parado pelo autor (gasto de créditos) **antes de rodar `npm test` e `npm run typecheck` no fim**: rode antes de qualquer merge.
-- Prévia muda (2:21.9) no NAS: `Videos Curtos/Davi/ep04/previa.mp4` e `roteiro.md`. **Esperando a revisão do autor.**
-- A branch saiu de um main antigo. No merge, cuidado com o que o main mudou depois:
-  - `src/engine/character/cast.ts` (braços cruzados novos, canal `line` e `tone.*` no estado);
-  - `src/engine/character/motion.ts` (`TALKING_CURVE`, `resolveFace(..., line)`, viseme E mais estreito);
-  - `src/engine/actions/ambient.ts` (`quietAt`, `ambientAt(..., lines)`);
-  - `src/engine/character/types.ts` (`CharacterProfile`) e todas as fichas `characters/*.json` (campo `profile`);
-  - `src/engine/fichas.test.ts`: personagem novo da branch precisa de `profile.role`, e não figurante precisa de `.md`.
-- Depois do merge e da aprovação do autor, falta:
-  1. Vozes: quem fala no ep. 4 e não tem voz passa pelo teste com o autor (`npm run testar-voz`, skill `create-character`, seção "Voz"). Mande as amostras e espere a escolha.
-  2. `npm run voz -- --series davi-e-golias --ep 4` (as falas são niveladas sozinhas).
-  3. Sons da luta e trilha (funda girando, impacto, queda, passos do gigante, vento, grito) em `bible.json`, como no ep. 3. Músicas CC0 em `audio/sons/CREDITOS.md`.
-  4. Render final, NAS (`Videos Curtos/Davi/ep04/` com `final.mp4`, `roteiro.md`, `publicacao/`), skill `publicar` e, com "pode", skill `agendar`.
-  5. Atualizar as fichas (`## Arco na série`, `## Cânone`, `profile.episodes`) de Davi, Golias, Saul, Eliabe e Abner.
+### Episódio 4, "O gigante" (a luta): ESPERANDO A REVISÃO DO AUTOR
+- Já na main (merge `f480acf` da branch `worktree-agent-ab28c9c39b577f3e5`; `npm test` e `npm run typecheck` passando):
+  - os movimentos da luta no motor (`lumber`, `stagger`, armadura com `size`, `don`/`doff`, alforje, funda com `whirl`, pedra com rastro, poeira, `draw`, câmera lenta `d.slowMo`), com testes em `src/engine/fight.test.ts`;
+  - `episodes/004.ts`, `roteiros/004-pedido.md`, `004-roteiro.md` e `004-marcado.md`.
+- `0a56949`: as vozes dos figurantes que falam e a trilha.
+  - Vozes, todas já aprovadas pelo autor: israel-2 = Guilherme, israel-6 = Arnold, israel-4 = Papai Noel, filisteu-6 = Manoel Lopes.
+  - Trilha: as músicas CC0 de sempre, mais 10 efeitos novos em `bible.json` (armadura, riacho, pedras, funda, pedra voando, impacto, queda, espada, fuga, exército correndo), **ainda não gerados**.
+- Prévia muda nova, renderizada da main com `--no-audio`: `Videos Curtos/Davi/ep04/previa.mp4` no NAS.
+- Próximos passos:
+  1. **O autor revisa a prévia.** Não gere áudio antes: os créditos da ElevenLabs são caros e o roteiro pode mudar.
+  2. Com a aprovação, rode `npm run voz -- --series davi-e-golias --ep 4`: 26 falas (~1.030 caracteres) e os 10 efeitos. As falas saem niveladas.
+  3. Rode `npm run render -- --series davi-e-golias --ep 4`. Confira:
+     - loudness em torno de -14 LUFS;
+     - nenhum silêncio longo, exceto o silêncio de propósito depois da queda;
+     - falas sem sobreposição.
+  4. Ponha no NAS `Videos Curtos/Davi/ep04/`: `final.mp4`, `roteiro.md` e `publicacao/` (capa, story, `textos.md`), seguindo a skill `publicar`. Tire a `previa.mp4`.
+  5. Publique ou agende só com o "pode" do autor (skill `agendar`). Até agora foi só no YouTube williamokano.
+  6. Atualize as fichas (`## Arco na série`, `## Cânone`, `profile.episodes`) de Davi, Golias, Saul, Eliabe, Abinadabe e Abner.
 - `episodes/005.ts` é a versão antiga ("Dez milhares") e ainda mostra a pedra, a queda e a espada: reescrever pelo `005-roteiro.md` v2.
 
 ### Vozes
