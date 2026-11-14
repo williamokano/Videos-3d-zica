@@ -17,6 +17,29 @@ describe('whole-body moves', () => {
     }
   });
 
+  it('after a throw the arm can come back down with "move" amount 0, but "move" cannot start a throw', () => {
+    const script = (amount: number) => resolveScript(direct({
+      episode: 1, title: 't', location: 't',
+      cast: [{ character: 'davi', at: [0, 0], yaw: 0 }],
+      props: [{ id: 'jarro', asset: 'item.box', pos: [0, 0], pocketOf: 'davi' }],
+    }, (d) => {
+      d.camera.cut({ pos: [8, 3, -6], lookAt: [0, 1, -6] });
+      d.actor('davi').pickUp('jarro');
+      d.do('jarro', 'throw', { to: [0, 0.5, -5] }, { ease: 'linear' });
+      d.do('davi', 'move', { name: 'throw', amount }, { duration: 0.5 });
+    }), location, defs);
+    const episode = script(0);
+    const compiled = compileEpisode(episode, location, buildCast(episode, defs));
+    const thrown = compiled.clips.find((c) => c.action === 'throw')!;
+    const lowered = compiled.clips.find((c) => c.action === 'move')!;
+    expect(channelAt(compiled, 'davi', 'move.throw', thrown.t + thrown.duration)).toBeCloseTo(1);
+    expect(channelAt(compiled, 'davi', 'move.throw', lowered.t + lowered.duration)).toBeCloseTo(0);
+    expect(() => {
+      const raised = script(1);
+      compileEpisode(raised, location, buildCast(raised, defs));
+    }).toThrow(/use a ação "throw"/);
+  });
+
   it('a stone thrown at someone leaves the hand, flies and ends at the forehead; the one hit falls forward', () => {
     const episode = resolveScript(direct({
       episode: 1, title: 't', location: 't',

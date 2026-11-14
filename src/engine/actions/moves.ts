@@ -23,7 +23,8 @@ registerAction({
   compile(ctx) {
     const name = ctx.params.name as string;
     if (!MOVE_NAMES.includes(name)) ctx.fail(`movimento desconhecido "${name}". Existem: ${MOVE_NAMES.join(', ')}.`);
-    if (name === 'fall' || name === 'throw') ctx.fail(`para "${name}" use a ação "${name}", que também move o corpo ou o objeto pelo cenário.`);
+    // Desfazer (amount 0) pode: é como o braço volta depois de um arremesso, ou alguém se levanta depois de cair.
+    if ((name === 'fall' || name === 'throw') && ctx.params.amount !== 0) ctx.fail(`para "${name}" use a ação "${name}", que também move o corpo ou o objeto pelo cenário (com "move" só se desfaz, amount 0).`);
     return { writes: [{ channel: `move.${name}`, to: (ctx.params.amount as number | undefined) ?? 1 }] };
   },
 });

@@ -119,6 +119,8 @@ export default direct(
     d.wait(0.8);
     d.do('saul', 'move', { name: 'cower', amount: 0.3 }, { duration: 0.3 });
     d.do('jarro', 'throw', { to: [95.6, 1.3, -103.4], arc: 0.4 }, { duration: 0.9, ease: 'linear' });
+    // O braço volta para o braço do trono.
+    d.background(() => d.do('saul', 'move', { name: 'throw', amount: 0 }, { duration: 0.8 }));
     // Os guardas se encolhem.
     for (const id of guardas) d.background(() => d.do(id, 'move', { name: 'cower', amount: 0.5 }, { duration: 0.35 }));
     // O salão inteiro, escuro, o rei pequeno lá no fundo.
@@ -209,7 +211,7 @@ export default direct(
     // ---- 4. Diante do rei (1:15) ----
     // Noite outra vez. As portas abertas; o Davi entra, pequeno entre as colunas. Plano largo do alto, do fundo.
     d.world.rule('noite', true, { duration: 0 });
-    saul.behave('idle', { mood: 'worried' });
+    saul.behave('attend', { object: 'davi', mood: 'worried' });
     for (const id of guardas) d.actor(id).behave('attend', { object: 'davi', mood: 'calm' });
     d.actor('soldado-1').behave('attend', { object: 'davi', mood: 'calm' });
     d.actor('soldado-2').behave('attend', { object: 'davi', mood: 'calm' });
@@ -241,7 +243,7 @@ export default direct(
     d.wait(1.5);
     // As mãos dele soltam os braços do trono; a respiração acalma.
     d.do('saul', 'move', { name: 'cower', amount: 0 }, { duration: 1.5 });
-    saul.behave('idle', { mood: 'calm' });
+    saul.behave('attend', { object: 'davi', mood: 'calm' });
     saul.express('happy', { amount: 0.15 });
     d.wait(1.3);
     // Os guardas se entreolham, surpresos.
