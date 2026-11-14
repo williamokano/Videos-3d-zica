@@ -262,7 +262,7 @@
       2.6
      ],
      "params": {
-      "intensity": 3
+      "intensity": 7
      }
     },
     {
@@ -272,7 +272,18 @@
       3.4
      ],
      "params": {
-      "intensity": 3
+      "intensity": 7
+     }
+    },
+    {
+     "asset": "ancient.lampStand",
+     "pos": [
+      7.2,
+      5.9
+     ],
+     "params": {
+      "kind": "stone",
+      "intensity": 6
      }
     },
     {
@@ -283,7 +294,7 @@
      ],
      "y": 0.42,
      "params": {
-      "intensity": 2
+      "intensity": 5
      }
     },
     {
@@ -294,6 +305,96 @@
      ],
      "params": {
       "count": 2
+     }
+    }
+   ]
+  },
+  {
+   "id": "sala-saul",
+   "name": "Palácio do Saul (canto)",
+   "origin": [
+    96.0,
+    -104.0
+   ],
+   "size": [
+    8,
+    8
+   ],
+   "height": 4.2,
+   "floorColor": "#5c5046",
+   "wallColor": "#7d6f60",
+   "props": [
+    {
+     "asset": "ancient.throne",
+     "pos": [
+      4,
+      2.2
+     ],
+     "rot": 180
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      1.2,
+      1.2
+     ],
+     "params": {
+      "height": 4.1
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      6.8,
+      1.2
+     ],
+     "params": {
+      "height": 4.1
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      1.6,
+      0.0
+     ],
+     "y": 1.7,
+     "params": {
+      "intensity": 5
+     }
+    },
+    {
+     "asset": "ancient.brazier",
+     "pos": [
+      5.6,
+      5.2
+     ],
+     "params": {
+      "intensity": 4
+     }
+    },
+    {
+     "asset": "ancient.rug",
+     "pos": [
+      4,
+      4.6
+     ],
+     "params": {
+      "width": 4,
+      "depth": 5,
+      "color": "#4a1f2a"
+     }
+    },
+    {
+     "asset": "ancient.lowTable",
+     "pos": [
+      5.6,
+      2.8
+     ],
+     "params": {
+      "width": 1,
+      "depth": 0.7,
+      "jar": 1
      }
     }
    ]
@@ -359,8 +460,8 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    -4.6,
-    -16.8
+    -2.2,
+    -24.9
    ],
    "params": {
     "seed": 80,
@@ -370,8 +471,8 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    -3.2,
-    -16.8
+    -1.0,
+    -24.9
    ],
    "params": {
     "seed": 81,
@@ -381,8 +482,8 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    3.4,
-    -16.8
+    1.6,
+    -24.9
    ],
    "params": {
     "seed": 82,
@@ -392,8 +493,8 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    4.8,
-    -16.8
+    3.0,
+    -24.9
    ],
    "params": {
     "seed": 83,
@@ -403,8 +504,8 @@
   {
    "asset": "ancient.oliveTree",
    "pos": [
-    -8,
-    -15.0
+    -6.5,
+    -26.0
    ],
    "params": {
     "seed": 12
@@ -413,8 +514,8 @@
   {
    "asset": "ancient.jar",
    "pos": [
-    6.5,
-    -17.8
+    5.2,
+    -24.2
    ],
    "params": {
     "count": 2

@@ -13,15 +13,15 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 - [x] Roteiros de trabalho dos episódios 2 a 5 com os ajustes aceitos pelo autor (`roteiros/00{2..5}-roteiro.md`); bíblia da série reescrita para os 5 episódios
 
 ## 2. Kit novo
-- [ ] Ovelhas (rebanho que pasta e anda), harpa (lira) na mão, chifre de azeite, lamparina de barro com luz
-- [ ] Ação de ungir (o óleo derramado sobre a cabeça)
+- [x] Ovelhas (rebanho que pasta e anda), harpa (lira) na mão, chifre de azeite, lamparina de barro com luz
+- [x] Ação de ungir (o óleo derramado sobre a cabeça)
 
 ## 3. Lugares
-- [ ] Belém: colinas com pasto e pedra para sentar, portão e ruas, a casa de Jessé por dentro (noite, lamparinas)
+- [x] Belém: colinas com pasto e pedra para sentar, portão e ruas, a casa de Jessé por dentro (noite, lamparinas)
 
 ## 4. Episódio "O escolhido"
 - [x] Roteiro de trabalho com as sugestões aceitas, até 2:40
-- [ ] Episódio na engine, prévia sem som, varredura do vídeo inteiro
+- [x] Episódio na engine, prévia sem som, varredura do vídeo inteiro (2:32)
 
 ## Revisão
 (preencher no fim)

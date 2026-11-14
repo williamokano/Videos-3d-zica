@@ -128,6 +128,8 @@ export interface Director {
   actor(id: string): Actor;
   /** A phone declared in the episode's `props`. */
   phone(id: string): Phone;
+  /** Height of the ground of the location at [x, z] (0 without terrain): to place a camera or a point on a hillside. */
+  ground(x: number, z: number): number;
   /** Any action of the catalog on any object, e.g. `d.do('carro', 'drive', { path })`. */
   do(target: string, action: string, params?: Record<string, unknown>, options?: StepOptions): Step;
   wait(seconds: number): void;
@@ -394,6 +396,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       now = start;
       return { start, end };
     },
+    ground: (x, z) => round(built.groundAt(x, z)),
     endCard: (card, options) => run(WORLD, 'endCard', { card }, options),
     titleCard: (card, options) => {
       const start = now;

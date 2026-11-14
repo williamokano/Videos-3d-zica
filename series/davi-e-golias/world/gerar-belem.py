@@ -97,12 +97,12 @@ for x, rot in ((-26, 90), (26, 90)):
     prop("ancient.wall", x, MURO_Z - 11, rot=rot, params={"length": 22, "seed": 7})
 taken += [(0, MURO_Z, 6), (-15, MURO_Z, 11), (15, MURO_Z, 11)]
 
-# Do lado de fora do portão, onde os anciãos se sentam: pedras como bancos e uma oliveira de sombra.
-for i, x in enumerate((-4.6, -3.2, 3.4, 4.8)):
-    prop("ancient.rock", x, MURO_Z + 3.2, params={"seed": 80 + i, "size": 0.5})
-prop("ancient.oliveTree", -8, MURO_Z + 5, params={"seed": 12})
-prop("ancient.jar", 6.5, MURO_Z + 2.2, params={"count": 2})
-taken += [(-4, MURO_Z + 3.2, 2), (4, MURO_Z + 3.2, 2), (-8, MURO_Z + 5, 2.5)]
+# Logo do lado de dentro do portão, no plano, onde os anciãos se sentam: pedras como bancos e uma oliveira de sombra.
+for i, x in enumerate((-2.2, -1.0, 1.6, 3.0)):
+    prop("ancient.rock", x, MURO_Z - 4.9, params={"seed": 80 + i, "size": 0.5})
+prop("ancient.oliveTree", -6.5, MURO_Z - 6, params={"seed": 12})
+prop("ancient.jar", 5.2, MURO_Z - 4.2, params={"count": 2})
+taken += [(-1.6, MURO_Z - 4.9, 2), (2.3, MURO_Z - 4.9, 2), (-6.5, MURO_Z - 6, 2.5)]
 
 # ---- As casas dentro dos muros, deixando a rua do portão e o terreiro de Jessé livres ----
 casas = [(-18, -28, 0), (-10, -27, 0), (-20, -40, 0), (-11, -42, 0), (-18, -53, 180), (-6, -55, 180),
@@ -141,9 +141,10 @@ casa_jesse = {
         {"asset": "ancient.basket", "pos": [0.8, 0.8], "params": {"bread": 1}},
         {"asset": "ancient.jar", "pos": [8.3, 0.7], "params": {"count": 3}},
         {"asset": "ancient.chest", "pos": [0.7, 4.6], "rot": 90},
-        {"asset": "ancient.lampStand", "pos": [0.6, 2.6], "params": {"intensity": 3}},
-        {"asset": "ancient.lampStand", "pos": [8.4, 3.4], "params": {"intensity": 3}},
-        {"asset": "ancient.oilLamp", "pos": [4.5, 1.6], "y": 0.42, "params": {"intensity": 2}},
+        {"asset": "ancient.lampStand", "pos": [0.6, 2.6], "params": {"intensity": 7}},
+        {"asset": "ancient.lampStand", "pos": [8.4, 3.4], "params": {"intensity": 7}},
+        {"asset": "ancient.lampStand", "pos": [7.2, 5.9], "params": {"kind": "stone", "intensity": 6}},
+        {"asset": "ancient.oilLamp", "pos": [4.5, 1.6], "y": 0.42, "params": {"intensity": 5}},
         {"asset": "ancient.sack", "pos": [7.8, 5.6], "params": {"count": 2}},
     ],
 }
@@ -201,13 +202,34 @@ for i in range(30):
 # A fogueira do Davi, para a noite.
 prop("ancient.campfire", px + 2.4, pz + 1.6, params={"seed": 3, "intensity": 2})
 
+# ---- Um canto do palácio do Saul, em Gibeá, para o gancho do fim (longe de tudo, num lugar plano) ----
+SALA = (96.0, -104.0)
+sala_saul = {
+    "id": "sala-saul",
+    "name": "Palácio do Saul (canto)",
+    "origin": list(SALA),
+    "size": [8, 8],
+    "height": 4.2,
+    "floorColor": "#5c5046",
+    "wallColor": "#7d6f60",
+    "props": [
+        {"asset": "ancient.throne", "pos": [4, 2.2], "rot": 180},
+        {"asset": "ancient.column", "pos": [1.2, 1.2], "params": {"height": 4.1}},
+        {"asset": "ancient.column", "pos": [6.8, 1.2], "params": {"height": 4.1}},
+        {"asset": "ancient.wallTorch", "pos": [1.6, 0.0], "y": 1.7, "params": {"intensity": 5}},
+        {"asset": "ancient.brazier", "pos": [5.6, 5.2], "params": {"intensity": 4}},
+        {"asset": "ancient.rug", "pos": [4, 4.6], "params": {"width": 4, "depth": 5, "color": "#4a1f2a"}},
+        {"asset": "ancient.lowTable", "pos": [5.6, 2.8], "params": {"width": 1, "depth": 0.7, "jar": 1}},
+    ],
+}
+
 location = {
     "id": "belem",
     "name": "Belém",
     "ground": {"color": "#929456", "size": 600},
     "terrain": terrain,
     "spawn": {"pos": [0, -10], "yaw": 0},
-    "rooms": [casa_jesse],
+    "rooms": [casa_jesse, sala_saul],
     "props": props,
 }
 
