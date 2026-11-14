@@ -69,13 +69,19 @@ registerAction({
     hit: { type: 'string', description: 'em vez de "to": id de um personagem; o item acerta a testa dele' },
     speed: { type: 'number', description: 'velocidade do voo em m/s (padrão 20). Mais baixo parece câmera lenta' },
     arc: { type: 'number', description: 'quanto o arco sobe no meio do voo, em metros (padrão 1/20 da distância)' },
+    with: { type: 'string', description: 'id de um item que lança (a funda) na mão de quem arremessa; o item arremessado sai do bolso dele no instante de soltar, e a funda fica vazia (canal "loaded")' },
   },
   duration: 1,
   compile(ctx) {
-    const link = ctx.linkOf(ctx.target.id);
+    const launcher = ctx.params.with as string | undefined;
+    const link = ctx.linkOf(launcher ?? ctx.target.id);
     const hand = link?.socket.match(/^hand([LR])$/)?.[1];
-    if (!link || !hand) ctx.fail('ninguém está segurando o item; use pickUp com "by" antes.');
+    if (!link || !hand) ctx.fail(launcher ? `ninguém está segurando "${launcher}"; use pickUp com "by" antes.` : 'ninguém está segurando o item; use pickUp com "by" antes.');
     const by = link!.to;
+    if (launcher) {
+      const own = ctx.linkOf(ctx.target.id);
+      if (own?.to !== by || own.socket !== 'pocket') ctx.fail(`com "with", o item arremessado precisa estar no bolso de "${by}" (guardado com putAway, ou "pocketOf" no episódio).`);
+    }
     const hit = ctx.params.hit as string | undefined;
     if ((hit === undefined) === (ctx.params.to === undefined)) ctx.fail('informe "to" ou "hit", um dos dois.');
     let to = ctx.params.to as [number, number, number];
@@ -107,8 +113,12 @@ registerAction({
     const arm = (u: number): number => Math.min(1, (u * total) / (RELEASE * 2));
     const writes: ChannelWrite[] = [
       { target: by, channel: 'move.throw', at: (u) => (u >= 1 ? 1 : arm(u)) },
-      { target: by, channel: `carry${hand}`, at: (u) => 1 - ramp(u, release, Math.min(1, release + 0.05)) },
-      { channel: 'held', at: (u) => (u < release ? 1 : 0) },
+      ...(launcher
+        ? ('loaded' in ctx.object(launcher).channels ? [{ target: launcher, channel: 'loaded', at: (u: number) => (u < release ? 1 : 0) }] : [])
+        : [
+            { target: by, channel: `carry${hand}`, at: (u: number) => 1 - ramp(u, release, Math.min(1, release + 0.05)) },
+            { channel: 'held', at: (u: number) => (u < release ? 1 : 0) },
+          ]),
       { channel: 'x', at: point(0) },
       { channel: 'y', at: point(1) },
       { channel: 'z', at: point(2) },

@@ -46,4 +46,24 @@ describe('whole-body moves', () => {
     const lying = placementAt(compiled, 'golias', fell.t + fell.duration).pos;
     expect(lying[2]).toBeGreaterThan(-12 + 1.4);
   });
+
+  it('a stone in the pocket flies from the sling in the hand, and the sling is left empty', () => {
+    const episode = resolveScript(direct({
+      episode: 1, title: 't', location: 't',
+      cast: [{ character: 'davi', at: [0, 0], yaw: 0 }, { character: 'golias', at: [0, -10], yaw: 180 }],
+      props: [{ id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi' }, { id: 'pedra', asset: 'arms.stone', pos: [0, 0], pocketOf: 'davi' }],
+    }, (d) => {
+      d.camera.cut({ pos: [8, 3, -6], lookAt: [0, 1, -6] });
+      d.actor('davi').pickUp('funda', { hand: 'right' });
+      d.do('funda', 'set', { channel: 'loaded', value: 1 }, { duration: 0 });
+      d.do('pedra', 'throw', { hit: 'golias', with: 'funda' }, { ease: 'linear' });
+    }), location, defs);
+    const compiled = compileEpisode(episode, location, buildCast(episode, defs));
+    const thrown = compiled.clips.find((c) => c.action === 'throw')!;
+    const end = thrown.t + thrown.duration;
+    expect(evaluateLinks(compiled, end).some((l) => l.target === 'pedra')).toBe(false);
+    expect(evaluateLinks(compiled, end).some((l) => l.target === 'funda')).toBe(true);
+    expect(channelAt(compiled, 'funda', 'loaded', end)).toBe(0);
+    expect(placementAt(compiled, 'pedra', end).pos[2]).toBeLessThan(-9);
+  });
 });

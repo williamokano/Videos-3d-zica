@@ -49,9 +49,12 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
     ...Object.fromEntries(MOVE_NAMES.map((n) => [`move.${n}`, 0])),
+    // One channel per worn piece: shown from 0.5 up, so an episode can put armor on and take it off.
+    ...Object.fromEntries((def.wear ?? []).map((w) => (typeof w === 'string' ? { id: w } : w)).map((w) => [`wear.${w.id}`, w.hidden ? 0 : 1])),
     ...Object.fromEntries(VISEME_NAMES.map((n) => [`vis.${n}`, 0])),
     ...Object.fromEntries((['L', 'R'] as Side[]).flatMap((side) => HAND_POSE_NAMES.map((n) => [`hand${side}.${n}`, 0]))),
   };
+  const worn = Object.keys(state).filter((c) => c.startsWith('wear.'));
   const scale = (def.height ?? 1.7) / 1.7;
   // Each character blinks at its own moments.
   const seed = [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
@@ -126,6 +129,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       shapes[side] = resolveHand(weights, t + seed);
       if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
     }
+    for (const channel of worn) rig.showWear?.(channel.slice(5), state[channel] >= 0.5);
     rig.applyPose(pose);
     rig.setHands?.(shapes.L, shapes.R);
     const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], ambient?.expressions[n] ?? 0)]));
