@@ -35,7 +35,7 @@ const CAPACETE: Record<string, object> = {
 };
 
 /** Um figurante da fila: a ficha de soldado com rosto, barba e cor de túnica sorteados. */
-function figurante(id: string, character: string, at: [number, number], yaw: number, seed: number, name: string): CastMember {
+export function figurante(id: string, character: string, at: [number, number], yaw: number, seed: number, name: string): CastMember {
   const look = extraLook(seed, { adult: true });
   return {
     id, character, at, yaw,

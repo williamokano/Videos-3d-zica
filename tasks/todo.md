@@ -68,3 +68,13 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [ ] Sons de cada cena: vento e anciãos no portão, ovelhas e harpa no campo, casa (passos, porta, fogo), sala do Saul (braseiro, eco).
 - [ ] Efeitos nos acontecimentos: chifre, azeite, ajoelhar, o grito do Saul.
 - [ ] Música orquestral (de fora do motor) e conferir que 2:46 ainda cabe em 3:00 com as vozes reais.
+
+## 10. Episódio 2 — O rei e o pastor
+
+- [x] Palácio do Saul em Gibeá (gerar-belem.py): salão do trono 14×22 com colunas, tochas, braseiros, trono, porta grande, janela para a praça; pátio de entrada com portão, palmeiras e poço; o trono continua onde o ep. 1 filma o Saul.
+- [x] Crista a leste para os filisteus marchando contra o céu.
+- [x] `episodes/002.ts`: 2:09.5, com tela de abertura, cartão final e chamada para o ep. 3.
+- [x] Planos na linha dos dois (formato vertical), por cima do ombro e alto; nada de twoShot com gente andando.
+- [ ] Revisão do autor.
+- [ ] Vozes (servo, guardas, mensageiro precisam de voz na ficha / look.voice).
+- [ ] O jumento desliza sem mexer as pernas (só aparece de longe e de lado) e o cabrito fica no terreiro.

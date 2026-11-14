@@ -223,29 +223,90 @@ for i in range(30):
 # A fogueira do Davi, para a noite.
 prop("ancient.campfire", px + 2.4, pz + 1.6, params={"seed": 3, "intensity": 2})
 
-# ---- Um canto do palácio do Saul, em Gibeá, para o gancho do fim (longe de tudo, num lugar plano) ----
-SALA = (96.0, -104.0)
+# ---- O palácio do Saul, em Gibeá (longe de tudo, num lugar plano) ----
+# O salão do trono: comprido, de pedra, com duas fileiras de colunas, o trono no fundo (norte) e a porta grande ao
+# sul, que dá para o pátio de entrada. Uma janela a leste olha para a praça. O trono fica onde o episódio 1 já o
+# filmou: (100, -101.8).
+SALAO = (93.0, -104.0)       # canto noroeste do salão
+SALAO_TAM = (14.0, 22.0)
+sx, sz = SALAO
+torches = []
+for lz in (4.5, 10.5, 16.5):
+    torches.append({"asset": "ancient.wallTorch", "pos": [0.0, lz], "y": 1.9, "rot": 90, "params": {"intensity": 9}})
+    torches.append({"asset": "ancient.wallTorch", "pos": [14.0, lz], "y": 1.9, "rot": -90, "params": {"intensity": 9}})
+# Braseiros dos dois lados do tapete, entre as colunas: o caminho até o trono fica iluminado.
+for lz in (9.5, 15.5):
+    for lx in (2.2, 11.8):
+        torches.append({"asset": "ancient.brazier", "pos": [lx, lz], "params": {"intensity": 7}})
+columns = [{"asset": "ancient.column", "pos": [x, z], "params": {"height": 5.9}} for z in (1.2,) for x in (4.2, 9.8)]
+columns += [{"asset": "ancient.column", "pos": [x, z], "params": {"height": 5.9}} for z in (7.0, 12.5, 18.0) for x in (3.6, 10.4)]
 sala_saul = {
     "id": "sala-saul",
-    "name": "Palácio do Saul (canto)",
-    "origin": list(SALA),
-    "size": [8, 8],
-    "height": 4.2,
+    "name": "Palácio do Saul (salão do trono)",
+    "origin": list(SALAO),
+    "size": list(SALAO_TAM),
+    "height": 6.0,
     "floorColor": "#5c5046",
-    "wallColor": "#7d6f60",
+    "wallColor": "#8a7a66",
+    "openings": [
+        {"id": "porta-salao", "wall": "s", "type": "door", "at": 7.0, "width": 2.6, "leaf": {"style": "planks", "open": 1, "angle": 95}},
+        {"id": "janela-praca", "wall": "e", "type": "window", "at": 9.0, "width": 1.4},
+    ],
     "props": [
-        {"asset": "ancient.throne", "pos": [4, 2.2], "rot": 180},
-        {"asset": "ancient.column", "pos": [1.2, 1.2], "params": {"height": 4.1}},
-        {"asset": "ancient.column", "pos": [6.8, 1.2], "params": {"height": 4.1}},
-        {"asset": "ancient.wallTorch", "pos": [1.6, 0.0], "y": 1.7, "params": {"intensity": 5}},
-        {"asset": "ancient.wallTorch", "pos": [6.4, 0.0], "y": 1.7, "params": {"intensity": 5}},
-        {"asset": "ancient.brazier", "pos": [5.6, 5.2], "params": {"intensity": 4}},
-        # Um braseiro ao lado do rei: o rosto dele fica visível, meio na sombra.
-        {"asset": "ancient.brazier", "pos": [2.3, 3.4], "params": {"intensity": 8}},
-        {"asset": "ancient.rug", "pos": [4, 4.6], "params": {"width": 4, "depth": 5, "color": "#4a1f2a"}},
-        {"asset": "ancient.lowTable", "pos": [5.6, 2.8], "params": {"width": 1, "depth": 0.7, "jar": 1}},
+        {"asset": "ancient.throne", "pos": [7.0, 2.2], "rot": 180},
+        *columns,
+        # O fundo, atrás do trono: duas tochas e dois braseiros que iluminam o rei de perto.
+        {"asset": "ancient.wallTorch", "pos": [4.6, 0.0], "y": 1.7, "params": {"intensity": 5}},
+        {"asset": "ancient.wallTorch", "pos": [9.4, 0.0], "y": 1.7, "params": {"intensity": 5}},
+        {"asset": "ancient.brazier", "pos": [11.2, 4.4], "params": {"intensity": 7}},
+        {"asset": "ancient.brazier", "pos": [5.3, 3.4], "params": {"intensity": 10}},
+        # Uma tocha mais alta bem atrás do trono: a parede do fundo não some no escuro.
+        {"asset": "ancient.wallTorch", "pos": [7.0, 0.0], "y": 2.7, "params": {"intensity": 7}},
+        *torches,
+        # O tapete do caminho, da porta ao trono.
+        {"asset": "ancient.rug", "pos": [7.0, 4.6], "params": {"width": 4, "depth": 5, "color": "#4a1f2a"}},
+        {"asset": "ancient.rug", "pos": [7.0, 14.0], "params": {"width": 2.4, "depth": 13, "color": "#5a2430"}},
+        {"asset": "ancient.lowTable", "pos": [8.6, 2.8], "params": {"width": 1, "depth": 0.7, "jar": 1}},
+        # Os estandartes nas paredes e um cabide de lanças junto da porta.
+        {"asset": "ancient.banner", "pos": [1.2, 2.0], "params": {"seed": 3}},
+        {"asset": "ancient.banner", "pos": [12.8, 2.0], "params": {"seed": 5}},
+        {"asset": "ancient.spearRack", "pos": [1.0, 20.6], "rot": 90},
+        {"asset": "ancient.chest", "pos": [12.9, 5.5], "rot": -90},
+        {"asset": "ancient.jar", "pos": [12.8, 19.5], "params": {"count": 3}},
+        # O banco baixo onde o Davi vai tocar, diante do trono.
+        {"id": "banco-davi", "asset": "ancient.stool", "pos": [7.0, 7.0], "params": {"height": 0.4}},
     ],
 }
+# O pátio de entrada, ao sul do salão: muro com portão, palmeiras, um poço e jarros. O mensageiro entra pelo portão.
+PATIO_Z = sz + SALAO_TAM[1]  # a parede sul do salão (-82)
+prop("ancient.cityGate", sx + 7, PATIO_Z + 18, params={"seed": 9, "height": 6})
+for x in (sx + 7 - 9, sx + 7 + 9):
+    prop("ancient.wall", x, PATIO_Z + 18, params={"length": 12, "seed": int(x)})
+for x in (sx - 4, sx + 18):
+    prop("ancient.wall", x, PATIO_Z + 12, rot=90, params={"length": 13, "seed": 11})
+for x, z in ((sx - 1, PATIO_Z + 4), (sx + 15, PATIO_Z + 4), (sx - 1, PATIO_Z + 14), (sx + 15, PATIO_Z + 14)):
+    prop("ancient.palm", x, z, params={"seed": int(x + z) % 17})
+prop("ancient.well", sx + 12.5, PATIO_Z + 9)
+prop("ancient.jar", sx + 1.5, PATIO_Z + 2, params={"count": 3})
+prop("ancient.sack", sx + 13, PATIO_Z + 2, params={"count": 2})
+# A fachada: duas colunas dos lados da porta grande e estandartes.
+for x in (sx + 4.6, sx + 9.4):
+    prop("ancient.column", x, PATIO_Z + 0.9, params={"height": 5.2})
+prop("ancient.banner", sx + 3.0, PATIO_Z + 0.8, params={"seed": 4})
+prop("ancient.banner", sx + 11.0, PATIO_Z + 0.8, params={"seed": 6})
+prop("ancient.wallTorch", sx + 5.2, PATIO_Z + 0.3, y=2.0, params={"intensity": 4})
+prop("ancient.wallTorch", sx + 8.8, PATIO_Z + 0.3, y=2.0, params={"intensity": 4})
+
+# ---- A crista onde o exército filisteu aparece contra o sol (ep. 2) ----
+CRISTA = (170.0, -60.0)
+terrain["hills"].append({"at": list(CRISTA), "radius": [45, 22], "height": 7, "top": 0.25})
+terrain["walkable"] += [
+    {"origin": [sx - 6, PATIO_Z], "size": [26, 20]},          # o pátio do palácio
+    {"origin": [CRISTA[0] - 30, CRISTA[1] - 14], "size": [60, 22]},  # a crista
+]
+for i in range(18):
+    x, z = R.uniform(CRISTA[0] - 40, CRISTA[0] + 40), R.uniform(CRISTA[1] - 4, CRISTA[1] + 20)
+    prop("ancient.dryBush", x, z, params={"seed": 700 + i, "size": round(R.uniform(0.6, 1.2), 2)})
 
 location = {
     "id": "belem",

@@ -95,6 +95,18 @@
      90
     ],
     "height": 24
+   },
+   {
+    "at": [
+     170.0,
+     -60.0
+    ],
+    "radius": [
+     45,
+     22
+    ],
+    "height": 7,
+    "top": 0.25
    }
   ],
   "highColor": "#a39158",
@@ -131,6 +143,26 @@
     "size": [
      50,
      40
+    ]
+   },
+   {
+    "origin": [
+     87.0,
+     -82.0
+    ],
+    "size": [
+     26,
+     20
+    ]
+   },
+   {
+    "origin": [
+     140.0,
+     -74.0
+    ],
+    "size": [
+     60,
+     22
     ]
    }
   ]
@@ -410,23 +442,44 @@
   },
   {
    "id": "sala-saul",
-   "name": "Palácio do Saul (canto)",
+   "name": "Palácio do Saul (salão do trono)",
    "origin": [
-    96.0,
+    93.0,
     -104.0
    ],
    "size": [
-    8,
-    8
+    14.0,
+    22.0
    ],
-   "height": 4.2,
+   "height": 6.0,
    "floorColor": "#5c5046",
-   "wallColor": "#7d6f60",
+   "wallColor": "#8a7a66",
+   "openings": [
+    {
+     "id": "porta-salao",
+     "wall": "s",
+     "type": "door",
+     "at": 7.0,
+     "width": 2.6,
+     "leaf": {
+      "style": "planks",
+      "open": 1,
+      "angle": 95
+     }
+    },
+    {
+     "id": "janela-praca",
+     "wall": "e",
+     "type": "window",
+     "at": 9.0,
+     "width": 1.4
+    }
+   ],
    "props": [
     {
      "asset": "ancient.throne",
      "pos": [
-      4,
+      7.0,
       2.2
      ],
      "rot": 180
@@ -434,27 +487,87 @@
     {
      "asset": "ancient.column",
      "pos": [
-      1.2,
+      4.2,
       1.2
      ],
      "params": {
-      "height": 4.1
+      "height": 5.9
      }
     },
     {
      "asset": "ancient.column",
      "pos": [
-      6.8,
+      9.8,
       1.2
      ],
      "params": {
-      "height": 4.1
+      "height": 5.9
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      3.6,
+      7.0
+     ],
+     "params": {
+      "height": 5.9
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      10.4,
+      7.0
+     ],
+     "params": {
+      "height": 5.9
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      3.6,
+      12.5
+     ],
+     "params": {
+      "height": 5.9
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      10.4,
+      12.5
+     ],
+     "params": {
+      "height": 5.9
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      3.6,
+      18.0
+     ],
+     "params": {
+      "height": 5.9
+     }
+    },
+    {
+     "asset": "ancient.column",
+     "pos": [
+      10.4,
+      18.0
+     ],
+     "params": {
+      "height": 5.9
      }
     },
     {
      "asset": "ancient.wallTorch",
      "pos": [
-      1.6,
+      4.6,
       0.0
      ],
      "y": 1.7,
@@ -465,7 +578,7 @@
     {
      "asset": "ancient.wallTorch",
      "pos": [
-      6.4,
+      9.4,
       0.0
      ],
      "y": 1.7,
@@ -476,27 +589,150 @@
     {
      "asset": "ancient.brazier",
      "pos": [
-      5.6,
-      5.2
+      11.2,
+      4.4
      ],
      "params": {
-      "intensity": 4
+      "intensity": 7
      }
     },
     {
      "asset": "ancient.brazier",
      "pos": [
-      2.3,
+      5.3,
       3.4
      ],
      "params": {
-      "intensity": 8
+      "intensity": 10
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      7.0,
+      0.0
+     ],
+     "y": 2.7,
+     "params": {
+      "intensity": 7
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      0.0,
+      4.5
+     ],
+     "y": 1.9,
+     "rot": 90,
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      14.0,
+      4.5
+     ],
+     "y": 1.9,
+     "rot": -90,
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      0.0,
+      10.5
+     ],
+     "y": 1.9,
+     "rot": 90,
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      14.0,
+      10.5
+     ],
+     "y": 1.9,
+     "rot": -90,
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      0.0,
+      16.5
+     ],
+     "y": 1.9,
+     "rot": 90,
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
+     "asset": "ancient.wallTorch",
+     "pos": [
+      14.0,
+      16.5
+     ],
+     "y": 1.9,
+     "rot": -90,
+     "params": {
+      "intensity": 9
+     }
+    },
+    {
+     "asset": "ancient.brazier",
+     "pos": [
+      2.2,
+      9.5
+     ],
+     "params": {
+      "intensity": 7
+     }
+    },
+    {
+     "asset": "ancient.brazier",
+     "pos": [
+      11.8,
+      9.5
+     ],
+     "params": {
+      "intensity": 7
+     }
+    },
+    {
+     "asset": "ancient.brazier",
+     "pos": [
+      2.2,
+      15.5
+     ],
+     "params": {
+      "intensity": 7
+     }
+    },
+    {
+     "asset": "ancient.brazier",
+     "pos": [
+      11.8,
+      15.5
+     ],
+     "params": {
+      "intensity": 7
      }
     },
     {
      "asset": "ancient.rug",
      "pos": [
-      4,
+      7.0,
       4.6
      ],
      "params": {
@@ -506,15 +742,84 @@
      }
     },
     {
+     "asset": "ancient.rug",
+     "pos": [
+      7.0,
+      14.0
+     ],
+     "params": {
+      "width": 2.4,
+      "depth": 13,
+      "color": "#5a2430"
+     }
+    },
+    {
      "asset": "ancient.lowTable",
      "pos": [
-      5.6,
+      8.6,
       2.8
      ],
      "params": {
       "width": 1,
       "depth": 0.7,
       "jar": 1
+     }
+    },
+    {
+     "asset": "ancient.banner",
+     "pos": [
+      1.2,
+      2.0
+     ],
+     "params": {
+      "seed": 3
+     }
+    },
+    {
+     "asset": "ancient.banner",
+     "pos": [
+      12.8,
+      2.0
+     ],
+     "params": {
+      "seed": 5
+     }
+    },
+    {
+     "asset": "ancient.spearRack",
+     "pos": [
+      1.0,
+      20.6
+     ],
+     "rot": 90
+    },
+    {
+     "asset": "ancient.chest",
+     "pos": [
+      12.9,
+      5.5
+     ],
+     "rot": -90
+    },
+    {
+     "asset": "ancient.jar",
+     "pos": [
+      12.8,
+      19.5
+     ],
+     "params": {
+      "count": 3
+     }
+    },
+    {
+     "id": "banco-davi",
+     "asset": "ancient.stool",
+     "pos": [
+      7.0,
+      7.0
+     ],
+     "params": {
+      "height": 0.4
      }
     }
    ]
@@ -4399,6 +4704,390 @@
    "params": {
     "seed": 3,
     "intensity": 2
+   }
+  },
+  {
+   "asset": "ancient.cityGate",
+   "pos": [
+    100.0,
+    -64.0
+   ],
+   "params": {
+    "seed": 9,
+    "height": 6
+   }
+  },
+  {
+   "asset": "ancient.wall",
+   "pos": [
+    91.0,
+    -64.0
+   ],
+   "params": {
+    "length": 12,
+    "seed": 91
+   }
+  },
+  {
+   "asset": "ancient.wall",
+   "pos": [
+    109.0,
+    -64.0
+   ],
+   "params": {
+    "length": 12,
+    "seed": 109
+   }
+  },
+  {
+   "asset": "ancient.wall",
+   "pos": [
+    89.0,
+    -70.0
+   ],
+   "rot": 90,
+   "params": {
+    "length": 13,
+    "seed": 11
+   }
+  },
+  {
+   "asset": "ancient.wall",
+   "pos": [
+    111.0,
+    -70.0
+   ],
+   "rot": 90,
+   "params": {
+    "length": 13,
+    "seed": 11
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    92.0,
+    -78.0
+   ],
+   "params": {
+    "seed": 14
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    108.0,
+    -78.0
+   ],
+   "params": {
+    "seed": 13
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    92.0,
+    -68.0
+   ],
+   "params": {
+    "seed": 7
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    108.0,
+    -68.0
+   ],
+   "params": {
+    "seed": 6
+   }
+  },
+  {
+   "asset": "ancient.well",
+   "pos": [
+    105.5,
+    -73.0
+   ]
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    94.5,
+    -80.0
+   ],
+   "params": {
+    "count": 3
+   }
+  },
+  {
+   "asset": "ancient.sack",
+   "pos": [
+    106.0,
+    -80.0
+   ],
+   "params": {
+    "count": 2
+   }
+  },
+  {
+   "asset": "ancient.column",
+   "pos": [
+    97.6,
+    -81.1
+   ],
+   "params": {
+    "height": 5.2
+   }
+  },
+  {
+   "asset": "ancient.column",
+   "pos": [
+    102.4,
+    -81.1
+   ],
+   "params": {
+    "height": 5.2
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    96.0,
+    -81.2
+   ],
+   "params": {
+    "seed": 4
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    104.0,
+    -81.2
+   ],
+   "params": {
+    "seed": 6
+   }
+  },
+  {
+   "asset": "ancient.wallTorch",
+   "pos": [
+    98.2,
+    -81.7
+   ],
+   "y": 2.0,
+   "params": {
+    "intensity": 4
+   }
+  },
+  {
+   "asset": "ancient.wallTorch",
+   "pos": [
+    101.8,
+    -81.7
+   ],
+   "y": 2.0,
+   "params": {
+    "intensity": 4
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    164.11,
+    -55.99
+   ],
+   "params": {
+    "seed": 700,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    205.75,
+    -40.65
+   ],
+   "params": {
+    "seed": 701,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    170.1,
+    -54.35
+   ],
+   "params": {
+    "seed": 702,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    207.58,
+    -48.93
+   ],
+   "params": {
+    "seed": 703,
+    "size": 0.81
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    146.59,
+    -40.01
+   ],
+   "params": {
+    "seed": 704,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    186.03,
+    -42.52
+   ],
+   "params": {
+    "seed": 705,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    135.1,
+    -54.17
+   ],
+   "params": {
+    "seed": 706,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    162.23,
+    -49.06
+   ],
+   "params": {
+    "seed": 707,
+    "size": 1.14
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    205.59,
+    -55.13
+   ],
+   "params": {
+    "seed": 708,
+    "size": 1.17
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    167.32,
+    -45.19
+   ],
+   "params": {
+    "seed": 709,
+    "size": 0.62
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    130.31,
+    -57.65
+   ],
+   "params": {
+    "seed": 710,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    179.49,
+    -47.75
+   ],
+   "params": {
+    "seed": 711,
+    "size": 0.69
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    177.31,
+    -50.74
+   ],
+   "params": {
+    "seed": 712,
+    "size": 0.75
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    153.37,
+    -61.15
+   ],
+   "params": {
+    "seed": 713,
+    "size": 0.69
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    132.43,
+    -63.73
+   ],
+   "params": {
+    "seed": 714,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    167.07,
+    -44.82
+   ],
+   "params": {
+    "seed": 715,
+    "size": 0.67
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    133.01,
+    -40.23
+   ],
+   "params": {
+    "seed": 716,
+    "size": 1.17
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    140.95,
+    -48.82
+   ],
+   "params": {
+    "seed": 717,
+    "size": 1.02
    }
   }
  ]
