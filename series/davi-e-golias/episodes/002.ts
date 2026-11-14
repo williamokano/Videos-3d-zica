@@ -172,7 +172,7 @@ export default direct(
     davi.turnTo([0, 8]);
     d.do('davi', 'move', { name: 'kneel', amount: 0.7 }, { duration: 0.5 });
     // A espada saindo da bainha, o brilho do sol na lâmina.
-    d.camera.cut({ pos: [1.9, 1.0, 5.4], lookAt: [0.8, 0.9, 6.8], fov: 34 });
+    d.camera.cut({ pos: [2.6, 1.0, 8.2], lookAt: [0.8, 0.8, 6.6], fov: 36 });
     d.do('golias', 'set', { channel: 'wear.scabbard', value: 0 }, { duration: 0 });
     d.do('golias', 'set', { channel: 'wear.scabbardEmpty', value: 1 }, { duration: 0 });
     davi.pickUp('espada-golias', { hand: 'right' });
@@ -281,7 +281,7 @@ export default direct(
 
     // ---- 6. Jônatas (1:30) ----
     // Ele dá um passo à frente, tira o próprio manto e põe no Davi.
-    d.camera.cut({ pos: [2.8, TOPO + 1.4, -44.4], lookAt: [-0.6, TOPO + 1.3, -45.4], fov: 40 });
+    d.camera.cut({ pos: [-2.9, TOPO + 1.45, -43.6], lookAt: [-0.3, TOPO + 1.3, -44.9], fov: 42 });
     jonatas.walkTo([-0.6, -45.3], { speed: 1 });
     jonatas.turnTo([0, -44.3]);
     daviT.lookAt(jonatas, { duration: 0.4 });
@@ -312,7 +312,8 @@ export default direct(
     // ---- 7. A volta (1:55) ----
     // Dias depois. A estrada de volta, chegando a uma cidade de Israel. O exército volta em marcha.
     d.world.rule('fim-de-tarde', false, { duration: 0 });
-    d.camera.cut({ pos: [PORTAO_X - 6, 3.2, 9], lookAt: [PORTAO_X - 20, 1.6, 0], fov: 44 });
+    // Primeiro do lado de fora, com a tropa chegando; depois, de dentro da praça, por trás das mulheres que dançam.
+    d.camera.cut({ pos: [PORTAO_X - 33, 2.2, 6], lookAt: [PORTAO_X - 16, 1.5, 0], fov: 44 });
     d.background(() => {
       d.wait(0.4);
       d.narrate('Dias depois, o exército voltou para casa.');
@@ -328,8 +329,10 @@ export default direct(
       () => daviC.walkTo([PORTAO_X + 3.2, 0.5], { speed: 1.3 }),
       ...marcha.map((m) => () => d.actor(m.id!).walkTo([m.at[0] + 18, m.at[1]], { speed: 1.3 })),
       () => {
-        d.wait(4);
-        d.camera.moveTo({ pos: [PORTAO_X + 9, 3.0, 7.5], lookAt: [PORTAO_X - 4, 1.5, 0], fov: 44 });
+        d.wait(5);
+        d.camera.cut({ pos: [PORTAO_X + 17, 2.6, 6], lookAt: [PORTAO_X + 5, 1.4, 0], fov: 48 });
+        d.wait(5);
+        d.camera.moveTo({ pos: [PORTAO_X + 15, 2.4, 4.5], lookAt: [PORTAO_X + 4, 1.4, 0], fov: 44 });
       },
       () => {
         // Das casas saem as mulheres cantando e dançando, com tamborins.
@@ -345,7 +348,7 @@ export default direct(
     saulC.behave('idle', { mood: 'calm' });
     daviC.behave('attend', { object: 'mulher-2', mood: 'happy' });
     for (const m of marcha) d.actor(m.id!).behave('idle', { mood: 'happy' });
-    d.camera.cut({ pos: [PORTAO_X + 13, 2.2, 4], lookAt: [PORTAO_X + 5, 1.5, 0], fov: 42 });
+    d.camera.cut({ pos: [PORTAO_X + 15, 2.2, 3.6], lookAt: [PORTAO_X + 6, 1.5, 0], fov: 44 });
     d.actor('mulher-3').say('Saul matou os seus milhares... e Davi, os seus dez milhares!', { tone: 'animado', gesture: 0 });
     d.actor('mulher-4').say('Davi, os seus dez milhares!', { tone: 'animado', gesture: 0 });
 

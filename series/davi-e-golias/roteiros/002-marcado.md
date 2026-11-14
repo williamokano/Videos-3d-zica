@@ -23,7 +23,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:12.4` **SAMÁ** (sussurro): Davi... ⚠ sem gravação
 - `0:13.4` *guarda funda*
 - `0:13.4` 🎥 corte: câmera fov 44
-- `0:16.3` 🎥 corte: câmera fov 34
+- `0:16.3` 🎥 corte: câmera fov 36
 - `0:18.3` 🎥 corte: câmera fov 44
 - ⏸ **6.4 s sem fala**
 - `0:19.9` **FILISTEU 6** (grito): O campeão morreu! Fujam! ⚠ sem gravação
@@ -52,7 +52,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:00.2` **DAVI**: Sou filho do teu servo Jessé, de Belém. ⚠ sem gravação
 - `1:00.2` 🎥 corte: câmera fov 32
 - `1:03.9` 🎥 corte: câmera fov 26
-- `1:05.7` 🎥 corte: câmera fov 40
+- `1:05.7` 🎥 corte: câmera fov 42
 - ⏸ **6.9 s sem fala**
 - `1:10.1` **DAVI**: O que é isso? ⚠ sem gravação
 - `1:11.5` **JÔNATAS**: Fica com ele. E com isso também. ⚠ sem gravação
@@ -69,13 +69,14 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:29.2` 🎥 corte: câmera fov 44
 - `1:29.6` **Narrador**: Dias depois, o exército voltou para casa. ⚠ sem gravação
 - `1:32.8` **MORADOR 2** (animado): É ele! O rapaz do gigante! ⚠ sem gravação
-- `1:33.2` 🎥  fov 44
+- `1:34.2` 🎥 corte: câmera fov 48
 - `1:35.0` **MORADOR 5** (grito): Davi! Davi! ⚠ sem gravação
 - `1:36.8` **MULHER 1** (animado): Saul matou os seus milhares... ⚠ sem gravação
+- `1:39.2` 🎥  fov 44
 - `1:39.2` **MULHER 2** (animado): ...e Davi, os seus dez milhares! ⚠ sem gravação
 - ⏸ **3.7 s sem fala**
 - `1:45.6` **MULHER 3** (animado): Saul matou os seus milhares... e Davi, os seus dez milhares! ⚠ sem gravação
-- `1:45.6` 🎥 corte: câmera fov 42
+- `1:45.6` 🎥 corte: câmera fov 44
 - `1:50.0` **MULHER 4** (animado): Davi, os seus dez milhares! ⚠ sem gravação
 - `1:52.2` 🎥 corte: câmera fov 40
 - `1:52.5` **REI SAUL** (sussurro): Pra ele deram dez milhares. Pra mim, só milhares. ⚠ sem gravação
