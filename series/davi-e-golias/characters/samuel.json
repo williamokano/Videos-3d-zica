@@ -1,6 +1,10 @@
 {
   "id": "samuel",
   "name": "Samuel",
+  "voice": {
+    "id": "zoe2cQFqDDW4DteHDEWI",
+    "speed": 1.12
+  },
   "height": 1.72,
   "build": 0.9,
   "skin": "#c69270",

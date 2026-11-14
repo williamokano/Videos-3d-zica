@@ -11,7 +11,11 @@
   "audio": {
     "provider": "elevenlabs",
     "defaultMode": "tts",
-    "model": "eleven_v3"
+    "model": "eleven_v3",
+    "narrator": {
+      "id": "GIuLCSVfgJaUuh7hYOY8",
+      "speed": 1.08
+    }
   },
   "style": {
     "look": "cel"

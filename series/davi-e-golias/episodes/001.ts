@@ -38,7 +38,9 @@ const ASSENTO: [number, number] = [-32.9, 34.6];
 
 const anciao = (n: number, at: [number, number], seed: number): CastMember => ({
   id: `anciao-${n}`, character: 'anciao', at, yaw: 180, seated: 0.42,
-  look: { name: `Ancião ${n}`, hair: ['#d8d2c8', '#bdb6aa', '#e6e1d8'][seed % 3], beard: (['full', 'full', 'goatee'] as const)[seed % 3] },
+  look: { name: `Ancião ${n}`, hair: ['#d8d2c8', '#bdb6aa', '#e6e1d8'][seed % 3], beard: (['full', 'full', 'goatee'] as const)[seed % 3],
+    // Cada ancião com a sua voz.
+    ...(n === 2 ? { voice: { id: 'hXur2dqIXKGl3IhDPHnb' } } : {}) },
 });
 
 export default direct(
@@ -319,10 +321,10 @@ export default direct(
     // dos dois: por cima do ombro do Jessé, o Davi de frente, e chega devagar.
     d.camera.cut({ pos: [9.2, TOPO + 2.1, -32.6], lookAt: [12.0, TOPO + 1.2, -34.3], fov: 60 });
     samuelC.standUp([11.5, -35.15]);
-    samuelC.walkTo([12.15, -33.55], { speed: 0.55 });
+    samuelC.walkTo([12.15, -33.55], { speed: 0.65 });
     samuelC.lookAt(daviC, { duration: 0.5 });
     d.wait(0.4);
-    samuelC.walkTo([11.5, -34.8], { speed: 0.55 });
+    samuelC.walkTo([11.5, -34.8], { speed: 0.65 });
     samuelC.turnTo(180);
     samuelC.lookAt(daviC, { duration: 0.5 });
     d.wait(0.5);
@@ -335,8 +337,8 @@ export default direct(
     daviC.lookAt(samuelC, { duration: 0.4 });
     d.do('davi-casa', 'move', { name: 'kneel' }, { duration: 1 });
     // De lado, aberto, a câmera girando devagar em volta dos dois: o azeite cai sobre a cabeça dele.
-    d.camera.twoShot('samuel-casa', 'davi-casa', { duration: 5.5, swing: 28, fov: 44, side: 1, height: 1.2 });
-    d.do('chifre-casa', 'pour', { over: 'davi-casa' }, { duration: 5 });
+    d.camera.twoShot('samuel-casa', 'davi-casa', { duration: 4.5, swing: 24, fov: 44, side: 1, height: 1.2 });
+    d.do('chifre-casa', 'pour', { over: 'davi-casa' }, { duration: 4.2 });
     // O rosto do Davi, confuso, sem colar: de frente e um pouco de lado; atrás, o Samuel.
     d.camera.cut({ pos: [13.2, TOPO + 1.15, -33.0], lookAt: [11.5, TOPO + 1.0, -34.4], fov: 40 });
     daviC.express('surprised', { amount: 0.5 });

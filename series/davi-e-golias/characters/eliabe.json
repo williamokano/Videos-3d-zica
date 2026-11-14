@@ -1,6 +1,9 @@
 {
   "id": "eliabe",
   "name": "Eliabe",
+  "voice": {
+    "id": "Dps47AVoFamqqkDShRDS"
+  },
   "height": 1.82,
   "build": 1.08,
   "skin": "#d49a70",

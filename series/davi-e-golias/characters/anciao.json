@@ -1,6 +1,9 @@
 {
   "id": "anciao",
   "name": "Ancião de Belém",
+  "voice": {
+    "id": "mBxe7tYxRAMLpIP3fPEp"
+  },
   "height": 1.68,
   "build": 0.95,
   "skin": "#c48c64",

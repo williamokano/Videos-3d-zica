@@ -1,6 +1,9 @@
 {
   "id": "abinadabe",
   "name": "Abinadabe",
+  "voice": {
+    "id": "tS45q0QcrDHqHoaWdCDR"
+  },
   "height": 1.76,
   "build": 1.0,
   "skin": "#d6a07a",

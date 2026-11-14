@@ -1,6 +1,10 @@
 {
   "id": "jesse",
   "name": "Jessé",
+  "voice": {
+    "id": "362PVGN0qz9gh4Hb4qdA",
+    "speed": 1.08
+  },
   "height": 1.7,
   "build": 1.0,
   "skin": "#c48c64",

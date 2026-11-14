@@ -1,6 +1,9 @@
 {
   "id": "sama",
   "name": "Samá",
+  "voice": {
+    "id": "GnDrTQvdzZ7wqAKfLzVQ"
+  },
   "height": 1.73,
   "build": 0.96,
   "skin": "#dba67f",
