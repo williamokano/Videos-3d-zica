@@ -8,3 +8,10 @@
 - Horário: 2026-11-14T22:24:00Z (19:24 em Brasília)
 - Status: **publicado** em 2026-11-14T22:24:29Z — https://youtube.com/shorts/kKxk8yp8m4o (id kKxk8yp8m4o); comentário fixado na fila do publicador (1–3 min depois)
 - Manual: Instagram e TikTok ainda não (o canal historinhas.animadas.3d não está no publicador)
+
+## Troca (2026-11-14): voz do guarda das bagagens
+
+- O autor vetou a voz do Diego no guarda; a fala foi refeita com o Arnold e o vídeo renderizado de novo.
+- O autor apagou o vídeo antigo (kKxk8yp8m4o) no YouTube Studio. O publicador não apaga vídeo publicado, e não aceitou um segundo lançamento do mesmo conteúdo nem outro conteúdo com o mesmo slug; o lançamento antigo `7e0ce1243e7416470730382d2872b81f` foi cancelado (só registro).
+- Conteúdo novo `eae77f2fd90738bfc27cfa718c511eb6` (título interno com "(v2)"; a publicação sobrescreve o título com o original), release `ba1a1eaffe0a22a4e97be6c0365ee0ac`, publicação `29093a52897a2baeae6395e37a5837ed`.
+- **Publicado** em 2026-11-14T22:49:29Z — https://youtube.com/shorts/jKsIravbVFM
