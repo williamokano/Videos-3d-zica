@@ -67,6 +67,7 @@ export default direct(
     // ---- O mundo vivo desde o primeiro quadro ----
     d.world.rule('noite', false, { duration: 0 });
     d.world.rule('amanhecer', false, { duration: 0 });
+    d.world.rule('entardecer', false, { duration: 0 });
     atentos(d, [...tropa, 'sama', 'eliabe', 'abinadabe'], 'golias', 'worried');
     atentos(d, ids(filisteus), 'golias', 'happy');
     for (const id of ids(fogueira)) d.actor(id).behave('chat', { group: 'fogueira', mood: 'worried' });

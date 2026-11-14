@@ -107,6 +107,29 @@
           "amount": 0.1
         }
       }
+    },
+    {
+      "id": "entardecer",
+      "description": "Fim de tarde em Belém: sol baixo vindo do oeste, luz dourada que entra fundo pelas portas e janelas, sombras compridas.",
+      "from": 1,
+      "until": null,
+      "effects": {
+        "environment": {
+          "skyTop": "#4a6aa6",
+          "skyHorizon": "#f3b07a",
+          "sunColor": "#ffbf7a",
+          "sunIntensity": 2.4,
+          "ambientIntensity": 0.85,
+          "clouds": 0.55,
+          "sunAzimuth": 262,
+          "sunElevation": 13
+        },
+        "grade": {
+          "tint": "#ff9a52",
+          "amount": 0.14,
+          "vignette": 0.18
+        }
+      }
     }
   ]
 }

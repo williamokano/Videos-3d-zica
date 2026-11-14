@@ -151,21 +151,21 @@
     -36.0
    ],
    "size": [
-    9.0,
-    6.5
+    7.0,
+    5.2
    ],
    "elevation": 10.0,
    "height": 3.0,
    "rustic": true,
-   "floorColor": "#8c7356",
-   "wallColor": "#c4ad86",
+   "floorColor": "#8a7253",
+   "wallColor": "#c8b089",
    "openings": [
     {
      "id": "porta-jesse",
      "wall": "s",
      "type": "door",
-     "at": 4.5,
-     "width": 1.3,
+     "at": 3.0,
+     "width": 1.2,
      "leaf": {
       "style": "planks",
       "open": 1,
@@ -173,151 +173,237 @@
      }
     },
     {
-     "id": "janela-leste",
-     "wall": "e",
-     "type": "window",
-     "at": 2.2,
-     "width": 0.8,
-     "frame": {
-      "kind": "shutters",
-      "open": 0.5
-     }
-    },
-    {
      "id": "janela-oeste",
      "wall": "w",
      "type": "window",
-     "at": 3.6,
-     "width": 0.8,
+     "at": 2.0,
+     "width": 0.75,
      "frame": {
       "kind": "shutters",
-      "open": 0.8
+      "open": 1
+     }
+    },
+    {
+     "id": "janela-leste",
+     "wall": "e",
+     "type": "window",
+     "at": 3.4,
+     "width": 0.6,
+     "frame": {
+      "kind": "shutters",
+      "open": 0.3
      }
     }
    ],
    "props": [
     {
-     "asset": "ancient.rug",
+     "asset": "ancient.mudBench",
      "pos": [
-      4.5,
-      3.4
+      3.5,
+      0.0
      ],
      "params": {
-      "width": 5.4,
-      "depth": 3.4,
-      "color": "#7a3b2a"
+      "length": 3.4
      }
     },
     {
-     "asset": "ancient.lowTable",
+     "asset": "ancient.post",
      "pos": [
-      4.5,
-      1.6
+      1.2,
+      3.6
      ],
      "params": {
-      "width": 2.6,
-      "jar": 1,
-      "cups": 4,
-      "fruit": 1
+      "height": 2.85,
+      "seed": 2
      }
     },
     {
-     "asset": "ancient.cushion",
+     "asset": "ancient.post",
      "pos": [
-      3.0,
-      1.0
-     ],
-     "params": {
-      "color": "#8a5a2a"
-     }
-    },
-    {
-     "asset": "ancient.cushion",
-     "pos": [
-      6.0,
-      1.0
-     ],
-     "params": {
-      "color": "#5a6a3a"
-     }
-    },
-    {
-     "asset": "ancient.basket",
-     "pos": [
-      0.8,
-      0.8
-     ],
-     "params": {
-      "bread": 1
-     }
-    },
-    {
-     "asset": "ancient.jar",
-     "pos": [
-      8.5,
-      2.2
-     ],
-     "params": {
-      "count": 3
-     }
-    },
-    {
-     "asset": "ancient.chest",
-     "pos": [
-      7.9,
-      0.7
-     ]
-    },
-    {
-     "asset": "ancient.lampStand",
-     "pos": [
-      0.6,
+      5.8,
       2.6
      ],
      "params": {
-      "intensity": 7
+      "height": 2.85,
+      "seed": 5
      }
     },
     {
-     "asset": "ancient.lampStand",
+     "asset": "ancient.plankShelf",
      "pos": [
-      8.4,
-      3.4
+      1.1,
+      0.0
      ],
+     "y": 1.65,
      "params": {
-      "intensity": 7
+      "length": 1.4,
+      "seed": 3
      }
     },
     {
-     "asset": "ancient.lampStand",
+     "asset": "ancient.plankShelf",
      "pos": [
-      7.2,
-      5.9
+      7.0,
+      1.6
+     ],
+     "y": 1.55,
+     "rot": -90,
+     "params": {
+      "length": 1.6,
+      "seed": 8
+     }
+    },
+    {
+     "asset": "ancient.wallNiche",
+     "pos": [
+      0.0,
+      3.7
+     ],
+     "y": 1.25,
+     "rot": 90,
+     "params": {
+      "item": "lamp"
+     }
+    },
+    {
+     "asset": "ancient.hangingCloth",
+     "pos": [
+      7.0,
+      3.6
+     ],
+     "y": 2.05,
+     "rot": -90,
+     "params": {
+      "width": 0.8,
+      "length": 1.4,
+      "color": "#8c3a2a",
+      "seed": 4
+     }
+    },
+    {
+     "asset": "ancient.hangingCloth",
+     "pos": [
+      5.6,
+      0.0
+     ],
+     "y": 2.15,
+     "params": {
+      "width": 0.9,
+      "length": 1.2,
+      "color": "#d9c9a4",
+      "seed": 7
+     }
+    },
+    {
+     "asset": "ancient.herbBundle",
+     "pos": [
+      2.4,
+      1.3
+     ],
+     "y": 2.6,
+     "params": {
+      "count": 3,
+      "seed": 1
+     }
+    },
+    {
+     "asset": "ancient.herbBundle",
+     "pos": [
+      4.8,
+      3.6
+     ],
+     "y": 2.6,
+     "params": {
+      "count": 2,
+      "seed": 6
+     }
+    },
+    {
+     "asset": "ancient.quern",
+     "pos": [
+      6.2,
+      2.4
+     ],
+     "rot": -20,
+     "params": {
+      "seed": 2
+     }
+    },
+    {
+     "asset": "ancient.potteryGroup",
+     "pos": [
+      6.3,
+      0.7
      ],
      "params": {
-      "kind": "stone",
-      "intensity": 6
+      "count": 7,
+      "seed": 5
+     }
+    },
+    {
+     "asset": "ancient.basketGroup",
+     "pos": [
+      0.6,
+      2.5
+     ],
+     "params": {
+      "seed": 3
+     }
+    },
+    {
+     "asset": "ancient.potteryGroup",
+     "pos": [
+      0.6,
+      1.0
+     ],
+     "params": {
+      "count": 4,
+      "seed": 9
+     }
+    },
+    {
+     "asset": "ancient.ladder",
+     "pos": [
+      6.7,
+      0.5
+     ],
+     "rot": -90,
+     "params": {
+      "height": 2.7
      }
     },
     {
      "asset": "ancient.oilLamp",
      "pos": [
-      4.5,
-      1.6
+      5.0,
+      0.22
      ],
      "y": 0.42,
      "params": {
-      "intensity": 5
+      "intensity": 3
      }
     },
     {
-     "asset": "ancient.sack",
+     "asset": "ancient.lampStand",
      "pos": [
-      7.8,
-      5.6
+      0.5,
+      0.5
      ],
      "params": {
-      "count": 2
+      "kind": "stone",
+      "intensity": 4
+     }
+    },
+    {
+     "asset": "ancient.rug",
+     "pos": [
+      3.5,
+      1.5
+     ],
+     "params": {
+      "width": 2.6,
+      "depth": 1.8,
+      "color": "#7a3b2a"
      }
     }
    ]
@@ -714,7 +800,7 @@
    "asset": "ancient.hitchedDonkey",
    "pos": [
     9.5,
-    -26.0
+    -27.3
    ],
    "rot": 90
   },
@@ -722,7 +808,7 @@
    "asset": "ancient.sack",
    "pos": [
     15.5,
-    -28.3
+    -29.6
    ],
    "params": {
     "count": 3
@@ -799,25 +885,25 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    6.24,
-    -37.05
+    24.31,
+    -34.99
    ],
-   "rot": 184.6,
+   "rot": 254.7,
    "params": {
-    "seed": 639,
-    "size": 0.41
+    "seed": 620,
+    "size": 0.33
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -3.87,
-    -33.61
+    -4.7,
+    -61.03
    ],
-   "rot": 134.1,
+   "rot": 218.7,
    "params": {
-    "seed": 542,
-    "size": 0.24
+    "seed": 984,
+    "size": 0.27
    }
   },
   {
@@ -847,85 +933,73 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    24.07,
-    -35.15
+    23.39,
+    -48.94
    ],
-   "rot": 324.8,
+   "rot": 6.8,
    "params": {
-    "seed": 506,
-    "size": 0.39
+    "seed": 351,
+    "size": 0.41
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    9.18,
-    -46.98
+    22.15,
+    -37.31
    ],
-   "rot": 147.8,
+   "rot": 68.7,
    "params": {
-    "seed": 709,
-    "size": 0.34
+    "seed": 750,
+    "size": 0.33
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -27.94,
-    -26.21
+    27.59,
+    -37.1
    ],
-   "rot": 120.6,
+   "rot": 52.4,
    "params": {
-    "seed": 19,
+    "seed": 443,
     "size": 0.26
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -1.59,
-    -57.63
+    3.0,
+    -32.31
    ],
-   "rot": 348.5,
+   "rot": 317.9,
    "params": {
-    "seed": 231,
-    "size": 0.42
+    "seed": 465,
+    "size": 0.23
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -25.13,
-    -61.91
+    -12.27,
+    -58.66
    ],
-   "rot": 150.5,
+   "rot": 23.6,
    "params": {
-    "seed": 28,
-    "size": 0.22
+    "seed": 223,
+    "size": 0.25
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -24.34,
-    -53.47
+    -15.41,
+    -44.1
    ],
-   "rot": 152.9,
+   "rot": 270.7,
    "params": {
-    "seed": 516,
-    "size": 0.31
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    14.11,
-    -48.47
-   ],
-   "rot": 328.9,
-   "params": {
-    "seed": 902,
-    "size": 0.43
+    "seed": 355,
+    "size": 0.25
    }
   },
   {
@@ -1111,229 +1185,217 @@
   {
    "asset": "ancient.rock",
    "pos": [
-    -24.67,
-    -30.66
-   ],
-   "rot": 359.9,
-   "params": {
-    "seed": 584,
-    "size": 0.44
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -2.63,
-    -16.39
+    -2.65,
+    -15.39
    ],
    "params": {
     "seed": 400,
-    "size": 0.44
+    "size": 0.6
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    3.34,
-    -16.57
+    3.06,
+    -15.78
    ],
    "params": {
     "seed": 401,
-    "size": 0.38
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -3.39,
-    -13.21
-   ],
-   "params": {
-    "seed": 402,
-    "size": 0.47
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    2.78,
-    -13.03
-   ],
-   "params": {
-    "seed": 403,
-    "size": 0.51
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -2.89,
-    -10.84
-   ],
-   "params": {
-    "seed": 404,
-    "size": 0.46
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    3.21,
-    -10.7
-   ],
-   "params": {
-    "seed": 405,
-    "size": 0.44
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -2.87,
-    -7.31
-   ],
-   "params": {
-    "seed": 406,
-    "size": 0.35
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    2.9,
-    -6.19
-   ],
-   "params": {
-    "seed": 407,
-    "size": 0.56
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -3.26,
-    -3.46
-   ],
-   "params": {
-    "seed": 408,
-    "size": 0.31
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    2.94,
-    -3.18
-   ],
-   "params": {
-    "seed": 409,
-    "size": 0.4
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -3.25,
-    -1.64
-   ],
-   "params": {
-    "seed": 410,
-    "size": 0.53
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    3.24,
-    -0.86
-   ],
-   "params": {
-    "seed": 411,
-    "size": 0.33
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -3.27,
-    2.94
-   ],
-   "params": {
-    "seed": 412,
-    "size": 0.43
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    3.1,
-    2.58
-   ],
-   "params": {
-    "seed": 413,
-    "size": 0.41
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -3.15,
-    5.32
-   ],
-   "params": {
-    "seed": 414,
     "size": 0.42
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    3.03,
-    5.13
+    -2.75,
+    -12.21
    ],
    "params": {
-    "seed": 415,
-    "size": 0.51
+    "seed": 402,
+    "size": 0.5
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -2.79,
-    8.36
+    2.64,
+    -12.89
    ],
    "params": {
-    "seed": 416,
-    "size": 0.58
+    "seed": 403,
+    "size": 0.39
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    2.72,
-    8.57
+    -2.86,
+    -9.48
    ],
    "params": {
-    "seed": 417,
+    "seed": 404,
+    "size": 0.43
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    2.86,
+    -9.82
+   ],
+   "params": {
+    "seed": 405,
+    "size": 0.32
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -2.69,
+    -7.71
+   ],
+   "params": {
+    "seed": 406,
     "size": 0.49
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -3.39,
-    11.9
+    2.61,
+    -7.97
    ],
    "params": {
-    "seed": 418,
-    "size": 0.44
+    "seed": 407,
+    "size": 0.58
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    2.94,
-    10.99
+    -3.02,
+    -4.6
+   ],
+   "params": {
+    "seed": 408,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    3.24,
+    -3.77
+   ],
+   "params": {
+    "seed": 409,
+    "size": 0.46
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -2.91,
+    -0.76
+   ],
+   "params": {
+    "seed": 410,
+    "size": 0.56
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    3.26,
+    -1.24
+   ],
+   "params": {
+    "seed": 411,
+    "size": 0.5
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -2.68,
+    1.08
+   ],
+   "params": {
+    "seed": 412,
+    "size": 0.53
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    2.64,
+    1.58
+   ],
+   "params": {
+    "seed": 413,
+    "size": 0.57
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -3.32,
+    4.37
+   ],
+   "params": {
+    "seed": 414,
+    "size": 0.48
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    2.63,
+    5.53
+   ],
+   "params": {
+    "seed": 415,
+    "size": 0.34
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -3.26,
+    7.23
+   ],
+   "params": {
+    "seed": 416,
+    "size": 0.56
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    3.36,
+    8.23
+   ],
+   "params": {
+    "seed": 417,
+    "size": 0.51
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -3.14,
+    11.7
+   ],
+   "params": {
+    "seed": 418,
+    "size": 0.32
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    2.7,
+    10.14
    ],
    "params": {
     "seed": 419,
@@ -1377,509 +1439,521 @@
    }
   },
   {
-   "asset": "ancient.oliveTree",
+   "asset": "ancient.dryBush",
    "pos": [
-    55.98,
-    78.48
+    63.34,
+    33.41
    ],
-   "rot": 259.0,
+   "rot": 254.7,
    "params": {
-    "seed": 910
+    "seed": 84,
+    "size": 1.13
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -65.72,
-    103.95
+    42.34,
+    100.49
    ],
-   "rot": 252.5,
+   "rot": 320.1,
    "params": {
-    "seed": 248,
-    "size": 0.79
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -91.67,
-    44.04
-   ],
-   "rot": 235.3,
-   "params": {
-    "seed": 257,
-    "size": 0.73
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -42.82,
-    -1.6
-   ],
-   "rot": 243.3,
-   "params": {
-    "seed": 178
+    "seed": 565,
+    "size": 0.92
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -3.97,
-    50.71
+    43.1,
+    79.69
    ],
-   "rot": 191.6,
+   "rot": 9.0,
    "params": {
-    "seed": 59,
-    "size": 0.99
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -102.89,
-    65.64
-   ],
-   "rot": 352.6,
-   "params": {
-    "seed": 552,
+    "seed": 721,
     "size": 0.91
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    3.25,
-    118.42
+    22.22,
+    73.25
    ],
-   "rot": 2.0,
+   "rot": 267.2,
    "params": {
-    "seed": 173,
-    "size": 0.94
+    "seed": 605,
+    "size": 0.67
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -84.58,
-    36.74
+    76.64,
+    76.24
    ],
-   "rot": 349.4,
+   "rot": 237.1,
    "params": {
-    "seed": 789,
-    "size": 1.17
+    "seed": 207,
+    "size": 0.77
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    40.33,
-    22.24
+    7.1,
+    -7.14
    ],
-   "rot": 133.5,
+   "rot": 59.4,
    "params": {
-    "seed": 140,
-    "size": 0.75
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    14.34,
-    -2.94
-   ],
-   "rot": 145.0,
-   "params": {
-    "seed": 765,
-    "size": 1.13
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    87.49,
-    21.65
-   ],
-   "rot": 40.4,
-   "params": {
-    "seed": 200,
-    "size": 1.25
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    88.88,
-    -13.5
-   ],
-   "rot": 172.2,
-   "params": {
-    "seed": 417,
+    "seed": 19,
     "size": 1.02
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    89.06,
-    85.59
+    105.5,
+    57.9
    ],
-   "rot": 161.1,
+   "rot": 258.2,
    "params": {
-    "seed": 516,
-    "size": 1.03
+    "seed": 687,
+    "size": 0.66
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -87.48,
-    73.24
+    -108.8,
+    7.88
    ],
-   "rot": 23.3,
+   "rot": 255.4,
    "params": {
-    "seed": 827,
-    "size": 0.85
+    "seed": 165,
+    "size": 0.76
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    103.5,
+    89.06
+   ],
+   "rot": 187.1,
+   "params": {
+    "seed": 747,
+    "size": 0.53
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -28.42,
+    3.49
+   ],
+   "rot": 258.3,
+   "params": {
+    "seed": 114
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -95.33,
+    39.36
+   ],
+   "rot": 87.8,
+   "params": {
+    "seed": 12,
+    "size": 0.49
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    109.67,
-    107.46
+    -66.94,
+    42.98
    ],
-   "rot": 120.2,
+   "rot": 100.4,
    "params": {
-    "seed": 392,
+    "seed": 932,
+    "size": 0.93
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -20.4,
+    58.99
+   ],
+   "rot": 93.8,
+   "params": {
+    "seed": 960,
     "size": 0.91
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    64.21,
-    29.41
+    1.02,
+    99.69
    ],
-   "rot": 2.0,
+   "rot": 343.4,
    "params": {
-    "seed": 994,
-    "size": 1.23
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -109.98,
-    101.83
-   ],
-   "rot": 36.5,
-   "params": {
-    "seed": 343,
-    "size": 0.99
+    "seed": 538,
+    "size": 0.65
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -8.47,
-    43.8
+    67.79,
+    70.38
    ],
-   "rot": 72.5,
+   "rot": 257.6,
    "params": {
-    "seed": 569,
-    "size": 0.96
+    "seed": 484,
+    "size": 0.53
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -25.23,
-    63.4
+    8.92,
+    114.83
    ],
-   "rot": 144.0,
+   "rot": 178.5,
    "params": {
-    "seed": 833,
+    "seed": 915,
+    "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    23.6,
+    76.96
+   ],
+   "rot": 69.3,
+   "params": {
+    "seed": 570,
+    "size": 0.61
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    56.14,
+    97.54
+   ],
+   "rot": 136.0,
+   "params": {
+    "seed": 971
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -58.26,
+    19.5
+   ],
+   "rot": 293.0,
+   "params": {
+    "seed": 301,
     "size": 0.87
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -39.78,
-    59.58
+    -44.3,
+    13.81
    ],
-   "rot": 99.4,
+   "rot": 353.8,
    "params": {
-    "seed": 533,
-    "size": 0.85
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -44.51,
-    78.58
-   ],
-   "rot": 35.3,
-   "params": {
-    "seed": 636,
-    "size": 1.28
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -58.05,
-    32.77
-   ],
-   "rot": 103.6,
-   "params": {
-    "seed": 755
+    "seed": 264,
+    "size": 0.96
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    78.31,
-    83.15
+    -108.45,
+    56.44
    ],
-   "rot": 72.0,
+   "rot": 246.4,
    "params": {
-    "seed": 960,
-    "size": 0.49
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -17.58,
-    112.47
-   ],
-   "rot": 308.7,
-   "params": {
-    "seed": 224
+    "seed": 263,
+    "size": 0.73
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    63.27,
-    -1.8
+    -77.06,
+    76.16
    ],
-   "rot": 240.6,
+   "rot": 350.3,
    "params": {
-    "seed": 74,
-    "size": 0.43
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -82.23,
-    13.24
-   ],
-   "rot": 314.3,
-   "params": {
-    "seed": 534,
-    "size": 1.05
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    75.08,
-    -9.83
-   ],
-   "rot": 173.1,
-   "params": {
-    "seed": 222
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -90.77,
-    7.81
-   ],
-   "rot": 97.0,
-   "params": {
-    "seed": 224,
-    "size": 0.62
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -95.46,
-    20.4
-   ],
-   "rot": 275.1,
-   "params": {
-    "seed": 496,
-    "size": 1.05
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -44.13,
-    3.11
-   ],
-   "rot": 142.0,
-   "params": {
-    "seed": 773,
-    "size": 0.4
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    62.66,
-    68.07
-   ],
-   "rot": 314.1,
-   "params": {
-    "seed": 372,
+    "seed": 910,
     "size": 0.82
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.oliveTree",
    "pos": [
-    37.4,
-    96.38
+    -43.65,
+    1.65
    ],
-   "rot": 155.7,
+   "rot": 286.5,
    "params": {
-    "seed": 602,
-    "size": 0.95
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -49.11,
-    9.7
-   ],
-   "rot": 161.6,
-   "params": {
-    "seed": 466,
-    "size": 0.98
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -19.59,
-    61.01
-   ],
-   "rot": 197.1,
-   "params": {
-    "seed": 126,
-    "size": 1.05
+    "seed": 285
    }
   },
   {
    "asset": "ancient.oliveTree",
    "pos": [
-    54.47,
-    0.43
+    109.66,
+    9.95
    ],
-   "rot": 239.3,
+   "rot": 166.1,
    "params": {
-    "seed": 2
+    "seed": 930
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -61.74,
+    43.19
+   ],
+   "rot": 37.0,
+   "params": {
+    "seed": 649,
+    "size": 0.65
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    33.4,
+    -1.35
+   ],
+   "rot": 227.6,
+   "params": {
+    "seed": 843,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    33.18,
+    86.07
+   ],
+   "rot": 166.7,
+   "params": {
+    "seed": 241
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -62.15,
+    4.4
+   ],
+   "rot": 344.6,
+   "params": {
+    "seed": 468
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -61.77,
+    101.01
+   ],
+   "rot": 308.2,
+   "params": {
+    "seed": 332,
+    "size": 1.13
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    27.55,
-    -10.67
+    -3.24,
+    21.03
    ],
-   "rot": 353.9,
+   "rot": 101.4,
    "params": {
-    "seed": 386,
+    "seed": 404,
+    "size": 0.6
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -77.81,
+    90.95
+   ],
+   "rot": 266.6,
+   "params": {
+    "seed": 893,
     "size": 0.48
    }
   },
   {
-   "asset": "ancient.dryBush",
-   "pos": [
-    41.69,
-    49.1
-   ],
-   "rot": 243.3,
-   "params": {
-    "seed": 831,
-    "size": 0.77
-   }
-  },
-  {
    "asset": "ancient.oliveTree",
    "pos": [
-    102.55,
-    77.49
+    52.63,
+    75.45
    ],
-   "rot": 218.8,
+   "rot": 264.0,
    "params": {
-    "seed": 173
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    51.06,
-    113.84
-   ],
-   "rot": 56.4,
-   "params": {
-    "seed": 152
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    77.12,
-    33.22
-   ],
-   "rot": 123.3,
-   "params": {
-    "seed": 301
+    "seed": 442
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -2.16,
-    65.91
+    -18.66,
+    109.78
    ],
-   "rot": 183.0,
+   "rot": 65.9,
    "params": {
-    "seed": 859,
-    "size": 1.25
+    "seed": 594,
+    "size": 0.78
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    76.95,
+    116.06
+   ],
+   "rot": 202.7,
+   "params": {
+    "seed": 433,
+    "size": 1.2
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -40.92,
-    -8.98
+    -78.14,
+    71.77
    ],
-   "rot": 27.8,
+   "rot": 41.2,
    "params": {
-    "seed": 172,
-    "size": 0.79
+    "seed": 977,
+    "size": 0.71
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -51.94,
+    69.41
+   ],
+   "rot": 190.1,
+   "params": {
+    "seed": 15,
+    "size": 0.86
    }
   },
   {
    "asset": "ancient.oliveTree",
    "pos": [
-    -72.34,
-    87.89
+    -2.37,
+    117.6
    ],
-   "rot": 151.8,
+   "rot": 64.3,
    "params": {
-    "seed": 74
+    "seed": 720
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    68.59,
+    91.72
+   ],
+   "rot": 6.4,
+   "params": {
+    "seed": 754,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -72.62,
+    58.48
+   ],
+   "rot": 262.7,
+   "params": {
+    "seed": 341
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -77.3,
+    8.59
+   ],
+   "rot": 84.2,
+   "params": {
+    "seed": 267,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -31.41,
+    107.03
+   ],
+   "rot": 106.1,
+   "params": {
+    "seed": 678,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -67.5,
+    53.62
+   ],
+   "rot": 338.3,
+   "params": {
+    "seed": 72
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -100.19,
+    67.21
+   ],
+   "rot": 60.5,
+   "params": {
+    "seed": 391,
+    "size": 0.9
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -104.85,
+    8.11
+   ],
+   "rot": 291.9,
+   "params": {
+    "seed": 431,
+    "size": 0.59
    }
   },
   {
@@ -1907,439 +1981,442 @@
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.rock",
    "pos": [
-    42.77,
-    85.43
+    57.06,
+    78.51
    ],
-   "rot": 142.8,
+   "rot": 267.8,
    "params": {
-    "seed": 838,
-    "size": 0.76
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -78.73,
-    51.52
-   ],
-   "rot": 242.3,
-   "params": {
-    "seed": 251
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    0.35,
-    72.76
-   ],
-   "rot": 300.7,
-   "params": {
-    "seed": 256
+    "seed": 79,
+    "size": 0.56
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -85.41,
-    70.49
+    59.57,
+    16.35
    ],
-   "rot": 70.6,
+   "rot": 177.4,
    "params": {
-    "seed": 728,
+    "seed": 28,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -55.87,
+    11.82
+   ],
+   "rot": 189.6,
+   "params": {
+    "seed": 525,
+    "size": 0.48
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -14.65,
+    64.33
+   ],
+   "rot": 193.8,
+   "params": {
+    "seed": 17,
+    "size": 0.61
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -26.71,
+    58.41
+   ],
+   "rot": 40.3,
+   "params": {
+    "seed": 790
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -37.7,
+    4.19
+   ],
+   "rot": 333.7,
+   "params": {
+    "seed": 954,
+    "size": 0.98
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    25.11,
+    100.6
+   ],
+   "rot": 116.4,
+   "params": {
+    "seed": 287,
     "size": 0.61
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    93.61,
-    10.35
+    -40.21,
+    21.53
    ],
-   "rot": 162.7,
+   "rot": 37.9,
    "params": {
-    "seed": 865,
-    "size": 1.14
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -47.48,
-    71.26
-   ],
-   "rot": 39.2,
-   "params": {
-    "seed": 556,
-    "size": 0.67
+    "seed": 704,
+    "size": 1.17
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    100.69,
-    118.42
+    20.39,
+    79.21
    ],
-   "rot": 114.2,
+   "rot": 320.7,
    "params": {
-    "seed": 277,
-    "size": 0.79
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    92.11,
-    119.7
-   ],
-   "rot": 213.4,
-   "params": {
-    "seed": 714
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    74.59,
-    62.65
-   ],
-   "rot": 47.9,
-   "params": {
-    "seed": 896,
-    "size": 0.77
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    44.53,
-    44.69
-   ],
-   "rot": 146.2,
-   "params": {
-    "seed": 448,
-    "size": 1.11
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    28.35,
-    77.1
-   ],
-   "rot": 155.9,
-   "params": {
-    "seed": 930,
-    "size": 1.13
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -109.23,
-    77.02
-   ],
-   "rot": 252.2,
-   "params": {
-    "seed": 702,
+    "seed": 506,
     "size": 0.69
    }
   },
   {
-   "asset": "ancient.oliveTree",
+   "asset": "ancient.rock",
    "pos": [
-    -97.96,
-    119.15
+    82.52,
+    84.99
    ],
-   "rot": 29.9,
+   "rot": 336.5,
    "params": {
-    "seed": 287
+    "seed": 746,
+    "size": 0.61
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    16.79,
-    101.63
+    -72.72,
+    39.81
    ],
-   "rot": 103.9,
+   "rot": 185.2,
    "params": {
-    "seed": 604,
-    "size": 1.29
+    "seed": 603,
+    "size": 1.08
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    89.91,
+    16.03
+   ],
+   "rot": 80.9,
+   "params": {
+    "seed": 253,
+    "size": 0.79
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -100.46,
-    80.15
+    40.93,
+    71.84
    ],
-   "rot": 45.8,
+   "rot": 181.9,
    "params": {
-    "seed": 485,
-    "size": 0.63
+    "seed": 527,
+    "size": 0.66
    }
   },
   {
-   "asset": "ancient.oliveTree",
+   "asset": "ancient.rock",
    "pos": [
-    -42.01,
-    55.34
+    -48.3,
+    76.0
    ],
-   "rot": 247.8,
+   "rot": 332.6,
    "params": {
-    "seed": 163
+    "seed": 444,
+    "size": 0.71
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -14.75,
-    58.03
+    63.91,
+    49.62
    ],
-   "rot": 34.4,
+   "rot": 159.3,
    "params": {
-    "seed": 781,
+    "seed": 598,
     "size": 0.84
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    84.57,
-    73.17
+    -82.01,
+    48.99
    ],
-   "rot": 108.3,
+   "rot": 284.2,
    "params": {
-    "seed": 426,
+    "seed": 177,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    41.4,
+    6.54
+   ],
+   "rot": 164.0,
+   "params": {
+    "seed": 161,
+    "size": 0.67
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    57.8,
+    20.33
+   ],
+   "rot": 54.6,
+   "params": {
+    "seed": 311,
     "size": 0.51
    }
   },
   {
    "asset": "ancient.oliveTree",
    "pos": [
-    68.23,
-    -13.0
+    -18.32,
+    111.93
    ],
-   "rot": 83.1,
+   "rot": 49.8,
    "params": {
-    "seed": 623
+    "seed": 318
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -59.23,
+    67.26
+   ],
+   "rot": 296.7,
+   "params": {
+    "seed": 793,
+    "size": 0.8
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    97.72,
+    62.2
+   ],
+   "rot": 250.6,
+   "params": {
+    "seed": 427,
+    "size": 0.72
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -58.75,
+    61.28
+   ],
+   "rot": 84.3,
+   "params": {
+    "seed": 152,
+    "size": 0.68
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    0.59,
-    39.91
+    30.55,
+    1.7
    ],
-   "rot": 101.2,
+   "rot": 354.1,
    "params": {
-    "seed": 966,
-    "size": 0.76
+    "seed": 573,
+    "size": 0.37
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -31.28,
-    -4.01
+    -86.37,
+    35.91
    ],
-   "rot": 62.2,
+   "rot": 36.7,
    "params": {
-    "seed": 238,
-    "size": 0.66
+    "seed": 414,
+    "size": 0.72
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.oliveTree",
    "pos": [
-    109.81,
-    89.77
+    -28.02,
+    105.02
    ],
-   "rot": 42.5,
+   "rot": 188.5,
    "params": {
-    "seed": 654,
-    "size": 1.06
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -36.64,
-    -12.66
-   ],
-   "rot": 35.5,
-   "params": {
-    "seed": 109,
-    "size": 0.99
+    "seed": 573
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    16.86,
-    60.83
+    0.7,
+    21.73
    ],
-   "rot": 59.2,
+   "rot": 196.1,
    "params": {
-    "seed": 381,
+    "seed": 630,
+    "size": 0.63
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -101.01,
+    101.24
+   ],
+   "rot": 23.0,
+   "params": {
+    "seed": 591,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    20.65,
+    108.42
+   ],
+   "rot": 159.3,
+   "params": {
+    "seed": 281,
+    "size": 0.46
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -65.21,
+    -1.55
+   ],
+   "rot": 285.2,
+   "params": {
+    "seed": 887,
+    "size": 0.74
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -8.68,
+    88.3
+   ],
+   "rot": 212.4,
+   "params": {
+    "seed": 100,
+    "size": 1.09
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -43.0,
+    60.8
+   ],
+   "rot": 198.7,
+   "params": {
+    "seed": 850,
+    "size": 0.77
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    51.35,
+    110.48
+   ],
+   "rot": 136.9,
+   "params": {
+    "seed": 689,
+    "size": 0.93
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -51.65,
+    59.93
+   ],
+   "rot": 71.9,
+   "params": {
+    "seed": 723,
     "size": 0.65
    }
   },
   {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -66.43,
-    -5.39
-   ],
-   "rot": 181.2,
-   "params": {
-    "seed": 278
-   }
-  },
-  {
    "asset": "ancient.dryBush",
    "pos": [
-    -25.89,
-    14.52
+    -106.91,
+    104.28
    ],
-   "rot": 167.2,
+   "rot": 131.1,
    "params": {
-    "seed": 387,
-    "size": 0.9
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -10.77,
-    26.64
-   ],
-   "rot": 47.3,
-   "params": {
-    "seed": 296,
-    "size": 1.0
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    86.43,
-    23.98
-   ],
-   "rot": 48.3,
-   "params": {
-    "seed": 358,
-    "size": 0.79
+    "seed": 31,
+    "size": 0.97
    }
   },
   {
    "asset": "ancient.oliveTree",
    "pos": [
-    92.07,
-    70.27
+    -4.72,
+    95.98
    ],
-   "rot": 89.6,
+   "rot": 162.2,
    "params": {
-    "seed": 40
+    "seed": 814
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    18.51,
+    92.68
+   ],
+   "rot": 194.2,
+   "params": {
+    "seed": 768
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    80.62,
-    104.99
+    -86.75,
+    52.04
    ],
-   "rot": 12.2,
-   "params": {
-    "seed": 866,
-    "size": 1.01
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -88.36,
-    -14.1
-   ],
-   "rot": 166.9,
-   "params": {
-    "seed": 625,
-    "size": 0.99
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    72.76,
-    101.7
-   ],
-   "rot": 343.4,
-   "params": {
-    "seed": 538,
-    "size": 0.57
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    38.04,
-    112.52
-   ],
-   "rot": 354.0,
-   "params": {
-    "seed": 719,
-    "size": 0.44
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    45.37,
-    89.89
-   ],
-   "rot": 333.9,
-   "params": {
-    "seed": 454,
-    "size": 0.55
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -103.32,
-    103.21
-   ],
-   "rot": 244.4,
-   "params": {
-    "seed": 390,
-    "size": 0.62
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    65.07,
-    100.78
-   ],
-   "rot": 337.6,
-   "params": {
-    "seed": 235,
-    "size": 0.83
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    9.82,
-    -6.9
-   ],
-   "rot": 278.7,
+   "rot": 203.1,
    "params": {
     "seed": 42,
-    "size": 0.71
+    "size": 1.01
    }
   },
   {
@@ -2424,229 +2501,252 @@
    }
   },
   {
+   "asset": "ancient.rock",
+   "pos": [
+    -23.81,
+    63.11
+   ],
+   "rot": 11.3,
+   "params": {
+    "seed": 665,
+    "size": 0.73
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    102.86,
+    45.23
+   ],
+   "rot": 155.7,
+   "params": {
+    "seed": 626,
+    "size": 0.81
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    99.26,
+    -9.82
+   ],
+   "rot": 208.6,
+   "params": {
+    "seed": 905,
+    "size": 0.36
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    107.21,
+    36.9
+   ],
+   "rot": 172.4,
+   "params": {
+    "seed": 938,
+    "size": 0.63
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    3.24,
+    64.6
+   ],
+   "rot": 338.6,
+   "params": {
+    "seed": 518,
+    "size": 0.91
+   }
+  },
+  {
    "asset": "ancient.oliveTree",
    "pos": [
-    32.9,
-    14.99
+    -62.51,
+    0.12
    ],
-   "rot": 169.6,
+   "rot": 239.3,
    "params": {
-    "seed": 200
+    "seed": 824
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -11.69,
+    78.32
+   ],
+   "rot": 353.6,
+   "params": {
+    "seed": 218
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    31.23,
+    -0.48
+   ],
+   "rot": 83.7,
+   "params": {
+    "seed": 309,
+    "size": 0.68
    }
   },
   {
    "asset": "ancient.dryBush",
-   "pos": [
-    -14.87,
-    67.6
-   ],
-   "rot": 129.7,
-   "params": {
-    "seed": 332,
-    "size": 1.0
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    17.49,
-    104.39
-   ],
-   "rot": 338.3,
-   "params": {
-    "seed": 482,
-    "size": 0.96
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -4.63,
-    108.76
-   ],
-   "rot": 356.1,
-   "params": {
-    "seed": 761,
-    "size": 0.55
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    96.93,
-    53.37
-   ],
-   "rot": 30.3,
-   "params": {
-    "seed": 533,
-    "size": 0.95
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    36.27,
-    93.64
-   ],
-   "rot": 11.5,
-   "params": {
-    "seed": 87,
-    "size": 0.99
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -63.11,
-    114.19
-   ],
-   "rot": 151.6,
-   "params": {
-    "seed": 477,
-    "size": 0.51
-   }
-  },
-  {
-   "asset": "ancient.rock",
    "pos": [
     -40.32,
-    105.25
+    80.63
    ],
-   "rot": 96.9,
+   "rot": 49.0,
    "params": {
-    "seed": 292,
-    "size": 0.43
+    "seed": 196,
+    "size": 0.77
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    25.32,
+    91.8
+   ],
+   "rot": 353.8,
+   "params": {
+    "seed": 343,
+    "size": 0.62
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    7.91,
-    34.2
+    95.4,
+    113.46
    ],
-   "rot": 71.6,
+   "rot": 331.1,
    "params": {
-    "seed": 438,
-    "size": 0.53
+    "seed": 121,
+    "size": 0.67
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -69.29,
-    80.61
+    76.87,
+    25.37
    ],
-   "rot": 190.7,
+   "rot": 246.7,
    "params": {
-    "seed": 869,
-    "size": 1.01
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -80.6,
-    79.16
-   ],
-   "rot": 33.2,
-   "params": {
-    "seed": 958,
-    "size": 1.24
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -29.41,
-    21.0
-   ],
-   "rot": 205.2,
-   "params": {
-    "seed": 536,
-    "size": 1.02
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -56.01,
-    -0.89
-   ],
-   "rot": 16.9,
-   "params": {
-    "seed": 94,
-    "size": 1.08
+    "seed": 561,
+    "size": 0.66
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    98.99,
-    20.46
+    95.85,
+    -2.08
    ],
-   "rot": 160.6,
+   "rot": 286.1,
+   "params": {
+    "seed": 661,
+    "size": 0.7
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    5.18,
+    81.82
+   ],
+   "rot": 48.6,
+   "params": {
+    "seed": 368,
+    "size": 0.33
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -89.69,
+    105.81
+   ],
+   "rot": 339.0,
+   "params": {
+    "seed": 641,
+    "size": 0.91
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    55.8,
+    48.01
+   ],
+   "rot": 211.9,
+   "params": {
+    "seed": 389,
+    "size": 1.13
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    17.7,
+    117.49
+   ],
+   "rot": 193.8,
    "params": {
     "seed": 771,
-    "size": 0.75
+    "size": 0.6
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    8.69,
-    87.25
+    78.97,
+    44.29
    ],
-   "rot": 353.3,
+   "rot": 127.3,
    "params": {
-    "seed": 700,
-    "size": 0.35
+    "seed": 229,
+    "size": 0.45
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.rock",
    "pos": [
-    -77.1,
-    42.6
+    12.2,
+    30.16
    ],
-   "rot": 1.8,
+   "rot": 132.5,
    "params": {
-    "seed": 879,
+    "seed": 273,
     "size": 0.88
    }
   },
   {
-   "asset": "ancient.rock",
-   "pos": [
-    24.61,
-    11.13
-   ],
-   "rot": 78.5,
-   "params": {
-    "seed": 568,
-    "size": 0.94
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -5.57,
-    97.39
-   ],
-   "rot": 122.6,
-   "params": {
-    "seed": 943,
-    "size": 0.86
-   }
-  },
-  {
    "asset": "ancient.oliveTree",
    "pos": [
-    61.77,
-    35.42
+    0.29,
+    30.99
    ],
-   "rot": 320.3,
+   "rot": 56.9,
    "params": {
-    "seed": 350
+    "seed": 363
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -18.12,
+    90.4
+   ],
+   "rot": 319.0,
+   "params": {
+    "seed": 911,
+    "size": 1.27
    }
   },
   {
@@ -2696,167 +2796,179 @@
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.dryBush",
    "pos": [
-    -10.58,
-    -4.38
+    -78.96,
+    53.64
    ],
-   "rot": 15.5,
+   "rot": 28.3,
    "params": {
-    "seed": 707,
-    "size": 0.51
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    79.8,
-    110.23
-   ],
-   "rot": 303.9,
-   "params": {
-    "seed": 171
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -61.75,
-    23.28
-   ],
-   "rot": 94.3,
-   "params": {
-    "seed": 792
+    "seed": 532,
+    "size": 0.7
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -28.67,
-    -8.98
+    28.41,
+    25.6
    ],
-   "rot": 67.1,
+   "rot": 31.7,
    "params": {
-    "seed": 265,
-    "size": 1.15
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -76.02,
-    107.7
-   ],
-   "rot": 3.0,
-   "params": {
-    "seed": 369,
-    "size": 0.72
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    74.7,
-    21.31
-   ],
-   "rot": 259.3,
-   "params": {
-    "seed": 588,
-    "size": 0.8
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    70.9,
-    103.46
-   ],
-   "rot": 334.7,
-   "params": {
-    "seed": 437
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    78.54,
-    96.07
-   ],
-   "rot": 148.6,
-   "params": {
-    "seed": 751,
-    "size": 1.21
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -101.27,
-    115.25
-   ],
-   "rot": 213.0,
-   "params": {
-    "seed": 296,
-    "size": 0.99
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    108.73,
-    117.28
-   ],
-   "rot": 94.0,
-   "params": {
-    "seed": 856
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -42.02,
-    106.36
-   ],
-   "rot": 52.5,
-   "params": {
-    "seed": 559,
-    "size": 0.31
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    67.72,
-    108.22
-   ],
-   "rot": 346.9,
-   "params": {
-    "seed": 853,
-    "size": 1.06
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -102.9,
-    119.59
-   ],
-   "rot": 238.6,
-   "params": {
-    "seed": 463,
-    "size": 0.59
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -79.53,
-    33.64
-   ],
-   "rot": 309.2,
-   "params": {
-    "seed": 327,
+    "seed": 883,
     "size": 0.91
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -74.33,
+    74.01
+   ],
+   "rot": 79.0,
+   "params": {
+    "seed": 290,
+    "size": 0.55
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -24.59,
+    87.26
+   ],
+   "rot": 16.1,
+   "params": {
+    "seed": 451,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    26.99,
+    91.03
+   ],
+   "rot": 312.0,
+   "params": {
+    "seed": 158
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    95.22,
+    60.03
+   ],
+   "rot": 8.9,
+   "params": {
+    "seed": 615,
+    "size": 0.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -20.28,
+    -4.3
+   ],
+   "rot": 269.9,
+   "params": {
+    "seed": 289,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -42.38,
+    -8.65
+   ],
+   "rot": 79.8,
+   "params": {
+    "seed": 877,
+    "size": 0.61
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    69.73,
+    97.89
+   ],
+   "rot": 312.0,
+   "params": {
+    "seed": 40,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    36.15,
+    30.61
+   ],
+   "rot": 202.2,
+   "params": {
+    "seed": 438,
+    "size": 1.29
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    90.86,
+    20.26
+   ],
+   "rot": 270.4,
+   "params": {
+    "seed": 732
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    15.95,
+    4.69
+   ],
+   "rot": 94.5,
+   "params": {
+    "seed": 704,
+    "size": 0.94
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -69.95,
+    115.09
+   ],
+   "rot": 324.3,
+   "params": {
+    "seed": 699
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    109.33,
+    81.77
+   ],
+   "rot": 163.1,
+   "params": {
+    "seed": 337,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -30.73,
+    24.74
+   ],
+   "rot": 115.0,
+   "params": {
+    "seed": 302
    }
   },
   {
@@ -2884,144 +2996,142 @@
    }
   },
   {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -66.16,
-    43.05
-   ],
-   "rot": 233.3,
-   "params": {
-    "seed": 928,
-    "size": 1.01
-   }
-  },
-  {
    "asset": "ancient.oliveTree",
    "pos": [
-    31.02,
-    57.16
+    -22.1,
+    72.5
    ],
-   "rot": 264.7,
+   "rot": 30.9,
    "params": {
-    "seed": 710
+    "seed": 469
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    40.25,
-    88.62
+    7.6,
+    97.84
    ],
-   "rot": 305.8,
+   "rot": 249.9,
    "params": {
-    "seed": 702,
-    "size": 0.8
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    -39.11,
-    48.28
-   ],
-   "rot": 76.9,
-   "params": {
-    "seed": 490
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    55.0,
-    5.88
-   ],
-   "rot": 59.1,
-   "params": {
-    "seed": 519,
-    "size": 1.2
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    49.17,
-    108.54
-   ],
-   "rot": 247.0,
-   "params": {
-    "seed": 812,
-    "size": 0.72
-   }
-  },
-  {
-   "asset": "ancient.oliveTree",
-   "pos": [
-    40.15,
-    30.47
-   ],
-   "rot": 339.9,
-   "params": {
-    "seed": 288
+    "seed": 807,
+    "size": 0.84
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    37.82,
-    110.69
+    35.32,
+    99.68
    ],
-   "rot": 121.9,
+   "rot": 169.7,
    "params": {
-    "seed": 631,
-    "size": 0.5
+    "seed": 951,
+    "size": 0.63
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    68.62,
-    92.17
+    108.07,
+    13.83
    ],
-   "rot": 85.1,
+   "rot": 166.7,
    "params": {
-    "seed": 72,
-    "size": 0.81
+    "seed": 984,
+    "size": 0.85
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -11.77,
-    -0.88
+    -73.87,
+    53.5
    ],
-   "rot": 90.7,
+   "rot": 120.2,
    "params": {
-    "seed": 907,
-    "size": 0.51
+    "seed": 697,
+    "size": 0.65
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    40.93,
+    92.06
+   ],
+   "rot": 44.9,
+   "params": {
+    "seed": 224
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -47.98,
+    49.16
+   ],
+   "rot": 73.3,
+   "params": {
+    "seed": 78
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    25.73,
+    111.31
+   ],
+   "rot": 20.2,
+   "params": {
+    "seed": 552,
+    "size": 0.47
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -54.08,
-    81.19
+    -94.37,
+    16.43
    ],
-   "rot": 103.1,
+   "rot": 121.3,
    "params": {
-    "seed": 657,
-    "size": 0.68
+    "seed": 770,
+    "size": 0.67
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    45.49,
+    19.0
+   ],
+   "rot": 173.1,
+   "params": {
+    "seed": 977
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -32.31,
-    -12.14
+    46.76,
+    1.52
    ],
-   "rot": 349.9,
+   "rot": 231.1,
    "params": {
-    "seed": 621,
-    "size": 1.12
+    "seed": 736,
+    "size": 0.85
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -105.34,
+    19.04
+   ],
+   "rot": 218.4,
+   "params": {
+    "seed": 134
    }
   },
   {
@@ -3166,15 +3276,15 @@
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.rock",
    "pos": [
-    34.9,
-    105.21
+    -57.21,
+    33.36
    ],
-   "rot": 85.3,
+   "rot": 320.5,
    "params": {
-    "seed": 341,
-    "size": 0.86
+    "seed": 44,
+    "size": 0.49
    }
   },
   {
@@ -3215,49 +3325,49 @@
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -26.34,
-    61.05
+    -101.84,
+    53.28
    ],
-   "rot": 182.1,
+   "rot": 353.8,
    "params": {
-    "seed": 502,
-    "size": 1.2
+    "seed": 341,
+    "size": 1.23
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.dryBush",
    "pos": [
-    93.15,
-    106.75
+    55.87,
+    -2.78
    ],
-   "rot": 32.6,
+   "rot": 260.8,
    "params": {
-    "seed": 483,
-    "size": 0.94
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    26.25,
-    37.82
-   ],
-   "rot": 296.6,
-   "params": {
-    "seed": 375,
-    "size": 0.45
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -46.23,
-    62.47
-   ],
-   "rot": 140.0,
-   "params": {
-    "seed": 445,
+    "seed": 280,
     "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    32.18,
+    96.21
+   ],
+   "rot": 137.7,
+   "params": {
+    "seed": 535,
+    "size": 1.0
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    53.51,
+    37.51
+   ],
+   "rot": 167.2,
+   "params": {
+    "seed": 392,
+    "size": 0.64
    }
   },
   {
@@ -3367,38 +3477,38 @@
    }
   },
   {
-   "asset": "ancient.dryBush",
-   "pos": [
-    78.64,
-    88.42
-   ],
-   "rot": 257.7,
-   "params": {
-    "seed": 210,
-    "size": 1.1
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    20.28,
-    97.82
-   ],
-   "rot": 145.3,
-   "params": {
-    "seed": 602,
-    "size": 0.61
-   }
-  },
-  {
    "asset": "ancient.oliveTree",
    "pos": [
-    102.46,
-    45.36
+    1.43,
+    38.71
    ],
-   "rot": 245.0,
+   "rot": 275.8,
    "params": {
-    "seed": 266
+    "seed": 121
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -50.21,
+    112.85
+   ],
+   "rot": 213.2,
+   "params": {
+    "seed": 855,
+    "size": 0.67
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -26.63,
+    115.37
+   ],
+   "rot": 289.0,
+   "params": {
+    "seed": 696,
+    "size": 1.22
    }
   },
   {
@@ -3426,15 +3536,15 @@
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.rock",
    "pos": [
-    42.14,
-    72.94
+    -34.79,
+    -4.92
    ],
-   "rot": 26.9,
+   "rot": 65.7,
    "params": {
-    "seed": 672,
-    "size": 1.12
+    "seed": 440,
+    "size": 0.84
    }
   },
   {
@@ -3510,134 +3620,132 @@
    }
   },
   {
-   "asset": "ancient.rock",
-   "pos": [
-    -61.95,
-    30.86
-   ],
-   "rot": 178.2,
-   "params": {
-    "seed": 332,
-    "size": 0.58
-   }
-  },
-  {
    "asset": "ancient.dryBush",
    "pos": [
-    75.99,
-    104.27
+    -25.3,
+    64.7
    ],
-   "rot": 303.8,
+   "rot": 122.3,
    "params": {
-    "seed": 472,
-    "size": 1.18
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -24.43,
-    84.65
-   ],
-   "rot": 117.0,
-   "params": {
-    "seed": 223,
-    "size": 0.88
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -99.48,
-    20.48
-   ],
-   "rot": 209.8,
-   "params": {
-    "seed": 639,
-    "size": 0.87
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    -26.18,
-    67.79
-   ],
-   "rot": 327.6,
-   "params": {
-    "seed": 503,
-    "size": 1.29
-   }
-  },
-  {
-   "asset": "ancient.rock",
-   "pos": [
-    -98.91,
-    108.01
-   ],
-   "rot": 339.9,
-   "params": {
-    "seed": 876,
-    "size": 0.5
+    "seed": 675,
+    "size": 1.11
    }
   },
   {
    "asset": "ancient.oliveTree",
    "pos": [
-    39.66,
-    116.2
+    82.71,
+    39.6
    ],
-   "rot": 349.5,
+   "rot": 318.0,
    "params": {
-    "seed": 254
+    "seed": 180
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.oliveTree",
    "pos": [
-    -48.97,
-    101.33
+    33.22,
+    12.24
    ],
-   "rot": 285.2,
+   "rot": 140.0,
    "params": {
-    "seed": 723,
-    "size": 1.19
-   }
-  },
-  {
-   "asset": "ancient.dryBush",
-   "pos": [
-    69.36,
-    9.76
-   ],
-   "rot": 148.0,
-   "params": {
-    "seed": 147,
-    "size": 0.86
+    "seed": 755
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    18.86,
-    -0.53
+    -108.25,
+    117.39
    ],
-   "rot": 268.6,
+   "rot": 144.8,
    "params": {
-    "seed": 803,
-    "size": 0.39
+    "seed": 48,
+    "size": 0.79
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -38.77,
-    99.87
+    22.35,
+    4.99
    ],
-   "rot": 175.4,
+   "rot": 137.6,
    "params": {
-    "seed": 896,
-    "size": 0.46
+    "seed": 390,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    16.95,
+    6.43
+   ],
+   "rot": 353.3,
+   "params": {
+    "seed": 51
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -75.41,
+    100.94
+   ],
+   "rot": 98.3,
+   "params": {
+    "seed": 290,
+    "size": 0.65
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    23.61,
+    68.11
+   ],
+   "rot": 347.1,
+   "params": {
+    "seed": 284,
+    "size": 0.71
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    102.79,
+    35.56
+   ],
+   "rot": 305.2,
+   "params": {
+    "seed": 834,
+    "size": 0.74
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -5.34,
+    34.62
+   ],
+   "rot": 38.6,
+   "params": {
+    "seed": 734,
+    "size": 0.89
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    74.3,
+    2.36
+   ],
+   "rot": 306.3,
+   "params": {
+    "seed": 550,
+    "size": 0.73
    }
   },
   {
@@ -3712,27 +3820,27 @@
    }
   },
   {
-   "asset": "ancient.rock",
+   "asset": "ancient.dryBush",
    "pos": [
-    -64.81,
-    109.95
+    -88.51,
+    -14.06
    ],
-   "rot": 269.7,
+   "rot": 333.2,
    "params": {
-    "seed": 83,
-    "size": 0.31
+    "seed": 773,
+    "size": 0.9
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -34.74,
-    109.07
+    87.57,
+    -12.92
    ],
-   "rot": 218.8,
+   "rot": 330.8,
    "params": {
-    "seed": 350,
-    "size": 0.88
+    "seed": 20,
+    "size": 0.62
    }
   },
   {
@@ -3750,37 +3858,37 @@
   {
    "asset": "ancient.dryBush",
    "pos": [
-    82.99,
-    85.42
+    -105.56,
+    -5.86
    ],
-   "rot": 24.4,
+   "rot": 275.9,
    "params": {
-    "seed": 196,
-    "size": 0.69
+    "seed": 346,
+    "size": 1.13
    }
   },
   {
    "asset": "ancient.rock",
    "pos": [
-    -7.54,
-    87.14
+    40.31,
+    52.27
    ],
-   "rot": 179.4,
+   "rot": 72.5,
    "params": {
-    "seed": 687,
-    "size": 0.31
+    "seed": 350,
+    "size": 0.81
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    -81.3,
-    83.36
+    -54.36,
+    -13.2
    ],
-   "rot": 4.8,
+   "rot": 82.6,
    "params": {
-    "seed": 176,
-    "size": 1.06
+    "seed": 396,
+    "size": 1.26
    }
   },
   {
@@ -3832,85 +3940,83 @@
    }
   },
   {
-   "asset": "ancient.dryBush",
+   "asset": "ancient.oliveTree",
    "pos": [
-    26.63,
-    94.08
+    -72.64,
+    51.64
    ],
-   "rot": 177.7,
+   "rot": 52.1,
    "params": {
-    "seed": 824,
-    "size": 1.09
+    "seed": 661
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    71.68,
+    32.66
+   ],
+   "rot": 143.3,
+   "params": {
+    "seed": 251,
+    "size": 0.81
    }
   },
   {
    "asset": "ancient.dryBush",
    "pos": [
-    85.39,
-    96.48
+    -56.12,
+    91.16
    ],
-   "rot": 229.0,
+   "rot": 161.0,
    "params": {
-    "seed": 407,
-    "size": 0.95
+    "seed": 592,
+    "size": 0.9
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -38.97,
+    -1.63
+   ],
+   "rot": 71.4,
+   "params": {
+    "seed": 469,
+    "size": 0.62
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -79.31,
+    35.29
+   ],
+   "rot": 190.7,
+   "params": {
+    "seed": 791,
+    "size": 0.86
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    85.64,
+    -7.11
+   ],
+   "rot": 203.4,
+   "params": {
+    "seed": 324
    }
   },
   {
    "asset": "nature.grass",
    "pos": [
-    -45.55,
-    29.56
+    50.5,
+    41.88
    ],
    "params": {
-    "width": 6.9,
-    "depth": 3.1,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -77.36,
-    41.74
-   ],
-   "params": {
-    "width": 6.1,
-    "depth": 4.0,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -66.14,
-    24.62
-   ],
-   "params": {
-    "width": 5.0,
-    "depth": 4.4,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -0.92,
-    27.58
-   ],
-   "params": {
-    "width": 5.3,
-    "depth": 3.6,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    48.13,
-    29.16
-   ],
-   "params": {
-    "width": 8.4,
+    "width": 8.1,
     "depth": 3.2,
     "density": 0.8
    }
@@ -3918,116 +4024,20 @@
   {
    "asset": "nature.grass",
    "pos": [
-    47.52,
-    41.72
+    19.55,
+    29.95
    ],
    "params": {
-    "width": 5.6,
-    "depth": 3.1,
+    "width": 4.5,
+    "depth": 5.3,
     "density": 0.8
    }
   },
   {
    "asset": "nature.grass",
    "pos": [
-    -53.93,
-    50.14
-   ],
-   "params": {
-    "width": 8.9,
-    "depth": 3.8,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -54.21,
-    8.14
-   ],
-   "params": {
-    "width": 8.7,
-    "depth": 5.8,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    17.19,
-    19.79
-   ],
-   "params": {
-    "width": 5.5,
-    "depth": 5.7,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -36.73,
-    57.18
-   ],
-   "params": {
-    "width": 5.4,
-    "depth": 5.9,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -29.75,
-    6.67
-   ],
-   "params": {
-    "width": 4.9,
-    "depth": 4.7,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    28.71,
-    14.33
-   ],
-   "params": {
-    "width": 6.1,
-    "depth": 5.4,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -21.02,
-    38.27
-   ],
-   "params": {
-    "width": 6.0,
-    "depth": 3.9,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    8.55,
-    20.32
-   ],
-   "params": {
-    "width": 7.6,
-    "depth": 3.9,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    57.77,
-    27.02
+    -74.21,
+    50.75
    ],
    "params": {
     "width": 7.3,
@@ -4038,83 +4048,23 @@
   {
    "asset": "nature.grass",
    "pos": [
-    5.37,
-    35.41
+    10.4,
+    58.16
    ],
    "params": {
-    "width": 5.0,
-    "depth": 5.2,
+    "width": 7.8,
+    "depth": 3.1,
     "density": 0.8
    }
   },
   {
    "asset": "nature.grass",
    "pos": [
-    12.92,
-    56.17
+    -38.21,
+    5.5
    ],
    "params": {
-    "width": 5.9,
-    "depth": 5.7,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -20.03,
-    46.7
-   ],
-   "params": {
-    "width": 6.7,
-    "depth": 5.7,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -19.19,
-    47.55
-   ],
-   "params": {
-    "width": 5.7,
-    "depth": 5.4,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -14.44,
-    57.32
-   ],
-   "params": {
-    "width": 6.4,
-    "depth": 4.2,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -26.0,
-    17.07
-   ],
-   "params": {
-    "width": 8.9,
-    "depth": 5.4,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    -7.97,
-    69.01
-   ],
-   "params": {
-    "width": 7.9,
+    "width": 8.4,
     "depth": 4.5,
     "density": 0.8
    }
@@ -4122,23 +4072,11 @@
   {
    "asset": "nature.grass",
    "pos": [
-    25.83,
-    50.19
+    56.25,
+    34.93
    ],
    "params": {
-    "width": 4.4,
-    "depth": 5.5,
-    "density": 0.8
-   }
-  },
-  {
-   "asset": "nature.grass",
-   "pos": [
-    0.58,
-    51.55
-   ],
-   "params": {
-    "width": 4.0,
+    "width": 7.7,
     "depth": 4.8,
     "density": 0.8
    }
@@ -4146,11 +4084,131 @@
   {
    "asset": "nature.grass",
    "pos": [
-    3.61,
+    -67.41,
     50.22
    ],
    "params": {
+    "width": 4.8,
+    "depth": 3.7,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -78.43,
+    29.61
+   ],
+   "params": {
+    "width": 4.6,
+    "depth": 5.0,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    57.58,
+    59.2
+   ],
+   "params": {
+    "width": 5.0,
+    "depth": 5.9,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -0.65,
+    40.33
+   ],
+   "params": {
     "width": 7.6,
+    "depth": 4.9,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -31.39,
+    21.43
+   ],
+   "params": {
+    "width": 6.5,
+    "depth": 6.0,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -1.99,
+    24.85
+   ],
+   "params": {
+    "width": 7.9,
+    "depth": 5.7,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -78.03,
+    33.05
+   ],
+   "params": {
+    "width": 8.3,
+    "depth": 4.4,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -48.57,
+    28.4
+   ],
+   "params": {
+    "width": 7.5,
+    "depth": 5.3,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    31.51,
+    12.38
+   ],
+   "params": {
+    "width": 8.3,
+    "depth": 5.3,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -43.4,
+    67.1
+   ],
+   "params": {
+    "width": 4.1,
+    "depth": 3.4,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -53.51,
+    59.21
+   ],
+   "params": {
+    "width": 8.1,
     "depth": 5.6,
     "density": 0.8
    }
@@ -4158,23 +4216,71 @@
   {
    "asset": "nature.grass",
    "pos": [
-    50.55,
-    58.21
+    19.91,
+    33.48
    ],
    "params": {
-    "width": 5.3,
-    "depth": 3.3,
+    "width": 4.7,
+    "depth": 5.4,
     "density": 0.8
    }
   },
   {
    "asset": "nature.grass",
    "pos": [
-    22.0,
-    30.09
+    -6.83,
+    29.48
    ],
    "params": {
-    "width": 6.2,
+    "width": 7.4,
+    "depth": 4.5,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    2.85,
+    18.77
+   ],
+   "params": {
+    "width": 5.8,
+    "depth": 5.4,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -60.58,
+    54.43
+   ],
+   "params": {
+    "width": 8.9,
+    "depth": 4.7,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    26.79,
+    36.72
+   ],
+   "params": {
+    "width": 6.3,
+    "depth": 3.8,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -56.6,
+    5.57
+   ],
+   "params": {
+    "width": 8.4,
     "depth": 4.3,
     "density": 0.8
    }
@@ -4182,36 +4288,84 @@
   {
    "asset": "nature.grass",
    "pos": [
-    31.48,
-    65.35
+    -52.73,
+    60.04
+   ],
+   "params": {
+    "width": 8.0,
+    "depth": 4.5,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    23.69,
+    65.97
+   ],
+   "params": {
+    "width": 6.3,
+    "depth": 4.0,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -78.19,
+    6.91
+   ],
+   "params": {
+    "width": 4.7,
+    "depth": 3.2,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -47.13,
+    27.71
    ],
    "params": {
     "width": 4.1,
-    "depth": 5.7,
+    "depth": 3.8,
     "density": 0.8
    }
   },
   {
    "asset": "nature.grass",
    "pos": [
-    -46.95,
-    53.54
+    -16.67,
+    54.52
    ],
    "params": {
-    "width": 6.6,
-    "depth": 5.7,
+    "width": 5.9,
+    "depth": 3.5,
     "density": 0.8
    }
   },
   {
    "asset": "nature.grass",
    "pos": [
-    -53.5,
-    30.85
+    -9.49,
+    30.43
    ],
    "params": {
     "width": 8.8,
-    "depth": 3.5,
+    "depth": 4.9,
+    "density": 0.8
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -23.59,
+    22.08
+   ],
+   "params": {
+    "width": 7.8,
+    "depth": 6.0,
     "density": 0.8
    }
   },

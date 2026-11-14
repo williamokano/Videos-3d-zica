@@ -20,7 +20,7 @@ R = random.Random(1613)  # 1 Samuel 16:13
 TOPO = 10.0                 # altura do topo plano do morro da cidade
 MURO_Z = -20.0              # linha do muro sul, com o portão no meio
 CASA = (8.0, -36.0)         # canto noroeste da casa de Jessé
-CASA_TAM = (9.0, 6.5)
+CASA_TAM = (7.0, 5.2)  # pequena e apertada, como as casas da época
 PEDRA_DAVI = (-34.0, 34.0)  # a pedra onde o Davi toca, numa encosta do pasto
 
 terrain = {
@@ -129,26 +129,41 @@ casa_jesse = {
     "elevation": TOPO,
     "height": 3.0,
     "rustic": True,
-    "floorColor": "#8c7356",
-    "wallColor": "#c4ad86",
+    "floorColor": "#8a7253",
+    "wallColor": "#c8b089",
     "openings": [
-        {"id": "porta-jesse", "wall": "s", "type": "door", "at": 4.5, "width": 1.3, "leaf": {"style": "planks", "open": 1, "angle": 100}},
-        {"id": "janela-leste", "wall": "e", "type": "window", "at": 2.2, "width": 0.8, "frame": {"kind": "shutters", "open": 0.5}},
-        {"id": "janela-oeste", "wall": "w", "type": "window", "at": 3.6, "width": 0.8, "frame": {"kind": "shutters", "open": 0.8}},
+        {"id": "porta-jesse", "wall": "s", "type": "door", "at": 3.0, "width": 1.2, "leaf": {"style": "planks", "open": 1, "angle": 100}},
+        # A janela a oeste deixa entrar o sol baixo do fim da tarde.
+        {"id": "janela-oeste", "wall": "w", "type": "window", "at": 2.0, "width": 0.75, "frame": {"kind": "shutters", "open": 1}},
+        {"id": "janela-leste", "wall": "e", "type": "window", "at": 3.4, "width": 0.6, "frame": {"kind": "shutters", "open": 0.3}},
     ],
+    # Posições relativas ao canto noroeste (x para leste, z para o sul). Paredes: norte em z = 0, oeste em x = 0.
+    # Objetos de parede olham para +z com rot 0; na parede oeste rot 90, na leste rot -90.
     "props": [
-        {"asset": "ancient.rug", "pos": [4.5, 3.4], "params": {"width": 5.4, "depth": 3.4, "color": "#7a3b2a"}},
-        {"asset": "ancient.lowTable", "pos": [4.5, 1.6], "params": {"width": 2.6, "jar": 1, "cups": 4, "fruit": 1}},
-        {"asset": "ancient.cushion", "pos": [3.0, 1.0], "params": {"color": "#8a5a2a"}},
-        {"asset": "ancient.cushion", "pos": [6.0, 1.0], "params": {"color": "#5a6a3a"}},
-        {"asset": "ancient.basket", "pos": [0.8, 0.8], "params": {"bread": 1}},
-        {"asset": "ancient.jar", "pos": [8.5, 2.2], "params": {"count": 3}},
-        {"asset": "ancient.chest", "pos": [7.9, 0.7]},
-        {"asset": "ancient.lampStand", "pos": [0.6, 2.6], "params": {"intensity": 7}},
-        {"asset": "ancient.lampStand", "pos": [8.4, 3.4], "params": {"intensity": 7}},
-        {"asset": "ancient.lampStand", "pos": [7.2, 5.9], "params": {"kind": "stone", "intensity": 6}},
-        {"asset": "ancient.oilLamp", "pos": [4.5, 1.6], "y": 0.42, "params": {"intensity": 5}},
-        {"asset": "ancient.sack", "pos": [7.8, 5.6], "params": {"count": 2}},
+        # O banco de barro na parede do fundo, onde o Samuel se senta.
+        {"asset": "ancient.mudBench", "pos": [3.5, 0.0], "params": {"length": 3.4}},
+        # Os postes que seguram a viga do meio.
+        {"asset": "ancient.post", "pos": [1.2, 3.6], "params": {"height": 2.85, "seed": 2}},
+        {"asset": "ancient.post", "pos": [5.8, 2.6], "params": {"height": 2.85, "seed": 5}},
+        # Prateleiras de tábua com potes, um nicho com candeia, panos listrados pendurados.
+        {"asset": "ancient.plankShelf", "pos": [1.1, 0.0], "y": 1.65, "params": {"length": 1.4, "seed": 3}},
+        {"asset": "ancient.plankShelf", "pos": [7.0, 1.6], "y": 1.55, "rot": -90, "params": {"length": 1.6, "seed": 8}},
+        {"asset": "ancient.wallNiche", "pos": [0.0, 3.7], "y": 1.25, "rot": 90, "params": {"item": "lamp"}},
+        {"asset": "ancient.hangingCloth", "pos": [7.0, 3.6], "y": 2.05, "rot": -90, "params": {"width": 0.8, "length": 1.4, "color": "#8c3a2a", "seed": 4}},
+        {"asset": "ancient.hangingCloth", "pos": [5.6, 0.0], "y": 2.15, "params": {"width": 0.9, "length": 1.2, "color": "#d9c9a4", "seed": 7}},
+        # Ervas secas penduradas das vigas.
+        {"asset": "ancient.herbBundle", "pos": [2.4, 1.3], "y": 2.6, "params": {"count": 3, "seed": 1}},
+        {"asset": "ancient.herbBundle", "pos": [4.8, 3.6], "y": 2.6, "params": {"count": 2, "seed": 6}},
+        # O canto do trabalho: a mó de pedra, potes, cestos, a escada para o terraço.
+        {"asset": "ancient.quern", "pos": [6.2, 2.4], "rot": -20, "params": {"seed": 2}},
+        {"asset": "ancient.potteryGroup", "pos": [6.3, 0.7], "params": {"count": 7, "seed": 5}},
+        {"asset": "ancient.basketGroup", "pos": [0.6, 2.5], "params": {"seed": 3}},
+        {"asset": "ancient.potteryGroup", "pos": [0.6, 1.0], "params": {"count": 4, "seed": 9}},
+        {"asset": "ancient.ladder", "pos": [6.7, 0.5], "rot": -90, "params": {"height": 2.7}},
+        # Luz: as candeias, fracas, porque ainda é dia; a luz de verdade vem da porta e da janela.
+        {"asset": "ancient.oilLamp", "pos": [5.0, 0.22], "y": 0.42, "params": {"intensity": 3}},
+        {"asset": "ancient.lampStand", "pos": [0.5, 0.5], "params": {"kind": "stone", "intensity": 4}},
+        {"asset": "ancient.rug", "pos": [3.5, 1.5], "params": {"width": 2.6, "depth": 1.8, "color": "#7a3b2a"}},
     ],
 }
 taken.append((cx + cw / 2, cz + cd / 2, 6))
