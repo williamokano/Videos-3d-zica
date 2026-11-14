@@ -27,6 +27,9 @@ export interface CastMember {
 /** Meters covered by one walk cycle of a 1.7 m character. */
 const STRIDE = 1.5;
 
+/** How far the wrist bends so a hand on crossed arms wraps the other arm, in degrees. */
+const CROSS_FLEX = 80;
+
 /**
  * Put a character in the scene as an interactive object. Its channels are x, y, z, yaw, `stride` (walk cycles
  * covered), `gait` (0 stands, 1 walks, 2 runs), `talk` (mouth held open by speech), one `vis.<shape>` weight per mouth shape of speech,
@@ -66,7 +69,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const face = new THREE.Vector3(0, 0.25, 1).normalize();
   // Arms crossed: elbows out to the sides and a little ahead, not back into the body; palms against the body.
   const crossBend = new THREE.Vector3(1, -0.7, -0.35);
-  const inward = new THREE.Vector3(0, 0, 1);
+  const inward = new THREE.Vector3();
   const wide = def.build ?? 1;
 
   const tick = (t: number): void => {
@@ -89,16 +92,16 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
         const toward = (x: number, y: number, z: number, weight: number): void => {
           if (weight > 0.001) pose = reachPose(pose, side, wristPosition(pose, side).lerp(hand.set(x, y + pose.lift, z), weight));
         };
-        // Arms crossed at the ribs: the right forearm over the left, each wrist across to the other arm, the hand
-        // tucked against it by the elbow (the left one under the right upper arm), so no hand sticks out.
+        // Arms crossed at the ribs: the forearms flat against the chest, the right one over the left, each wrist
+        // at the other arm's elbow. The right hand closes over the left biceps; the left one goes under the right
+        // arm, between it and the ribs. Nothing sticks out past the arms.
         // Seated (a throne, a bench), the arms rest on the lap and the armrests instead.
         const cross = (ambient?.cross ?? 0) * (1 - state.sit);
         if (cross > 0.001) {
           const top = side === 'R';
-          const wrist = hand.set(-sign * 0.115 * wide, (top ? 1.19 : 1.13) + pose.lift, -(0.1 * wide + (top ? 0.12 : 0.075)));
+          const wrist = hand.set(-sign * (top ? 0.15 : 0.13) * wide, (top ? 1.2 : 1.13) + pose.lift, -(0.1 * wide + (top ? 0.075 : 0.045)));
           pose = reachPose(pose, side, wristPosition(pose, side).lerp(wrist, cross), crossBend);
           crossed[side] = cross;
-          busy[side].grip = Math.max(busy[side].grip, cross * 0.75);
         }
         const talking = Math.max(ambient?.[`gesture${side}`] ?? 0, side === 'R' ? state.gesture : state.gesture * 0.6);
         toward(sign * 0.21, 1.07 + 0.07 * Math.sin(t * 5.5 + seed + sign), -0.28 + 0.04 * Math.cos(t * 4.1 + seed), talking);
@@ -138,13 +141,21 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       const weights = Object.fromEntries(HAND_POSE_NAMES.map((n) => [n, state[`hand${side}.${n}`]]));
       weights.grip = Math.max(weights.grip, busy[side].grip);
       weights.open = Math.max(weights.open, busy[side].open * (1 - weights.grip));
+      // On crossed arms the hand closes around the other arm with the thumb in, not up.
+      weights.fist = Math.max(weights.fist, crossed[side]);
+      weights.grip *= 1 - crossed[side];
       // Raised to be read, the hand goes behind what it holds, palm to the face, fingers flat against its back.
       const raised = Math.max(weights.grip, weights.type) * state[`reach${side}`] * (state[`reach${side}.local`] > 0.5 ? 1 : 0);
       weights.hold = Math.max(weights.hold, raised * (1 - weights.type));
       weights.grip *= 1 - raised;
       shapes[side] = resolveHand(weights, t + seed);
       if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
-      else if (crossed[side] > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, inward) * crossed[side], 0, 0] } };
+      else if (crossed[side] > 0.01) {
+        // The palm toward the other arm and the body, the wrist bent so the hand wraps around that arm.
+        const sign = side === 'R' ? 1 : -1;
+        const roll = palmToward(pose, side, inward.set(sign, 0, 1).normalize());
+        pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [roll * crossed[side], 0, -sign * CROSS_FLEX * crossed[side]] } };
+      }
     }
     for (const channel of worn) rig.showWear?.(channel.slice(5), state[channel] >= 0.5);
     rig.applyPose(pose);
