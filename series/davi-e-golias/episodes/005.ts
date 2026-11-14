@@ -100,6 +100,8 @@ export default direct(
     const [saulC, daviC] = [d.actor('saul-cidade'), d.actor('davi-cidade')];
 
     // ---- O mundo vivo desde o primeiro quadro ----
+    d.world.rule('noite', false, { duration: 0 });
+    d.world.rule('amanhecer', false, { duration: 0 });
     // O fim da tarde chega só na cena 5.
     d.world.rule('fim-de-tarde', false, { duration: 0 });
     atentos(d, [...tropa, 'sama', 'eliabe', 'abinadabe', 'saul', 'abner'], 'golias', 'worried');

@@ -60,6 +60,49 @@
           "amount": 0.18
         }
       }
+    },
+    {
+      "id": "noite",
+      "description": "Noite de lua: céu azul-escuro, luz fria e fraca da lua; dentro das casas, só a luz quente das lamparinas.",
+      "from": 1,
+      "until": null,
+      "effects": {
+        "environment": {
+          "skyTop": "#070b1c",
+          "skyHorizon": "#1d2a4a",
+          "sunColor": "#8fa6d6",
+          "sunIntensity": 0.55,
+          "ambientIntensity": 0.32,
+          "fogNear": 40,
+          "fogFar": 260
+        },
+        "grade": {
+          "tint": "#4a6aa8",
+          "amount": 0.16,
+          "saturation": 0.85,
+          "contrast": 1.1,
+          "vignette": 0.25
+        }
+      }
+    },
+    {
+      "id": "amanhecer",
+      "description": "Amanhecer: céu rosado no horizonte, sol baixo e frio.",
+      "from": 1,
+      "until": null,
+      "effects": {
+        "environment": {
+          "skyTop": "#4f6ea8",
+          "skyHorizon": "#f2b48c",
+          "sunColor": "#ffc79a",
+          "sunIntensity": 1.9,
+          "ambientIntensity": 0.85
+        },
+        "grade": {
+          "tint": "#ff9f7a",
+          "amount": 0.1
+        }
+      }
     }
   ]
 }

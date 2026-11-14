@@ -1,6 +1,6 @@
 import { MOVE_NAMES } from '../character/motion';
 import { registerAction, type ChannelWrite } from './catalog';
-import { ramp } from './hands';
+import { outAndBack, ramp, reach } from './hands';
 
 /**
  * Whole-body moves (MOVES in character/motion.ts) as actions: a plain `move` that sets the weight of one, and
@@ -124,5 +124,38 @@ registerAction({
       { channel: 'z', at: point(2) },
     ];
     return { duration: total, writes, detach: { at: release } };
+  },
+});
+
+registerAction({
+  id: 'pour',
+  description: 'Quem segura o item (o chifre de azeite, um jarro) leva a mão até acima da cabeça de alguém e derrama: a unção. O item inclina pelo canal "pour" se tiver um. O outro pode estar de pé ou ajoelhado.',
+  appliesTo: ['item'],
+  params: {
+    over: { type: 'string', description: 'id do personagem sobre cuja cabeça derramar', required: true },
+  },
+  duration: 4,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id);
+    const hand = link?.socket.match(/^hand([LR])$/)?.[1] as 'L' | 'R' | undefined;
+    if (!link || !hand) ctx.fail('ninguém está segurando o item; use pickUp com "by" antes.');
+    const by = link!.to;
+    const over = ctx.params.over as string;
+    if (over === by) ctx.fail('não dá para derramar sobre a própria cabeça.');
+    const who = ctx.object(over);
+    if (who.kind !== 'character') ctx.fail(`"${over}" precisa ser um personagem do elenco.`);
+    const place = ctx.placeOf(over);
+    const scale = who.traits.bodyScale ?? 1;
+    // The top of the head, a little lower when kneeling, and a hand's width above it.
+    const kneeling = ctx.current('move.kneel', over);
+    const top = place.pos[1] + ((who.traits.eyeHeight ?? 1.6) + 0.14 * scale) - 0.4 * scale * kneeling;
+    const point: [number, number, number] = [place.pos[0], top + 0.22, place.pos[2]];
+    const tilt = (u: number): number => Math.min(ramp(u, 0.25, 0.4), 1 - ramp(u, 0.75, 0.85));
+    return {
+      writes: [
+        ...reach(ctx, by, hand!, point, outAndBack(0.2, 0.88), `a cabeça de "${over}"`),
+        ...('pour' in ctx.target.channels ? [{ channel: 'pour', at: tilt }] : []),
+      ],
+    };
   },
 });

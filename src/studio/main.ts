@@ -9,6 +9,7 @@ import { activeRules, resolveEnvironment, resolveGrade, resolveStyle, type Bible
 import { EnvironmentRig } from '../engine/environment';
 import { GradePass } from '../engine/grade';
 import { endCardAt } from '../engine/ui/endcard';
+import { titleCardAt } from '../engine/ui/titlecard';
 import { applyStyle } from '../engine/style';
 import { evaluateCamera, validateCamera, type CameraPose, type CameraStage } from '../engine/timeline/camera';
 import { isScript, resolveScript, type EpisodeScript } from '../engine/timeline/direct';
@@ -69,6 +70,10 @@ const endCard = document.createElement('div');
 endCard.id = 'endcard';
 endCard.hidden = true;
 stage.append(endCard);
+const titleCard = document.createElement('div');
+titleCard.id = 'titlecard';
+titleCard.hidden = true;
+stage.append(titleCard);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(rendering ? 1 : Math.min(window.devicePixelRatio, 2));
@@ -206,6 +211,7 @@ function applyShot(t: number): void {
   shotCamera.updateMatrixWorld();
   showLine(t);
   showEndCard(t);
+  showTitleCard(t);
   gizmoCamera.copy(shotCamera, false);
   gizmoCamera.near = 0.2;
   gizmoCamera.far = 1.6;
@@ -253,6 +259,28 @@ function showEndCard(t: number): void {
   });
   endCard.replaceChildren(enter(el('h3', view.card.title), view.title), options);
   if (view.card.cta) endCard.append(enter(el('p', view.card.cta, 'cta'), view.cta));
+}
+
+/** The series' opening card at time t, over the episode camera's picture, in the upper part of the frame. */
+function showTitleCard(t: number): void {
+  const view = (mode === 'shot' || rendering) ? titleCardAt(actions, t) : undefined;
+  titleCard.hidden = !view;
+  if (!view) return;
+  const [x, y, w, h] = fit(0, 0, width, height);
+  Object.assign(titleCard.style, { left: `${x}px`, bottom: `${y}px`, width: `${w}px`, height: `${h}px`, fontSize: `${h * 0.022}px` });
+  const line = (tag: keyof HTMLElementTagNameMap, text: string, cls: string, amount: number): HTMLElement => {
+    const node = el(tag, text, cls);
+    node.style.opacity = String(amount);
+    node.style.letterSpacing = `${0.35 + (1 - amount) * 0.25}em`;
+    return node;
+  };
+  const backdrop = Math.max(view.title, view.subtitle, view.episode);
+  titleCard.style.setProperty('--shade', String(0.55 * backdrop));
+  titleCard.replaceChildren(
+    line('h2', view.card.title, 'name', view.title),
+    ...(view.card.subtitle ? [line('p', view.card.subtitle, 'tagline', view.subtitle)] : []),
+    ...(view.card.episode ? [line('p', view.card.episode, 'episode', view.episode)] : []),
+  );
 }
 
 let frustum: THREE.CameraHelper | undefined;
@@ -344,6 +372,7 @@ function setMode(next: Mode): void {
   if (timeline) {
     showLine(timeline.time);
     showEndCard(timeline.time);
+    showTitleCard(timeline.time);
   }
   renderPanel();
 }
@@ -595,6 +624,7 @@ if (rendering) {
           free.updateMatrixWorld();
           subtitle.hidden = true;
           endCard.hidden = true;
+          titleCard.hidden = true;
           // With `level`, a dollhouse view: what is above that floor and the ceilings at it are hidden.
           const cut = view.level ?? null;
           for (const room of built.rooms) {

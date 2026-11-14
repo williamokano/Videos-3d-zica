@@ -66,4 +66,26 @@ describe('whole-body moves', () => {
     expect(channelAt(compiled, 'funda', 'loaded', end)).toBe(0);
     expect(placementAt(compiled, 'pedra', end).pos[2]).toBeLessThan(-9);
   });
+
+  it('pouring over a kneeling head takes the hand above it, and the title card takes no time', () => {
+    const episode = resolveScript(direct({
+      episode: 1, title: 't', location: 't',
+      cast: [{ character: 'davi', at: [0, 0], yaw: 0 }, { id: 'samuel', character: 'davi', at: [0, -0.5], yaw: 180 }],
+      props: [{ id: 'chifre', asset: 'item.box', pos: [0, 0], pocketOf: 'samuel' }],
+    }, (d) => {
+      d.camera.cut({ pos: [3, 1.6, 0], lookAt: [0, 1, 0] });
+      const card = d.titleCard({ title: 'DAVI', subtitle: 'Uma história', episode: 'Episódio 1' });
+      expect(d.now).toBe(card.start);
+      d.actor('samuel').pickUp('chifre', { hand: 'right' });
+      d.do('davi', 'move', { name: 'kneel' });
+      d.do('chifre', 'pour', { over: 'davi' });
+    }), location, defs.slice(0, 1));
+    const compiled = compileEpisode(episode, location, buildCast(episode, defs.slice(0, 1)));
+    const pour = compiled.clips.find((c) => c.action === 'pour')!;
+    expect(channelAt(compiled, 'samuel', 'reachR', pour.t + pour.duration / 2)).toBeCloseTo(1);
+    const above = channelAt(compiled, 'samuel', 'reachR.y', pour.t + pour.duration / 2);
+    expect(above).toBeGreaterThan(1.3);
+    expect(above).toBeLessThan(1.8);
+    expect(compiled.clips.some((c) => c.action === 'titleCard')).toBe(true);
+  });
 });

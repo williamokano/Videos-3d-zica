@@ -10,6 +10,7 @@ import '../actions/moves';
 import '../actions/phone';
 import '../actions/audio';
 import '../actions/endcard';
+import '../actions/titlecard';
 import { channelAt, compileActions, focusAt, placementAt, type ActionClip, type Ease, type WalkPath } from '../actions/catalog';
 import type { CastMember } from '../character/cast';
 import type { Bible } from '../bible';
@@ -17,6 +18,7 @@ import type { CharacterDef } from '../character/types';
 import { DEFAULT_MODEL, NARRATOR, spokenText, takeKey, type LineVoice, type Take } from '../audio/voice';
 import type { ChatMessage, PhoneSetup } from '../ui/phone';
 import type { EndCard } from '../ui/endcard';
+import type { TitleCard } from '../ui/titlecard';
 import type { BuiltLocation } from '../world/build';
 import { buildNav, findPath } from '../world/nav';
 import { validateCamera, type CameraKey, type Vec3 } from './camera';
@@ -142,6 +144,11 @@ export interface Director {
    * Stays for 6 seconds unless `duration` says otherwise; the episode goes on behind it.
    */
   endCard(card: EndCard, options?: StepOptions): Step;
+  /**
+   * The opening card of the series over the picture: its name, a line under it and the episode. Stays 3.5 s
+   * unless `duration` says otherwise. The episode goes on behind it, so it takes no time: the clock does not move.
+   */
+  titleCard(card: TitleCard, options?: StepOptions): Step;
   /**
    * A jump cut: what happens from `from` to `to` (times or steps) stays in the episode but leaves the finished
    * video. For long walks between moments. Takes no time.
@@ -388,6 +395,12 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       return { start, end };
     },
     endCard: (card, options) => run(WORLD, 'endCard', { card }, options),
+    titleCard: (card, options) => {
+      const start = now;
+      const step = run(WORLD, 'titleCard', { card }, options);
+      now = start;
+      return step;
+    },
     cutOut(from, to) {
       const [a, b] = [typeof from === 'number' ? from : from.start, typeof to === 'number' ? to : to.end];
       if (!(b > a)) throw new Error(`cutOut: o fim (${b}) precisa vir depois do começo (${a}).`);

@@ -72,6 +72,8 @@ try {
       rows.push({ t: clip.t, end, text: `🔊 ${p.name}${p.length ? ` (${Math.round(p.length)} s)` : ''}` });
     } else if (clip.action === 'set' && clip.target === 'world') {
       rows.push({ t: clip.t, end, text: `🌍 ${p.channel} → ${p.value}${clip.duration ? ` em ${clip.duration} s` : ''}` });
+    } else if (clip.action === 'titleCard') {
+      rows.push({ t: clip.t, end, text: `🎬 abertura: ${[p.card.title, p.card.subtitle, p.card.episode].filter(Boolean).join(' — ')}` });
     } else if (clip.action === 'endCard') {
       rows.push({ t: clip.t, end, text: `🟥 cartão final: "${p.card.title}" — ${p.card.options.map((o) => o.label).join(' / ')} — ${p.card.cta ?? ''}` });
     } else if (clip.action === 'pickUp' && who.has(p.by)) {
