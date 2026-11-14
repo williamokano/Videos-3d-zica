@@ -16,7 +16,7 @@ O exército de Israel e o dos filisteus estão acampados frente a frente, cada u
    - figurantes e detalhes de lugar.
 
    Não se acrescentam fatos novos que mudem a história: nada de morte, milagre ou motivo que o texto não tenha. Toda liberdade fica marcada **[Liberdade]** no roteiro, para o autor decidir.
-2. **Falas modernizadas**: português do Brasil, simples, sem "vós". Mantêm o sentido do texto e, quando possível, as palavras marcantes ("sou eu algum cão?", "a batalha é do Senhor").
+2. **Falas modernizadas**: português do Brasil, simples, sem "vós". Mantêm o sentido do texto e, quando possível, as palavras marcantes ("sou eu algum cão?", "a batalha é do Senhor"). **As frases célebres ficam na forma tradicional**, como o público conhece. A resposta do Davi ao Golias é sempre: "Tu vens contra mim com espada, lança e escudo; eu, porém, vou contra ti em nome do Senhor dos Exércitos" (pedido do autor).
 3. **Deus não aparece e não fala.** Não há voz do céu, luz sobrenatural ou milagre visível. A fé aparece no que o Davi diz e faz.
 4. **Tom:** reverente, mas vivo. Pode ter humor leve (a armadura que não serve), nunca deboche do texto.
 5. **Violência:** sem sangue na tela. A pedra acertando e a queda do Golias podem ser mostradas, a queda de costas para a câmera. A espada e a cabeça ficam fora do quadro: corte antes do golpe e planos do peito para cima.

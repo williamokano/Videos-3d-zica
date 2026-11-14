@@ -155,7 +155,7 @@ Mudanças da v2: mais conversa (os três irmãos, o guarda das bagagens, Abner n
 
 - **GOLIAS** (laughs): Isso? ⏸ Eu sou algum cachorro, pra você vir atrás de mim com um pedaço de pau?
 - **GOLIAS** (bravo): Que os meus deuses te amaldiçoem! ⏸ Vem cá, menino. Vou dar a tua carne pros pássaros e pros bichos do campo.
-- **DAVI** (firme): Você vem com espada, lança e escudo. ⏸ Eu venho em nome do Senhor dos Exércitos, o Deus de Israel, que você desafiou.
+- **DAVI** (firme): Tu vens contra mim com espada, lança e escudo; ⏸ eu, porém, vou contra ti em nome do Senhor dos Exércitos, o Deus dos exércitos de Israel, a quem tens afrontado.
 - **DAVI** (firme): Hoje o Senhor vai te entregar na minha mão. E a terra inteira vai saber que existe Deus em Israel.
 - **DAVI** (grito): E todo mundo aqui vai saber que o Senhor não salva com espada nem com lança. ⏸ Porque a batalha é do Senhor!
 

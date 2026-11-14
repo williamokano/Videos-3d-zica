@@ -350,7 +350,7 @@ export default direct(
     golias.say('Isso? Eu sou algum cachorro, pra você vir atrás de mim com um pedaço de pau?', { tone: 'laughs', to: davi, gesture: 0.5 });
     golias.say('Que os meus deuses te amaldiçoem! Vem cá, menino. Vou dar a tua carne pros pássaros e pros bichos do campo.', { tone: 'bravo', to: davi, gesture: 0.6 });
     d.camera.cut({ pos: [0.7, 0.95, 5.7], lookAt: [0, 0.75, 3.2], fov: 40 });
-    davi.say('Você vem com espada, lança e escudo. Eu venho em nome do Senhor dos Exércitos, o Deus de Israel, que você desafiou.', { tone: 'firme', to: golias, gesture: 0.4 });
+    davi.say('Tu vens contra mim com espada, lança e escudo; eu, porém, vou contra ti em nome do Senhor dos Exércitos, o Deus dos exércitos de Israel, a quem tens afrontado.', { tone: 'firme', to: golias, gesture: 0.4 });
     davi.say('Hoje o Senhor vai te entregar na minha mão. E a terra inteira vai saber que existe Deus em Israel.', { tone: 'firme', to: golias, gesture: 0.4 });
     d.camera.cut({ pos: [1.7, 0.5, 5.2], lookAt: [0, 0.9, 3.2], fov: 46 });
     davi.say('E todo mundo aqui vai saber que o Senhor não salva com espada nem com lança. Porque a batalha é do Senhor!', { tone: 'grito', to: golias, gesture: 0.7 });
