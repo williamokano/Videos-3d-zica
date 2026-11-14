@@ -138,7 +138,7 @@ export default direct(
     d.waitFor(tiro);
 
     // A pedra acerta. Por trás do gigante, sem mostrar o rosto: a cabeça dá um tranco e a lança escorrega.
-    d.camera.cut({ pos: [1.2, 2.2, 14.6], lookAt: [0, 2.6, 8.6], fov: 44, shake: 0.4 });
+    d.camera.cut({ pos: [1.2, 2.2, 14.6], lookAt: [0, 2.6, 8.6], fov: 44, shake: 0.1 });
     golias.lookAt([0, 6, 9.2], { duration: 0.15 });
     golias.putDown('lanca-golias', [1.2, 0.02, 9.6]);
     d.wait(0.6);
@@ -146,7 +146,7 @@ export default direct(
     // Silêncio total. Ele balança... e cai para a frente, de cara no chão.
     d.do('golias', 'fall', {}, { ease: 'linear', duration: 1.6 });
     golias.behave('none');
-    d.camera.cut({ pos: [5.5, 0.6, 5.0], lookAt: [0, 0.6, 7.6], fov: 46, shake: 0.9 });
+    d.camera.cut({ pos: [5.5, 0.6, 5.0], lookAt: [0, 0.6, 7.6], fov: 46, shake: 0.25 });
     d.wait(0.5);
     d.camera.moveTo({ pos: [5.5, 0.6, 5.0], lookAt: [0, 0.6, 7.6], fov: 46, shake: 0 });
     // O escudeiro larga o escudo e recua.
@@ -219,8 +219,8 @@ export default direct(
       d.actor('israel-1').say('Não deixa nenhum escapar!', { tone: 'grito', gesture: 0 });
     });
     // A câmera corre junto com a onda de soldados descendo o monte.
-    d.camera.cut({ pos: [7, TOPO + 1.4, -32], lookAt: [0, 2, -10], fov: 56, shake: 0.4 });
-    d.camera.moveTo({ pos: [5, 2.2, -10], lookAt: [0, 1.2, 4], fov: 56, shake: 0.4 });
+    d.camera.cut({ pos: [7, TOPO + 1.4, -32], lookAt: [0, 2, -10], fov: 56, shake: 0.12 });
+    d.camera.moveTo({ pos: [5, 2.2, -10], lookAt: [0, 1.2, 4], fov: 56, shake: 0.12 });
     // O Eliabe corre com eles. No meio do vale, passa pelo Davi, para e olha o irmão. [Liberdade]
     eliabe.runTo([1.8, 5.4], { speed: 3.8 });
     eliabe.turnTo([0.9, 6.6]);

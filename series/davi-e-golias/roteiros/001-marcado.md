@@ -67,20 +67,11 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `2:31.6` **ABNER** (ironico): Ele é pastor, majestade. ⚠ sem gravação
 - `2:33.7` **REI SAUL** (cansado): Você não consegue enfrentar esse homem. Você é um rapaz. Ele é guerreiro desde menino. ⚠ sem gravação
 - `2:39.8` **DAVI**: Eu cuido das ovelhas do meu pai. Uma vez veio um leão e levou um cordeiro. ⚠ sem gravação
-- `2:39.8` 🎥 corte: câmera fov 46
-- `2:41.6` 🎥  fov 46
-- `2:43.4` 🎥  fov 46
+- `2:39.8` 🎥 corte: câmera fov 44
 - `2:45.1` **DAVI**: Eu fui atrás, bati nele e tirei o cordeiro da boca dele. Ele veio pra cima de mim. Eu peguei pela juba e matei. ⚠ sem gravação
-- `2:45.2` 🎥  fov 46
-- `2:47.0` 🎥  fov 46
-- `2:48.8` 🎥  fov 46
-- `2:50.6` 🎥  fov 46
-- `2:52.4` 🎥  fov 46
 - `2:52.8` **DAVI**: Matei leão. Matei urso. Esse filisteu vai ser como um deles. ⚠ sem gravação
-- `2:54.2` 🎥  fov 46
-- `2:56.0` 🎥  fov 46
 - `2:57.2` **DAVI** (firme): O Senhor que me livrou do leão e do urso vai me livrar desse filisteu também. ⚠ sem gravação
-- `2:57.8` 🎥  fov 46
+- `2:57.8` 🎥  fov 40
 - `3:02.7` **GOLIAS** (grito): Israel! Eu ainda tô esperando! ⚠ sem gravação
 - `3:02.7` 🎥 corte: câmera fov 40
 - `3:07.0` **REI SAUL**: Vá. E que o Senhor esteja com você. ⚠ sem gravação

@@ -82,7 +82,7 @@ export default direct(
 
     // ---- 1. O desafio (0:00) ----
     // Rente ao chão do vale; uma pedrinha treme a cada passo. A câmera sobe pelo corpo até o rosto, que já grita.
-    d.camera.cut({ pos: [1.3, 0.3, 8.6], lookAt: [0.2, 0.25, 12.5], fov: 50, shake: 0.35 });
+    d.camera.cut({ pos: [1.3, 0.3, 8.6], lookAt: [0.2, 0.25, 12.5], fov: 50, shake: 0.06 });
     d.together(
       () => {
         escudeiro.pickUp('escudo-golias', { hand: 'left' });
@@ -92,7 +92,7 @@ export default direct(
         golias.pickUp('lanca-golias', { hand: 'right' });
         d.background(() => golias.say('Escolham um homem! E que ele desça até mim!', { tone: 'grito', gesture: 0.4 }));
         golias.walkTo([0, 12.6], { speed: 1.1 });
-        d.camera.moveTo({ pos: [1.9, 1.7, 8.0], lookAt: [0, 2.2, 12.6], fov: 50, shake: 0.2 });
+        d.camera.moveTo({ pos: [1.9, 1.7, 8.0], lookAt: [0, 2.2, 12.6], fov: 50, shake: 0.03 });
       },
     );
     d.camera.moveTo({ pos: [1.6, 2.3, 8.4], lookAt: [0, 2.95, 12.6], fov: 48, shake: 0 });
@@ -147,7 +147,7 @@ export default direct(
     guarda.behave('attend', { object: 'davi' });
 
     // ---- 4. Os irmãos (0:50) ----
-    d.camera.thirdPerson(davi, { distance: 3.2, height: 0.2, fov: 54, shake: 0.3 });
+    d.camera.thirdPerson(davi, { distance: 3.2, height: 0.2, fov: 54, shake: 0.1 });
     const corrida = davi.runTo([4.4, -LINHA - 2.1], { speed: 3.6 });
     d.at(corrida.end - 2.6);
     davi.say('Eliabe! Abinadabe! Samá!', { tone: 'animado', gesture: 0 });
@@ -244,7 +244,10 @@ export default direct(
 
     // A órbita lenta em volta dos dois enquanto o Davi conta do leão e do urso.
     const historia = d.now;
-    d.camera.orbit({ center: [0, TOPO + 1.05, -45.9], radius: 2.3, height: 0.45, from: -55, to: 40, duration: 18, fov: 46 });
+    d.camera.cut({ pos: [0.75, TOPO + 1.55, -40.9], lookAt: [-0.1, TOPO + 1.0, -47.4], fov: 44 });
+    d.at(historia + 18);
+    d.camera.moveTo({ pos: [0.5, TOPO + 1.45, -42.7], lookAt: [-0.1, TOPO + 1.0, -47.4], fov: 40 });
+    d.at(historia);
     davi.say('Eu cuido das ovelhas do meu pai. Uma vez veio um leão e levou um cordeiro.', { to: saul, gesture: 0.5 });
     davi.say('Eu fui atrás, bati nele e tirei o cordeiro da boca dele. Ele veio pra cima de mim. Eu peguei pela juba e matei.', { to: saul, gesture: 0.8 });
     davi.say('Matei leão. Matei urso. Esse filisteu vai ser como um deles.', { to: saul, gesture: 0.5 });
@@ -299,13 +302,13 @@ export default direct(
       davi.turnTo(180);
     });
     d.wait(2.4);
-    d.camera.cut({ pos: [11, 17, -8], lookAt: [0, 6, -28], fov: 50 });
+    d.camera.cut({ pos: [2.5, TOPO + 3.5, -41], lookAt: [-1, 1.5, -6], fov: 46 });
     d.wait(1);
     // [Liberdade] Na fila, alguém vê o rapaz descendo.
     d.actor('israel-2').say('Olha! Tem alguém descendo!', { tone: 'urgente', gesture: 0.5 });
     d.actor('israel-3').say('É um menino. Sem armadura!', { tone: 'nervoso', gesture: 0.4 });
     d.wait(0.6);
-    d.camera.moveTo({ pos: [6, 4, -2], lookAt: [-1, 1.5, -11], fov: 46 });
+    d.camera.moveTo({ pos: [1.8, TOPO + 6, -44], lookAt: [-1, 1, -4], fov: 42 });
     d.camera.cut({ pos: [7.2, TOPO + 1.6, -31.5], lookAt: [4.6, TOPO + 1.4, -35.8], fov: 40 });
     for (const irmao of ['sama', 'eliabe', 'abinadabe']) d.actor(irmao).behave('attend', { object: 'davi', mood: 'scared' });
     abinadabe.say('Ele vai mesmo?', { to: eliabe });
@@ -354,7 +357,7 @@ export default direct(
     void face;
 
     // O Golias levanta a lança e começa a andar; o chão treme a cada passo.
-    d.camera.cut({ pos: [-1.5, 0.5, 1.6], lookAt: [0, 2.6, 10], fov: 50, shake: 0.6 });
+    d.camera.cut({ pos: [-1.5, 0.5, 1.6], lookAt: [0, 2.6, 10], fov: 50, shake: 0.15 });
     // [Liberdade] Do outro monte, os filisteus gritam o nome dele.
     d.background(() => {
       d.wait(0.6);
@@ -372,7 +375,7 @@ export default direct(
     d.do('funda', 'set', { channel: 'loaded', value: 1 }, { duration: 0 });
     d.do('davi', 'move', { name: 'sling' }, { duration: 0.4 });
     const giro = d.do('funda', 'set', { channel: 'spin', value: 10 }, { duration: 4.6, ease: 'linear' });
-    d.camera.thirdPerson(davi, { distance: 2.6, height: -0.2, fov: 58, shake: 0.35 });
+    d.camera.thirdPerson(davi, { distance: 2.6, height: -0.2, fov: 58, shake: 0.1 });
     d.at(giro.start);
     davi.runTo([0, 3.6], { speed: 1.6 });
     // Cortes rápidos: a fila prende a respiração, o Eliabe fecha os olhos, o Golias ergue a lança.
@@ -381,7 +384,7 @@ export default direct(
     d.camera.cut({ pos: [5.2, TOPO + 1.75, -37.4], lookAt: [4.0, TOPO + 1.7, -36.6], fov: 30 });
     eliabe.express('scared');
     eliabe.say('Senhor...', { tone: 'sussurro', gesture: 0 });
-    d.camera.cut({ pos: [-2.2, 0.6, 5.6], lookAt: [0, 3.4, 9.2], fov: 46, shake: 0.15 });
+    d.camera.cut({ pos: [-2.2, 0.6, 5.6], lookAt: [0, 3.4, 9.2], fov: 46, shake: 0.05 });
     d.do('golias', 'move', { name: 'cheer', amount: 0.5 }, { duration: 0.5 });
     d.waitFor(giro);
     d.do('davi', 'move', { name: 'sling', amount: 0 }, { duration: 0.2 });
