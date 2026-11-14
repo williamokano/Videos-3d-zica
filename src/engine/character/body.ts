@@ -104,7 +104,7 @@ function buildFace(r: number, colors: { skin: string; hair: string; eyes: string
   // Half width and half height of the white, how far it is sunk into the head, and how thick it is.
   const big = THREE.MathUtils.clamp(def.eyeSize ?? 1, 0.7, 1.3);
   const [ex, ey, sunk, deep] = [r * 0.2 * big, r * 0.23 * big, r * 0.03, r * 0.075];
-  const irisR = r * 0.118 * big;
+  const irisR = r * 0.135 * big;
   const eyes = [-1, 1].map((side) => {
     const eye = new THREE.Group();
     seat(eye, side * eyeX, eyeY);
@@ -217,8 +217,10 @@ function buildFace(r: number, colors: { skin: string; hair: string; eyes: string
       // How far each lid is turned back from the front of the eye, in degrees. They meet a little below the
       // middle; wide open they clear the white.
       const open = Math.max(0, face.eyeOpen);
-      const upperTurn = open <= 1 ? -12 + 62 * open : Math.min(88, 50 + (open - 1) * 100);
-      const lowerTurn = open <= 1 ? -12 - 46 * open : Math.max(-88, -58 - (open - 1) * 70);
+      // At rest the upper lid covers the top of the iris a little and the lower one its bottom edge: a calm
+      // look. A round eye, all white around the iris, is for surprise and fear (eyeOpen above 1).
+      const upperTurn = open <= 1 ? -12 + 36 * open : Math.min(88, 24 + (open - 1) * 190);
+      const lowerTurn = open <= 1 ? -12 - 38 * open : Math.max(-88, -50 - (open - 1) * 95);
       for (const { side, iris, upper, lower } of eyes) {
         // The inner end of each lid is the one toward the nose.
         upper.rotation.set(upperTurn * DEG, 0, side * face.lidTilt * 0.3);

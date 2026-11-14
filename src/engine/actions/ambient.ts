@@ -192,8 +192,9 @@ export function ambientAt(behaviours: Behaviour[], id: string, t: number): Ambie
       if (feeling < (mine.mode === 'chat' ? 0.1 : 0.05)) out.expressions.happy = 0.45 * swell;
       else if (mine.mode === 'chat' && feeling < 0.18) out.expressions.surprised = 0.35 * swell;
     } else if (feel === 'worried') {
-      out.expressions.sad = (0.35 + 0.1 * Math.sin(t * 0.6 + seed)) * settle;
-      if (feeling < 0.3) out.expressions.scared = 0.45 * swell;
+      // Concern, not fear: a little sad most of the time, a flash of fright only now and then.
+      out.expressions.sad = (0.2 + 0.08 * Math.sin(t * 0.6 + seed)) * settle;
+      if (feeling < 0.15) out.expressions.scared = 0.25 * swell;
     } else if (feel === 'scared') {
       out.expressions.scared = (0.55 + 0.2 * Math.sin(t * 0.9 + seed)) * settle;
       if (feeling < 0.3) out.expressions.surprised = 0.4 * swell;
