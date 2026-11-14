@@ -238,7 +238,10 @@ sala_saul = {
         {"asset": "ancient.column", "pos": [1.2, 1.2], "params": {"height": 4.1}},
         {"asset": "ancient.column", "pos": [6.8, 1.2], "params": {"height": 4.1}},
         {"asset": "ancient.wallTorch", "pos": [1.6, 0.0], "y": 1.7, "params": {"intensity": 5}},
+        {"asset": "ancient.wallTorch", "pos": [6.4, 0.0], "y": 1.7, "params": {"intensity": 5}},
         {"asset": "ancient.brazier", "pos": [5.6, 5.2], "params": {"intensity": 4}},
+        # Um braseiro ao lado do rei: o rosto dele fica visível, meio na sombra.
+        {"asset": "ancient.brazier", "pos": [2.3, 3.4], "params": {"intensity": 8}},
         {"asset": "ancient.rug", "pos": [4, 4.6], "params": {"width": 4, "depth": 5, "color": "#4a1f2a"}},
         {"asset": "ancient.lowTable", "pos": [5.6, 2.8], "params": {"width": 1, "depth": 0.7, "jar": 1}},
     ],

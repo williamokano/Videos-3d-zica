@@ -27,3 +27,19 @@ Referências em `../referencias/casa/`.
 > Deposi que eliabe entra, a camera fica mostrando um pedaço da casa só com móveis e da pra ver uma minuscula parte de alguém se movendo, acho qeu a camera esta'errada. O profeta sentado está dentro da parede
 
 > Cada um que for rejeitado, quando os outros forem entrando na casa, a camera deve começar a seguir eles, eles passam a ser o subject, não quem estava antes. Legal mostrando eles voltando e meio tristes, mas podemos melhorar esses angulos
+
+## Rodada 5
+
+> Deposi de Natanael a camera não foca nos 3 filhos chegando e estamos com 2:59. Faça algumas coisas serem ligeiramente mais rápidas, ou podemos ficar sem tempo com os audios
+
+> quando o davi chega o profeta analisa ele, a camera fica aonde o profeta estava, daí tanto davi quanto o profeta ficam fora da camera
+
+> a cena do rei está muito escura no final, mas no geral está ficando do meu gosto
+
+> E um dos filhos está com a porta passando por dentro dele
+
+- A câmera segue os três mais novos entrando e voltando; eles vêm do pátio enquanto o Natanael volta para a parede.
+- Andares, olhares e pausas mais curtos: de 2:59.7 para 2:46.3.
+- O exame do Davi: plano fixo por cima do ombro do Jessé, que se aproxima devagar; o Samuel dá a volta por trás do Davi.
+- A sala do Saul: mais uma tocha e um braseiro ao lado do rei.
+- Os três primeiros filhos se encostam a oeste da porta, que abre para dentro.

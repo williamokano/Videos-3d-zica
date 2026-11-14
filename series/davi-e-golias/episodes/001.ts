@@ -28,7 +28,8 @@ const BANCO: [number, number] = [11.5, -35.5];
 const DIANTE: [number, number] = [11.5, -34.25];
 const FILHOS = ['eliabe', 'abinadabe', 'sama', 'natanael', 'radai', 'ozem', 'eliu'];
 /** Onde cada um fica depois, encostado na parede da porta, por ordem de idade. */
-const ENCOSTO: [number, number][] = [[8.8, -31.45], [9.6, -31.45], [10.35, -31.5], [12.3, -31.5], [13.0, -31.45], [13.7, -31.45], [14.4, -31.5]];
+// Os três primeiros ficam a oeste da porta, que abre para dentro até x ≈ 10.2.
+const ENCOSTO: [number, number][] = [[8.75, -31.45], [9.3, -31.45], [9.8, -31.5], [12.3, -31.5], [13.0, -31.45], [13.7, -31.45], [14.4, -31.5]];
 /** Na fila do lado de fora, esperando a vez, um atrás do outro. */
 const FORA = (i: number): [number, number] => [11.0 + (i % 2 ? 0.45 : -0.45), -29.4 + i * 0.75];
 const NOMES: Record<string, string> = { eliabe: 'Eliabe', abinadabe: 'Abinadabe', sama: 'Samá', natanael: 'Natanael', radai: 'Radai', ozem: 'Ozém', eliu: 'Eliú' };
@@ -101,7 +102,7 @@ export default direct(
     // ---- 1. A chegada (0:00) ----
     // Os anciãos conversam no portão; o vento levanta poeira. Depois, o chifre na mão velha e o rosto do Samuel.
     d.camera.cut({ pos: sobre(0.2, -30.5, 1.8), lookAt: sobre(0.2, -16, 1.0), fov: 50 });
-    d.wait(1.5);
+    d.wait(1.0);
     // A câmera, à beira da estrada, acompanha o Samuel subindo, girando e deslizando para mantê-lo em quadro.
     d.camera.track('samuel', { from: sobre(4.6, -12.6, 1.9), to: sobre(3.8, -17.4, 2.0), duration: 3.4, fov: 38 });
     // A novilha do sacrifício já está amarrada junto do portão, no plano, esperando.
@@ -151,7 +152,7 @@ export default direct(
     samuelC.behave('attend', { object: 'jesse' });
     d.camera.cut({ pos: [14.5, TOPO + 2.2, -31.3], lookAt: [10.6, TOPO + 1.0, -35.0], fov: 52 });
     d.camera.moveTo({ pos: [14.3, TOPO + 2.1, -31.5], lookAt: [10.6, TOPO + 1.0, -35.0], fov: 50 });
-    d.wait(1.5);
+    d.wait(0.8);
 
     /** Logo depois da porta, onde o próximo espera a vez. */
     const VEZ: [number, number] = [11.0, -31.75];
@@ -160,21 +161,21 @@ export default direct(
     const aproxima = (i: number) => {
       if (i >= FILHOS.length) return;
       naVez[i] = d.background(() => {
-        filho(FILHOS[i]).walkTo(VEZ, { speed: 1.2, via: [[PORTA[0], PORTA[1] + 0.6]] });
+        filho(FILHOS[i]).walkTo(VEZ, { speed: 1.4, via: [[PORTA[0], PORTA[1] + 0.6]] });
         filho(FILHOS[i]).behave('attend', { object: 'samuel-casa' });
       });
     };
     /** Da vez, ele dá os passos até diante do Samuel e espera. */
     const entra = (i: number) => {
       const id = FILHOS[i];
-      filho(id).walkTo(DIANTE, { speed: 0.9 });
+      filho(id).walkTo(DIANTE, { speed: 1.1 });
       filho(id).turnTo(0);
       filho(id).behave('attend', { object: 'samuel-casa' });
     };
     /** Depois de olhado, vai se encostar na parede da porta; o seguinte já vem entrando. */
     const encosta = (i: number) => {
       d.background(() => {
-        filho(FILHOS[i]).walkTo(ENCOSTO[i], { speed: 0.9 });
+        filho(FILHOS[i]).walkTo(ENCOSTO[i], { speed: 1.1 });
         filho(FILHOS[i]).turnTo(0);
         filho(FILHOS[i]).behave('attend', { object: 'samuel-casa', mood: 'calm' });
       });
@@ -184,7 +185,7 @@ export default direct(
     d.camera.track('eliabe', { from: [8.7, TOPO + 1.75, -35.3], to: [8.8, TOPO + 1.7, -35.0], duration: 6, fov: 44 });
     // O pai já vai apresentando enquanto ele entra.
     const eliabeEntra = d.background(() => {
-      filho('eliabe').walkTo(VEZ, { speed: 1.1, via: [[PORTA[0], PORTA[1] + 0.6]] });
+      filho('eliabe').walkTo(VEZ, { speed: 1.25, via: [[PORTA[0], PORTA[1] + 0.6]] });
       entra(0);
     });
     d.at(eliabeEntra.end - 2.2);
@@ -204,28 +205,31 @@ export default direct(
     samuelC.say('Certamente este é o ungido do Senhor.', { tone: 'sussurro', gesture: 0 });
     // Ele para. Abaixa o chifre devagar.
     d.camera.cut({ pos: [13.4, TOPO + 1.45, -33.4], lookAt: [11.5, TOPO + 1.05, -35.4], fov: 40 });
-    d.wait(1.6);
+    d.wait(1.0);
     samuelC.say('Não. O homem vê o que está diante dos olhos. Porém o Senhor olha para o coração.', { tone: 'sussurro', gesture: 0 });
     // O Eliabe fica rígido e vai para a parede sem olhar para ninguém. [Liberdade]
     filho('eliabe').express('angry', { amount: 0.5 });
     // A câmera acompanha o rejeitado voltando para a parede, de frente para ele, do lado do banco.
     d.camera.track('eliabe', { from: [12.9, TOPO + 1.6, -35.2], to: [12.6, TOPO + 1.6, -35.1], duration: 2.6, fov: 42 });
     encosta(0);
-    d.wait(1.2);
+    d.wait(0.8);
     filho('eliabe').behave('watch', { point: [8.0, TOPO + 1.6, -33], mood: 'calm' });
 
+    // Os três mais novos (antes do Davi) entram juntos; o Samuel quase não precisa olhar.
+    const juntos: [number, number][] = [[10.9, -33.6], [11.6, -33.7], [12.3, -33.6]];
+    let tresEntram = { end: 0 };
     // Os outros, um por um, pela porta. A câmera, do canto, acompanha cada um entrando.
     for (let i = 1; i < 4; i++) {
       const id = FILHOS[i];
       // Espera o anterior sair da frente e o próprio chegar à porta. A câmera passa a seguir quem entra.
-      d.wait(0.3);
+      d.wait(0.15);
       d.waitFor(naVez[i].end);
       d.camera.track(id, { from: [9.0, TOPO + 1.7, -35.3], to: [9.2, TOPO + 1.65, -35.1], duration: 3, fov: 44 });
       entra(i);
       if (i < 3) aproxima(i + 1);
       samuelC.behave('attend', { object: id });
       jesse.say(NOMES[id] + '.', { to: samuelC, gesture: 0.2 });
-      const calm = i <= 2 ? 1 : 0.55;
+      const calm = i <= 2 ? 0.8 : 0.5;
       samuelC.lookAt([DIANTE[0], TOPO + 1.7, DIANTE[1]], { duration: 0.6 * calm });
       samuelC.lookAt([DIANTE[0], TOPO + 0.8, DIANTE[1]], { duration: 0.8 * calm });
       samuelC.lookAt([DIANTE[0], TOPO + 1.65, DIANTE[1]], { duration: 0.6 * calm });
@@ -234,22 +238,28 @@ export default direct(
       filho(id).express('sad', { amount: 0.6 });
       d.camera.track(id, { from: [12.9, TOPO + 1.6, -35.2], to: [12.6, TOPO + 1.6, -35.1], duration: 2.4, fov: 42 });
       encosta(i);
-      d.wait(0.9);
+      // Enquanto o Natanael volta, os três mais novos já vêm do pátio.
+      if (i === 3) tresEntram = d.background(() => d.together(...[4, 5, 6].map((j, k) => () => {
+        filho(FILHOS[j]).walkTo(juntos[k], { speed: 1.2, via: [[PORTA[0], PORTA[1] + 0.6]] });
+        filho(FILHOS[j]).turnTo(0);
+        filho(FILHOS[j]).behave('attend', { object: 'samuel-casa' });
+      })));
+      d.wait(0.6);
       if (i === 3) filho('sama').say('Nenhum de nós?', { tone: 'sussurro', to: 'abinadabe', gesture: 0 });
     }
-    // Os três mais novos (antes do Davi) entram juntos; o Samuel quase não precisa olhar.
-    const juntos: [number, number][] = [[10.8, -34.2], [11.5, -34.3], [12.2, -34.2]];
-    d.together(...[4, 5, 6].map((i, k) => () => {
-      filho(FILHOS[i]).walkTo(juntos[k], { speed: 1.1, via: [[PORTA[0], PORTA[1] + 0.6]] });
-      filho(FILHOS[i]).turnTo(0);
-      filho(FILHOS[i]).behave('attend', { object: 'samuel-casa' });
-    }));
+    // A câmera passa a seguir os três entrando (pelo do meio), mais aberta para caber os três.
+    d.camera.track('ozem', { from: [8.9, TOPO + 1.85, -35.5], to: [8.6, TOPO + 2.0, -35.7], duration: Math.max(2.5, tresEntram.end - d.now), fov: 58 });
+    d.at(Math.max(d.now, tresEntram.end - 2.4));
     jesse.say('Radai. Ozém. Eliú.', { to: samuelC, gesture: 0.3 });
-    samuelC.lookAt([10.8, TOPO + 1.6, -34.2], { duration: 0.5 });
-    samuelC.lookAt([12.2, TOPO + 1.6, -34.2], { duration: 0.9 });
+    d.waitFor(tresEntram.end);
+    samuelC.lookAt([10.9, TOPO + 1.6, -33.6], { duration: 0.5 });
+    samuelC.lookAt([12.3, TOPO + 1.6, -33.6], { duration: 0.9 });
+    // Rejeitados, os três voltam juntos para a parede; a câmera vai com eles.
+    for (const i of [4, 5, 6]) filho(FILHOS[i]).express('sad', { amount: 0.5 });
+    d.camera.track('ozem', { from: [13.1, TOPO + 2.1, -35.4], to: [12.8, TOPO + 2.0, -35.3], duration: 2.2, fov: 56 });
     for (const i of [4, 5, 6]) encosta(i);
     // [GANCHO] Nenhum dos sete.
-    d.wait(1.0);
+    d.wait(0.7);
     samuelC.behave('attend', { object: 'jesse' });
     // Por cima do ombro do Jessé, o Samuel sentado; a câmera chega devagar.
     {
@@ -286,7 +296,7 @@ export default direct(
     // A casa. A porta. O Davi entra com a roupa de pastor, o cajado e a palha das colinas, sem jeito, e para logo
     // depois da porta, entre os irmãos de túnica limpa.
     d.background(() => daviC.pickUp('cajado-casa', { hand: 'right' }));
-    const chega = daviC.walkTo([11.0, -31.9], { speed: 0.9, via: [[PORTA[0], PORTA[1] + 0.8]] });
+    const chega = daviC.walkTo([11.0, -31.9], { speed: 1.0, via: [[PORTA[0], PORTA[1] + 0.8]] });
     d.at(chega.start + 0.4);
     d.camera.track('davi-casa', { from: [9.0, TOPO + 1.8, -35.4], to: [9.2, TOPO + 1.75, -35.2], duration: 6, fov: 44 });
     d.at(chega.end - 2.4);
@@ -302,24 +312,26 @@ export default direct(
     // O Samuel, de frente, sentado: chama o rapaz para perto.
     d.camera.cut({ pos: [11.9, TOPO + 1.45, -33.4], lookAt: [11.5, TOPO + 1.1, -35.7], fov: 40 });
     samuelC.say('Aproxima-te, filho.', { tone: 'calmo', to: daviC, gesture: 0.4 });
-    daviC.walkTo(DIANTE, { speed: 0.6 });
+    daviC.walkTo(DIANTE, { speed: 0.75 });
     daviC.turnTo(0);
     daviC.behave('attend', { object: 'samuel-casa', mood: 'worried' });
-    // Longo silêncio. O Samuel se levanta e o examina devagar, dando a volta nele; a câmera gira devagar.
-    d.camera.twoShot('samuel-casa', 'davi-casa', { duration: 10, swing: 28, fov: 44, side: 1, height: 1.3 });
+    // Longo silêncio. O Samuel se levanta e o examina devagar, dando a volta nele. A câmera fica fora do caminho
+    // dos dois: por cima do ombro do Jessé, o Davi de frente, e chega devagar.
+    d.camera.cut({ pos: [9.2, TOPO + 2.1, -32.6], lookAt: [12.0, TOPO + 1.2, -34.3], fov: 60 });
     samuelC.standUp([11.5, -35.15]);
-    samuelC.walkTo([12.2, -34.0], { speed: 0.45 });
-    samuelC.lookAt(daviC, { duration: 0.6 });
-    d.wait(0.6);
-    samuelC.walkTo([11.5, -34.8], { speed: 0.45 });
+    samuelC.walkTo([12.15, -33.55], { speed: 0.55 });
+    samuelC.lookAt(daviC, { duration: 0.5 });
+    d.wait(0.4);
+    samuelC.walkTo([11.5, -34.8], { speed: 0.55 });
     samuelC.turnTo(180);
     samuelC.lookAt(daviC, { duration: 0.5 });
-    d.wait(0.6);
+    d.wait(0.5);
+    d.camera.moveTo({ pos: [9.5, TOPO + 2.0, -32.8], lookAt: [12.0, TOPO + 1.2, -34.4], fov: 52 });
     samuelC.say('É este.', { tone: 'sussurro', gesture: 0 });
     // O Davi olha para o pai, que faz que sim. Ele se ajoelha.
     daviC.lookAt(jesse, { duration: 0.5 });
     jesse.express('happy', { amount: 0.4 });
-    d.wait(0.8);
+    d.wait(0.6);
     daviC.lookAt(samuelC, { duration: 0.4 });
     d.do('davi-casa', 'move', { name: 'kneel' }, { duration: 1 });
     // De lado, aberto, a câmera girando devagar em volta dos dois: o azeite cai sobre a cabeça dele.
@@ -329,7 +341,7 @@ export default direct(
     d.camera.cut({ pos: [13.2, TOPO + 1.15, -33.0], lookAt: [11.5, TOPO + 1.0, -34.4], fov: 40 });
     daviC.express('surprised', { amount: 0.5 });
     d.narrate('E naquele dia, enquanto todos ainda viam um pastor, Deus havia escolhido um rei.');
-    d.wait(0.8);
+    d.wait(0.5);
 
     // ---- 5. O gancho (2:20) ----
     // Em outro lugar, de noite, o Saul sozinho no escuro, com as mãos na cabeça.
@@ -338,13 +350,13 @@ export default direct(
     const saul = d.actor('saul');
     d.camera.cut({ pos: [100.6, 1.5, -98.6], lookAt: [100, 1.2, -101.6], fov: 44 });
     d.do('saul', 'move', { name: 'cower', amount: 0.8 }, { duration: 0.8 });
-    d.wait(1.0);
+    d.wait(0.7);
     d.camera.moveTo({ pos: [100.2, 1.35, -99.4], lookAt: [100, 1.2, -101.6], fov: 36 });
     saul.lookAt([97, 1.8, -100], { duration: 0.3 });
     saul.say('Quem está aí?', { tone: 'sussurro', gesture: 0 });
     saul.lookAt([103, 1.6, -99], { duration: 0.25 });
     saul.say('Quem está aí?!', { tone: 'grito', gesture: 0 });
-    d.wait(1.2);
+    d.wait(0.9);
     d.endCard({
       title: 'Se você fosse irmão do Davi, ficaria feliz ou com inveja?',
       options: [{ label: 'FELIZ', icon: '🙌' }, { label: 'INVEJA', icon: '😒' }],

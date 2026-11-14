@@ -11,3 +11,8 @@
 - **Com ajudantes trabalhando, nunca `git add -A` numa pasta que eles mexem.** Um commit meu levou o trabalho pela metade de outro agente (e um teste temporário dele). Adicione os arquivos pelo nome, ou confira `git show --stat` antes de seguir.
 - **Câmera de cinema acompanha o personagem.** Plano travado com gente saindo de quadro e terceira pessoa "de videogame" incomodaram o autor. Quem anda é seguido por uma câmera mais afastada que gira e desliza para mantê-lo em quadro; conversa de duas pessoas, de lado, com pequena rotação; nada colado no rosto.
 - **Quem senta, senta em algo.** Sentar com `seated` sem um banco, pedra ou trono embaixo fica flutuando. Ponha o assento no lugar.
+
+## Câmera que segue quem se move (ep. 1 de Davi)
+
+- `twoShot` é calculado com as posições do começo do plano. Se um dos dois vai andar (levantar, dar a volta), use um plano fixo de um lugar fora do caminho dos dois, e confira os quadros do começo, meio e fim.
+- Antes de pôr alguém encostado perto de uma porta, veja para que lado e até onde a folha abre (`doors.ts`: dobradiça no começo da abertura).
