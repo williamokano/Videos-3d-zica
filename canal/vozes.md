@@ -8,6 +8,7 @@ Notas do autor sobre as vozes já usadas, para escolher a próxima. Vale para to
 |---|---|---|---|
 | Adriano | `hwnuNyWkl9DjdTFykrN6` | DAVI ep. 2 (guarda 1) | Parece **locutor de rádio**: animada demais, de anúncio. Não combina com história bíblica nem com cena séria. Só para um personagem que seja mesmo apresentador, vendedor, arauto exagerado ou cômico. (Autor, 2026-11-14) |
 | Diego | `rpNe0HOx7heUulPiOEaG` | DAVI ep. 2 (porteiro), ep. 3 (guarda das bagagens) | Também **locutor de rádio**: "explosiva e feliz" numa cena tensa (autor, 2026-11-14, sobre o ep. 3). Na biblioteca é "Confident Announcer". |
+| Borges | `9pDzHy2OpOgeXM8SeL0t` | amostra do guarda do ep. 3 (não usada) | Também **locutor**, voz explosiva (autor, 2026-11-14). Na biblioteca é "Slow, Calm and Confident", "entertainment_tv": a descrição não avisa, só ouvindo. |
 
 ## Aprovadas no tom das histórias
 
