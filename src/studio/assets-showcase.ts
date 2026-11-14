@@ -135,7 +135,7 @@ renderer.domElement.addEventListener('pointerup', (e) => {
   if (slot) pick(slot);
 });
 
-const GROUP_NAMES: Record<string, string> = { vehicle: 'Veículos', school: 'Escola', item: 'Itens', storage: 'Depósito', nature: 'Natureza', structure: 'Estrutura', light: 'Luzes' };
+const GROUP_NAMES: Record<string, string> = { ancient: 'Época', vehicle: 'Veículos', school: 'Escola', item: 'Itens', storage: 'Depósito', nature: 'Natureza', structure: 'Estrutura', light: 'Luzes' };
 
 function renderPanel(): void {
   panel.replaceChildren();

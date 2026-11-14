@@ -89,7 +89,10 @@ export function assetActions(id: string): { actions: AssetAction[]; uses: string
   if (seats.length) add('sit / standUp', `lugares: ${seats.join(', ')}`, seats);
   const surfaces = places.filter((n) => SURFACES.test(n));
   if (surfaces.length) add('putDown (com "on")', `onde pôr coisas: ${surfaces.join(', ')}`, surfaces);
-  if (id.startsWith('item.')) add('pickUp / putDown / putAway', 'pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")', []);
+  if (id.startsWith('item.') || id.startsWith('arms.')) add('pickUp / putDown / putAway', 'pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")', []);
+  // A sling turns and carries a stone: no action of its own yet, `set` moves both.
+  const sling = channels.filter((c) => c === 'spin' || c === 'loaded');
+  if (sling.length) add('set', `canais: ${sling.join(', ')}`, sling);
   if (id === 'item.phone' || id === 'item.radio') add('raise / lower', 'levar à frente do rosto ou do peito', []);
   if (kind === 'phone') add('screen', 'mensagens, digitando, tela acesa ou apagada', ['network']);
   if (asset.userData.loose) add('knockOver / setUpright', 'derrubar e pôr de pé', []);

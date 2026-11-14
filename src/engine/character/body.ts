@@ -474,7 +474,14 @@ export function buildBody(def: CharacterDef): CharacterRig {
 
   // What the character wears: pieces fixed to joints, so they follow every pose. Head pieces go on the head
   // itself, to hide with it when a camera sits in the eyes.
-  for (const { joint, object } of buildWear(def.wear, { head: r, wide, shirt })) (joint === 'head' ? head : joints[joint]).add(object);
+  // Some pieces (a skirt, a cloak) move by themselves after each pose, to keep clear of the legs.
+  const follow: ((joints: Record<Joint, THREE.Object3D>) => void)[] = [];
+  const worn = new Map<string, THREE.Object3D[]>();
+  for (const { id, joint, object, pose } of buildWear(def.wear, { head: r, wide, shirt })) {
+    (joint === 'head' ? head : joints[joint]).add(object);
+    if (pose) follow.push(pose);
+    worn.set(id!, [...(worn.get(id!) ?? []), object]);
+  }
 
   root.traverse((o) => {
     if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
@@ -488,6 +495,7 @@ export function buildBody(def: CharacterDef): CharacterRig {
         joints[name].rotation.set(x * DEG, y * DEG, z * DEG);
       }
       joints.hips.position.y = OFFSETS.hips[1] + pose.lift;
+      for (const f of follow) f(joints);
     },
     setFace: (params) => face.set(params),
     eyeHeight: scale * (1.48 + r * 1.02),
@@ -500,5 +508,8 @@ export function buildBody(def: CharacterDef): CharacterRig {
       hands.R.set(right);
     },
     palm: (side) => hands[side].palm,
+    showWear(id, on) {
+      for (const object of worn.get(id) ?? []) object.visible = on;
+    },
   };
 }

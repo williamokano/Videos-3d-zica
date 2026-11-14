@@ -1,0 +1,29 @@
+{
+  "id": "saul",
+  "name": "Rei Saul",
+  "height": 1.95,
+  "build": 1.12,
+  "skin": "#cf9670",
+  "hair": "#6d625a",
+  "hairStyle": "short",
+  "beard": "full",
+  "headShape": "oval",
+  "nose": "long",
+  "shirt": "#5b2a6e",
+  "pants": "#3d1c4a",
+  "shoes": "#cf9670",
+  "wear": [
+    {
+      "id": "robe",
+      "color": "#5b2a6e",
+      "accent": "#d9b04a"
+    },
+    {
+      "id": "cloak",
+      "color": "#8a1f2b",
+      "accent": "#d9b04a"
+    },
+    "crown",
+    "sandals"
+  ]
+}

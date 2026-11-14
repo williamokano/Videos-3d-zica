@@ -1,0 +1,28 @@
+{
+  "id": "golias",
+  "name": "Golias",
+  "height": 3.0,
+  "build": 1.35,
+  "headScale": 1.75,
+  "headShape": "wide",
+  "skin": "#c08a5e",
+  "hair": "#2a1c14",
+  "hairStyle": "short",
+  "beard": "full",
+  "nose": "wide",
+  "eyeSize": 0.85,
+  "shirt": "#c08a5e",
+  "pants": "#c08a5e",
+  "shoes": "#c08a5e",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#7a2621"
+    },
+    "scaleArmor",
+    "greaves",
+    "bronzeHelmet",
+    "sandals",
+    "scabbard"
+  ]
+}

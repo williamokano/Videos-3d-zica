@@ -1,0 +1,32 @@
+{
+  "id": "jonatas",
+  "name": "Jônatas",
+  "height": 1.78,
+  "build": 1.0,
+  "skin": "#dca47c",
+  "hair": "#4a3020",
+  "hairStyle": "curly",
+  "beard": "goatee",
+  "shirt": "#dca47c",
+  "pants": "#dca47c",
+  "shoes": "#dca47c",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#ece4cf",
+      "accent": "#2f56a8"
+    },
+    {
+      "id": "cloak",
+      "color": "#2f56a8",
+      "accent": "#d9b04a"
+    },
+    {
+      "id": "sash",
+      "color": "#2f56a8",
+      "accent": "#d9b04a"
+    },
+    "sandals",
+    "scabbard"
+  ]
+}

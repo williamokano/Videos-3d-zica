@@ -1,0 +1,26 @@
+{
+  "id": "abinadabe",
+  "name": "Abinadabe",
+  "height": 1.76,
+  "build": 1.0,
+  "skin": "#d6a07a",
+  "hair": "#3e2a1c",
+  "hairStyle": "short",
+  "beard": "full",
+  "nose": "long",
+  "shirt": "#d6a07a",
+  "pants": "#d6a07a",
+  "shoes": "#d6a07a",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#5e7d34",
+      "accent": "#3b2a1a"
+    },
+    {
+      "id": "headband",
+      "color": "#d9cfb4"
+    },
+    "sandals"
+  ]
+}

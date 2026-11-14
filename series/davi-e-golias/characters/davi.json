@@ -1,0 +1,31 @@
+{
+  "id": "davi",
+  "name": "Davi",
+  "height": 1.66,
+  "build": 0.92,
+  "skin": "#e6ad82",
+  "hair": "#b5471f",
+  "hairStyle": "curly",
+  "eyes": "#4f6b3a",
+  "beard": "none",
+  "shirt": "#e6ad82",
+  "pants": "#e6ad82",
+  "shoes": "#e6ad82",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#d9893a",
+      "accent": "#7a4a24"
+    },
+    "sandals",
+    "shepherdBag",
+    {
+      "id": "scaleArmor",
+      "hidden": true
+    },
+    {
+      "id": "bronzeHelmet",
+      "hidden": true
+    }
+  ]
+}

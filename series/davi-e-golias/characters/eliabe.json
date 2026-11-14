@@ -1,0 +1,31 @@
+{
+  "id": "eliabe",
+  "name": "Eliabe",
+  "height": 1.82,
+  "build": 1.08,
+  "skin": "#d49a70",
+  "hair": "#3a2618",
+  "hairStyle": "short",
+  "beard": "full",
+  "headShape": "oval",
+  "shirt": "#d49a70",
+  "pants": "#d49a70",
+  "shoes": "#d49a70",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#2f6690",
+      "accent": "#d8c9a0"
+    },
+    {
+      "id": "sash",
+      "color": "#5a3a22"
+    },
+    {
+      "id": "bronzeHelmet",
+      "color": "#7a5233",
+      "accent": "#4e331f"
+    },
+    "sandals"
+  ]
+}

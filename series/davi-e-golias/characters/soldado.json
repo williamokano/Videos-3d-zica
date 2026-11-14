@@ -1,0 +1,26 @@
+{
+  "id": "soldado",
+  "name": "Soldado de Israel",
+  "height": 1.74,
+  "build": 1.02,
+  "skin": "#d09a72",
+  "hair": "#33241a",
+  "hairStyle": "short",
+  "beard": "stubble",
+  "shirt": "#d09a72",
+  "pants": "#d09a72",
+  "shoes": "#d09a72",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#7d8a96",
+      "accent": "#4b3a2a"
+    },
+    {
+      "id": "bronzeHelmet",
+      "color": "#7a5233",
+      "accent": "#4e331f"
+    },
+    "sandals"
+  ]
+}

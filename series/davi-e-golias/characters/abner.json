@@ -1,0 +1,25 @@
+{
+  "id": "abner",
+  "name": "Abner",
+  "height": 1.84,
+  "build": 1.12,
+  "skin": "#c78f66",
+  "hair": "#2b1d16",
+  "hairStyle": "buzz",
+  "beard": "full",
+  "headShape": "wide",
+  "shirt": "#c78f66",
+  "pants": "#c78f66",
+  "shoes": "#c78f66",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#2f5a52"
+    },
+    "scaleArmor",
+    "bronzeHelmet",
+    "greaves",
+    "sandals",
+    "scabbard"
+  ]
+}

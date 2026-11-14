@@ -1,0 +1,26 @@
+{
+  "id": "mulher",
+  "name": "Mulher",
+  "height": 1.6,
+  "build": 0.9,
+  "skin": "#d9a27c",
+  "hair": "#2b1d16",
+  "hairStyle": "short",
+  "lips": "#a8505a",
+  "shirt": "#c0566b",
+  "pants": "#8a3a4c",
+  "shoes": "#d9a27c",
+  "wear": [
+    {
+      "id": "robe",
+      "color": "#c0566b",
+      "accent": "#e8c26a"
+    },
+    {
+      "id": "headwrap",
+      "color": "#efe3c8",
+      "accent": "#c0566b"
+    },
+    "sandals"
+  ]
+}

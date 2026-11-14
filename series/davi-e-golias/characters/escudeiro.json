@@ -1,0 +1,24 @@
+{
+  "id": "escudeiro",
+  "name": "Escudeiro do Golias",
+  "height": 1.72,
+  "build": 1.0,
+  "skin": "#c99067",
+  "hair": "#2b1d16",
+  "hairStyle": "short",
+  "beard": "stubble",
+  "shirt": "#c99067",
+  "pants": "#c99067",
+  "shoes": "#c99067",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#9c4a2c",
+      "accent": "#e0c27a"
+    },
+    {
+      "id": "plumedHelmet"
+    },
+    "sandals"
+  ]
+}

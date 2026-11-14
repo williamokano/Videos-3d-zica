@@ -28,4 +28,38 @@ describe('what a character wears', () => {
     expect(head.visible).toBe(false);
     expect(head.children.length).toBeGreaterThan(plain.joint('head')!.children[0].children.length);
   });
+
+  it('has period pieces, and a piece can start hidden and be put on later', () => {
+    expect(listWearables().map((w) => w.id)).toEqual(expect.arrayContaining(['tunic', 'robe', 'cloak', 'sash', 'sandals', 'headwrap', 'headband', 'scaleArmor', 'greaves', 'bronzeHelmet', 'plumedHelmet', 'crown', 'shepherdBag', 'scabbard', 'scabbardEmpty']));
+    const body = buildBody({ id: 'd', name: 'D', wear: ['tunic', { id: 'scaleArmor', hidden: true }] });
+    const armor = buildWear([{ id: 'scaleArmor' }], { head: 0.15, wide: 1, shirt: '#fff' });
+    expect(armor.every((p) => p.id === 'scaleArmor')).toBe(true);
+    const visibleMeshes = (): number => {
+      let n = 0;
+      body.object.traverseVisible((o) => void (o instanceof THREE.Mesh && n++));
+      return n;
+    };
+    const hidden = visibleMeshes();
+    body.showWear!('scaleArmor', true);
+    expect(visibleMeshes()).toBeGreaterThan(hidden);
+    body.showWear!('scaleArmor', false);
+    expect(visibleMeshes()).toBe(hidden);
+  });
+
+  it('a skirt keeps clear of the legs: it opens over a step and lies on the lap when sitting', () => {
+    const body = buildBody({ id: 'd', name: 'D', wear: ['tunic'] });
+    const lowest = (): THREE.Vector3 => {
+      // How far forward and down what hangs on the hips reaches (the joints of the legs have names; the cloth has none).
+      body.object.updateMatrixWorld(true);
+      const box = new THREE.Box3();
+      body.joint('hips')!.children.filter((c) => c.name === '').forEach((c) => box.expandByObject(c));
+      return box.min.clone();
+    };
+    body.applyPose({ joints: {}, lift: 0 });
+    const standing = lowest();
+    body.applyPose({ joints: { thighL: [90, 0, 0], thighR: [90, 0, 0], shinL: [-90, 0, 0], shinR: [-90, 0, 0] }, lift: -0.45 });
+    const sitting = lowest();
+    // Sitting, the cloth reaches forward over the thighs instead of hanging through them.
+    expect(sitting.z).toBeLessThan(standing.z - 0.2);
+  });
 });

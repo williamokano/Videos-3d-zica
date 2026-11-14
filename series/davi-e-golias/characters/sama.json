@@ -1,0 +1,25 @@
+{
+  "id": "sama",
+  "name": "Samá",
+  "height": 1.73,
+  "build": 0.96,
+  "skin": "#dba67f",
+  "hair": "#4a3020",
+  "hairStyle": "curly",
+  "beard": "goatee",
+  "shirt": "#dba67f",
+  "pants": "#dba67f",
+  "shoes": "#dba67f",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#c9a227",
+      "accent": "#6b4423"
+    },
+    {
+      "id": "headband",
+      "color": "#8a3b2a"
+    },
+    "sandals"
+  ]
+}

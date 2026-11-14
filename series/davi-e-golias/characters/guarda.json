@@ -1,0 +1,25 @@
+{
+  "id": "guarda",
+  "name": "Guarda das bagagens",
+  "height": 1.68,
+  "build": 1.06,
+  "skin": "#c48b62",
+  "hair": "#8f8a84",
+  "hairStyle": "short",
+  "beard": "full",
+  "shirt": "#c48b62",
+  "pants": "#c48b62",
+  "shoes": "#c48b62",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#8a6a4a",
+      "accent": "#4e3a26"
+    },
+    {
+      "id": "headwrap",
+      "color": "#cfc3a5"
+    },
+    "sandals"
+  ]
+}

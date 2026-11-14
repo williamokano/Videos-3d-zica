@@ -1,0 +1,26 @@
+{
+  "id": "filisteu",
+  "name": "Soldado filisteu",
+  "height": 1.76,
+  "build": 1.04,
+  "skin": "#c99067",
+  "hair": "#2b1d16",
+  "hairStyle": "short",
+  "beard": "none",
+  "shirt": "#c99067",
+  "pants": "#c99067",
+  "shoes": "#c99067",
+  "wear": [
+    {
+      "id": "tunic",
+      "color": "#b0443a",
+      "accent": "#e0c27a"
+    },
+    {
+      "id": "sash",
+      "color": "#e0c27a"
+    },
+    "plumedHelmet",
+    "sandals"
+  ]
+}

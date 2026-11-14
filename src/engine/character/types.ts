@@ -124,7 +124,10 @@ export interface CharacterDef {
   /**
    * What the character wears over the body, by id from the catalog in character/wear.ts, each with a `color`
    * (and `accent`) if wanted: "cap", "policeCap", "helmet", "vest", "badge", "longSleeves", "dutyBelt",
-   * "backpack", "deliveryBag". E.g. ["policeCap", { "id": "vest", "color": "#1d2430" }, "dutyBelt", "badge"].
+   * "backpack", "deliveryBag", and period pieces: "tunic", "robe", "cloak", "sash", "sandals", "headwrap", "headband",
+   * "scaleArmor", "greaves", "bronzeHelmet", "plumedHelmet", "crown", "shepherdBag", "scabbard", "scabbardEmpty".
+   * E.g. ["policeCap", { "id": "vest", "color": "#1d2430" }, "dutyBelt", "badge"]. `"hidden": true` starts a piece
+   * out of sight, to be put on later.
    */
   wear?: (string | import('./wear').WearSpec)[];
   /**
@@ -156,4 +159,6 @@ export interface CharacterRig {
   setHands?(left: HandShape, right: HandShape): void;
   /** Bodies with a palm: the place in a hand where something held sits. Without it, things are held by the wrist. */
   palm?(side: 'L' | 'R'): import('three').Object3D;
+  /** Bodies with `wear`: show or hide every part of one worn piece, by its wearable id (putting armor on and off). */
+  showWear?(id: string, on: boolean): void;
 }

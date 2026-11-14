@@ -4,6 +4,224 @@ Gerado por `npm run assets` a partir do catálogo do motor. Não edite à mão.
 
 Todo asset com `id` no local (ou em `props` do episódio) também aceita `moveTo` (levar a outro ponto) e `set` (qualquer canal). Os que não têm ação própria são cenário.
 
+## ancient
+
+### `ancient.banner`
+
+Estandarte: vara alta fincada num monte de pedras, com um pano que tremula sozinho. `shape`: "hang" (pano pendurado de uma travessa, 0,8 × 1,1 m) ou "pennant" (flâmula comprida voando da vara) (params: height — da vara —, color, trim — cor das faixas —, shape, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.basket`
+
+Cesto de vime redondo e baixo (50 cm), com pães redondos dentro (params: bread — quantos pães, 0 para vazio —, size — escala —, color)
+
+- **knockOver / setUpright**: derrubar e pôr de pé
+
+### `ancient.boulder`
+
+Rochedo grande com pedras menores no pé, para os montes (params: size — largura, 2,2 m —, seed, color)
+
+- Cenário: sem ação própria.
+
+### `ancient.campfire`
+
+Fogueira: roda de pedras, lenha em pirâmide, brasas e chamas que tremem sozinhas com o tempo. `pot: 1` põe um tripé com uma panela de barro pendurada sobre o fogo. Com `intensity` maior que 0 ilumina de verdade, tremendo (use em poucas, à noite) (params: size — escala —, lit — 0 para só cinzas e lenha —, pot, intensity, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.cart`
+
+Carroça de duas rodas de madeira, de boi, de frente para -z: a lança desce até o chão com a canga na ponta. Com `load`, sacos deitados na caixa (params: load — quantos sacos, 0 a 6 —, color)
+
+- Cenário: sem ação própria.
+
+### `ancient.cheese`
+
+Queijos: uma trouxinha de pano amarrada no alto, do tamanho de levar no braço, ou (`wrapped: 0`) o pano aberto com os queijos redondos empilhados (params: count — queijos, 10 —, wrapped, color — do pano)
+
+- **knockOver / setUpright**: derrubar e pôr de pé
+
+### `ancient.chest`
+
+Baú de madeira com cintas de bronze, a frente (fechadura) para +z; a tampa abre para trás (canal `open`) e em cima se põem coisas (`top`) (params: width, color)
+
+- **open / close**: o objeto inteiro
+- **putDown (com "on")**: onde pôr coisas: top
+- Canais: `open`
+
+### `ancient.cityGate`
+
+Portão de cidade de pedra: duas torres com ameias e, entre elas, uma passagem em arco com as folhas de madeira abertas para dentro; a frente (fora da cidade) olha para +z. Passa-se pelo arco ao longo de z; o asset não bloqueia nada: ponha `ancient.wall` dos lados (params: opening — largura do arco —, height — das torres —, color, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.cushion`
+
+Almofada de chão, quadrada e fofa com borlas nos cantos, ou um rolo para encostar (params: shape — "square" ou "bolster" —, color, trim, size — escala)
+
+- **knockOver / setUpright**: derrubar e pôr de pé
+
+### `ancient.dryBush`
+
+Arbusto seco de encosta: galhos finos marrons e poucas folhas cinza-esverdeadas; bloqueia a passagem (params: size — 0,9 m —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.groundShields`
+
+Escudos redondos de couro com borda e umbo de bronze, no chão (não na mão). `arrange`: "mixed" (dois apoiados um no outro e o resto empilhado), "stack" (pilha) ou "lean" (fileira inclinada para trás, para encostar em tenda, suporte ou pedra) (params: count, arrange, color, rim, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.hitchedDonkey`
+
+Jumento parado, de frente para -z, amarrado pelo cabresto a uma estaca; mexe a cauda, as orelhas e a cabeça sozinho. `load: 1` põe manta e alforjes no lombo (params: color, load, tied — 0 sem estaca —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.house`
+
+Casa de pedra e barro de teto plano com terraço e mureta, porta baixa e janelinhas como vãos escuros, pontas das vigas aparecendo; a frente (porta) olha para +z. Pelo `seed` muda cor, altura, escada de fora até o terraço, quartinho ou cabana de ramos no terraço (params: width, depth, height, seed, stair — 0 ou 1 —, color)
+
+- Cenário: sem ação própria.
+
+### `ancient.jar`
+
+Jarro de barro. `shape`: "storage" (talha alta de gargalo com colar e duas alças, para grão, azeite ou água) ou "pitcher" (jarra de uma alça). Com `count` maior que 1, um grupo de jarros de alturas diferentes (params: shape, size — altura em metros, 0,75 a talha e 0,3 a jarra —, count, color, seed)
+
+- **knockOver / setUpright**: derrubar e pôr de pé
+
+### `ancient.lowTable`
+
+Mesa baixa de madeira (35 cm, para comer sentado no chão), com jarra, copos e uma tigela de frutas em cima; põe-se coisas em `top` (params: width, depth, jar — 0 ou 1 —, cups, fruit — 0 ou 1 —, color)
+
+- **putDown (com "on")**: onde pôr coisas: top
+
+### `ancient.oliveTree`
+
+Oliveira: tronco retorcido de vários troncos enroscados e copa larga verde-prateada; só o tronco bloqueia a passagem (params: height — 3,5 —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.palm`
+
+Tamareira: tronco anelado levemente curvo, coroa de folhas compridas caindo e cachos de tâmaras (params: height — 6 —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.pebbles`
+
+Seixos lisos de riacho espalhados num retângulo centrado na origem; pisa-se neles (params: width, depth, density — por m² —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.rock`
+
+Pedra solta irregular, de terra clara, meio enterrada (params: size — largura em metros, 0,6 —, seed, color)
+
+- Cenário: sem ação própria.
+
+### `ancient.royalTent`
+
+Tenda do rei, um pavilhão: paredes de pano atrás e dos lados, teto de duas águas, sem parede na frente (+z), com sanefa de franjas, cortinas presas nos cantos da frente e um galhardete no alto que tremula. Por dentro só se vê pano: monte o interior com tapete, almofadas, baú e mesa. Não bloqueia a passagem (params: width, depth, height — da cumeeira —, color, trim — cor da sanefa e das faixas)
+
+- Cenário: sem ação própria.
+
+### `ancient.rug`
+
+Tapete tecido, com barra de outra cor, losangos no meio e franjas nas pontas (ao longo de z); pisa-se nele (params: width, depth, color, trim, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.sack`
+
+Saco de grão de pano grosso, amarrado na boca (70 cm em pé). Com `count` maior que 1 vira uma pilha de sacos deitados, como a carga do acampamento (params: count, arrange — "pile" deitados em pirâmide ou "standing" em pé lado a lado —, seed)
+
+- **knockOver / setUpright**: derrubar e pôr de pé
+
+### `ancient.spearRack`
+
+Suporte de lanças: travessa sobre dois cavaletes em X, com lanças encostadas dos dois lados, ao longo de x (params: count — lanças —, color — da madeira)
+
+- Cenário: sem ação própria.
+
+### `ancient.stream`
+
+Riacho raso ao longo de x: água azul meio transparente que brilha e corre (para +x), leito de pedras lisas, margens de cascalho e capim verde. Plano: ponha no fundo do vale, onde o chão é reto; pisa-se nele (params: length, width — da água —, curve — quanto a linha se afasta do eixo, em metros —, bends — quantas curvas —, bank — largura de cada margem —, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.tent`
+
+Tenda de soldado. `style`: "ridge" (duas abas até o chão, 2,4 × 3 m, 1,75 m de altura) ou "long" (tenda comprida de teto inclinado sobre varas, com toldo na frente, 4,2 × 4,2 m). Fechada atrás, aberta na frente (+z), com abas presas para trás, cordas e estacas (params: style, color — "linen", "brown", "dark", "striped" ou uma cor —, stripes — número de listras —, stripe — cor das listras —, size — escala, 1 = normal)
+
+- Cenário: sem ação própria.
+
+### `ancient.wall`
+
+Trecho de muralha de pedra ao longo de x, com ameias, base mais larga e pedras aparentes (params: length, height, thickness, color, seed)
+
+- Cenário: sem ação própria.
+
+### `ancient.well`
+
+Poço redondo de pedra, com água escura lá dentro, dois esteios e um sarilho com corda e balde (params: radius — por fora, 0,75 —, color)
+
+- Cenário: sem ação própria.
+
+## arms
+
+### `arms.bow`
+
+Arco de madeira com a corda, em pé; pegável, pelo meio (params: size, a altura, padrão 1.2)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.shield`
+
+Escudo: redondo de couro com borda e umbo de bronze, ou o grande escudo filisteu em pé (kind: round | tower); pegável, pela alça de trás (params: kind, size em metros, color, accent)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.sling`
+
+Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+- **set**: canais: spin, loaded
+- Canais: `spin`, `loaded`
+
+### `arms.spear`
+
+Lança de pé: haste de madeira, ponta de ferro em folha e ponteira no pé; pegável, segurada pela haste (params: length em metros, padrão 2.4; grip, altura da mão na haste)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.staff`
+
+Cajado de pastor: vara comprida com a ponta curva em gancho; pegável, pela vara (params: length, padrão 1.7)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.stone`
+
+Pedra lisa de riacho, pequena, do tamanho de um ovo; pegável (params: size, color)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.sword`
+
+Espada reta de ferro com guarda e punho de bronze; pegável, pelo punho, com a lâmina para cima e um pouco à frente (params: length da lâmina, padrão 0.7; color)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
+### `arms.tambourine`
+
+Tamborim (adufe): aro de madeira com pele e platinelas, em pé de frente; pegável, pelo aro de baixo (params: size, o diâmetro, padrão 0.3; color da pele)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
 ## backdrop
 
 ### `backdrop.house`
@@ -295,6 +513,21 @@ Viatura de polícia: o carro com pintura, giroflex no teto e rádio no painel. C
 - `dutyBelt`: Cinto de serviço: coldre do lado direito, rádio do lado esquerdo e fivela (color, accent na fivela)
 - `backpack`: Mochila nas costas, com alças (color, accent no bolso)
 - `deliveryBag`: Bag de entrega: caixa térmica grande nas costas, com alças e tampa (color, accent na tampa e na faixa)
+- `tunic`: Túnica até o joelho, de manga curta, com cinto estreito; a saia abre ao andar e cobre o colo sentado (color, accent no cinto e na barra). Ponha `pants` e `shoes` da cor da pele para pernas de fora
+- `robe`: Manto longo até os tornozelos, de mangas compridas e largas: rei, sacerdote, mulher (color, accent na barra e nos punhos)
+- `cloak`: Capa sobre os ombros, caindo pelas costas até a panturrilha, presa na frente (color, accent no broche e na barra)
+- `sash`: Faixa larga de pano na cintura, com a ponta caindo do lado (color, accent numa listra)
+- `sandals`: Sandálias de couro: sola e tiras sobre o pé e no tornozelo. Ponha `shoes` da cor da pele (color)
+- `scaleArmor`: Couraça de escamas de bronze sobre o peito e a barriga, com ombreiras (color, accent nas escamas)
+- `greaves`: Caneleiras de bronze, do joelho ao tornozelo (color)
+- `bronzeHelmet`: Capacete de bronze redondo, com ponta, protetor de nuca e de rosto dos lados (color, accent na borda)
+- `plumedHelmet`: Capacete filisteu: faixa de bronze com uma coroa de penas ou juncos em pé (color nas penas, accent na faixa)
+- `crown`: Coroa simples de ouro: um aro com pontas baixas (color)
+- `headband`: Faixa de pano em volta da cabeça, na testa, com o nó atrás (color)
+- `headwrap`: Pano cobrindo a cabeça e caindo nas costas e dos lados, sobre o cabelo (color, accent numa faixa na testa)
+- `shepherdBag`: Alforje de pastor: bolsa de couro do lado esquerdo do quadril, com a alça cruzando o peito (color, accent na tampa)
+- `scabbard`: Espada embainhada no quadril esquerdo: bainha de couro e o punho à mostra (color na bainha, accent no metal)
+- `scabbardEmpty`: Só a bainha no quadril esquerdo, sem a espada (depois de tirá-la) (color, accent no metal)
 
 ## Janelas (`frame` numa abertura, ou `windows` no local)
 
