@@ -16,3 +16,5 @@
 
 - `twoShot` é calculado com as posições do começo do plano. Se um dos dois vai andar (levantar, dar a volta), use um plano fixo de um lugar fora do caminho dos dois, e confira os quadros do começo, meio e fim.
 - Antes de pôr alguém encostado perto de uma porta, veja para que lado e até onde a folha abre (`doors.ts`: dobradiça no começo da abertura).
+
+- **Diálogo no centro do quadro.** O Instagram corta as beiradas do vertical: os dois personagens de um diálogo ficam no terço central, nunca um deles na borda. Prefira um plano sobre o ombro de quem fala, alinhado com o outro, a um plano de lado que abre os dois para as pontas. Confira no `look` antes de seguir.

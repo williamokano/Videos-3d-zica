@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+import { channelAt, type CompiledActions } from '../actions/catalog';
 import { rng } from '../core/rng';
 import { group, loose, mat, place, post, rbox, registerAsset, setChannels } from './registry';
 
@@ -762,9 +763,14 @@ registerAsset(
     const dark = '#3a3330';
     const g = group(mesh(new THREE.CapsuleGeometry(0.27, 0.6, 6, 14).rotateX(Math.PI / 2), color, [0, 0.88, 0.05]));
     // Legs, a little thicker at the top, with dark hooves; the haunches.
-    for (const [x, z] of [[-0.13, -0.33], [0.13, -0.33], [-0.13, 0.4], [0.13, 0.4]]) {
-      g.add(rod(v3(x, 0.07, z), v3(x, 0.84, z), 0.05, color, 0.09), mesh(new THREE.CylinderGeometry(0.048, 0.055, 0.08, 10), dark, [x, 0.04, z]));
-    }
+    // Each leg hangs from a pivot at the hip, so it can swing when the donkey is led along.
+    const legs = [[-0.13, -0.33], [0.13, -0.33], [-0.13, 0.4], [0.13, 0.4]].map(([x, z]) => {
+      const leg = new THREE.Group();
+      leg.position.set(x, 0.84, z);
+      leg.add(rod(v3(0, -0.77, 0), v3(0, 0, 0), 0.05, color, 0.09), mesh(new THREE.CylinderGeometry(0.048, 0.055, 0.08, 10), dark, [0, -0.8, 0]));
+      g.add(leg);
+      return leg;
+    });
     for (const s of [-1, 1]) g.add(mesh(new THREE.SphereGeometry(0.15, 12, 10).scale(0.8, 1, 1), color, [s * 0.11, 0.86, 0.42]));
     // The light belly.
     g.add(mesh(new THREE.CapsuleGeometry(0.17, 0.45, 4, 12).rotateX(Math.PI / 2), light, [0, 0.74, 0.05]));
@@ -812,6 +818,19 @@ registerAsset(
       head.rotation.x = 0.06 * Math.sin(t * 0.6 + phase);
       head.rotation.y = 0.12 * Math.sin(t * 0.27 + phase);
       ears.forEach((ear, i) => (ear.rotation.x = 0.35 + 0.25 * Math.max(0, Math.sin(t * (1.3 + i * 0.4) + phase * (i + 1))) ** 6));
+    };
+    // Led along (moveTo), it walks: speed from where it is a moment before and after, a diagonal gait
+    // (front left with back right), one step about every 0.45 m, and a small bob of the head.
+    g.userData.present = (compiled: CompiledActions, t: number, id: string) => {
+      const dt = 0.12;
+      const at = (u: number) => [channelAt(compiled, id, 'x', u), channelAt(compiled, id, 'z', u)];
+      const [a, b] = [at(Math.max(0, t - dt)), at(t + dt)];
+      const speed = Math.hypot(b[0] - a[0], b[1] - a[1]) / (2 * dt);
+      const walk = Math.min(1, speed / 0.5);
+      const stride = (t * speed * Math.PI * 2) / 0.9;
+      legs.forEach((leg, i) => (leg.rotation.x = walk * 0.38 * Math.sin(stride + (i === 0 || i === 3 ? 0 : Math.PI))));
+      head.position.y = 1.0 + walk * 0.025 * Math.abs(Math.sin(stride));
+      head.rotation.x += walk * 0.08 * Math.sin(stride * 2);
     };
     return g;
   },

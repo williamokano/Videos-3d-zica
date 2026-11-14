@@ -154,9 +154,9 @@ export default direct(
     d.waitFor(servoVem.end);
     d.do('servo', 'move', { name: 'kneel' }, { duration: 0.9 });
     saul.lookAt(servo, { duration: 0.6 });
-    // Os dois de lado, a câmera girando devagar: o rei no trono, o servo de joelhos.
-    d.camera.cut({ pos: [98.0, 1.6, -97.0], lookAt: [100.4, 1.0, -100.4], fov: 52 });
-    d.camera.moveTo({ pos: [98.2, 1.58, -97.4], lookAt: [100.4, 1.0, -100.4], fov: 48 });
+    // Por cima do ombro do servo de joelhos, o rei no trono: os dois no meio do quadro (o Instagram corta as beiradas).
+    d.camera.cut({ pos: [99.9, 1.9, -96.2], lookAt: [100.35, 1.0, -100.4], fov: 52 });
+    d.camera.moveTo({ pos: [99.95, 1.85, -96.6], lookAt: [100.35, 1.05, -100.4], fov: 48 });
     servo.say('Meu senhor. Um espírito mau te atormenta. Deixa que procuremos alguém que saiba tocar harpa. Quando a música tocar, tu ficarás melhor.', { tone: 'cuidadoso', to: saul, gesture: 0.3 });
     saul.express('angry', { amount: 0.2 });
     saul.say('Encontrem esse homem. E tragam-no a mim.', { tone: 'cansado', to: servo, gesture: 0.2 });
