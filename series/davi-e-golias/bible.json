@@ -45,8 +45,8 @@
     {
       "id": "fim-de-tarde",
       "description": "Fim da tarde, na tenda do rei depois da batalha: sol baixo, céu alaranjado.",
-      "from": 2,
-      "until": 2,
+      "from": 5,
+      "until": 5,
       "effects": {
         "environment": {
           "skyTop": "#41588f",

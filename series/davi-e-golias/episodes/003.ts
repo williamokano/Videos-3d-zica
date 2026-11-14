@@ -2,7 +2,7 @@ import { direct } from '../../../src/engine/timeline/direct';
 import { IRMAOS, LINHA, TOPO, atentos, encolhem, filaDeIsrael, filaFilisteia, ids, rodaDaFogueira } from '../cena';
 
 /*
- * Episódio 1, "Cinco pedras". Roteiro de trabalho em series/davi-e-golias/roteiros/001-roteiro.md (as cenas
+ * Episódio 1, "Cinco pedras". Roteiro de trabalho em series/davi-e-golias/roteiros/003-roteiro.md (as cenas
  * abaixo têm os mesmos números); regras da história em series/davi-e-golias/biblia.md.
  *
  * Sem áudio por enquanto (pedido do autor): as falas não têm voz gravada e duram o que o texto pede.
@@ -26,7 +26,7 @@ const TRILHA: [number, number] = [-9, -60];
 
 export default direct(
   {
-    episode: 1,
+    episode: 3,
     title: 'Cinco pedras',
     location: 'vale-de-ela',
     cast: [

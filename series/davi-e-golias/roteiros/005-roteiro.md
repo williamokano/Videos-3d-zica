@@ -1,6 +1,6 @@
 # Episódio 2 — "Dez milhares" (roteiro, versão 1)
 
-A partir do pedido em [`002-pedido.md`](002-pedido.md), de 1 Samuel 17:49-58 e 18:1-9. Este é o roteiro de trabalho: o que está aqui vira `episodes/002.ts`.
+A partir do pedido em [`005-pedido.md`](005-pedido.md), de 1 Samuel 17:49-58 e 18:1-9. Este é o roteiro de trabalho: o que está aqui vira `episodes/002.ts`.
 
 Legenda: **[GANCHO]** prende a atenção, **(tom)** é como a voz sai e não aparece na legenda, *itálico* é ação, **Câmera:** é o plano, `⏸` é pausa, **[Liberdade]** é algo que não está no texto bíblico mas também não o contradiz.
 
