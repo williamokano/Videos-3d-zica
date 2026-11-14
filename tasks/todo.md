@@ -32,3 +32,17 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 - [ ] Episódio 4 (armadura, riacho, confronto, queda, silêncio e grito) a partir do resto do 003.ts e do começo do 005.ts
 - [ ] Episódio 5 (cidade, Jônatas na praça, janela do palácio, a lança)
 - [ ] Tela de abertura da série em todos
+
+## 6. Ajustes do autor em "O escolhido" (2026-11-14, ele assistiu a prévia: "99%")
+Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
+- [ ] Davi toca harpa sentado em nada; os anciãos também sentam em nada: sentar em algo de verdade (pedra-assento, banco de pedra)
+- [ ] Uma ovelha do rebanho afunda na terra (rebanho em encosta): cada ovelha no chão sob ela
+- [ ] O filho mais perto do baú se sobrepõe ao baú: tirar o baú do caminho
+- [ ] Câmera que acompanha: quando o Samuel anda, câmera mais afastada que gira e se move para manter ele em quadro (nada de plano travado com gente saindo)
+- [ ] Samá correndo para chamar o Davi: em vez de terceira pessoa de videogame, câmera semifixa de longe, que acompanha e vai na direção dele; a cena não pode perder o foco das pessoas
+- [ ] Câmeras menos coladas em geral
+- [ ] Nuvens no céu
+- [ ] Casa de Jessé menos "moderna": paredes irregulares de pedra e barro, porta e janela de madeira antiga, sem esquadro perfeito
+- [ ] Fogo das fogueiras mais vivo e chama da lamparina melhor
+- [ ] Unção: câmera colada demais e o Davi ajoelhado mal se vê; plano mais aberto, de lado, com uma pequena rotação em volta dos dois
+- [ ] Cenas de duas pessoas: pegar as duas meio de lado, com uma pequena rotação em volta delas

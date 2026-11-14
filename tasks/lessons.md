@@ -9,3 +9,5 @@
 - **Câmera não entra em cenário fechado nem atravessa pano ou parede.** A órbita dentro da tenda passou pelo pano e tapou tudo. Em lugar fechado, filme pela abertura (de fora para dentro, por cima do ombro) e confira cada quadro do movimento, não só o começo e o fim.
 - **No vídeo vertical o campo lateral é estreito.** Órbita em volta do meio de duas pessoas perde as duas. Deixe as pessoas na linha do olhar da câmera (uma atrás da outra) e gire pouco.
 - **Com ajudantes trabalhando, nunca `git add -A` numa pasta que eles mexem.** Um commit meu levou o trabalho pela metade de outro agente (e um teste temporário dele). Adicione os arquivos pelo nome, ou confira `git show --stat` antes de seguir.
+- **Câmera de cinema acompanha o personagem.** Plano travado com gente saindo de quadro e terceira pessoa "de videogame" incomodaram o autor. Quem anda é seguido por uma câmera mais afastada que gira e desliza para mantê-lo em quadro; conversa de duas pessoas, de lado, com pequena rotação; nada colado no rosto.
+- **Quem senta, senta em algo.** Sentar com `seated` sem um banco, pedra ou trono embaixo fica flutuando. Ponha o assento no lugar.
