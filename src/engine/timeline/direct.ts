@@ -6,6 +6,7 @@
  */
 import '../actions/builtin';
 import '../actions/character';
+import '../actions/moves';
 import '../actions/phone';
 import '../actions/audio';
 import '../actions/endcard';

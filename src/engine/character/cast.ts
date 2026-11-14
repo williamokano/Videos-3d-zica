@@ -3,7 +3,7 @@ import type { Ambient } from '../actions/ambient';
 import type { InteractiveObject } from '../world/build';
 import { buildBody } from './body';
 import { palmToward, reachPose, wristPosition, type Side } from './ik';
-import { EXPRESSIONS, HAND_POSE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, resolveFace, resolveHand, ridePose, sitPose, splitGaze } from './motion';
+import { EXPRESSIONS, HAND_POSE_NAMES, MOVE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, movePose, resolveFace, resolveHand, ridePose, sitPose, splitGaze } from './motion';
 import type { CharacterDef, CharacterRig, HandShape, Joint } from './types';
 
 /** A character placed in an episode. */
@@ -30,7 +30,7 @@ const STRIDE = 1.5;
 /**
  * Put a character in the scene as an interactive object. Its channels are x, y, z, yaw, `stride` (walk cycles
  * covered), `gait` (0 stands, 1 walks, 2 runs), `talk` (mouth held open by speech), one `vis.<shape>` weight per mouth shape of speech,
- * one `expr.<name>` weight per expression, and the body channels: `crouch`, `sit`, `attached` (how much it rides on a seat), and for each
+ * one `expr.<name>` weight per expression, one `move.<name>` weight per whole-body move (MOVES in motion.ts), and the body channels: `crouch`, `sit`, `attached` (how much it rides on a seat), and for each
  * hand `carryL` / `carryR` (holding something), one `handL.<pose>` / `handR.<pose>` weight per hand pose, and `reachL` / `reachR` with `.x`, `.y`, `.z` (hand going to a point
  * of the location, or of the body itself when `.local` is 1). `look.yaw` and `look.pitch` turn the head from the body, in degrees. `rig` replaces the built-in body, e.g. by a loaded GLB.
  */
@@ -48,6 +48,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
+    ...Object.fromEntries(MOVE_NAMES.map((n) => [`move.${n}`, 0])),
     ...Object.fromEntries(VISEME_NAMES.map((n) => [`vis.${n}`, 0])),
     ...Object.fromEntries((['L', 'R'] as Side[]).flatMap((side) => HAND_POSE_NAMES.map((n) => [`hand${side}.${n}`, 0]))),
   };
@@ -65,6 +66,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     object.rotation.y = THREE.MathUtils.degToRad(state.yaw);
     object.updateMatrixWorld();
     let pose = ridePose(sitPose(crouchPose(locomotionPose(t, state.gait, state.stride), state.crouch), state.sit), state.ride, state.pedal);
+    pose = movePose(pose, Object.fromEntries(MOVE_NAMES.map((n) => [n, state[`move.${n}`]])), t + seed);
     // What each hand does because of what the arm is doing: open when it talks, closed on what it holds.
     const busy = { L: { open: 0, grip: 0 }, R: { open: 0, grip: 0 } };
     for (const side of ['L', 'R'] as Side[]) {

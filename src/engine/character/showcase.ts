@@ -87,6 +87,14 @@ export const SHOWCASE_POSES: Record<string, ShowcasePose> = {
       return { carryR: 1, reachR: 1, 'reachR.x': x, 'reachR.y': y, 'reachR.z': z, 'reachR.local': 1 };
     },
   },
+  // The whole-body moves (MOVES in motion.ts); throwing and falling repeat from the start every few seconds.
+  kneel: { label: 'Ajoelhar', channels: () => ({ 'move.kneel': 1 }) },
+  sling: { label: 'Girar a funda', channels: () => ({ 'move.sling': 1 }) },
+  throw: { label: 'Arremessar', channels: (t) => ({ 'move.throw': (t % 1.6) / 1.2 }) },
+  fall: { label: 'Cair de frente', channels: (t) => ({ 'move.fall': Math.min(1, (t % 3.5) / 1.3) ** 2 }) },
+  dance: { label: 'Dançar', channels: () => ({ 'move.dance': 1 }) },
+  cheer: { label: 'Comemorar', channels: () => ({ 'move.cheer': 1 }) },
+  cower: { label: 'Encolher', channels: () => ({ 'move.cower': 1 }) },
 };
 
 /** Channels of a character doing a pose at time t. The stage floor is at height 0, so `y` is the height of the stool. */

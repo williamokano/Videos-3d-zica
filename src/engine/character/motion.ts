@@ -374,3 +374,151 @@ export function resolveHand(weights: Record<string, number>, t = 0): HandShape {
   for (const key of Object.keys(hand) as (keyof HandShape)[]) hand[key] = Math.max(0, Math.min(1, hand[key]));
   return hand;
 }
+
+// ---- Whole-body moves ----
+
+/**
+ * Moves that take the whole body, each a weight from 0 to 1 on a character channel `move.<name>`. A move
+ * gets the pose so far and the clock, so it can keep going by itself (spinning a sling, dancing) while its
+ * weight holds. Added in this order, after crouching and sitting and before what the hands do.
+ */
+export type Move = (pose: Pose, amount: number, t: number) => Pose;
+
+const sum = (pose: Pose, joint: Joint, d: [number, number, number]): [number, number, number] => {
+  const [a, b, c] = pose.joints[joint] ?? [0, 0, 0];
+  return [a + d[0], b + d[1], c + d[2]];
+};
+
+/** Down on the right knee, the left foot flat in front: to pick something off the ground or to pray. */
+function kneel(pose: Pose, amount: number): Pose {
+  const knelt: Pose = {
+    // The hips come down to a thigh's length over the knee on the ground.
+    lift: -0.4,
+    joints: {
+      ...pose.joints,
+      hips: [0, 0, 0], spine: [-18, 0, 0], chest: [-6, 0, 0], head: [16, 0, 0],
+      thighL: [88, 0, 0], shinL: [-90, 0, 0], footL: [2, 0, 0],
+      thighR: [-8, 0, 0], shinR: [-88, 0, 0], footR: [40, 0, 0],
+    },
+  };
+  return blendPose(pose, knelt, amount);
+}
+
+/**
+ * Spinning a sling over the head with the right hand: the arm up and out, the hand going round about twice a
+ * second. The body leans back a little and the left arm points ahead for aim.
+ */
+function sling(pose: Pose, amount: number, t: number): Pose {
+  const a = t * Math.PI * 2 * 2.2;
+  const spun: Pose = {
+    lift: pose.lift,
+    joints: {
+      ...pose.joints,
+      spine: sum(pose, 'spine', [6, -10, 0]),
+      upperArmR: [-20 + 18 * Math.sin(a), 30 * Math.cos(a), 62 + 10 * Math.sin(a)],
+      forearmR: [0, 30 + 25 * Math.cos(a), 0],
+      upperArmL: [-70, 0, 10],
+      forearmL: [0, -10, 0],
+    },
+  };
+  return blendPose(pose, spun, amount);
+}
+
+/**
+ * Throwing overhand with the right arm. `amount` is how far the throw has gone: 0 to 0.4 winds up (arm back,
+ * body turned), 0.4 to 0.6 whips the arm over and forward (the release is at 0.5), then it follows through.
+ */
+function throwing(pose: Pose, amount: number): Pose {
+  if (amount <= 0.001 || amount >= 0.999) return pose;
+  const key = (u: number): number => (u < 0.4 ? u / 0.4 : u < 0.6 ? 1 - ((u - 0.4) / 0.2) * 2 : -1 + ((u - 0.6) / 0.4) * 0.6);
+  // 1 wound up, -1 thrown forward.
+  const k = key(amount);
+  const back = Math.max(0, k);
+  const fwd = Math.max(0, -k);
+  const out: Pose = {
+    lift: pose.lift,
+    joints: {
+      ...pose.joints,
+      spine: sum(pose, 'spine', [8 * back - 22 * fwd, -25 * back + 25 * fwd, 0]),
+      upperArmR: [60 * back - 80 * fwd, 0, 70 * back + 20 * fwd],
+      forearmR: [0, 70 * back + 10 * fwd, 0],
+      upperArmL: [-60 * back - 10 * fwd, 0, 30],
+      thighL: sum(pose, 'thighL', [20 * fwd, 0, 0]),
+      thighR: sum(pose, 'thighR', [-15 * fwd, 0, 0]),
+    },
+  };
+  // Fades in and out at the ends of the throw.
+  return blendPose(pose, out, Math.min(1, amount / 0.1, (1 - amount) / 0.1));
+}
+
+/** Falling forward stiff, like a tree, and lying face down. The fall action moves the body forward with it. */
+function fall(pose: Pose, amount: number): Pose {
+  if (amount <= 0.001) return pose;
+  const angle = 90 * amount;
+  const rad = (angle * Math.PI) / 180;
+  // Pivoting on the feet: the hips come down along a circle and the chest ends a hand above the ground.
+  const lift = 0.9 * (Math.cos(rad) - 1) + 0.14 * Math.sin(rad);
+  const arms = Math.min(1, amount * 1.5);
+  return {
+    lift: pose.lift * (1 - amount) + lift,
+    joints: {
+      ...pose.joints,
+      hips: [-angle, 0, 0], spine: [0, 0, 0], chest: [0, 0, 0], neck: [0, 0, 0],
+      // The head turns to one side on the ground.
+      head: [10 * amount, 35 * amount, 0],
+      upperArmL: [-60 * arms, 0, 78 - 50 * arms], upperArmR: [-60 * arms, 0, -78 + 50 * arms],
+      forearmL: [0, -20, 0], forearmR: [0, 20, 0],
+      thighL: [0, 0, 0], thighR: [0, 0, 0], shinL: [-4 * amount, 0, 0], shinR: [-6 * amount, 0, 0],
+      footL: [40 * amount, 0, 0], footR: [40 * amount, 0, 0],
+    },
+  };
+}
+
+/** Dancing with both hands up (a tambourine in one), the hips swaying and the feet stepping in time. */
+function dance(pose: Pose, amount: number, t: number): Pose {
+  const a = t * Math.PI * 2 * 1.1;
+  const s = Math.sin(a);
+  const danced: Pose = {
+    lift: pose.lift - 0.03 * (1 - Math.abs(Math.cos(a))),
+    joints: {
+      ...pose.joints,
+      hips: [0, 14 * s, 6 * s], spine: [0, -8 * s, -5 * s], head: [0, 10 * s, 4 * s],
+      upperArmR: [-8, 0, 68 + 12 * Math.sin(a * 2)], forearmR: [0, 35, 0],
+      upperArmL: [-8, 0, -68 - 12 * Math.sin(a * 2 + 1)], forearmL: [0, -35, 0],
+      thighL: [18 * Math.max(0, s), 0, 0], shinL: [-30 * Math.max(0, s), 0, 0],
+      thighR: [18 * Math.max(0, -s), 0, 0], shinR: [-30 * Math.max(0, -s), 0, 0],
+    },
+  };
+  return blendPose(pose, danced, amount);
+}
+
+/** Both arms up in triumph (a shout of victory, a charge), shaking a little. */
+function cheer(pose: Pose, amount: number, t: number): Pose {
+  const shake = 6 * Math.sin(t * 9);
+  const up: Pose = {
+    lift: pose.lift,
+    joints: { ...pose.joints, upperArmR: [-15, 0, 70 + shake], forearmR: [0, 25, 0], upperArmL: [-15, 0, -70 - shake], forearmL: [0, -25, 0], head: sum(pose, 'head', [-10, 0, 0]) },
+  };
+  return blendPose(pose, up, amount);
+}
+
+/** Head down and shoulders in: shame, fear, a soldier backing off. */
+function cower(pose: Pose, amount: number): Pose {
+  const low: Pose = {
+    lift: pose.lift - 0.04,
+    joints: { ...pose.joints, spine: sum(pose, 'spine', [-12, 0, 0]), chest: sum(pose, 'chest', [-8, 0, 0]), head: sum(pose, 'head', [22, 0, 0]), upperArmL: [-25, 0, 70], upperArmR: [-25, 0, -70], forearmL: [0, -50, 0], forearmR: [0, 50, 0] },
+  };
+  return blendPose(pose, low, amount);
+}
+
+export const MOVES: Record<string, Move> = { kneel, sling, throw: throwing, fall, dance, cheer, cower };
+export const MOVE_NAMES = Object.keys(MOVES);
+
+/** All the moves on a pose, by their weights. */
+export function movePose(pose: Pose, weights: Record<string, number>, t: number): Pose {
+  for (const name of MOVE_NAMES) {
+    const w = weights[name] ?? 0;
+    if (w > 0.001) pose = MOVES[name](pose, Math.min(1, w), t);
+  }
+  return pose;
+}

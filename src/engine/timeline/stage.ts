@@ -2,6 +2,7 @@ import '../actions/builtin';
 import { charactersOf, crowdAt } from '../actions/crowd';
 import { ambientAt, behaviourAt } from '../actions/ambient';
 import '../actions/character';
+import '../actions/moves';
 import '../actions/endcard';
 import '../actions/audio';
 import '../actions/phone';
