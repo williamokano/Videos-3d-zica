@@ -463,6 +463,9 @@ export function stillWithNothingToDo(clips: ActionClip[], cast: string[], viewer
   for (const id of cast) {
     if (viewers.includes(id)) continue;
     const mine = clips.filter((c) => c.target === id || (c.params as { by?: string } | undefined)?.by === id).sort((a, b) => a.t - b.t);
+    // Someone who has fallen lies still on purpose, from then on.
+    const fallen = mine.find((c) => c.action === 'fall');
+    const end = fallen ? Math.min(length, fallen.t) : length;
     // When the character is busy (a step that takes time) and when its behaviour changes.
     const busy = mine.filter((c) => (c.duration ?? 0) > 0 && c.action !== 'lookAt').map((c) => [c.t, c.t + (c.duration ?? 0)] as [number, number]);
     const modes = mine.filter((c) => c.action === 'behave').map((c) => ({ t: c.t, mode: (c.params as { mode: string }).mode }));
@@ -476,7 +479,7 @@ export function stillWithNothingToDo(clips: ActionClip[], cast: string[], viewer
         from = null;
       }
     }
-    if (from !== null) idle.push([from, length]);
+    if (from !== null && end > from) idle.push([from, end]);
     // Take out the time spent on steps; what is left is standing frozen.
     for (const [a, b] of idle) {
       let t = a;

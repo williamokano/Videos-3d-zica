@@ -1,6 +1,6 @@
 # Episódio 1 — Cinco pedras (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 5:00.0. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 5:03.9. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -27,123 +27,124 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:33.1` **SOLDADO DA FOGUEIRA 2**: E o rei? Não faz nada? ⚠ sem gravação
 - `0:35.0` **SOLDADO DA FOGUEIRA 3** (sussurro): O rei tá na tenda. Faz quarenta dias que tá na tenda. ⚠ sem gravação
 - `0:37.2` **DAVI**: Guarda isso pra mim? É dos filhos de Jessé, de Belém. ⚠ sem gravação
-- `0:37.2` 🎥 corte: câmera fov 42
+- `0:37.2` 🎥 corte: câmera fov 46
 - `0:42.3` **GUARDA DAS BAGAGENS** (cansado): Mais comida? Põe ali. Teus irmãos tão na linha de frente. ⚠ sem gravação
 - `0:46.5` **DAVI**: O que foi aquele grito? ⚠ sem gravação
 - `0:48.5` **GUARDA DAS BAGAGENS**: Vai lá ver. Mas não vai muito pra frente, não. ⚠ sem gravação
 - `0:52.0` 🎥 corte: third_person fov 54
-- `0:54.3` **DAVI** (animado): Eliabe! Abinadabe! Samá! ⚠ sem gravação
-- `0:56.9` 🎥 corte: câmera fov 44
-- `0:57.3` **DAVI**: Paz pra vocês! ⚠ sem gravação
-- `0:58.7` **SAMÁ** (surprised): Davi? O que você tá fazendo aqui? ⚠ sem gravação
+- `0:54.2` **DAVI** (animado): Eliabe! Abinadabe! Samá! ⚠ sem gravação
+- `0:56.8` 🎥 corte: câmera fov 44
+- `0:57.2` **DAVI**: Paz pra vocês! ⚠ sem gravação
+- `0:58.6` **SAMÁ** (surprised): Davi? O que você tá fazendo aqui? ⚠ sem gravação
 - `1:01.3` **DAVI**: O pai mandou grão e pão. E dez queijos pro comandante de vocês. Ele quer um sinal de que vocês tão bem. ⚠ sem gravação
 - `1:08.5` **ABINADABE** (ironico): Diz pra ele que a gente tá vivo. Por enquanto. ⚠ sem gravação
 - `1:12.0` **GOLIAS** (grito): Ninguém?! Israel inteiro e nenhum homem?! ⚠ sem gravação
 - `1:12.0` 🎥 corte: câmera fov 40
-- `1:15.2` 🎥 corte: câmera fov 40
-- `1:17.4` 🎥 corte: câmera fov 42
-- `1:17.8` **SOLDADO 6**: Viu aquele homem? Ele sobe pra afrontar Israel. O rei prometeu: quem matar o gigante fica rico. ⚠ sem gravação
-- `1:24.4` **SOLDADO 5**: Casa com a filha do rei. ⚠ sem gravação
-- `1:26.5` **SOLDADO 6**: E a casa do pai dele nunca mais paga imposto. ⚠ sem gravação
-- `1:29.9` **DAVI**: O que vão dar pra quem matar esse filisteu e tirar essa vergonha de Israel? ⚠ sem gravação
-- `1:35.3` **SOLDADO 6** (ironico): Acabei de dizer. ⚠ sem gravação
-- `1:36.8` **DAVI** (firme): E quem é esse filisteu, pra desafiar o exército do Deus vivo? ⚠ sem gravação
-- `1:36.8` 🎥  fov 34
-- `1:43.6` **ELIABE** (bravo): O que você tá fazendo aqui? E as poucas ovelhas, deixou com quem no deserto? ⚠ sem gravação
-- `1:43.6` 🎥 corte: câmera fov 40
-- `1:49.1` **ELIABE** (bravo): Eu te conheço. Conheço teu orgulho. Você veio pra ver a guerra. ⚠ sem gravação
-- `1:53.7` **DAVI**: E o que foi que eu fiz agora? Foi só uma pergunta. ⚠ sem gravação
-- `1:57.7` 🎥 corte: câmera fov 44
-- `1:58.5` **SOLDADO 5** (cansado): Deixa o menino, Eliabe. ⚠ sem gravação
-- `2:03.4` **DAVI**: E você? O que o rei vai dar? ⚠ sem gravação
-- `2:05.7` **SOLDADO 12**: O mesmo que te disseram, rapaz. Por quê? Tá pensando em ir? ⚠ sem gravação
-- `2:11.3` **REI SAUL** (cansado): Quarenta dias, Abner. ⚠ sem gravação
-- `2:11.3` 🎥 corte: câmera fov 46
-- `2:13.1` **ABNER**: E nenhum homem desceu, majestade. ⚠ sem gravação
-- `2:17.6` **ABNER**: Majestade, esse é o rapaz que anda perguntando sobre a recompensa. ⚠ sem gravação
-- `2:22.4` **DAVI** (decidido): Que ninguém perca a coragem por causa dele. Eu vou lutar com esse filisteu. ⚠ sem gravação
-- `2:27.8` **ABNER** (ironico): Ele é pastor, majestade. ⚠ sem gravação
-- `2:29.8` **REI SAUL** (cansado): Você não consegue enfrentar esse homem. Você é um rapaz. Ele é guerreiro desde menino. ⚠ sem gravação
-- `2:35.9` **DAVI**: Eu cuido das ovelhas do meu pai. Uma vez veio um leão e levou um cordeiro. ⚠ sem gravação
-- `2:35.9` 🎥 corte: câmera fov 44
-- `2:37.9` 🎥  fov 44
-- `2:39.9` 🎥  fov 44
-- `2:41.2` **DAVI**: Eu fui atrás, bati nele e tirei o cordeiro da boca dele. Ele veio pra cima de mim. Eu peguei pela juba e matei. ⚠ sem gravação
-- `2:41.9` 🎥  fov 44
-- `2:43.9` 🎥  fov 44
-- `2:45.9` 🎥  fov 44
-- `2:47.9` 🎥  fov 44
-- `2:48.9` **DAVI**: Matei leão. Matei urso. Esse filisteu vai ser como um deles. ⚠ sem gravação
-- `2:49.9` 🎥  fov 44
-- `2:51.9` 🎥  fov 44
-- `2:53.3` **DAVI** (firme): O Senhor que me livrou do leão e do urso vai me livrar desse filisteu também. ⚠ sem gravação
-- `2:53.9` 🎥  fov 44
-- `2:58.8` **GOLIAS** (grito): Israel! Eu ainda tô esperando! ⚠ sem gravação
-- `2:58.8` 🎥 corte: câmera fov 40
-- `3:03.1` **REI SAUL**: Vá. E que o Senhor esteja com você. ⚠ sem gravação
-- `3:05.9` 🎥 corte: câmera fov 40
+- `1:15.1` 🎥 corte: câmera fov 40
+- `1:17.3` 🎥 corte: câmera fov 44
+- ⏸ **7.3 s sem fala**
+- `1:22.5` **SOLDADO 6**: Viu aquele homem? Ele sobe pra afrontar Israel. O rei prometeu: quem matar o gigante fica rico. ⚠ sem gravação
+- `1:29.1` **SOLDADO 5**: Casa com a filha do rei. ⚠ sem gravação
+- `1:31.2` **SOLDADO 6**: E a casa do pai dele nunca mais paga imposto. ⚠ sem gravação
+- `1:34.6` **DAVI**: O que vão dar pra quem matar esse filisteu e tirar essa vergonha de Israel? ⚠ sem gravação
+- `1:40.0` **SOLDADO 6** (ironico): Acabei de dizer. ⚠ sem gravação
+- `1:41.5` **DAVI** (firme): E quem é esse filisteu, pra desafiar o exército do Deus vivo? ⚠ sem gravação
+- `1:41.5` 🎥 corte: câmera fov 36
+- ⏸ **3.6 s sem fala**
+- `1:49.6` **ELIABE** (bravo): O que você tá fazendo aqui? E as poucas ovelhas, deixou com quem no deserto? ⚠ sem gravação
+- `1:49.6` 🎥 corte: câmera fov 40
+- `1:55.1` **ELIABE** (bravo): Eu te conheço. Conheço teu orgulho. Você veio pra ver a guerra. ⚠ sem gravação
+- `1:59.6` **DAVI**: E o que foi que eu fiz agora? Foi só uma pergunta. ⚠ sem gravação
+- `2:03.7` 🎥 corte: câmera fov 44
+- `2:04.5` **SOLDADO 5** (cansado): Deixa o menino, Eliabe. ⚠ sem gravação
+- `2:07.3` **DAVI**: E você? O que o rei vai dar? ⚠ sem gravação
+- `2:09.6` **SOLDADO 12**: O mesmo que te disseram, rapaz. Por quê? Tá pensando em ir? ⚠ sem gravação
+- `2:15.1` **REI SAUL** (cansado): Quarenta dias, Abner. ⚠ sem gravação
+- `2:15.1` 🎥 corte: câmera fov 46
+- `2:17.0` **ABNER**: E nenhum homem desceu, majestade. ⚠ sem gravação
+- `2:21.5` **ABNER**: Majestade, esse é o rapaz que anda perguntando sobre a recompensa. ⚠ sem gravação
+- `2:26.2` **DAVI** (decidido): Que ninguém perca a coragem por causa dele. Eu vou lutar com esse filisteu. ⚠ sem gravação
+- `2:31.6` **ABNER** (ironico): Ele é pastor, majestade. ⚠ sem gravação
+- `2:33.7` **REI SAUL** (cansado): Você não consegue enfrentar esse homem. Você é um rapaz. Ele é guerreiro desde menino. ⚠ sem gravação
+- `2:39.8` **DAVI**: Eu cuido das ovelhas do meu pai. Uma vez veio um leão e levou um cordeiro. ⚠ sem gravação
+- `2:39.8` 🎥 corte: câmera fov 46
+- `2:41.6` 🎥  fov 46
+- `2:43.4` 🎥  fov 46
+- `2:45.1` **DAVI**: Eu fui atrás, bati nele e tirei o cordeiro da boca dele. Ele veio pra cima de mim. Eu peguei pela juba e matei. ⚠ sem gravação
+- `2:45.2` 🎥  fov 46
+- `2:47.0` 🎥  fov 46
+- `2:48.8` 🎥  fov 46
+- `2:50.6` 🎥  fov 46
+- `2:52.4` 🎥  fov 46
+- `2:52.8` **DAVI**: Matei leão. Matei urso. Esse filisteu vai ser como um deles. ⚠ sem gravação
+- `2:54.2` 🎥  fov 46
+- `2:56.0` 🎥  fov 46
+- `2:57.2` **DAVI** (firme): O Senhor que me livrou do leão e do urso vai me livrar desse filisteu também. ⚠ sem gravação
+- `2:57.8` 🎥  fov 46
+- `3:02.7` **GOLIAS** (grito): Israel! Eu ainda tô esperando! ⚠ sem gravação
+- `3:02.7` 🎥 corte: câmera fov 40
+- `3:07.0` **REI SAUL**: Vá. E que o Senhor esteja com você. ⚠ sem gravação
+- `3:09.7` 🎥 corte: câmera fov 50
 - ⏸ **3.5 s sem fala**
-- `3:09.3` **REI SAUL**: Meu capacete. ⚠ sem gravação
-- `3:11.5` **REI SAUL**: E a minha couraça. ⚠ sem gravação
+- `3:13.2` **REI SAUL**: Meu capacete. ⚠ sem gravação
+- `3:15.4` **REI SAUL**: E a minha couraça. ⚠ sem gravação
 - ⏸ **3.6 s sem fala**
-- `3:16.7` **DAVI**: Não dá. Eu nunca usei isso. Não consigo nem andar. ⚠ sem gravação
-- `3:21.6` **REI SAUL** (preocupada): Vai assim? ⚠ sem gravação
-- `3:22.7` **DAVI**: Eu sempre fui assim. ⚠ sem gravação
-- `3:26.9` 🎥 corte: câmera fov 50
+- `3:20.6` **DAVI**: Não dá. Eu nunca usei isso. Não consigo nem andar. ⚠ sem gravação
+- `3:25.5` **REI SAUL** (preocupada): Vai assim? ⚠ sem gravação
+- `3:26.6` **DAVI**: Eu sempre fui assim. ⚠ sem gravação
+- `3:30.8` 🎥 corte: câmera fov 50
 - ⏸ **3.4 s sem fala**
-- `3:27.9` **SOLDADO 2** (urgente): Olha! Tem alguém descendo! ⚠ sem gravação
-- `3:30.1` **SOLDADO 3** (nervoso): É um menino. Sem armadura! ⚠ sem gravação
-- `3:32.9` **ABINADABE**: Ele vai mesmo? ⚠ sem gravação
-- `3:32.9` 🎥  fov 46
-- `3:32.9` 🎥 corte: câmera fov 40
-- `3:34.3` **ELIABE** (bravo): Esse menino nunca escutou ninguém. ⚠ sem gravação
-- `3:37.0` **GOLIAS** (grito): Cadê o homem de Israel? ⚠ sem gravação
-- `3:37.0` 🎥 corte: câmera fov 44
-- `3:39.0` **ELIABE** (grito): Davi! Davi, volta! ⚠ sem gravação
-- `3:39.0` 🎥 corte: câmera fov 36
-- `3:42.3` 🎥 corte: câmera fov 46
+- `3:31.8` **SOLDADO 2** (urgente): Olha! Tem alguém descendo! ⚠ sem gravação
+- `3:34.0` **SOLDADO 3** (nervoso): É um menino. Sem armadura! ⚠ sem gravação
+- `3:36.8` **ABINADABE**: Ele vai mesmo? ⚠ sem gravação
+- `3:36.8` 🎥  fov 46
+- `3:36.8` 🎥 corte: câmera fov 40
+- `3:38.2` **ELIABE** (bravo): Esse menino nunca escutou ninguém. ⚠ sem gravação
+- `3:40.9` **GOLIAS** (grito): Cadê o homem de Israel? ⚠ sem gravação
+- `3:40.9` 🎥 corte: câmera fov 44
+- `3:42.9` **ELIABE** (grito): Davi! Davi, volta! ⚠ sem gravação
+- `3:42.9` 🎥 corte: câmera fov 36
+- `3:46.2` 🎥 corte: câmera fov 46
 - ⏸ **3.6 s sem fala**
-- `3:44.3` **DAVI** (sussurro): Uma. ⚠ sem gravação
-- `3:44.3` *guarda pedra1*
-- `3:46.4` **DAVI** (sussurro): Duas. ⚠ sem gravação
-- `3:46.4` *guarda pedra2*
-- `3:47.3` 🎥 corte: câmera fov 40
-- `3:48.5` **DAVI** (sussurro): Três. ⚠ sem gravação
-- `3:48.5` *guarda pedra3*
-- `3:49.4` **FILISTEU 6** (laughs): Olha lá! Mandaram um menino! ⚠ sem gravação
-- `3:50.6` **DAVI** (sussurro): Quatro. ⚠ sem gravação
-- `3:50.6` *guarda pedra4*
-- `3:51.7` **FILISTEU 4** (laughs): Com um pau de pastor! ⚠ sem gravação
-- `3:52.7` **DAVI** (sussurro): Cinco. ⚠ sem gravação
-- `3:52.7` *guarda pedra5*
-- `3:54.4` 🎥 corte: câmera fov 50
+- `3:48.2` **DAVI** (sussurro): Uma. ⚠ sem gravação
+- `3:48.2` *guarda pedra1*
+- `3:50.3` **DAVI** (sussurro): Duas. ⚠ sem gravação
+- `3:50.3` *guarda pedra2*
+- `3:51.2` 🎥 corte: câmera fov 40
+- `3:52.4` **DAVI** (sussurro): Três. ⚠ sem gravação
+- `3:52.4` *guarda pedra3*
+- `3:53.3` **FILISTEU 6** (laughs): Olha lá! Mandaram um menino! ⚠ sem gravação
+- `3:54.5` **DAVI** (sussurro): Quatro. ⚠ sem gravação
+- `3:54.5` *guarda pedra4*
+- `3:55.6` **FILISTEU 4** (laughs): Com um pau de pastor! ⚠ sem gravação
+- `3:56.6` **DAVI** (sussurro): Cinco. ⚠ sem gravação
+- `3:56.6` *guarda pedra5*
+- `3:58.3` 🎥 corte: câmera fov 50
 - ⏸ **6.1 s sem fala**
-- `3:59.8` **GOLIAS** (laughs): Isso? Eu sou algum cachorro, pra você vir atrás de mim com um pedaço de pau? ⚠ sem gravação
-- `3:59.8` 🎥 corte: câmera fov 46
-- `4:04.2` 🎥  fov 46
-- `4:05.3` **GOLIAS** (bravo): Que os meus deuses te amaldiçoem! Vem cá, menino. Vou dar a tua carne pros pássaros e pros bichos do campo. ⚠ sem gravação
-- `4:08.6` 🎥  fov 46
-- `4:12.7` **DAVI** (firme): Você vem com espada, lança e escudo. Eu venho em nome do Senhor dos Exércitos, o Deus de Israel, que você desafiou. ⚠ sem gravação
-- `4:12.7` 🎥 corte: câmera fov 38
-- `4:13.0` 🎥  fov 46
-- `4:17.4` 🎥  fov 46
-- `4:20.7` **DAVI** (firme): Hoje o Senhor vai te entregar na minha mão. E a terra inteira vai saber que existe Deus em Israel. ⚠ sem gravação
-- `4:21.8` 🎥  fov 46
-- `4:27.6` **DAVI** (grito): E todo mundo aqui vai saber que o Senhor não salva com espada nem com lança. Porque a batalha é do Senhor! ⚠ sem gravação
-- `4:27.6` 🎥 corte: câmera fov 44
-- `4:35.0` *GOLIAS anda até [0.0,9.2]*
-- `4:35.0` 🎥 corte: câmera fov 50
-- `4:35.6` **FILISTEU 5** (grito): Golias! Golias! ⚠ sem gravação
-- `4:37.0` **FILISTEU 7** (grito): Golias! ⚠ sem gravação
-- `4:38.0` *GOLIAS passa a: attend (calm)*
-- `4:40.8` 🎥 corte: câmera fov 46
-- `4:41.6` 🎥 corte: câmera fov 30
+- `4:03.7` **GOLIAS** (laughs): Isso? Eu sou algum cachorro, pra você vir atrás de mim com um pedaço de pau? ⚠ sem gravação
+- `4:03.7` 🎥 corte: câmera fov 50
+- `4:07.2` 🎥  fov 50
+- `4:09.1` **GOLIAS** (bravo): Que os meus deuses te amaldiçoem! Vem cá, menino. Vou dar a tua carne pros pássaros e pros bichos do campo. ⚠ sem gravação
+- `4:10.7` 🎥  fov 50
+- `4:14.2` 🎥  fov 50
+- `4:16.6` **DAVI** (firme): Você vem com espada, lança e escudo. Eu venho em nome do Senhor dos Exércitos, o Deus de Israel, que você desafiou. ⚠ sem gravação
+- `4:16.6` 🎥 corte: câmera fov 40
+- `4:24.6` **DAVI** (firme): Hoje o Senhor vai te entregar na minha mão. E a terra inteira vai saber que existe Deus em Israel. ⚠ sem gravação
+- `4:31.4` **DAVI** (grito): E todo mundo aqui vai saber que o Senhor não salva com espada nem com lança. Porque a batalha é do Senhor! ⚠ sem gravação
+- `4:31.4` 🎥 corte: câmera fov 46
+- `4:38.8` *GOLIAS anda até [0.0,9.2]*
+- `4:38.8` 🎥 corte: câmera fov 50
+- `4:39.4` **FILISTEU 5** (grito): Golias! Golias! ⚠ sem gravação
+- `4:40.9` **FILISTEU 7** (grito): Golias! ⚠ sem gravação
+- `4:41.9` *GOLIAS passa a: attend (calm)*
+- `4:44.7` 🎥 corte: câmera fov 46
+- `4:45.5` 🎥 corte: câmera fov 30
 - ⏸ **3.9 s sem fala**
-- `4:41.9` **ELIABE** (sussurro): Senhor... ⚠ sem gravação
-- `4:43.0` 🎥 corte: câmera fov 46
-- `4:45.1` 🎥 corte: third_person fov 58
-- `4:45.3` 🎥 corte: câmera fov 40
-- `4:47.5` 🟥 cartão final: "Você descia no vale no lugar do Davi?" — DESCIA / FICAVA — Comenta DESCIA ou FICAVA 👇 e marca o amigo que sempre duvida de você
+- `4:45.8` **ELIABE** (sussurro): Senhor... ⚠ sem gravação
+- `4:46.9` 🎥 corte: câmera fov 46
+- `4:49.0` 🎥 corte: third_person fov 58
+- `4:49.2` 🎥 corte: câmera fov 40
+- `4:51.4` 🟥 cartão final: "Você descia no vale no lugar do Davi?" — DESCIA / FICAVA — Comenta DESCIA ou FICAVA 👇 e marca o amigo que sempre duvida de você
 - ⏸ **4.6 s sem fala**
-- `4:47.5` **Narrador**: Um rapaz, uma funda e cinco pedras. Você descia no vale no lugar do Davi... ou ficava na fila com o exército? Comenta aí. E marca aquele amigo que sempre duvida de você. ⚠ sem gravação
-- `4:53.3` 🎥  fov 34
+- `4:51.4` **Narrador**: Um rapaz, uma funda e cinco pedras. Você descia no vale no lugar do Davi... ou ficava na fila com o exército? Comenta aí. E marca aquele amigo que sempre duvida de você. ⚠ sem gravação
+- `4:57.2` 🎥  fov 36

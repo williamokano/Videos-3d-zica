@@ -1,0 +1,87 @@
+# Episódio 2 — Dez milhares (marcado)
+
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:15.8. Tempos já sem os cortes secos.
+
+Pausas sem fala de 3 s ou mais aparecem como ⏸.
+
+- `0:00.0` 🌍 rule.fim-de-tarde → 0
+- `0:00.0` *GOLIAS passa a: attend*
+- `0:00.0` *GOLIAS pega lanca-golias*
+- `0:00.0` 🎥  fov 38
+- `0:00.3` **Narrador**: A maioria de vocês disse que descia. O Davi desceu. ⚠ sem gravação
+- `0:04.3` 🎥  fov 34
+- `0:04.7` 🎥 corte: câmera fov 44
+- `0:06.7` 🎥  fov 44
+- `0:08.3` *GOLIAS passa a: none*
+- `0:08.3` 🎥 corte: câmera fov 46
+- `0:08.8` 🎥  fov 46
+- `0:10.0` 🎥 corte: câmera fov 46
+- `0:10.0` 🎥  fov 46
+- ⏸ **7.0 s sem fala**
+- `0:11.2` **SOLDADO 6** (sussurro): Ele... caiu? ⚠ sem gravação
+- `0:11.2` 🎥  fov 52
+- `0:12.4` **SAMÁ** (sussurro): Davi... ⚠ sem gravação
+- `0:13.4` *guarda funda*
+- `0:13.4` 🎥 corte: câmera fov 44
+- `0:16.3` 🎥 corte: câmera fov 34
+- `0:18.3` 🎥 corte: câmera fov 44
+- ⏸ **6.4 s sem fala**
+- `0:19.9` **FILISTEU 6** (grito): O campeão morreu! Fujam! ⚠ sem gravação
+- `0:22.4` **SOLDADO 2** (grito): Por Israel! ⚠ sem gravação
+- `0:22.4` 🎥 corte: câmera fov 46
+- `0:24.4` 🎥 corte: câmera fov 56
+- `0:24.4` 🎥  fov 56
+- `0:25.6` **SOLDADO 4** (grito): Atrás deles! ⚠ sem gravação
+- `0:26.9` **SOLDADO 10** (grito): Pelo Deus de Israel! ⚠ sem gravação
+- `0:30.2` **ABINADABE** (grito): Davi! Ele conseguiu! ⚠ sem gravação
+- `0:32.0` **SOLDADO 1** (grito): Não deixa nenhum escapar! ⚠ sem gravação
+- `0:36.3` 🎥 corte: câmera fov 38
+- ⏸ **8.0 s sem fala**
+- `0:42.1` **REI SAUL** (firme): Abner. De quem é filho esse rapaz? ⚠ sem gravação
+- `0:42.1` 🎥 corte: câmera fov 34
+- `0:45.3` **ABNER**: Juro pela tua vida, majestade... não sei. ⚠ sem gravação
+- `0:48.4` **REI SAUL** (firme): Então descobre. ⚠ sem gravação
+- `0:49.9` 🎥  fov 26
+- `0:52.3` 🌍 rule.fim-de-tarde → 1
+- `0:52.3` 🎥 corte: câmera fov 40
+- ⏸ **6.3 s sem fala**
+- `0:56.2` **ABNER**: Majestade. O rapaz. ⚠ sem gravação
+- `0:56.2` 🎥 corte: câmera fov 32
+- `0:57.9` **REI SAUL**: De quem você é filho, rapaz? ⚠ sem gravação
+- `0:57.9` 🎥 corte: câmera fov 34
+- `1:00.2` **DAVI**: Sou filho do teu servo Jessé, de Belém. ⚠ sem gravação
+- `1:00.2` 🎥 corte: câmera fov 32
+- `1:03.9` 🎥 corte: câmera fov 26
+- `1:05.7` 🎥 corte: câmera fov 40
+- ⏸ **6.9 s sem fala**
+- `1:10.1` **DAVI**: O que é isso? ⚠ sem gravação
+- `1:11.5` **JÔNATAS**: Fica com ele. E com isso também. ⚠ sem gravação
+- ⏸ **3.4 s sem fala**
+- `1:17.4` **JÔNATAS** (firme): A partir de hoje, você é meu irmão. Eu te amo como amo a minha própria vida. ⚠ sem gravação
+- `1:17.4` 🎥 corte: câmera fov 38
+- `1:18.9` 🎥  fov 38
+- `1:20.4` 🎥  fov 38
+- `1:21.9` 🎥  fov 38
+- `1:23.4` 🎥  fov 38
+- `1:24.4` **REI SAUL**: E você não volta mais pra casa do teu pai. Agora você fica comigo. ⚠ sem gravação
+- `1:24.4` 🎥 corte: câmera fov 36
+- `1:29.2` 🌍 rule.fim-de-tarde → 0
+- `1:29.2` 🎥 corte: câmera fov 44
+- `1:29.6` **Narrador**: Dias depois, o exército voltou para casa. ⚠ sem gravação
+- `1:32.8` **MORADOR 2** (animado): É ele! O rapaz do gigante! ⚠ sem gravação
+- `1:33.2` 🎥  fov 44
+- `1:35.0` **MORADOR 5** (grito): Davi! Davi! ⚠ sem gravação
+- `1:36.8` **MULHER 1** (animado): Saul matou os seus milhares... ⚠ sem gravação
+- `1:39.2` **MULHER 2** (animado): ...e Davi, os seus dez milhares! ⚠ sem gravação
+- ⏸ **3.7 s sem fala**
+- `1:45.6` **MULHER 3** (animado): Saul matou os seus milhares... e Davi, os seus dez milhares! ⚠ sem gravação
+- `1:45.6` 🎥 corte: câmera fov 42
+- `1:50.0` **MULHER 4** (animado): Davi, os seus dez milhares! ⚠ sem gravação
+- `1:52.2` 🎥 corte: câmera fov 40
+- `1:52.5` **REI SAUL** (sussurro): Pra ele deram dez milhares. Pra mim, só milhares. ⚠ sem gravação
+- `1:52.5` 🎥  fov 30
+- `1:56.2` **REI SAUL** (sussurro): O que mais falta pra ele? Só o reino. ⚠ sem gravação
+- `1:59.9` 🎥 corte: câmera fov 34
+- `2:02.5` 🟥 cartão final: "Se você fosse o Davi, confiava no Saul?" — CONFIAVA / FUGIA — Comenta CONFIAVA ou FUGIA 👇 e marca alguém que ficou com inveja de você
+- ⏸ **3.4 s sem fala**
+- `2:02.5` **Narrador**: Daquele dia em diante, Saul passou a olhar o Davi com desconfiança. Se você fosse o Davi... confiava no rei, ou fugia? Comenta aí. E marca aquela pessoa que ficou com inveja de você. ⚠ sem gravação

@@ -3,10 +3,27 @@
   "title": "Davi e Golias",
   "language": "pt-BR",
   "dubbing": [],
-  "format": { "width": 1080, "height": 1920, "fps": 30 },
-  "audio": { "provider": "elevenlabs", "defaultMode": "tts", "model": "eleven_v3" },
-  "style": { "look": "cel" },
-  "grade": { "tint": "#ffb36b", "amount": 0.12, "saturation": 1.08, "contrast": 1.06, "vignette": 0.12, "grain": 0 },
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "audio": {
+    "provider": "elevenlabs",
+    "defaultMode": "tts",
+    "model": "eleven_v3"
+  },
+  "style": {
+    "look": "cel"
+  },
+  "grade": {
+    "tint": "#ffb36b",
+    "amount": 0.12,
+    "saturation": 1.08,
+    "contrast": 1.06,
+    "vignette": 0.12,
+    "grain": 0
+  },
   "rules": [
     {
       "id": "luz-de-ela",
@@ -22,6 +39,25 @@
           "ambientIntensity": 1.2,
           "fogNear": 90,
           "fogFar": 420
+        }
+      }
+    },
+    {
+      "id": "fim-de-tarde",
+      "description": "Fim da tarde, na tenda do rei depois da batalha: sol baixo, céu alaranjado.",
+      "from": 2,
+      "until": 2,
+      "effects": {
+        "environment": {
+          "skyTop": "#41588f",
+          "skyHorizon": "#f0a868",
+          "sunColor": "#ffb072",
+          "sunIntensity": 2.2,
+          "ambientIntensity": 1.0
+        },
+        "grade": {
+          "tint": "#ff9a52",
+          "amount": 0.18
         }
       }
     }
