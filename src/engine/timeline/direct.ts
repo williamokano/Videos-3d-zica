@@ -237,6 +237,8 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     return takes[key];
   };
   const keys: CameraKey[] = [];
+  /** Keys a camera move planned ahead of the clock (an orbit), by when the move started: a later cut ends the move. */
+  const planned = new Map<CameraKey, number>();
   let now = 0;
   let last = 0;
 
@@ -418,6 +420,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
           const a = ((from + ((to - from) * k) / steps) * Math.PI) / 180;
           now = start + (duration * k) / steps;
           key({ pos: [center[0] + Math.sin(a) * radius, center[1] + height, center[2] + Math.cos(a) * radius], lookAt: center, fov, lens, shake, ...(k === 0 && cut && keys.length > 0 ? { cut: true } : {}) });
+          if (k > 0) planned.set(keys[keys.length - 1], round(start));
         }
         now = start;
       },
@@ -426,6 +429,10 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   script(director);
 
   if (!keys.length) throw new Error('O roteiro não tem câmera: comece com d.camera.cut(...), d.camera.fpv(...) ou d.camera.thirdPerson(...).');
+  // A cut ends a move planned ahead: the rest of an orbit after the next cut is dropped.
+  for (const [k, start] of planned) {
+    if (keys.some((other) => other.cut && !planned.has(other) && other.t > start && other.t <= k.t)) keys.splice(keys.indexOf(k), 1);
+  }
   // Keys written out of order (inside a background branch) go to their place; equal times keep the order they were written in.
   const camera = keys.map((k, i) => ({ k, i })).sort((a, b) => a.k.t - b.k.t || a.i - b.i).map(({ k }) => k);
   validateCamera(camera, cast.map((c) => c.id));

@@ -1,0 +1,8212 @@
+{
+ "id": "vale-de-ela",
+ "name": "Vale de Elá",
+ "ground": {
+  "color": "#959558",
+  "size": 600
+ },
+ "terrain": {
+  "hills": [
+   {
+    "at": [
+     0,
+     -50
+    ],
+    "radius": [
+     115,
+     36
+    ],
+    "height": 9.0,
+    "top": 0.45
+   },
+   {
+    "at": [
+     0,
+     50
+    ],
+    "radius": [
+     115,
+     36
+    ],
+    "height": 9.0,
+    "top": 0.45
+   },
+   {
+    "at": [
+     0,
+     0
+    ],
+    "radius": [
+     150,
+     7
+    ],
+    "height": -0.9,
+    "top": 0.4
+   },
+   {
+    "at": [
+     -40,
+     -235
+    ],
+    "radius": [
+     210,
+     95
+    ],
+    "height": 42
+   },
+   {
+    "at": [
+     70,
+     245
+    ],
+    "radius": [
+     230,
+     95
+    ],
+    "height": 38
+   },
+   {
+    "at": [
+     -270,
+     10
+    ],
+    "radius": [
+     90,
+     210
+    ],
+    "height": 30
+   },
+   {
+    "at": [
+     345,
+     -10
+    ],
+    "radius": [
+     95,
+     210
+    ],
+    "height": 26
+   },
+   {
+    "at": [
+     -150,
+     -70
+    ],
+    "radius": [
+     60,
+     45
+    ],
+    "height": 9
+   },
+   {
+    "at": [
+     -160,
+     80
+    ],
+    "radius": [
+     70,
+     45
+    ],
+    "height": 11
+   },
+   {
+    "at": [
+     140,
+     90
+    ],
+    "radius": [
+     55,
+     40
+    ],
+    "height": 8
+   }
+  ],
+  "highColor": "#a69660",
+  "lowColor": "#7c8c48",
+  "slopeColor": "#8e7450",
+  "resolution": 1.5,
+  "roughness": 0.45,
+  "walkable": [
+   {
+    "origin": [
+     -26,
+     -66
+    ],
+    "size": [
+     52,
+     132
+    ]
+   },
+   {
+    "origin": [
+     135.0,
+     -16.0
+    ],
+    "size": [
+     60,
+     32
+    ]
+   }
+  ]
+ },
+ "spawn": {
+  "pos": [
+   0,
+   -10
+  ],
+  "yaw": 0
+ },
+ "rooms": [
+  {
+   "id": "estrada",
+   "name": "Estrada da cidade",
+   "origin": [
+    135.0,
+    -2.5
+   ],
+   "size": [
+    26,
+    5
+   ],
+   "outdoor": true,
+   "floorColor": "#b89c70",
+   "elevation": 0.01
+  },
+  {
+   "id": "praca",
+   "name": "Praça da cidade",
+   "origin": [
+    161.0,
+    -14.0
+   ],
+   "size": [
+    34,
+    28
+   ],
+   "outdoor": true,
+   "floorColor": "#c9b28a",
+   "elevation": 0.01
+  }
+ ],
+ "props": [
+  {
+   "asset": "ancient.stream",
+   "pos": [
+    0,
+    0
+   ],
+   "params": {
+    "length": 220,
+    "width": 2.6,
+    "seed": 3
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -60.11,
+    1.79
+   ],
+   "params": {
+    "width": 3.2822722201013423,
+    "depth": 1.2,
+    "seed": 0
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -52.13,
+    1.87
+   ],
+   "params": {
+    "width": 5.3710167775102375,
+    "depth": 1.2,
+    "seed": 1
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -40.13,
+    2.45
+   ],
+   "params": {
+    "width": 5.552746315315513,
+    "depth": 1.2,
+    "seed": 2
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -32.86,
+    2.22
+   ],
+   "params": {
+    "width": 4.735721051866831,
+    "depth": 1.2,
+    "seed": 3
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -25.43,
+    2.51
+   ],
+   "params": {
+    "width": 4.464085019759532,
+    "depth": 1.2,
+    "seed": 4
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -17.56,
+    1.85
+   ],
+   "params": {
+    "width": 3.401048172303546,
+    "depth": 1.2,
+    "seed": 5
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    -3.54,
+    -1.76
+   ],
+   "params": {
+    "width": 3.6085995349232167,
+    "depth": 1.2,
+    "seed": 6
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    0.86,
+    -1.75
+   ],
+   "params": {
+    "width": 4.149060228316054,
+    "depth": 1.2,
+    "seed": 7
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    10.74,
+    -2.31
+   ],
+   "params": {
+    "width": 4.4632315704979515,
+    "depth": 1.2,
+    "seed": 8
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    22.69,
+    -2.18
+   ],
+   "params": {
+    "width": 5.970777993064239,
+    "depth": 1.2,
+    "seed": 9
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    27.71,
+    2.13
+   ],
+   "params": {
+    "width": 4.21594406061982,
+    "depth": 1.2,
+    "seed": 10
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    41.56,
+    -1.72
+   ],
+   "params": {
+    "width": 4.420933916058296,
+    "depth": 1.2,
+    "seed": 11
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    48.08,
+    1.76
+   ],
+   "params": {
+    "width": 4.42400881608542,
+    "depth": 1.2,
+    "seed": 12
+   }
+  },
+  {
+   "asset": "ancient.pebbles",
+   "pos": [
+    57.41,
+    -2.31
+   ],
+   "params": {
+    "width": 5.2090006325431455,
+    "depth": 1.2,
+    "seed": 13
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -32.74,
+    10.14
+   ],
+   "params": {
+    "width": 6.0,
+    "depth": 3.9,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -29.97,
+    9.41
+   ],
+   "params": {
+    "width": 6.2,
+    "depth": 3.0,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    66.23,
+    -9.0
+   ],
+   "params": {
+    "width": 7.0,
+    "depth": 2.4,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    69.23,
+    6.35
+   ],
+   "params": {
+    "width": 4.9,
+    "depth": 3.6,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -36.23,
+    -7.68
+   ],
+   "params": {
+    "width": 6.7,
+    "depth": 3.4,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    21.75,
+    -11.13
+   ],
+   "params": {
+    "width": 7.5,
+    "depth": 3.5,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -80.63,
+    9.68
+   ],
+   "params": {
+    "width": 6.3,
+    "depth": 2.8,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    62.14,
+    -7.67
+   ],
+   "params": {
+    "width": 3.5,
+    "depth": 2.2,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    21.37,
+    8.61
+   ],
+   "params": {
+    "width": 7.2,
+    "depth": 2.2,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -56.53,
+    3.63
+   ],
+   "params": {
+    "width": 4.9,
+    "depth": 3.9,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    73.22,
+    4.41
+   ],
+   "params": {
+    "width": 3.2,
+    "depth": 2.9,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    68.07,
+    -11.28
+   ],
+   "params": {
+    "width": 3.4,
+    "depth": 3.9,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    71.26,
+    7.53
+   ],
+   "params": {
+    "width": 7.7,
+    "depth": 4.5,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    58.97,
+    -9.4
+   ],
+   "params": {
+    "width": 5.6,
+    "depth": 3.9,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -68.53,
+    8.02
+   ],
+   "params": {
+    "width": 6.1,
+    "depth": 2.1,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -68.69,
+    4.96
+   ],
+   "params": {
+    "width": 7.6,
+    "depth": 2.2,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -36.79,
+    6.69
+   ],
+   "params": {
+    "width": 6.4,
+    "depth": 2.6,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    12.54,
+    6.88
+   ],
+   "params": {
+    "width": 6.5,
+    "depth": 4.6,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    18.78,
+    -7.74
+   ],
+   "params": {
+    "width": 7.0,
+    "depth": 2.8,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    27.09,
+    11.54
+   ],
+   "params": {
+    "width": 7.2,
+    "depth": 3.5,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    82.18,
+    11.47
+   ],
+   "params": {
+    "width": 3.4,
+    "depth": 4.2,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    48.35,
+    10.77
+   ],
+   "params": {
+    "width": 5.0,
+    "depth": 4.5,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -10.92,
+    -11.77
+   ],
+   "params": {
+    "width": 7.3,
+    "depth": 2.7,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -87.49,
+    3.97
+   ],
+   "params": {
+    "width": 6.3,
+    "depth": 2.1,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -66.53,
+    -8.25
+   ],
+   "params": {
+    "width": 4.2,
+    "depth": 3.6,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    25.81,
+    -8.8
+   ],
+   "params": {
+    "width": 3.6,
+    "depth": 4.3,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -23.57,
+    7.2
+   ],
+   "params": {
+    "width": 3.5,
+    "depth": 2.3,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -11.24,
+    -10.75
+   ],
+   "params": {
+    "width": 4.4,
+    "depth": 2.6,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    81.3,
+    4.62
+   ],
+   "params": {
+    "width": 5.4,
+    "depth": 3.5,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    69.52,
+    -3.38
+   ],
+   "params": {
+    "width": 5.9,
+    "depth": 2.4,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    52.88,
+    -4.95
+   ],
+   "params": {
+    "width": 5.9,
+    "depth": 4.9,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -43.77,
+    -12.0
+   ],
+   "params": {
+    "width": 5.7,
+    "depth": 2.7,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -13.89,
+    -5.97
+   ],
+   "params": {
+    "width": 5.3,
+    "depth": 3.5,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -20.21,
+    -10.97
+   ],
+   "params": {
+    "width": 8.0,
+    "depth": 2.7,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    82.9,
+    -4.8
+   ],
+   "params": {
+    "width": 4.2,
+    "depth": 4.8,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    17.4,
+    6.53
+   ],
+   "params": {
+    "width": 4.1,
+    "depth": 4.0,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -57.16,
+    10.39
+   ],
+   "params": {
+    "width": 3.5,
+    "depth": 4.0,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    -52.17,
+    3.79
+   ],
+   "params": {
+    "width": 7.0,
+    "depth": 4.6,
+    "density": 1
+   }
+  },
+  {
+   "asset": "nature.grass",
+   "pos": [
+    83.11,
+    5.31
+   ],
+   "params": {
+    "width": 7.1,
+    "depth": 3.1,
+    "density": 1
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -67.65,
+    -3.67
+   ],
+   "rot": 113.8,
+   "params": {
+    "seed": 862,
+    "size": 0.9
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    74.47,
+    -11.0
+   ],
+   "rot": 174.1,
+   "params": {
+    "seed": 885,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    93.51,
+    9.87
+   ],
+   "rot": 128.4,
+   "params": {
+    "seed": 80
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    27.26,
+    19.29
+   ],
+   "rot": 255.3,
+   "params": {
+    "seed": 536,
+    "size": 1.16
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    50.7,
+    -30.0
+   ],
+   "rot": 309.3,
+   "params": {
+    "seed": 593,
+    "size": 2.4
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -95.08,
+    -31.68
+   ],
+   "rot": 206.3,
+   "params": {
+    "seed": 658,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    87.49,
+    26.74
+   ],
+   "rot": 235.6,
+   "params": {
+    "seed": 33,
+    "size": 0.66
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -52.18,
+    5.34
+   ],
+   "rot": 51.0,
+   "params": {
+    "seed": 974,
+    "size": 0.48
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    37.86,
+    -28.6
+   ],
+   "rot": 234.5,
+   "params": {
+    "seed": 939,
+    "size": 2.41
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -86.86,
+    21.58
+   ],
+   "rot": 3.8,
+   "params": {
+    "seed": 156,
+    "size": 0.5
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    75.14,
+    -17.96
+   ],
+   "rot": 96.3,
+   "params": {
+    "seed": 875,
+    "size": 0.5
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -36.73,
+    15.4
+   ],
+   "rot": 233.5,
+   "params": {
+    "seed": 764,
+    "size": 0.85
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    99.42,
+    -38.6
+   ],
+   "rot": 8.0,
+   "params": {
+    "seed": 331,
+    "size": 0.57
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -36.39,
+    37.3
+   ],
+   "rot": 53.4,
+   "params": {
+    "seed": 349,
+    "size": 0.51
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    72.77,
+    8.68
+   ],
+   "rot": 196.0,
+   "params": {
+    "seed": 573
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -69.55,
+    -39.59
+   ],
+   "rot": 85.4,
+   "params": {
+    "seed": 688,
+    "size": 0.79
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    45.05,
+    -18.41
+   ],
+   "rot": 147.5,
+   "params": {
+    "seed": 860,
+    "size": 1.29
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    84.62,
+    14.46
+   ],
+   "rot": 191.7,
+   "params": {
+    "seed": 966,
+    "size": 0.64
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -71.33,
+    -39.44
+   ],
+   "rot": 321.1,
+   "params": {
+    "seed": 390,
+    "size": 0.46
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -1.79,
+    39.17
+   ],
+   "rot": 333.2,
+   "params": {
+    "seed": 684,
+    "size": 0.79
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -84.68,
+    -9.7
+   ],
+   "rot": 48.1,
+   "params": {
+    "seed": 339
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -24.07,
+    22.83
+   ],
+   "rot": 219.3,
+   "params": {
+    "seed": 386,
+    "size": 0.75
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    92.02,
+    -15.36
+   ],
+   "rot": 238.3,
+   "params": {
+    "seed": 276,
+    "size": 1.78
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    17.35,
+    -20.7
+   ],
+   "rot": 182.2,
+   "params": {
+    "seed": 792,
+    "size": 1.21
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    61.17,
+    32.5
+   ],
+   "rot": 56.8,
+   "params": {
+    "seed": 442,
+    "size": 1.15
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    80.53,
+    19.68
+   ],
+   "rot": 88.8,
+   "params": {
+    "seed": 14,
+    "size": 0.98
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    21.3,
+    6.48
+   ],
+   "rot": 200.4,
+   "params": {
+    "seed": 564,
+    "size": 0.47
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -7.94,
+    36.63
+   ],
+   "rot": 287.0,
+   "params": {
+    "seed": 38,
+    "size": 0.7
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -10.65,
+    35.79
+   ],
+   "rot": 120.8,
+   "params": {
+    "seed": 943,
+    "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    17.2,
+    -13.49
+   ],
+   "rot": 55.7,
+   "params": {
+    "seed": 684,
+    "size": 1.79
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    59.48,
+    33.64
+   ],
+   "rot": 141.9,
+   "params": {
+    "seed": 114,
+    "size": 0.85
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    62.93,
+    5.7
+   ],
+   "rot": 201.3,
+   "params": {
+    "seed": 690,
+    "size": 1.13
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    64.91,
+    24.23
+   ],
+   "rot": 147.5,
+   "params": {
+    "seed": 670,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    67.48,
+    12.8
+   ],
+   "rot": 260.6,
+   "params": {
+    "seed": 742,
+    "size": 1.24
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    36.52,
+    -9.75
+   ],
+   "rot": 312.1,
+   "params": {
+    "seed": 760,
+    "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -36.99,
+    -34.81
+   ],
+   "rot": 280.0,
+   "params": {
+    "seed": 890,
+    "size": 0.95
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    67.81,
+    4.09
+   ],
+   "rot": 101.8,
+   "params": {
+    "seed": 935,
+    "size": 0.8
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -45.28,
+    -22.85
+   ],
+   "rot": 27.6,
+   "params": {
+    "seed": 63,
+    "size": 0.62
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -72.01,
+    22.13
+   ],
+   "rot": 155.6,
+   "params": {
+    "seed": 574,
+    "size": 0.68
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    31.7,
+    -14.16
+   ],
+   "rot": 292.0,
+   "params": {
+    "seed": 821,
+    "size": 0.73
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    8.05,
+    -26.96
+   ],
+   "rot": 152.2,
+   "params": {
+    "seed": 677,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -76.49,
+    36.63
+   ],
+   "rot": 240.7,
+   "params": {
+    "seed": 137,
+    "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    74.47,
+    13.92
+   ],
+   "rot": 312.5,
+   "params": {
+    "seed": 301,
+    "size": 1.71
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -59.64,
+    -5.28
+   ],
+   "rot": 225.6,
+   "params": {
+    "seed": 483,
+    "size": 0.77
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -39.67,
+    -28.53
+   ],
+   "rot": 100.9,
+   "params": {
+    "seed": 78,
+    "size": 1.25
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -55.97,
+    -18.76
+   ],
+   "rot": 109.7,
+   "params": {
+    "seed": 749,
+    "size": 1.82
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -67.04,
+    7.75
+   ],
+   "rot": 20.4,
+   "params": {
+    "seed": 91,
+    "size": 0.48
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    9.25,
+    -14.31
+   ],
+   "rot": 173.8,
+   "params": {
+    "seed": 388,
+    "size": 1.16
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -60.32,
+    32.52
+   ],
+   "rot": 102.3,
+   "params": {
+    "seed": 392,
+    "size": 1.09
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -47.97,
+    33.78
+   ],
+   "rot": 182.4,
+   "params": {
+    "seed": 808,
+    "size": 0.9
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -80.73,
+    -9.34
+   ],
+   "rot": 54.3,
+   "params": {
+    "seed": 15,
+    "size": 0.33
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    91.06,
+    13.79
+   ],
+   "rot": 201.7,
+   "params": {
+    "seed": 697,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -41.0,
+    32.22
+   ],
+   "rot": 152.5,
+   "params": {
+    "seed": 782,
+    "size": 2.35
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -78.0,
+    18.61
+   ],
+   "rot": 3.1,
+   "params": {
+    "seed": 763,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    15.23,
+    -7.69
+   ],
+   "rot": 355.3,
+   "params": {
+    "seed": 751
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -86.63,
+    31.44
+   ],
+   "rot": 275.2,
+   "params": {
+    "seed": 125,
+    "size": 1.25
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -94.62,
+    -22.88
+   ],
+   "rot": 52.6,
+   "params": {
+    "seed": 603,
+    "size": 1.7
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -72.55,
+    -12.02
+   ],
+   "rot": 102.2,
+   "params": {
+    "seed": 115,
+    "size": 0.35
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    52.09,
+    4.18
+   ],
+   "rot": 171.2,
+   "params": {
+    "seed": 53
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    34.45,
+    -15.93
+   ],
+   "rot": 232.4,
+   "params": {
+    "seed": 680,
+    "size": 0.68
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -80.09,
+    -17.79
+   ],
+   "rot": 184.8,
+   "params": {
+    "seed": 178,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -76.85,
+    -11.7
+   ],
+   "rot": 49.4,
+   "params": {
+    "seed": 946,
+    "size": 0.9
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -73.09,
+    -28.24
+   ],
+   "rot": 241.1,
+   "params": {
+    "seed": 443,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -21.14,
+    -12.13
+   ],
+   "rot": 86.8,
+   "params": {
+    "seed": 554,
+    "size": 1.95
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    97.06,
+    -37.2
+   ],
+   "rot": 95.3,
+   "params": {
+    "seed": 883,
+    "size": 0.98
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    9.91,
+    -12.03
+   ],
+   "rot": 113.3,
+   "params": {
+    "seed": 273,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -94.73,
+    39.73
+   ],
+   "rot": 124.6,
+   "params": {
+    "seed": 761,
+    "size": 0.63
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -38.97,
+    -24.9
+   ],
+   "rot": 12.2,
+   "params": {
+    "seed": 649,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    26.3,
+    30.32
+   ],
+   "rot": 56.6,
+   "params": {
+    "seed": 282,
+    "size": 0.53
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    28.88,
+    -10.22
+   ],
+   "rot": 63.8,
+   "params": {
+    "seed": 912
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    8.25,
+    -11.53
+   ],
+   "rot": 91.0,
+   "params": {
+    "seed": 196
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -64.85,
+    8.51
+   ],
+   "rot": 68.6,
+   "params": {
+    "seed": 676,
+    "size": 0.61
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    40.36,
+    -12.24
+   ],
+   "rot": 96.6,
+   "params": {
+    "seed": 494,
+    "size": 1.17
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    77.85,
+    24.63
+   ],
+   "rot": 284.7,
+   "params": {
+    "seed": 123,
+    "size": 0.98
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -75.41,
+    22.03
+   ],
+   "rot": 228.6,
+   "params": {
+    "seed": 850,
+    "size": 1.18
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -50.99,
+    16.1
+   ],
+   "rot": 236.6,
+   "params": {
+    "seed": 860,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -82.96,
+    8.35
+   ],
+   "rot": 177.4,
+   "params": {
+    "seed": 688,
+    "size": 0.46
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    90.77,
+    6.97
+   ],
+   "rot": 243.7,
+   "params": {
+    "seed": 193,
+    "size": 1.24
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -44.35,
+    21.47
+   ],
+   "rot": 126.1,
+   "params": {
+    "seed": 802,
+    "size": 0.95
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -30.02,
+    -11.23
+   ],
+   "rot": 130.3,
+   "params": {
+    "seed": 123,
+    "size": 0.8
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -33.4,
+    39.98
+   ],
+   "rot": 113.1,
+   "params": {
+    "seed": 72,
+    "size": 0.88
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    21.05,
+    -38.1
+   ],
+   "rot": 102.2,
+   "params": {
+    "seed": 639,
+    "size": 0.39
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -58.07,
+    13.62
+   ],
+   "rot": 193.0,
+   "params": {
+    "seed": 589,
+    "size": 1.24
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -10.55,
+    -13.59
+   ],
+   "rot": 189.0,
+   "params": {
+    "seed": 820,
+    "size": 0.84
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -21.16,
+    -26.46
+   ],
+   "rot": 319.8,
+   "params": {
+    "seed": 890,
+    "size": 1.82
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -17.01,
+    3.88
+   ],
+   "rot": 153.2,
+   "params": {
+    "seed": 370,
+    "size": 1.13
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    98.14,
+    -33.32
+   ],
+   "rot": 319.6,
+   "params": {
+    "seed": 566,
+    "size": 1.15
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    52.23,
+    37.53
+   ],
+   "rot": 175.0,
+   "params": {
+    "seed": 917,
+    "size": 0.62
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    64.05,
+    -8.24
+   ],
+   "rot": 15.4,
+   "params": {
+    "seed": 693
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    83.88,
+    27.46
+   ],
+   "rot": 21.1,
+   "params": {
+    "seed": 167,
+    "size": 0.77
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    12.89,
+    -4.58
+   ],
+   "rot": 324.5,
+   "params": {
+    "seed": 7,
+    "size": 1.13
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    61.32,
+    -18.28
+   ],
+   "rot": 28.2,
+   "params": {
+    "seed": 111,
+    "size": 1.28
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -55.68,
+    5.2
+   ],
+   "rot": 350.6,
+   "params": {
+    "seed": 55,
+    "size": 1.22
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    51.01,
+    -3.45
+   ],
+   "rot": 185.8,
+   "params": {
+    "seed": 980
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -94.66,
+    23.97
+   ],
+   "rot": 219.9,
+   "params": {
+    "seed": 472,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -40.17,
+    6.06
+   ],
+   "rot": 346.8,
+   "params": {
+    "seed": 982,
+    "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    69.92,
+    15.46
+   ],
+   "rot": 286.5,
+   "params": {
+    "seed": 762,
+    "size": 1.04
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -14.18,
+    22.98
+   ],
+   "rot": 196.2,
+   "params": {
+    "seed": 456,
+    "size": 1.28
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    77.2,
+    -20.39
+   ],
+   "rot": 87.8,
+   "params": {
+    "seed": 173,
+    "size": 0.8
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -93.33,
+    17.69
+   ],
+   "rot": 306.2,
+   "params": {
+    "seed": 611,
+    "size": 0.33
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -92.31,
+    -28.31
+   ],
+   "rot": 242.6,
+   "params": {
+    "seed": 713,
+    "size": 2.0
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -36.75,
+    31.48
+   ],
+   "rot": 166.6,
+   "params": {
+    "seed": 366,
+    "size": 0.36
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    24.78,
+    16.15
+   ],
+   "rot": 142.1,
+   "params": {
+    "seed": 502,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -22.2,
+    27.58
+   ],
+   "rot": 51.7,
+   "params": {
+    "seed": 216,
+    "size": 0.68
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -53.57,
+    -16.71
+   ],
+   "rot": 252.9,
+   "params": {
+    "seed": 434,
+    "size": 0.76
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    39.14,
+    10.99
+   ],
+   "rot": 203.6,
+   "params": {
+    "seed": 658,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    32.21,
+    -38.49
+   ],
+   "rot": 252.2,
+   "params": {
+    "seed": 864,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    85.43,
+    28.7
+   ],
+   "rot": 26.3,
+   "params": {
+    "seed": 314,
+    "size": 0.72
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    43.36,
+    28.59
+   ],
+   "rot": 209.6,
+   "params": {
+    "seed": 122,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -33.93,
+    -15.03
+   ],
+   "rot": 342.3,
+   "params": {
+    "seed": 506,
+    "size": 0.61
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    69.6,
+    -22.57
+   ],
+   "rot": 233.8,
+   "params": {
+    "seed": 614,
+    "size": 0.6
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    42.32,
+    -29.43
+   ],
+   "rot": 68.8,
+   "params": {
+    "seed": 92,
+    "size": 0.66
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -52.73,
+    -10.68
+   ],
+   "rot": 173.4,
+   "params": {
+    "seed": 370
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -39.66,
+    17.76
+   ],
+   "rot": 233.5,
+   "params": {
+    "seed": 800,
+    "size": 0.85
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -72.93,
+    -34.44
+   ],
+   "rot": 132.9,
+   "params": {
+    "seed": 836,
+    "size": 0.77
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    37.04,
+    29.18
+   ],
+   "rot": 268.8,
+   "params": {
+    "seed": 425,
+    "size": 0.62
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    72.01,
+    12.8
+   ],
+   "rot": 283.6,
+   "params": {
+    "seed": 683,
+    "size": 1.17
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    65.95,
+    -33.41
+   ],
+   "rot": 279.7,
+   "params": {
+    "seed": 705,
+    "size": 1.17
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -37.17,
+    29.86
+   ],
+   "rot": 309.7,
+   "params": {
+    "seed": 794,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    37.96,
+    -22.59
+   ],
+   "rot": 31.9,
+   "params": {
+    "seed": 734,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -53.9,
+    18.55
+   ],
+   "rot": 21.4,
+   "params": {
+    "seed": 13,
+    "size": 0.65
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -32.12,
+    32.93
+   ],
+   "rot": 0.4,
+   "params": {
+    "seed": 4,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -88.71,
+    4.13
+   ],
+   "rot": 31.1,
+   "params": {
+    "seed": 824,
+    "size": 0.86
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    54.77,
+    19.51
+   ],
+   "rot": 89.8,
+   "params": {
+    "seed": 930,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -43.14,
+    -23.71
+   ],
+   "rot": 224.9,
+   "params": {
+    "seed": 149,
+    "size": 0.78
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    62.13,
+    11.31
+   ],
+   "rot": 147.5,
+   "params": {
+    "seed": 500
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -91.37,
+    -35.44
+   ],
+   "rot": 243.9,
+   "params": {
+    "seed": 389,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    39.9,
+    22.67
+   ],
+   "rot": 172.7,
+   "params": {
+    "seed": 49,
+    "size": 0.31
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    84.38,
+    -28.69
+   ],
+   "rot": 318.5,
+   "params": {
+    "seed": 945,
+    "size": 0.76
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    77.96,
+    11.0
+   ],
+   "rot": 80.6,
+   "params": {
+    "seed": 787,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -90.18,
+    -31.73
+   ],
+   "rot": 96.9,
+   "params": {
+    "seed": 193,
+    "size": 1.67
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -40.5,
+    38.05
+   ],
+   "rot": 298.1,
+   "params": {
+    "seed": 358,
+    "size": 0.64
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -17.76,
+    -11.36
+   ],
+   "rot": 65.2,
+   "params": {
+    "seed": 129,
+    "size": 0.77
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -15.85,
+    21.15
+   ],
+   "rot": 336.7,
+   "params": {
+    "seed": 621,
+    "size": 2.1
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    34.78,
+    32.3
+   ],
+   "rot": 287.9,
+   "params": {
+    "seed": 701,
+    "size": 0.34
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -18.13,
+    22.67
+   ],
+   "rot": 110.0,
+   "params": {
+    "seed": 540,
+    "size": 0.49
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    58.6,
+    22.75
+   ],
+   "rot": 151.4,
+   "params": {
+    "seed": 391,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -21.84,
+    36.16
+   ],
+   "rot": 327.2,
+   "params": {
+    "seed": 767,
+    "size": 1.24
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    46.66,
+    34.12
+   ],
+   "rot": 109.4,
+   "params": {
+    "seed": 489,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -49.42,
+    29.53
+   ],
+   "rot": 193.5,
+   "params": {
+    "seed": 959,
+    "size": 0.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    19.76,
+    16.38
+   ],
+   "rot": 356.3,
+   "params": {
+    "seed": 369,
+    "size": 1.28
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    30.98,
+    38.87
+   ],
+   "rot": 104.1,
+   "params": {
+    "seed": 392,
+    "size": 1.11
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    39.9,
+    -21.59
+   ],
+   "rot": 209.7,
+   "params": {
+    "seed": 463,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -74.44,
+    9.56
+   ],
+   "rot": 58.4,
+   "params": {
+    "seed": 632,
+    "size": 0.65
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -34.01,
+    37.24
+   ],
+   "rot": 151.9,
+   "params": {
+    "seed": 528,
+    "size": 0.49
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -6.63,
+    -36.91
+   ],
+   "rot": 325.6,
+   "params": {
+    "seed": 358,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -92.09,
+    16.28
+   ],
+   "rot": 111.3,
+   "params": {
+    "seed": 6,
+    "size": 0.88
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    86.6,
+    18.37
+   ],
+   "rot": 227.7,
+   "params": {
+    "seed": 833,
+    "size": 0.68
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -66.92,
+    26.58
+   ],
+   "rot": 112.7,
+   "params": {
+    "seed": 682,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -26.16,
+    22.04
+   ],
+   "rot": 258.3,
+   "params": {
+    "seed": 573,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -82.24,
+    -31.8
+   ],
+   "rot": 29.9,
+   "params": {
+    "seed": 475,
+    "size": 0.67
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    28.89,
+    38.72
+   ],
+   "rot": 116.8,
+   "params": {
+    "seed": 365,
+    "size": 1.11
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -17.04,
+    -34.85
+   ],
+   "rot": 161.3,
+   "params": {
+    "seed": 208,
+    "size": 1.29
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    23.63,
+    -31.11
+   ],
+   "rot": 40.2,
+   "params": {
+    "seed": 487,
+    "size": 0.85
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    57.19,
+    9.42
+   ],
+   "rot": 108.9,
+   "params": {
+    "seed": 165
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    38.2,
+    5.22
+   ],
+   "rot": 192.3,
+   "params": {
+    "seed": 629,
+    "size": 1.13
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    9.25,
+    19.01
+   ],
+   "rot": 343.4,
+   "params": {
+    "seed": 974,
+    "size": 1.88
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -23.63,
+    28.81
+   ],
+   "rot": 225.3,
+   "params": {
+    "seed": 815,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    69.94,
+    -24.9
+   ],
+   "rot": 335.5,
+   "params": {
+    "seed": 484,
+    "size": 0.95
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -44.88,
+    16.27
+   ],
+   "rot": 125.2,
+   "params": {
+    "seed": 524,
+    "size": 0.89
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    45.12,
+    -35.27
+   ],
+   "rot": 270.5,
+   "params": {
+    "seed": 980,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -38.93,
+    -5.71
+   ],
+   "rot": 358.8,
+   "params": {
+    "seed": 543,
+    "size": 1.15
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -46.35,
+    -6.02
+   ],
+   "rot": 301.6,
+   "params": {
+    "seed": 493,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    11.61,
+    37.27
+   ],
+   "rot": 171.7,
+   "params": {
+    "seed": 134,
+    "size": 0.86
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -80.79,
+    -33.22
+   ],
+   "rot": 252.3,
+   "params": {
+    "seed": 666,
+    "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    62.77,
+    -19.62
+   ],
+   "rot": 46.8,
+   "params": {
+    "seed": 385,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.boulder",
+   "pos": [
+    -15.21,
+    -28.72
+   ],
+   "rot": 300.0,
+   "params": {
+    "seed": 925,
+    "size": 1.95
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -13.24,
+    31.15
+   ],
+   "rot": 302.6,
+   "params": {
+    "seed": 608,
+    "size": 1.23
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -70.4,
+    -5.6
+   ],
+   "rot": 211.8,
+   "params": {
+    "seed": 154,
+    "size": 0.72
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -49.02,
+    10.35
+   ],
+   "rot": 320.8,
+   "params": {
+    "seed": 705,
+    "size": 0.64
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    58.47,
+    -43.49
+   ],
+   "rot": 177.5,
+   "params": {
+    "seed": 270,
+    "size": 0.91
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -113.65,
+    136.15
+   ],
+   "rot": 299.4,
+   "params": {
+    "seed": 127,
+    "size": 0.93
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    127.08,
+    69.69
+   ],
+   "rot": 64.0,
+   "params": {
+    "seed": 626,
+    "size": 1.47
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    64.0,
+    121.61
+   ],
+   "rot": 162.8,
+   "params": {
+    "seed": 976,
+    "size": 0.98
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    105.59,
+    124.1
+   ],
+   "rot": 61.5,
+   "params": {
+    "seed": 510,
+    "size": 1.5
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    69.36,
+    -134.32
+   ],
+   "rot": 244.9,
+   "params": {
+    "seed": 488,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    29.79,
+    113.01
+   ],
+   "rot": 151.7,
+   "params": {
+    "seed": 673,
+    "size": 1.12
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -98.65,
+    85.7
+   ],
+   "rot": 46.7,
+   "params": {
+    "seed": 12,
+    "size": 1.37
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -4.02,
+    -103.08
+   ],
+   "rot": 240.6,
+   "params": {
+    "seed": 484,
+    "size": 1.29
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -44.81,
+    -120.63
+   ],
+   "rot": 170.8,
+   "params": {
+    "seed": 135,
+    "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -7.43,
+    -122.95
+   ],
+   "rot": 152.8,
+   "params": {
+    "seed": 689,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    75.65,
+    45.04
+   ],
+   "rot": 280.4,
+   "params": {
+    "seed": 7,
+    "size": 1.11
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    73.2,
+    -69.91
+   ],
+   "rot": 244.0,
+   "params": {
+    "seed": 945,
+    "size": 1.23
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -67.84,
+    -52.56
+   ],
+   "rot": 101.5,
+   "params": {
+    "seed": 232,
+    "size": 1.59
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -117.72,
+    113.24
+   ],
+   "rot": 171.8,
+   "params": {
+    "seed": 924,
+    "size": 0.95
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    143.63,
+    70.98
+   ],
+   "rot": 202.0,
+   "params": {
+    "seed": 19,
+    "size": 1.11
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    102.41,
+    49.02
+   ],
+   "rot": 345.8,
+   "params": {
+    "seed": 294,
+    "size": 1.25
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    108.42,
+    -110.78
+   ],
+   "rot": 336.8,
+   "params": {
+    "seed": 325,
+    "size": 1.21
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    73.3,
+    -139.31
+   ],
+   "rot": 81.9,
+   "params": {
+    "seed": 972,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -133.39,
+    -79.29
+   ],
+   "rot": 62.2,
+   "params": {
+    "seed": 929,
+    "size": 1.31
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -91.83,
+    -59.24
+   ],
+   "rot": 274.3,
+   "params": {
+    "seed": 664,
+    "size": 1.27
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -21.99,
+    126.15
+   ],
+   "rot": 78.1,
+   "params": {
+    "seed": 673,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    35.29,
+    -82.37
+   ],
+   "rot": 337.9,
+   "params": {
+    "seed": 141,
+    "size": 1.33
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -64.01,
+    75.25
+   ],
+   "rot": 306.0,
+   "params": {
+    "seed": 840,
+    "size": 1.53
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    130.89,
+    -109.94
+   ],
+   "rot": 220.1,
+   "params": {
+    "seed": 308,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -40.02,
+    108.08
+   ],
+   "rot": 254.3,
+   "params": {
+    "seed": 784,
+    "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    63.31,
+    -114.32
+   ],
+   "rot": 189.4,
+   "params": {
+    "seed": 313,
+    "size": 1.38
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -116.03,
+    -51.07
+   ],
+   "rot": 88.4,
+   "params": {
+    "seed": 395,
+    "size": 1.11
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -100.83,
+    -114.86
+   ],
+   "rot": 351.5,
+   "params": {
+    "seed": 367,
+    "size": 1.24
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -101.43,
+    -62.71
+   ],
+   "rot": 350.6,
+   "params": {
+    "seed": 875,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    125.73,
+    52.77
+   ],
+   "rot": 241.9,
+   "params": {
+    "seed": 671,
+    "size": 1.35
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    121.98,
+    -109.39
+   ],
+   "rot": 237.6,
+   "params": {
+    "seed": 121,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    62.99,
+    -77.43
+   ],
+   "rot": 256.9,
+   "params": {
+    "seed": 68,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -138.75,
+    120.22
+   ],
+   "rot": 71.1,
+   "params": {
+    "seed": 230,
+    "size": 1.1
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -70.05,
+    127.07
+   ],
+   "rot": 329.4,
+   "params": {
+    "seed": 117,
+    "size": 1.48
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -69.62,
+    55.2
+   ],
+   "rot": 251.0,
+   "params": {
+    "seed": 273,
+    "size": 1.6
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    124.68,
+    64.86
+   ],
+   "rot": 125.2,
+   "params": {
+    "seed": 209,
+    "size": 0.83
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -128.06,
+    -86.51
+   ],
+   "rot": 28.5,
+   "params": {
+    "seed": 687,
+    "size": 1.5
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    146.09,
+    -51.03
+   ],
+   "rot": 206.3,
+   "params": {
+    "seed": 54,
+    "size": 1.04
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -4.71,
+    95.83
+   ],
+   "rot": 29.0,
+   "params": {
+    "seed": 606,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    92.3,
+    58.54
+   ],
+   "rot": 70.5,
+   "params": {
+    "seed": 730,
+    "size": 1.34
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    111.63,
+    -92.37
+   ],
+   "rot": 310.0,
+   "params": {
+    "seed": 816,
+    "size": 1.4
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -107.9,
+    139.94
+   ],
+   "rot": 263.8,
+   "params": {
+    "seed": 319,
+    "size": 1.13
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    104.97,
+    48.44
+   ],
+   "rot": 90.0,
+   "params": {
+    "seed": 89,
+    "size": 1.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -98.29,
+    -44.61
+   ],
+   "rot": 96.9,
+   "params": {
+    "seed": 540,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -134.3,
+    -121.97
+   ],
+   "rot": 254.4,
+   "params": {
+    "seed": 636,
+    "size": 1.43
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -78.07,
+    75.5
+   ],
+   "rot": 131.5,
+   "params": {
+    "seed": 427,
+    "size": 1.06
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -129.09,
+    72.72
+   ],
+   "rot": 6.2,
+   "params": {
+    "seed": 940,
+    "size": 1.32
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    132.76,
+    -72.51
+   ],
+   "rot": 64.9,
+   "params": {
+    "seed": 794,
+    "size": 1.54
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    116.34,
+    -98.29
+   ],
+   "rot": 317.9,
+   "params": {
+    "seed": 169,
+    "size": 1.35
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -53.6,
+    91.76
+   ],
+   "rot": 292.3,
+   "params": {
+    "seed": 535,
+    "size": 1.25
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -74.45,
+    -67.37
+   ],
+   "rot": 337.5,
+   "params": {
+    "seed": 569,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -115.95,
+    69.56
+   ],
+   "rot": 172.8,
+   "params": {
+    "seed": 445,
+    "size": 1.47
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -64.23,
+    -112.32
+   ],
+   "rot": 157.3,
+   "params": {
+    "seed": 249,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    75.46,
+    -133.66
+   ],
+   "rot": 68.6,
+   "params": {
+    "seed": 477,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -129.12,
+    54.95
+   ],
+   "rot": 260.9,
+   "params": {
+    "seed": 971,
+    "size": 1.06
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    116.17,
+    -108.81
+   ],
+   "rot": 196.6,
+   "params": {
+    "seed": 516,
+    "size": 1.4
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    15.49,
+    136.33
+   ],
+   "rot": 273.0,
+   "params": {
+    "seed": 662,
+    "size": 1.48
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    61.5,
+    -59.63
+   ],
+   "rot": 194.4,
+   "params": {
+    "seed": 54,
+    "size": 1.51
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    36.28,
+    -110.87
+   ],
+   "rot": 146.2,
+   "params": {
+    "seed": 943,
+    "size": 1.28
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -87.71,
+    -117.61
+   ],
+   "rot": 111.1,
+   "params": {
+    "seed": 568,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    137.69,
+    51.24
+   ],
+   "rot": 203.9,
+   "params": {
+    "seed": 598,
+    "size": 1.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -75.11,
+    -95.69
+   ],
+   "rot": 58.7,
+   "params": {
+    "seed": 40,
+    "size": 0.95
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    57.41,
+    -77.02
+   ],
+   "rot": 7.1,
+   "params": {
+    "seed": 600,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    117.63,
+    110.2
+   ],
+   "rot": 310.7,
+   "params": {
+    "seed": 866,
+    "size": 1.38
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    7.06,
+    121.53
+   ],
+   "rot": 157.7,
+   "params": {
+    "seed": 855,
+    "size": 1.39
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -61.22,
+    47.33
+   ],
+   "rot": 3.1,
+   "params": {
+    "seed": 609,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -99.5,
+    -127.3
+   ],
+   "rot": 150.7,
+   "params": {
+    "seed": 8,
+    "size": 0.85
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    103.4,
+    85.4
+   ],
+   "rot": 279.7,
+   "params": {
+    "seed": 55,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -129.57,
+    98.67
+   ],
+   "rot": 242.0,
+   "params": {
+    "seed": 251,
+    "size": 1.24
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    126.92,
+    60.91
+   ],
+   "rot": 58.6,
+   "params": {
+    "seed": 567,
+    "size": 0.81
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    81.98,
+    -76.15
+   ],
+   "rot": 71.4,
+   "params": {
+    "seed": 962,
+    "size": 1.08
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    53.39,
+    108.43
+   ],
+   "rot": 66.9,
+   "params": {
+    "seed": 184,
+    "size": 0.88
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    19.85,
+    -104.18
+   ],
+   "rot": 175.2,
+   "params": {
+    "seed": 9,
+    "size": 0.88
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    98.3,
+    -137.99
+   ],
+   "rot": 280.7,
+   "params": {
+    "seed": 338,
+    "size": 0.9
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -5.3,
+    -85.74
+   ],
+   "rot": 233.6,
+   "params": {
+    "seed": 23,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    117.41,
+    40.55
+   ],
+   "rot": 27.7,
+   "params": {
+    "seed": 562,
+    "size": 0.91
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    119.45,
+    76.08
+   ],
+   "rot": 288.2,
+   "params": {
+    "seed": 738,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -69.63,
+    -124.87
+   ],
+   "rot": 316.2,
+   "params": {
+    "seed": 249,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -82.39,
+    -129.18
+   ],
+   "rot": 245.2,
+   "params": {
+    "seed": 510,
+    "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    141.45,
+    -117.43
+   ],
+   "rot": 251.0,
+   "params": {
+    "seed": 202,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    15.4,
+    106.12
+   ],
+   "rot": 35.6,
+   "params": {
+    "seed": 974,
+    "size": 1.04
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -82.61,
+    -36.97
+   ],
+   "rot": 77.9,
+   "params": {
+    "seed": 51,
+    "size": 0.92
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    92.58,
+    89.05
+   ],
+   "rot": 280.5,
+   "params": {
+    "seed": 774,
+    "size": 1.58
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    131.63,
+    -117.01
+   ],
+   "rot": 131.0,
+   "params": {
+    "seed": 91,
+    "size": 1.09
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    93.71,
+    -47.1
+   ],
+   "rot": 217.1,
+   "params": {
+    "seed": 109,
+    "size": 1.51
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    61.17,
+    -35.73
+   ],
+   "rot": 29.8,
+   "params": {
+    "seed": 392,
+    "size": 1.58
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    148.89,
+    -57.53
+   ],
+   "rot": 13.4,
+   "params": {
+    "seed": 892,
+    "size": 1.39
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -28.14,
+    132.88
+   ],
+   "rot": 178.3,
+   "params": {
+    "seed": 365,
+    "size": 1.53
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -0.33,
+    126.33
+   ],
+   "rot": 121.9,
+   "params": {
+    "seed": 621,
+    "size": 1.36
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    75.49,
+    -100.2
+   ],
+   "rot": 77.0,
+   "params": {
+    "seed": 142,
+    "size": 1.0
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -66.59,
+    86.34
+   ],
+   "rot": 17.5,
+   "params": {
+    "seed": 572,
+    "size": 1.33
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -83.94,
+    43.82
+   ],
+   "rot": 242.7,
+   "params": {
+    "seed": 838,
+    "size": 1.21
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    77.06,
+    -78.63
+   ],
+   "rot": 66.2,
+   "params": {
+    "seed": 6,
+    "size": 1.54
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -16.04,
+    -115.86
+   ],
+   "rot": 27.0,
+   "params": {
+    "seed": 383,
+    "size": 0.84
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    55.54,
+    72.8
+   ],
+   "rot": 256.2,
+   "params": {
+    "seed": 257,
+    "size": 1.55
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    79.25,
+    -96.13
+   ],
+   "rot": 85.2,
+   "params": {
+    "seed": 503,
+    "size": 1.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    110.15,
+    -127.63
+   ],
+   "rot": 345.4,
+   "params": {
+    "seed": 369,
+    "size": 1.29
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -92.48,
+    -56.59
+   ],
+   "rot": 146.2,
+   "params": {
+    "seed": 650,
+    "size": 1.47
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    75.39,
+    -120.3
+   ],
+   "rot": 161.0,
+   "params": {
+    "seed": 479,
+    "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -6.33,
+    99.94
+   ],
+   "rot": 21.5,
+   "params": {
+    "seed": 266,
+    "size": 1.25
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    115.14,
+    -37.62
+   ],
+   "rot": 358.1,
+   "params": {
+    "seed": 59,
+    "size": 1.09
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -135.46,
+    138.6
+   ],
+   "rot": 291.6,
+   "params": {
+    "seed": 285,
+    "size": 1.16
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    130.25,
+    -57.32
+   ],
+   "rot": 148.8,
+   "params": {
+    "seed": 975,
+    "size": 1.21
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    82.36,
+    63.37
+   ],
+   "rot": 53.3,
+   "params": {
+    "seed": 377,
+    "size": 1.25
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -60.97,
+    -36.71
+   ],
+   "rot": 78.9,
+   "params": {
+    "seed": 950,
+    "size": 1.4
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    49.31,
+    78.89
+   ],
+   "rot": 330.8,
+   "params": {
+    "seed": 597,
+    "size": 1.58
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    20.25,
+    134.39
+   ],
+   "rot": 170.3,
+   "params": {
+    "seed": 236,
+    "size": 1.14
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -22.34,
+    -128.69
+   ],
+   "rot": 316.7,
+   "params": {
+    "seed": 968,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    27.52,
+    80.54
+   ],
+   "rot": 2.0,
+   "params": {
+    "seed": 235,
+    "size": 1.16
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -12.73,
+    119.81
+   ],
+   "rot": 93.5,
+   "params": {
+    "seed": 433,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -63.55,
+    -39.64
+   ],
+   "rot": 57.6,
+   "params": {
+    "seed": 750,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    96.23,
+    134.81
+   ],
+   "rot": 49.0,
+   "params": {
+    "seed": 521,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -109.95,
+    138.24
+   ],
+   "rot": 305.1,
+   "params": {
+    "seed": 841,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -24.61,
+    109.39
+   ],
+   "rot": 214.5,
+   "params": {
+    "seed": 9,
+    "size": 1.48
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -50.47,
+    -122.79
+   ],
+   "rot": 15.8,
+   "params": {
+    "seed": 416,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -146.82,
+    90.71
+   ],
+   "rot": 264.4,
+   "params": {
+    "seed": 633,
+    "size": 1.38
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -107.96,
+    -102.26
+   ],
+   "rot": 91.2,
+   "params": {
+    "seed": 426,
+    "size": 0.88
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -35.66,
+    97.91
+   ],
+   "rot": 323.4,
+   "params": {
+    "seed": 130,
+    "size": 1.5
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -109.14,
+    70.39
+   ],
+   "rot": 162.3,
+   "params": {
+    "seed": 545,
+    "size": 1.08
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -47.95,
+    118.04
+   ],
+   "rot": 105.2,
+   "params": {
+    "seed": 894,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    129.09,
+    106.37
+   ],
+   "rot": 208.0,
+   "params": {
+    "seed": 770,
+    "size": 0.94
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -54.95,
+    44.23
+   ],
+   "rot": 79.7,
+   "params": {
+    "seed": 56,
+    "size": 0.91
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -35.89,
+    -90.75
+   ],
+   "rot": 162.6,
+   "params": {
+    "seed": 748,
+    "size": 1.56
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -88.42,
+    -139.1
+   ],
+   "rot": 232.4,
+   "params": {
+    "seed": 923,
+    "size": 1.42
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    144.0,
+    132.64
+   ],
+   "rot": 356.8,
+   "params": {
+    "seed": 947,
+    "size": 1.04
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    116.11,
+    91.16
+   ],
+   "rot": 12.8,
+   "params": {
+    "seed": 456,
+    "size": 1.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -141.15,
+    -94.86
+   ],
+   "rot": 122.3,
+   "params": {
+    "seed": 959,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -106.25,
+    69.86
+   ],
+   "rot": 279.0,
+   "params": {
+    "seed": 127,
+    "size": 1.18
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -13.0,
+    108.37
+   ],
+   "rot": 60.8,
+   "params": {
+    "seed": 330,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -12.22,
+    -116.67
+   ],
+   "rot": 171.4,
+   "params": {
+    "seed": 14,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    144.99,
+    -120.06
+   ],
+   "rot": 125.1,
+   "params": {
+    "seed": 469,
+    "size": 1.22
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -18.25,
+    -128.48
+   ],
+   "rot": 228.6,
+   "params": {
+    "seed": 209,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -26.43,
+    -139.92
+   ],
+   "rot": 337.2,
+   "params": {
+    "seed": 127,
+    "size": 0.8
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    90.37,
+    128.01
+   ],
+   "rot": 319.0,
+   "params": {
+    "seed": 200,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -32.45,
+    -139.95
+   ],
+   "rot": 338.8,
+   "params": {
+    "seed": 456,
+    "size": 1.08
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -26.49,
+    109.57
+   ],
+   "rot": 100.2,
+   "params": {
+    "seed": 266,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -57.44,
+    -93.31
+   ],
+   "rot": 221.7,
+   "params": {
+    "seed": 973,
+    "size": 0.84
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    57.36,
+    -93.8
+   ],
+   "rot": 212.9,
+   "params": {
+    "seed": 214,
+    "size": 1.35
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    132.87,
+    118.54
+   ],
+   "rot": 34.5,
+   "params": {
+    "seed": 479,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -29.95,
+    -89.67
+   ],
+   "rot": 171.3,
+   "params": {
+    "seed": 766,
+    "size": 1.27
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -97.31,
+    -93.92
+   ],
+   "rot": 24.0,
+   "params": {
+    "seed": 676,
+    "size": 1.53
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -22.25,
+    73.61
+   ],
+   "rot": 293.6,
+   "params": {
+    "seed": 835,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    127.21,
+    -75.54
+   ],
+   "rot": 133.7,
+   "params": {
+    "seed": 957,
+    "size": 0.87
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    83.04,
+    65.16
+   ],
+   "rot": 113.2,
+   "params": {
+    "seed": 854,
+    "size": 1.0
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -140.5,
+    -132.11
+   ],
+   "rot": 65.4,
+   "params": {
+    "seed": 824,
+    "size": 1.0
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -146.26,
+    -97.43
+   ],
+   "rot": 26.5,
+   "params": {
+    "seed": 22,
+    "size": 1.35
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    145.27,
+    -114.83
+   ],
+   "rot": 286.6,
+   "params": {
+    "seed": 379,
+    "size": 0.81
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    62.67,
+    -118.35
+   ],
+   "rot": 46.0,
+   "params": {
+    "seed": 555,
+    "size": 1.33
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -71.87,
+    -129.9
+   ],
+   "rot": 150.8,
+   "params": {
+    "seed": 885,
+    "size": 0.88
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    145.69,
+    -78.6
+   ],
+   "rot": 134.8,
+   "params": {
+    "seed": 269,
+    "size": 1.59
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    100.75,
+    56.69
+   ],
+   "rot": 88.7,
+   "params": {
+    "seed": 488,
+    "size": 1.38
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    69.54,
+    99.01
+   ],
+   "rot": 281.7,
+   "params": {
+    "seed": 844,
+    "size": 0.82
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    88.05,
+    135.14
+   ],
+   "rot": 108.2,
+   "params": {
+    "seed": 428,
+    "size": 1.2
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -66.84,
+    -52.87
+   ],
+   "rot": 218.0,
+   "params": {
+    "seed": 122,
+    "size": 1.22
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    130.82,
+    -67.21
+   ],
+   "rot": 50.3,
+   "params": {
+    "seed": 82,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -31.53,
+    92.43
+   ],
+   "rot": 116.9,
+   "params": {
+    "seed": 188,
+    "size": 1.41
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    76.83,
+    94.99
+   ],
+   "rot": 65.2,
+   "params": {
+    "seed": 418,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    69.15,
+    -75.41
+   ],
+   "rot": 225.1,
+   "params": {
+    "seed": 421,
+    "size": 1.45
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -128.51,
+    -69.79
+   ],
+   "rot": 114.8,
+   "params": {
+    "seed": 956,
+    "size": 1.3
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -15.74,
+    -135.48
+   ],
+   "rot": 338.3,
+   "params": {
+    "seed": 447,
+    "size": 1.52
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    31.6,
+    -81.67
+   ],
+   "rot": 63.4,
+   "params": {
+    "seed": 148,
+    "size": 1.31
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    96.92,
+    92.68
+   ],
+   "rot": 3.1,
+   "params": {
+    "seed": 601,
+    "size": 1.15
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -59.97,
+    -85.19
+   ],
+   "rot": 336.3,
+   "params": {
+    "seed": 454,
+    "size": 1.42
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    118.56,
+    -121.93
+   ],
+   "rot": 34.7,
+   "params": {
+    "seed": 526,
+    "size": 1.47
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -111.03,
+    -95.09
+   ],
+   "rot": 55.9,
+   "params": {
+    "seed": 886,
+    "size": 0.97
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -70.06,
+    -107.86
+   ],
+   "rot": 71.2,
+   "params": {
+    "seed": 520,
+    "size": 1.59
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -141.93,
+    135.64
+   ],
+   "rot": 234.8,
+   "params": {
+    "seed": 131,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -97.02,
+    -138.99
+   ],
+   "rot": 270.7,
+   "params": {
+    "seed": 941,
+    "size": 0.84
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -128.1,
+    -47.74
+   ],
+   "rot": 68.1,
+   "params": {
+    "seed": 208,
+    "size": 1.34
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    72.58,
+    113.47
+   ],
+   "rot": 81.3,
+   "params": {
+    "seed": 727,
+    "size": 1.22
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    6.17,
+    122.82
+   ],
+   "rot": 178.4,
+   "params": {
+    "seed": 7,
+    "size": 0.96
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    0.83,
+    -104.2
+   ],
+   "rot": 136.0,
+   "params": {
+    "seed": 935,
+    "size": 1.49
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    87.68,
+    -36.72
+   ],
+   "rot": 146.1,
+   "params": {
+    "seed": 362,
+    "size": 1.05
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    74.31,
+    -43.78
+   ],
+   "rot": 239.5,
+   "params": {
+    "seed": 599,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    97.08,
+    -112.23
+   ],
+   "rot": 287.1,
+   "params": {
+    "seed": 346,
+    "size": 1.12
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -116.04,
+    -92.53
+   ],
+   "rot": 159.1,
+   "params": {
+    "seed": 458,
+    "size": 1.48
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -91.58,
+    -43.39
+   ],
+   "rot": 142.0,
+   "params": {
+    "seed": 173,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -74.98,
+    -133.99
+   ],
+   "rot": 294.7,
+   "params": {
+    "seed": 123,
+    "size": 1.02
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -149.15,
+    129.79
+   ],
+   "rot": 284.6,
+   "params": {
+    "seed": 979,
+    "size": 1.18
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    119.28,
+    101.31
+   ],
+   "rot": 131.4,
+   "params": {
+    "seed": 767,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    58.05,
+    50.36
+   ],
+   "rot": 208.8,
+   "params": {
+    "seed": 568,
+    "size": 1.31
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    43.49,
+    -119.97
+   ],
+   "rot": 45.9,
+   "params": {
+    "seed": 886,
+    "size": 1.03
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    21.4,
+    -81.41
+   ],
+   "rot": 337.0,
+   "params": {
+    "seed": 930,
+    "size": 1.46
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    92.87,
+    -124.53
+   ],
+   "rot": 160.9,
+   "params": {
+    "seed": 809,
+    "size": 1.01
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -84.01,
+    61.19
+   ],
+   "rot": 175.3,
+   "params": {
+    "seed": 37,
+    "size": 0.86
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    97.58,
+    -82.26
+   ],
+   "rot": 86.5,
+   "params": {
+    "seed": 681,
+    "size": 0.99
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    57.71,
+    104.73
+   ],
+   "rot": 311.6,
+   "params": {
+    "seed": 550,
+    "size": 1.36
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    110.15,
+    88.88
+   ],
+   "rot": 244.5,
+   "params": {
+    "seed": 873,
+    "size": 0.86
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    142.91,
+    -119.31
+   ],
+   "rot": 227.8,
+   "params": {
+    "seed": 624,
+    "size": 1.34
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    68.85,
+    -75.13
+   ],
+   "rot": 76.3,
+   "params": {
+    "seed": 299,
+    "size": 1.17
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    -111.92,
+    97.59
+   ],
+   "rot": 57.6,
+   "params": {
+    "seed": 177,
+    "size": 1.07
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    60.97,
+    -64.7
+   ],
+   "rot": 137.8,
+   "params": {
+    "seed": 316,
+    "size": 1.19
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    30.64,
+    94.3
+   ],
+   "rot": 322.1,
+   "params": {
+    "seed": 679,
+    "size": 1.33
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    144.82,
+    -129.84
+   ],
+   "rot": 165.6,
+   "params": {
+    "seed": 132,
+    "size": 1.31
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    102.36,
+    -101.02
+   ],
+   "rot": 281.6,
+   "params": {
+    "seed": 351,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    61.92,
+    72.97
+   ],
+   "rot": 170.6,
+   "params": {
+    "seed": 833,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    52.83,
+    -112.98
+   ],
+   "rot": 144.9,
+   "params": {
+    "seed": 737,
+    "size": 1.26
+   }
+  },
+  {
+   "asset": "ancient.dryBush",
+   "pos": [
+    14.68,
+    104.69
+   ],
+   "rot": 101.4,
+   "params": {
+    "seed": 233,
+    "size": 1.47
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    23.26,
+    -97.19
+   ],
+   "rot": 229.5,
+   "params": {
+    "seed": 100
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    99.18,
+    -123.23
+   ],
+   "rot": 350.6,
+   "params": {
+    "seed": 583
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    99.42,
+    -121.44
+   ],
+   "rot": 118.7,
+   "params": {
+    "seed": 405
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    8.91,
+    129.31
+   ],
+   "rot": 342.8,
+   "params": {
+    "seed": 11
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    88.62,
+    100.94
+   ],
+   "rot": 33.8,
+   "params": {
+    "seed": 843
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    20.95,
+    96.41
+   ],
+   "rot": 299.0,
+   "params": {
+    "seed": 233
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    103.92,
+    125.83
+   ],
+   "rot": 336.7,
+   "params": {
+    "seed": 330
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    20.47,
+    -119.02
+   ],
+   "rot": 299.5,
+   "params": {
+    "seed": 26
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    96.34,
+    88.43
+   ],
+   "rot": 266.8,
+   "params": {
+    "seed": 726
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -26.95,
+    -99.89
+   ],
+   "rot": 126.6,
+   "params": {
+    "seed": 454
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    13.89,
+    -110.16
+   ],
+   "rot": 294.5,
+   "params": {
+    "seed": 495
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -63.54,
+    82.91
+   ],
+   "rot": 13.0,
+   "params": {
+    "seed": 202
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -3.04,
+    94.14
+   ],
+   "rot": 279.2,
+   "params": {
+    "seed": 773
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -132.01,
+    126.91
+   ],
+   "rot": 224.0,
+   "params": {
+    "seed": 113
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -137.29,
+    -111.02
+   ],
+   "rot": 304.2,
+   "params": {
+    "seed": 719
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -8.19,
+    -117.23
+   ],
+   "rot": 164.4,
+   "params": {
+    "seed": 734
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    120.21,
+    -93.13
+   ],
+   "rot": 11.2,
+   "params": {
+    "seed": 71
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    126.02,
+    -104.14
+   ],
+   "rot": 263.0,
+   "params": {
+    "seed": 585
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -82.19,
+    -51.86
+   ],
+   "rot": 112.2,
+   "params": {
+    "seed": 768
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -8.43,
+    -100.1
+   ],
+   "rot": 116.5,
+   "params": {
+    "seed": 492
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -108.19,
+    50.6
+   ],
+   "rot": 200.8,
+   "params": {
+    "seed": 281
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    89.47,
+    93.41
+   ],
+   "rot": 73.7,
+   "params": {
+    "seed": 881
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    111.24,
+    -95.72
+   ],
+   "rot": 162.5,
+   "params": {
+    "seed": 274
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    26.65,
+    -114.0
+   ],
+   "rot": 187.9,
+   "params": {
+    "seed": 783
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    71.02,
+    -54.19
+   ],
+   "rot": 216.4,
+   "params": {
+    "seed": 316
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -49.81,
+    -89.4
+   ],
+   "rot": 97.4,
+   "params": {
+    "seed": 32
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    45.6,
+    -101.05
+   ],
+   "rot": 195.0,
+   "params": {
+    "seed": 671
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -65.89,
+    96.38
+   ],
+   "rot": 37.7,
+   "params": {
+    "seed": 27
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -109.62,
+    -110.96
+   ],
+   "rot": 255.9,
+   "params": {
+    "seed": 425
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    53.99,
+    -42.12
+   ],
+   "rot": 225.1,
+   "params": {
+    "seed": 787
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    50.5,
+    44.13
+   ],
+   "rot": 184.8,
+   "params": {
+    "seed": 798
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -96.52,
+    44.19
+   ],
+   "rot": 98.0,
+   "params": {
+    "seed": 548
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    56.26,
+    82.5
+   ],
+   "rot": 206.7,
+   "params": {
+    "seed": 769
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -5.12,
+    108.43
+   ],
+   "rot": 274.4,
+   "params": {
+    "seed": 861
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    139.06,
+    -61.04
+   ],
+   "rot": 7.7,
+   "params": {
+    "seed": 741
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -117.21,
+    114.09
+   ],
+   "rot": 20.4,
+   "params": {
+    "seed": 969
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    -115.69,
+    -124.41
+   ],
+   "rot": 180.8,
+   "params": {
+    "seed": 766
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    -21,
+    -36.3
+   ],
+   "params": {
+    "color": "#3a5f9a",
+    "seed": 29
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    -7,
+    -36.3
+   ],
+   "params": {
+    "color": "#3a5f9a",
+    "seed": 43
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    7,
+    -36.3
+   ],
+   "params": {
+    "color": "#3a5f9a",
+    "seed": 57
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    21,
+    -36.3
+   ],
+   "params": {
+    "color": "#3a5f9a",
+    "seed": 71
+   }
+  },
+  {
+   "asset": "ancient.groundShields",
+   "pos": [
+    -24,
+    -37.8
+   ],
+   "rot": 242.9,
+   "params": {
+    "color": "#7a5a3a"
+   }
+  },
+  {
+   "asset": "ancient.spearRack",
+   "pos": [
+    -21,
+    -38.8
+   ],
+   "rot": 90
+  },
+  {
+   "asset": "ancient.groundShields",
+   "pos": [
+    24,
+    -37.8
+   ],
+   "rot": 144.7,
+   "params": {
+    "color": "#7a5a3a"
+   }
+  },
+  {
+   "asset": "ancient.spearRack",
+   "pos": [
+    21,
+    -38.8
+   ],
+   "rot": 90
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -42.9,
+    -41.98
+   ],
+   "rot": 180.1,
+   "params": {
+    "color": "#cfb58a",
+    "style": "long",
+    "size": 1.08,
+    "seed": 177
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -34.73,
+    -40.28
+   ],
+   "rot": 168.0,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 1.17,
+    "seed": 633
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -28.71,
+    -42.46
+   ],
+   "rot": 186.5,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 0.92,
+    "seed": 90
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -21.26,
+    -41.11
+   ],
+   "rot": 184.2,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 1.12,
+    "seed": 471
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    19.49,
+    -41.87
+   ],
+   "rot": 172.5,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 1.11,
+    "seed": 534
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    27.72,
+    -40.3
+   ],
+   "rot": 191.2,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "long",
+    "size": 1.15,
+    "seed": 249
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    36.35,
+    -40.45
+   ],
+   "rot": 169.0,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 0.94,
+    "seed": 863
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    44.21,
+    -41.02
+   ],
+   "rot": 170.2,
+   "params": {
+    "color": "#cfb58a",
+    "style": "long",
+    "size": 0.98,
+    "seed": 390
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -43.24,
+    -47.86
+   ],
+   "rot": 179.1,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 1.07,
+    "seed": 402
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -37.3,
+    -48.47
+   ],
+   "rot": 178.7,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "long",
+    "size": 1.13,
+    "seed": 360
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -26.88,
+    -47.88
+   ],
+   "rot": 169.0,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 0.92,
+    "seed": 492
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -19.76,
+    -47.88
+   ],
+   "rot": 189.9,
+   "params": {
+    "color": "#cfb58a",
+    "style": "long",
+    "size": 1.07,
+    "seed": 752
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    19.49,
+    -47.11
+   ],
+   "rot": 179.1,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "long",
+    "size": 0.99,
+    "seed": 218
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    27.51,
+    -46.75
+   ],
+   "rot": 172.1,
+   "params": {
+    "color": "#cfb58a",
+    "style": "ridge",
+    "size": 1.0,
+    "seed": 247
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    35.25,
+    -46.53
+   ],
+   "rot": 172.5,
+   "params": {
+    "color": "#b89a72",
+    "style": "long",
+    "size": 1.06,
+    "seed": 700
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    44.64,
+    -48.54
+   ],
+   "rot": 178.3,
+   "params": {
+    "color": "#a88660",
+    "style": "long",
+    "size": 1.06,
+    "seed": 355
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -45.02,
+    -54.76
+   ],
+   "rot": 186.5,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 1.08,
+    "seed": 283
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -34.66,
+    -56.39
+   ],
+   "rot": 171.6,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "long",
+    "size": 0.99,
+    "seed": 58
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -27.47,
+    -55.06
+   ],
+   "rot": 169.7,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 1.09,
+    "seed": 608
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -19.63,
+    -54.9
+   ],
+   "rot": 171.6,
+   "params": {
+    "color": "#cfb58a",
+    "style": "ridge",
+    "size": 1.0,
+    "seed": 309
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -12.65,
+    -55.73
+   ],
+   "rot": 178.7,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 0.92,
+    "seed": 558
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    13.41,
+    -54.98
+   ],
+   "rot": 177.5,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 0.98,
+    "seed": 952
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    20.43,
+    -54.44
+   ],
+   "rot": 191.0,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 1.19,
+    "seed": 570
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    27.72,
+    -55.62
+   ],
+   "rot": 190.2,
+   "params": {
+    "color": "#b89a72",
+    "style": "long",
+    "size": 1.03,
+    "seed": 263
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    36.54,
+    -55.73
+   ],
+   "rot": 183.3,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 0.93,
+    "seed": 25
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    43.7,
+    -55.3
+   ],
+   "rot": 178.9,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 1.0,
+    "seed": 318
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -45.26,
+    -62.79
+   ],
+   "rot": 172.7,
+   "params": {
+    "color": "#b89a72",
+    "style": "long",
+    "size": 1.2,
+    "seed": 225
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -36.49,
+    -61.41
+   ],
+   "rot": 175.5,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 0.95,
+    "seed": 413
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -28.07,
+    -62.73
+   ],
+   "rot": 173.4,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 1.1,
+    "seed": 785
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -21.31,
+    -61.67
+   ],
+   "rot": 186.1,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 0.93,
+    "seed": 511
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -12.3,
+    -60.84
+   ],
+   "rot": 176.7,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 1.01,
+    "seed": 338
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    11.46,
+    -62.84
+   ],
+   "rot": 189.1,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 0.91,
+    "seed": 66
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    21.42,
+    -61.49
+   ],
+   "rot": 188.1,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 1.06,
+    "seed": 885
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    27.31,
+    -62.93
+   ],
+   "rot": 181.6,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "long",
+    "size": 0.94,
+    "seed": 820
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    37.41,
+    -62.24
+   ],
+   "rot": 188.9,
+   "params": {
+    "color": "#cfb58a",
+    "style": "ridge",
+    "size": 1.13,
+    "seed": 766
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    44.7,
+    -61.3
+   ],
+   "rot": 178.4,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 1.15,
+    "seed": 862
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -43.94,
+    -68.44
+   ],
+   "rot": 177.7,
+   "params": {
+    "color": "#a88660",
+    "style": "long",
+    "size": 1.06,
+    "seed": 380
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -36.21,
+    -69.09
+   ],
+   "rot": 181.4,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 0.99,
+    "seed": 549
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -28.49,
+    -70.16
+   ],
+   "rot": 190.4,
+   "params": {
+    "color": "#cfb58a",
+    "style": "ridge",
+    "size": 0.96,
+    "seed": 294
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -19.59,
+    -69.96
+   ],
+   "rot": 173.5,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 0.93,
+    "seed": 62
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -11.63,
+    -67.77
+   ],
+   "rot": 169.5,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 1.2,
+    "seed": 571
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    10.55,
+    -67.81
+   ],
+   "rot": 185.2,
+   "params": {
+    "color": "#b89a72",
+    "style": "ridge",
+    "size": 1.17,
+    "seed": 169
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    19.73,
+    -68.46
+   ],
+   "rot": 171.1,
+   "params": {
+    "color": "#a88660",
+    "style": "long",
+    "size": 0.99,
+    "seed": 566
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    29.47,
+    -67.98
+   ],
+   "rot": 170.7,
+   "params": {
+    "color": "#a88660",
+    "style": "ridge",
+    "size": 0.98,
+    "seed": 710
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    35.36,
+    -68.21
+   ],
+   "rot": 188.1,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "long",
+    "size": 1.08,
+    "seed": 273
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    44.05,
+    -69.87
+   ],
+   "rot": 177.5,
+   "params": {
+    "color": "#d9c8a4",
+    "style": "ridge",
+    "size": 1.11,
+    "seed": 196
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    -10,
+    -39.5
+   ],
+   "params": {
+    "seed": 60
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -8.43,
+    -40.38
+   ],
+   "params": {
+    "seed": 92
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -11.78,
+    -39.21
+   ],
+   "params": {
+    "seed": 4
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    11,
+    -40
+   ],
+   "params": {
+    "seed": 44
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    9.2,
+    -39.88
+   ],
+   "params": {
+    "seed": 53
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    -26,
+    -51
+   ],
+   "params": {
+    "seed": 52
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -24.2,
+    -51.06
+   ],
+   "params": {
+    "seed": 79
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -24.28,
+    -51.54
+   ],
+   "params": {
+    "seed": 35
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -24.4,
+    -51.83
+   ],
+   "params": {
+    "seed": 27
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    26,
+    -57
+   ],
+   "params": {
+    "seed": 35
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    26.88,
+    -55.43
+   ],
+   "params": {
+    "seed": 44
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    25.94,
+    -58.8
+   ],
+   "params": {
+    "seed": 13
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    -18,
+    -65
+   ],
+   "params": {
+    "seed": 81
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -19.02,
+    -63.51
+   ],
+   "params": {
+    "seed": 9
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    18,
+    -66
+   ],
+   "params": {
+    "seed": 61
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    17.86,
+    -67.79
+   ],
+   "params": {
+    "seed": 91
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    -32,
+    -44
+   ],
+   "rot": 30,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    33,
+    -52
+   ],
+   "rot": -20,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    -36,
+    -63
+   ],
+   "rot": 80,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.hitchedDonkey",
+   "pos": [
+    -30,
+    -40
+   ],
+   "rot": 233.6
+  },
+  {
+   "asset": "ancient.hitchedDonkey",
+   "pos": [
+    31,
+    -64
+   ],
+   "rot": 340.2
+  },
+  {
+   "asset": "ancient.hitchedDonkey",
+   "pos": [
+    -3,
+    -70
+   ],
+   "rot": 198.9
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    -21,
+    36.3
+   ],
+   "params": {
+    "color": "#9a2b22",
+    "seed": 29
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    -7,
+    36.3
+   ],
+   "params": {
+    "color": "#9a2b22",
+    "seed": 43
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    7,
+    36.3
+   ],
+   "params": {
+    "color": "#9a2b22",
+    "seed": 57
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    21,
+    36.3
+   ],
+   "params": {
+    "color": "#9a2b22",
+    "seed": 71
+   }
+  },
+  {
+   "asset": "ancient.groundShields",
+   "pos": [
+    -24,
+    37.8
+   ],
+   "rot": 54.7,
+   "params": {
+    "color": "#8a6a3a"
+   }
+  },
+  {
+   "asset": "ancient.spearRack",
+   "pos": [
+    -21,
+    38.8
+   ],
+   "rot": 90
+  },
+  {
+   "asset": "ancient.groundShields",
+   "pos": [
+    24,
+    37.8
+   ],
+   "rot": 42.6,
+   "params": {
+    "color": "#8a6a3a"
+   }
+  },
+  {
+   "asset": "ancient.spearRack",
+   "pos": [
+    21,
+    38.8
+   ],
+   "rot": 90
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -43.96,
+    41.82
+   ],
+   "rot": -10.2,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 0.96,
+    "seed": 49
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -37.11,
+    40.14
+   ],
+   "rot": 5.8,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 0.98,
+    "seed": 257
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -28.86,
+    39.98
+   ],
+   "rot": 6.6,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 0.93,
+    "seed": 60
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -19.15,
+    40.23
+   ],
+   "rot": -3.3,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 1.16,
+    "seed": 666
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -13.08,
+    41.9
+   ],
+   "rot": -0.8,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 0.98,
+    "seed": 937
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    12.28,
+    42.19
+   ],
+   "rot": 9.7,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 1.08,
+    "seed": 719
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    20.4,
+    42.26
+   ],
+   "rot": 9.8,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 1.02,
+    "seed": 57
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    28.79,
+    41.11
+   ],
+   "rot": -4.7,
+   "params": {
+    "color": "#c47a3a",
+    "style": "long",
+    "size": 1.16,
+    "seed": 46
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    36.28,
+    42.03
+   ],
+   "rot": -4.5,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 0.91,
+    "seed": 330
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    44.39,
+    41.77
+   ],
+   "rot": 0.2,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 1.2,
+    "seed": 608
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -44.65,
+    48.31
+   ],
+   "rot": 8.9,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.02,
+    "seed": 294
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -37.07,
+    47.19
+   ],
+   "rot": 10.2,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 1.03,
+    "seed": 354
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -26.53,
+    46.62
+   ],
+   "rot": -7.9,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.19,
+    "seed": 403
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -20.31,
+    48.47
+   ],
+   "rot": 9.9,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 1.07,
+    "seed": 505
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -12.96,
+    47.13
+   ],
+   "rot": 0.2,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.04,
+    "seed": 899
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    11.02,
+    49.35
+   ],
+   "rot": 11.0,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 0.94,
+    "seed": 349
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    20.22,
+    49.0
+   ],
+   "rot": 8.3,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.03,
+    "seed": 645
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    27.45,
+    46.75
+   ],
+   "rot": -4.2,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 0.93,
+    "seed": 463
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    35.24,
+    47.84
+   ],
+   "rot": -9.2,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 0.98,
+    "seed": 903
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    43.73,
+    48.31
+   ],
+   "rot": 6.6,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 0.91,
+    "seed": 8
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -43.45,
+    54.27
+   ],
+   "rot": -9.4,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 0.98,
+    "seed": 443
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -37.18,
+    55.07
+   ],
+   "rot": 4.3,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 1.17,
+    "seed": 110
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -29.12,
+    54.53
+   ],
+   "rot": -3.1,
+   "params": {
+    "color": "#c47a3a",
+    "style": "long",
+    "size": 0.92,
+    "seed": 51
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -19.77,
+    56.21
+   ],
+   "rot": 4.7,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.08,
+    "seed": 976
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -11.87,
+    54.75
+   ],
+   "rot": 9.5,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 0.91,
+    "seed": 665
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    11.31,
+    56.49
+   ],
+   "rot": 7.3,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 1.14,
+    "seed": 556
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    20.6,
+    56.28
+   ],
+   "rot": -9.5,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "long",
+    "size": 1.09,
+    "seed": 730
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    28.85,
+    56.06
+   ],
+   "rot": 9.0,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.02,
+    "seed": 780
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    36.69,
+    54.43
+   ],
+   "rot": 10.8,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 0.95,
+    "seed": 620
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    43.13,
+    54.97
+   ],
+   "rot": 3.0,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "long",
+    "size": 1.04,
+    "seed": 740
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -43.64,
+    62.11
+   ],
+   "rot": 9.3,
+   "params": {
+    "color": "#c47a3a",
+    "style": "long",
+    "size": 1.01,
+    "seed": 328
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -35.45,
+    61.51
+   ],
+   "rot": -7.0,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 0.93,
+    "seed": 74
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -26.76,
+    61.27
+   ],
+   "rot": 11.6,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 1.09,
+    "seed": 220
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -18.92,
+    62.34
+   ],
+   "rot": 11.2,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 0.96,
+    "seed": 632
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -11.19,
+    63.2
+   ],
+   "rot": -0.4,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.13,
+    "seed": 241
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    12.57,
+    63.07
+   ],
+   "rot": 2.5,
+   "params": {
+    "color": "#c47a3a",
+    "style": "long",
+    "size": 0.98,
+    "seed": 466
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    19.95,
+    61.93
+   ],
+   "rot": 8.5,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.03,
+    "seed": 829
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    28.98,
+    60.83
+   ],
+   "rot": -8.2,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.04,
+    "seed": 76
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    36.99,
+    63.34
+   ],
+   "rot": 7.0,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "ridge",
+    "size": 1.16,
+    "seed": 486
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    45.18,
+    62.54
+   ],
+   "rot": 4.3,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 1.05,
+    "seed": 480
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -42.98,
+    67.93
+   ],
+   "rot": 9.6,
+   "params": {
+    "color": "#c47a3a",
+    "style": "long",
+    "size": 1.02,
+    "seed": 910
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -36.36,
+    69.52
+   ],
+   "rot": 4.4,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 0.95,
+    "seed": 221
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -26.92,
+    69.89
+   ],
+   "rot": -5.4,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.09,
+    "seed": 407
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -20.64,
+    67.97
+   ],
+   "rot": 8.6,
+   "params": {
+    "color": "#8f3b2b",
+    "style": "ridge",
+    "size": 1.08,
+    "seed": 422
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    -12.72,
+    67.66
+   ],
+   "rot": -10.9,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.14,
+    "seed": 560
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    12.64,
+    69.88
+   ],
+   "rot": 7.8,
+   "params": {
+    "color": "#d8b07a",
+    "style": "ridge",
+    "size": 0.93,
+    "seed": 767
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    18.83,
+    67.91
+   ],
+   "rot": 4.7,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.1,
+    "seed": 873
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    28.56,
+    68.02
+   ],
+   "rot": -3.2,
+   "params": {
+    "color": "#d8b07a",
+    "style": "long",
+    "size": 1.01,
+    "seed": 112
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    35.96,
+    68.73
+   ],
+   "rot": -2.4,
+   "params": {
+    "color": "#5d4a3a",
+    "style": "long",
+    "size": 1.18,
+    "seed": 273
+   }
+  },
+  {
+   "asset": "ancient.tent",
+   "pos": [
+    44.91,
+    69.61
+   ],
+   "rot": 9.7,
+   "params": {
+    "color": "#c47a3a",
+    "style": "ridge",
+    "size": 1.11,
+    "seed": 123
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    -10,
+    39.5
+   ],
+   "params": {
+    "seed": 51
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -11.56,
+    38.61
+   ],
+   "params": {
+    "seed": 90
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    11,
+    40
+   ],
+   "params": {
+    "seed": 38
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    10.64,
+    38.24
+   ],
+   "params": {
+    "seed": 10
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    10.75,
+    38.22
+   ],
+   "params": {
+    "seed": 44
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    12.76,
+    40.37
+   ],
+   "params": {
+    "seed": 12
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    -26,
+    51
+   ],
+   "params": {
+    "seed": 31
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -25.83,
+    49.21
+   ],
+   "params": {
+    "seed": 53
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -27.6,
+    50.18
+   ],
+   "params": {
+    "seed": 12
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -24.77,
+    49.68
+   ],
+   "params": {
+    "seed": 35
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    26,
+    57
+   ],
+   "params": {
+    "seed": 28
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    24.91,
+    58.43
+   ],
+   "params": {
+    "seed": 15
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    26.91,
+    55.45
+   ],
+   "params": {
+    "seed": 61
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    -18,
+    65
+   ],
+   "params": {
+    "seed": 5
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -19.8,
+    65.04
+   ],
+   "params": {
+    "seed": 81
+   }
+  },
+  {
+   "asset": "ancient.campfire",
+   "pos": [
+    18,
+    66
+   ],
+   "params": {
+    "seed": 28
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    18.57,
+    67.71
+   ],
+   "params": {
+    "seed": 85
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    19.77,
+    65.67
+   ],
+   "params": {
+    "seed": 64
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    -32,
+    44
+   ],
+   "rot": 30,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    33,
+    52
+   ],
+   "rot": -20,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    -36,
+    63
+   ],
+   "rot": 80,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.hitchedDonkey",
+   "pos": [
+    -30,
+    40
+   ],
+   "rot": 250.1
+  },
+  {
+   "asset": "ancient.hitchedDonkey",
+   "pos": [
+    31,
+    64
+   ],
+   "rot": 43.7
+  },
+  {
+   "asset": "ancient.hitchedDonkey",
+   "pos": [
+    -3,
+    70
+   ],
+   "rot": 244.4
+  },
+  {
+   "asset": "ancient.sack",
+   "pos": [
+    -13,
+    -42
+   ],
+   "rot": 172.3,
+   "params": {
+    "count": 2,
+    "seed": 0
+   }
+  },
+  {
+   "asset": "ancient.sack",
+   "pos": [
+    -14.2,
+    -42.6
+   ],
+   "rot": 120.3,
+   "params": {
+    "count": 2,
+    "seed": 1
+   }
+  },
+  {
+   "asset": "ancient.sack",
+   "pos": [
+    -12.2,
+    -43.4
+   ],
+   "rot": 76.3,
+   "params": {
+    "count": 2,
+    "seed": 2
+   }
+  },
+  {
+   "asset": "ancient.sack",
+   "pos": [
+    -13.6,
+    -44
+   ],
+   "rot": 57.6,
+   "params": {
+    "count": 2,
+    "seed": 3
+   }
+  },
+  {
+   "asset": "ancient.cart",
+   "pos": [
+    -16.5,
+    -45
+   ],
+   "rot": 70,
+   "params": {
+    "load": 1
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -11.6,
+    -44.6
+   ],
+   "params": {
+    "count": 3
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -7.51,
+    -64.0
+   ],
+   "params": {
+    "seed": 300,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -8.71,
+    -60.5
+   ],
+   "params": {
+    "seed": 301,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -9.33,
+    -57.0
+   ],
+   "params": {
+    "seed": 302,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -8.13,
+    -53.5
+   ],
+   "params": {
+    "seed": 303,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -9.43,
+    -50.0
+   ],
+   "params": {
+    "seed": 304,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.rock",
+   "pos": [
+    -8.78,
+    -46.5
+   ],
+   "params": {
+    "seed": 305,
+    "size": 0.4
+   }
+  },
+  {
+   "asset": "ancient.royalTent",
+   "pos": [
+    0.0,
+    -45.0
+   ],
+   "params": {
+    "width": 10,
+    "depth": 8,
+    "height": 3.8,
+    "color": "#e6d3a8",
+    "trim": "#7a2a2a"
+   }
+  },
+  {
+   "asset": "ancient.rug",
+   "pos": [
+    0.0,
+    -44.6
+   ],
+   "params": {
+    "width": 6,
+    "depth": 4.6,
+    "color": "#8c2f2a"
+   }
+  },
+  {
+   "asset": "ancient.cushion",
+   "pos": [
+    0.0,
+    -47.4
+   ],
+   "params": {
+    "color": "#c9a23a"
+   }
+  },
+  {
+   "asset": "ancient.cushion",
+   "pos": [
+    -1.3,
+    -47.2
+   ],
+   "rot": 20,
+   "params": {
+    "color": "#6b2f6a",
+    "shape": "bolster"
+   }
+  },
+  {
+   "asset": "ancient.cushion",
+   "pos": [
+    1.3,
+    -47.2
+   ],
+   "rot": -15,
+   "params": {
+    "color": "#2f4f6b"
+   }
+  },
+  {
+   "asset": "ancient.lowTable",
+   "pos": [
+    0.0,
+    -46.1
+   ],
+   "params": {
+    "jar": 1,
+    "cups": 2,
+    "fruit": 1
+   }
+  },
+  {
+   "asset": "ancient.chest",
+   "pos": [
+    -4.0,
+    -48.0
+   ],
+   "rot": 90
+  },
+  {
+   "asset": "ancient.chest",
+   "pos": [
+    4.0,
+    -48.0
+   ],
+   "rot": -90,
+   "params": {
+    "color": "#5a3a22"
+   }
+  },
+  {
+   "asset": "ancient.jar",
+   "pos": [
+    -4.2,
+    -42.4
+   ],
+   "params": {
+    "count": 3
+   }
+  },
+  {
+   "asset": "ancient.spearRack",
+   "pos": [
+    4.2,
+    -43.0
+   ],
+   "rot": -90,
+   "params": {
+    "count": 3
+   }
+  },
+  {
+   "asset": "ancient.basket",
+   "pos": [
+    -3.4,
+    -45.6
+   ],
+   "params": {
+    "bread": 1
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    -6.5,
+    -40.0
+   ],
+   "params": {
+    "color": "#7a2a2a",
+    "seed": 9
+   }
+  },
+  {
+   "asset": "ancient.banner",
+   "pos": [
+    6.5,
+    -40.0
+   ],
+   "params": {
+    "color": "#7a2a2a",
+    "seed": 9
+   }
+  },
+  {
+   "asset": "ancient.wall",
+   "pos": [
+    161.0,
+    -9.0
+   ],
+   "rot": 90,
+   "params": {
+    "length": 10
+   }
+  },
+  {
+   "asset": "ancient.wall",
+   "pos": [
+    161.0,
+    9.0
+   ],
+   "rot": 90,
+   "params": {
+    "length": 10
+   }
+  },
+  {
+   "asset": "ancient.cityGate",
+   "pos": [
+    161.0,
+    0.0
+   ],
+   "rot": 90
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    169.0,
+    -10.0
+   ],
+   "params": {
+    "seed": 1,
+    "width": 6.0,
+    "depth": 5.1
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    177.0,
+    -10.5
+   ],
+   "params": {
+    "seed": 2,
+    "width": 5.6,
+    "depth": 4.6
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    185.0,
+    -10.0
+   ],
+   "params": {
+    "seed": 3,
+    "width": 6.2,
+    "depth": 5.0
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    169.0,
+    10.0
+   ],
+   "rot": 180,
+   "params": {
+    "seed": 4,
+    "width": 6.4,
+    "depth": 4.6
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    177.0,
+    10.5
+   ],
+   "rot": 180,
+   "params": {
+    "seed": 5,
+    "width": 5.2,
+    "depth": 5.2
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    185.0,
+    10.0
+   ],
+   "rot": 180,
+   "params": {
+    "seed": 6,
+    "width": 6.0,
+    "depth": 4.6
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    191.0,
+    -2.0
+   ],
+   "rot": -90,
+   "params": {
+    "seed": 7,
+    "width": 5.8,
+    "depth": 5.3
+   }
+  },
+  {
+   "asset": "ancient.house",
+   "pos": [
+    191.0,
+    6.0
+   ],
+   "rot": -90,
+   "params": {
+    "seed": 8,
+    "width": 5.4,
+    "depth": 5.4
+   }
+  },
+  {
+   "asset": "ancient.well",
+   "pos": [
+    179.0,
+    0.0
+   ]
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    155.0,
+    -6.0
+   ],
+   "params": {
+    "seed": -146
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    151.0,
+    7.0
+   ],
+   "params": {
+    "seed": -161
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    166.0,
+    -5.5
+   ],
+   "params": {
+    "seed": -68
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    187.0,
+    5.0
+   ],
+   "params": {
+    "seed": 89
+   }
+  },
+  {
+   "asset": "ancient.palm",
+   "pos": [
+    145.0,
+    -5.0
+   ],
+   "params": {
+    "seed": -215
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    115.29,
+    32.47
+   ],
+   "params": {
+    "seed": 700
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    201.05,
+    29.52
+   ],
+   "params": {
+    "seed": 701
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    154.05,
+    -28.1
+   ],
+   "params": {
+    "seed": 702
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    159.29,
+    -31.0
+   ],
+   "params": {
+    "seed": 703
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    205.3,
+    -35.02
+   ],
+   "params": {
+    "seed": 704
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    160.27,
+    30.95
+   ],
+   "params": {
+    "seed": 705
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    166.91,
+    -28.41
+   ],
+   "params": {
+    "seed": 706
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    142.31,
+    -25.49
+   ],
+   "params": {
+    "seed": 707
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    198.51,
+    -27.15
+   ],
+   "params": {
+    "seed": 708
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    213.7,
+    38.32
+   ],
+   "params": {
+    "seed": 709
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    188.94,
+    23.96
+   ],
+   "params": {
+    "seed": 710
+   }
+  },
+  {
+   "asset": "ancient.oliveTree",
+   "pos": [
+    149.84,
+    24.79
+   ],
+   "params": {
+    "seed": 711
+   }
+  }
+ ]
+}

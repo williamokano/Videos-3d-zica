@@ -371,7 +371,8 @@ export function compileActions(clips: ActionClip[], targets: ActionTarget[], ser
       const t0 = moment(result.attach.at ?? 'start');
       const busy = links.find((l) => l.target === rider && l.t1 > t0);
       if (busy) fail(`"${rider}" já está preso a "${busy.to}"; solte antes.`);
-      const taken = links.find((l) => l.to === to && l.socket === socket && l.t1 > t0);
+      // A pocket (or a bag) holds several things; a hand or a seat holds one.
+      const taken = socket !== 'pocket' && links.find((l) => l.to === to && l.socket === socket && l.t1 > t0);
       if (taken) fail(`"${socket}" de "${to}" já está ocupado por "${taken.target}".`);
       links.push({ target: rider, to, socket, weight, t0, t1: Infinity });
     }

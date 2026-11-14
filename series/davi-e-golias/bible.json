@@ -1,0 +1,29 @@
+{
+  "series": "davi-e-golias",
+  "title": "Davi e Golias",
+  "language": "pt-BR",
+  "dubbing": [],
+  "format": { "width": 1080, "height": 1920, "fps": 30 },
+  "audio": { "provider": "elevenlabs", "defaultMode": "tts", "model": "eleven_v3" },
+  "style": { "look": "cel" },
+  "grade": { "tint": "#ffb36b", "amount": 0.12, "saturation": 1.08, "contrast": 1.06, "vignette": 0.12, "grain": 0 },
+  "rules": [
+    {
+      "id": "luz-de-ela",
+      "description": "Terra de Judá, estação seca: céu limpo e alto, sol baixo e dourado, poeira no horizonte.",
+      "from": 1,
+      "until": null,
+      "effects": {
+        "environment": {
+          "skyTop": "#3a78c2",
+          "skyHorizon": "#f1dcb4",
+          "sunColor": "#ffe2b0",
+          "sunIntensity": 2.8,
+          "ambientIntensity": 1.2,
+          "fogNear": 90,
+          "fogFar": 420
+        }
+      }
+    }
+  ]
+}

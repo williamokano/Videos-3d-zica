@@ -29,4 +29,14 @@ describe('camera orbit and shake', () => {
     expect(Math.hypot(a[0] - 0, a[1] - 2, a[2] - 10)).toBeLessThan(0.1);
     expect(a).not.toEqual(b);
   });
+
+  it('a cut in the middle of an orbit ends it', () => {
+    const episode = resolveScript(direct({ episode: 1, title: 't', location: 't', cast: [] }, (d) => {
+      d.camera.orbit({ center: [0, 1, 0], radius: 5, height: 0, from: 0, to: 180, duration: 10 });
+      d.wait(3);
+      d.camera.cut({ pos: [9, 2, 9], lookAt: [0, 1, 0] });
+      d.wait(9);
+    }), location, []);
+    for (const t of [3, 6, 9, 11]) expect(evaluateCamera(episode.camera, t).pos).toEqual([9, 2, 9]);
+  });
 });
