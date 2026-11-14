@@ -34,6 +34,8 @@ const gente = (id: string, at: [number, number], yaw: number, seed: number, name
   const m = figurante(id, 'soldado', at, yaw, seed, name);
   return { ...m, look: { ...m.look, wear: [{ id: 'tunic', color: tunic, accent: '#4b3a2a' }, ...extra, 'sandals'] } };
 };
+/** Uma voz da conta para quem fala e não tem ficha própria (os brasileiros da série que não estão neste episódio). */
+const voz = (m: CastMember, id: string, speed?: number): CastMember => ({ ...m, look: { ...m.look, voice: { id, ...(speed ? { speed } : {}) } } });
 const guarda = (id: string, at: [number, number], yaw: number, seed: number, name: string): CastMember => figurante(id, 'soldado', at, yaw, seed, name);
 /** Os filisteus marchando na crista, em duas fileiras. */
 const marcha: CastMember[] = Array.from({ length: 12 }, (_, i) => {
@@ -50,13 +52,13 @@ export default direct(
     cast: [
       // O salão do trono.
       { character: 'saul', at: TRONO, yaw: 180, seated: 0.64 },
-      guarda('guarda-1', [97.3, -99.6], -90, 21, 'Guarda 1'),
+      voz(guarda('guarda-1', [97.3, -99.6], -90, 21, 'Guarda 1'), 'zoe2cQFqDDW4DteHDEWI'),
       guarda('guarda-2', [102.7, -99.6], 90, 34, 'Guarda 2'),
       guarda('soldado-1', [97.2, -89.3], -120, 47, 'Soldado 1'),
-      guarda('soldado-2', [97.6, -90.3], -20, 58, 'Soldado 2'),
-      guarda('porta-1', [97.0, -85.6], -90, 63, 'Guarda da porta 1'),
+      voz(guarda('soldado-2', [97.6, -90.3], -20, 58, 'Soldado 2'), 'mBxe7tYxRAMLpIP3fPEp'),
+      voz(guarda('porta-1', [97.0, -85.6], -90, 63, 'Guarda da porta 1'), 'hXur2dqIXKGl3IhDPHnb'),
       guarda('porta-2', [103.0, -85.6], 90, 72, 'Guarda da porta 2'),
-      gente('servo', [104.2, -95.6], 120, 81, 'Servo', '#c9b896', [{ id: 'headwrap', color: '#e2d6b8' }]),
+      voz(gente('servo', [104.2, -95.6], 120, 81, 'Servo', '#c9b896', [{ id: 'headwrap', color: '#e2d6b8' }]), 'GnDrTQvdzZ7wqAKfLzVQ', 1.08),
       { character: 'davi', at: [100, -85.4], yaw: 0 },
       // Belém, de manhã.
       { id: 'davi-belem', character: 'davi', at: [14.2, -23.9], yaw: -150 },
@@ -66,7 +68,7 @@ export default direct(
       { id: 'davi-patio', character: 'davi', at: [100, -80.6], yaw: 180 },
       guarda('sentinela-1', [97.4, -80.4], 180, 91, 'Sentinela 1'),
       guarda('sentinela-2', [102.6, -80.4], 180, 99, 'Sentinela 2'),
-      gente('mensageiro', [100.4, -66.5], 0, 107, 'Mensageiro', '#a89470'),
+      voz(gente('mensageiro', [100.4, -66.5], 0, 107, 'Mensageiro', '#a89470'), 'tS45q0QcrDHqHoaWdCDR'),
       // A crista.
       ...marcha,
     ],
@@ -113,12 +115,25 @@ export default direct(
     d.background(() => daviP.pickUp('harpa-patio', { hand: 'left' }));
     marcha.forEach((m, i) => d.background(() => d.actor(m.id!).pickUp(`lanca-${i + 1}`, { hand: 'right' })));
 
+    /** O som de fundo de uma cena, de `from` até agora. */
+    const ambiente = (name: string, from: number, volume?: number) => {
+      const end = d.now;
+      d.at(from);
+      d.sound(name, { length: end - from, fade: 0.8, ...(volume !== undefined ? { volume } : {}) });
+      d.at(end);
+    };
+    let cena = d.now;
+    // Música (CC0, ver audio/sons/CREDITOS.md): cada faixa já cortada no tamanho da sua cena.
+    d.sound('musica-trono');
+    d.sound('tensao-saul');
+
     // ---- 1. O rei no escuro (0:00) ----
     // [GANCHO] Um jarro voa e se quebra contra a parede. O Saul, de lado, no trono.
     d.camera.cut({ pos: [103.6, 1.75, -97.6], lookAt: [99.6, 1.35, -102.2], fov: 46 });
     d.wait(0.8);
     d.do('saul', 'move', { name: 'cower', amount: 0.3 }, { duration: 0.3 });
     d.do('jarro', 'throw', { to: [95.6, 1.3, -103.4], arc: 0.4 }, { duration: 0.9, ease: 'linear' });
+    d.sound('jarro-quebra');
     // O braço volta para o braço do trono.
     d.background(() => d.do('saul', 'move', { name: 'throw', amount: 0 }, { duration: 0.8 }));
     // Os guardas se encolhem.
@@ -146,12 +161,14 @@ export default direct(
       servo.walkTo(AJOELHA, { speed: 1.05 });
       servo.turnTo(0);
     });
+    d.sound('titulo-impacto');
     d.titleCard({ title: 'DAVI', subtitle: 'Uma história de coragem e destino', episode: 'Episódio 2 · O rei e o pastor' }, { duration: 3.6 });
 
     // ---- 2. O conselho (0:20) ----
     // A câmera passa a acompanhar o servo.
     d.camera.track('servo', { from: [98.6, 1.8, -92.0], to: [98.2, 1.8, -95.0], duration: Math.max(1.5, servoVem.end - d.now), fov: 44 });
     d.waitFor(servoVem.end);
+    d.sound('ajoelhar');
     d.do('servo', 'move', { name: 'kneel' }, { duration: 0.9 });
     saul.lookAt(servo, { duration: 0.6 });
     // Por cima do ombro do servo de joelhos, o rei no trono: os dois no meio do quadro (o Instagram corta as beiradas).
@@ -178,6 +195,9 @@ export default direct(
 
     // ---- 3. A partida (0:55) ----
     // Belém, de manhã. Grua descendo do telhado de Jessé até o terreiro, onde o jumento já está carregado.
+    ambiente('palacio-noite', cena);
+    cena = d.now;
+    d.sound('musica-partida');
     d.world.rule('noite', false, { duration: 0 });
     d.camera.cut({ pos: [22, TOPO + 8, -22], lookAt: [13, TOPO, -28], fov: 55 });
     d.camera.moveTo({ pos: [21.0, TOPO + 2.8, -22.8], lookAt: [15.6, TOPO + 1.1, -25.4], fov: 46 });
@@ -200,6 +220,10 @@ export default direct(
     const vai = d.background(() => daviB.walkTo([2.0, -22.8], { speed: 1.2 }));
     d.background(() => {
       d.wait(0.6);
+      d.sound('jumento-passos', { length: vai.end - vai.start - 0.6, fade: 0.5 });
+    });
+    d.background(() => {
+      d.wait(0.6);
       d.do('jumento', 'moveTo', { to: [3.2, -22.8], yaw: 70 }, { duration: vai.end - vai.start - 0.6, ease: 'linear' });
     });
     d.wait(3.2);
@@ -210,6 +234,10 @@ export default direct(
 
     // ---- 4. Diante do rei (1:15) ----
     // Noite outra vez. As portas abertas; o Davi entra, pequeno entre as colunas. Plano largo do alto, do fundo.
+    ambiente('manha-belem', cena);
+    cena = d.now;
+    d.sound('musica-entrada');
+    d.sound('porta-madeira-passos');
     d.world.rule('noite', true, { duration: 0 });
     saul.behave('attend', { object: 'davi', mood: 'worried' });
     for (const id of guardas) d.actor(id).behave('attend', { object: 'davi', mood: 'calm' });
@@ -237,6 +265,7 @@ export default direct(
     // O Davi se senta no banco baixo e começa a tocar.
     davi.sit('banco-davi', 'seat');
     d.do('davi', 'move', { name: 'strum' }, { duration: 0.6 });
+    const harpa = d.now;
     // [GANCHO] Travelling lento do Davi até o rei.
     d.camera.cut({ pos: [101.3, 1.2, -95.4], lookAt: [100, 1.0, -97.2], fov: 42 });
     d.camera.moveTo({ pos: [101.0, 1.45, -99.0], lookAt: [100, 1.5, -101.8], fov: 40 });
@@ -258,6 +287,8 @@ export default direct(
     d.narrate('Um jovem que não sabia o que o esperava.');
     // A música termina. O Saul abre os olhos e fica olhando o Davi.
     d.do('davi', 'move', { name: 'strum', amount: 0 }, { duration: 0.6 });
+    ambiente('harpa-pastor', harpa, 0.55);
+    d.sound('musica-escudeiro');
     d.camera.cut({ pos: [100.9, 1.9, -94.4], lookAt: [100, 1.3, -100.5], fov: 46 });
     d.camera.moveTo({ pos: [100.8, 1.85, -94.8], lookAt: [100, 1.3, -100.5], fov: 42 });
     saul.express('happy', { amount: 0 });
@@ -267,11 +298,14 @@ export default direct(
     saul.say('Fica comigo. Serás meu escudeiro.', { tone: 'firme', to: davi, gesture: 0.3 });
     // O Davi se levanta e se ajoelha.
     davi.standUp([100, -96.2], { yaw: 0 });
+    d.sound('ajoelhar');
     d.do('davi', 'move', { name: 'kneel' }, { duration: 1 });
     d.wait(0.8);
 
     // ---- 5. A ameaça (2:05) ----
     // Amanhecer. O pátio do palácio. O Davi sai e olha o horizonte.
+    ambiente('palacio-noite', cena);
+    cena = d.now;
     d.world.rule('noite', false, { duration: 0 });
     d.world.rule('amanhecer', true, { duration: 0 });
     d.camera.cut({ pos: [101.6, 1.7, -76.2], lookAt: [100, 1.4, -80.6], fov: 44 });
@@ -280,6 +314,10 @@ export default direct(
     // [GANCHO] O mensageiro, coberto de poeira, entra correndo pelo portão.
     d.camera.track('mensageiro', { from: [104.6, 1.6, -78.0], to: [104.2, 1.6, -78.6], duration: 5.5, fov: 42 });
     const corre = mensageiro.runTo([100.5, -78.6], { speed: 4.0 });
+    d.background(() => {
+      d.at(Math.max(corre.start, corre.end - 4));
+      d.sound('corrida-pedra');
+    });
     for (const id of ['sentinela-1', 'sentinela-2', 'davi-patio']) d.actor(id).behave('attend', { object: 'mensageiro', mood: 'worried' });
     d.at(corre.end - 1.0);
     mensageiro.say('Os filisteus!', { tone: 'grito', gesture: 0.4 });
@@ -292,6 +330,9 @@ export default direct(
     daviP.express('surprised', { amount: 0.4 });
     d.wait(0.6);
     // O horizonte: na crista, uma fileira de lanças avançando contra o céu.
+    ambiente('patio-amanhecer', cena);
+    cena = d.now;
+    d.sound('musica-ameaca');
     d.camera.cut({ pos: [146, d.ground(146, -51) + 0.5, -51], lookAt: [143, d.ground(143, -60) + 2.4, -60], fov: 50 });
     marcha.forEach((m, i) => d.background(() => d.actor(m.id!).walkTo([m.at[0] + 16, m.at[1]], { speed: 0.9 + (i % 3) * 0.03 })));
     d.camera.moveTo({ pos: [147, d.ground(147, -52) + 0.5, -52], lookAt: [149, d.ground(149, -60) + 2.4, -60], fov: 46 });
@@ -302,6 +343,7 @@ export default direct(
       options: [{ label: 'TOCAVA', icon: '🎶' }, { label: 'FUGIA', icon: '🚪' }],
       cta: 'Comenta TOCAVA ou FUGIA 👇 e marca quem ia tremer na frente do rei',
     }, { duration: 6 });
+    ambiente('marcha-exercito', cena);
     d.at(d.now - 6);
     d.narrate('No próximo episódio: quarenta dias.');
   },

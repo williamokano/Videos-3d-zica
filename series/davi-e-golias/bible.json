@@ -104,6 +104,75 @@
         "source": "https://freesound.org/people/Magmi.Soundtracks/sounds/507741",
         "author": "Magmi.Soundtracks",
         "volume": 0.18
+      },
+      "musica-trono": {
+        "file": "musica-trono.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/Magmi.Soundtracks/sounds/507741",
+        "author": "Magmi.Soundtracks",
+        "volume": 0.16
+      },
+      "musica-partida": {
+        "file": "musica-partida.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/MusicByMisterbates/sounds/596510",
+        "author": "MusicByMisterbates",
+        "volume": 0.24
+      },
+      "musica-entrada": {
+        "file": "musica-entrada.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/BuytheField/sounds/414442",
+        "author": "BuytheField",
+        "volume": 0.2
+      },
+      "musica-escudeiro": {
+        "file": "musica-escudeiro.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/MusicByMisterbates/sounds/603711",
+        "author": "MusicByMisterbates",
+        "volume": 0.24
+      },
+      "musica-ameaca": {
+        "file": "musica-ameaca.mp3",
+        "license": "CC0-1.0",
+        "source": "https://freesound.org/people/edtijo/sounds/218744",
+        "author": "edtijo",
+        "volume": 0.24
+      },
+      "jarro-quebra": {
+        "prompt": "clay jar thrown and shattering against a stone wall in a large hall, ceramic crash with shards scattering, short reverb",
+        "duration": 2.5,
+        "volume": 0.6
+      },
+      "manha-belem": {
+        "prompt": "small ancient village courtyard in the early morning, birds chirping, a distant rooster, goats bleating far away, light breeze, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "jumento-passos": {
+        "prompt": "a donkey walking slowly on a dry dirt path, steady hoof clops, leather saddlebags creaking, one soft snort",
+        "duration": 8,
+        "loop": true,
+        "volume": 0.4
+      },
+      "patio-amanhecer": {
+        "prompt": "stone palace courtyard at dawn, cool wind, a few birds, distant waking city murmur, flag cloth flapping, no music",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.35
+      },
+      "corrida-pedra": {
+        "prompt": "one man running fast on stone paving in sandals, heavy breathing, panting, skidding to a stop",
+        "duration": 4,
+        "volume": 0.5
+      },
+      "marcha-exercito": {
+        "prompt": "ancient army marching far away on a hill, many heavy footsteps in rhythm, bronze armor and spears clinking, wind, distant war horn",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.25
       }
     }
   },
