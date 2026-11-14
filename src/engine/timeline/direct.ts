@@ -431,7 +431,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   if (!keys.length) throw new Error('O roteiro não tem câmera: comece com d.camera.cut(...), d.camera.fpv(...) ou d.camera.thirdPerson(...).');
   // A cut ends a move planned ahead: the rest of an orbit after the next cut is dropped.
   for (const [k, start] of planned) {
-    if (keys.some((other) => other.cut && !planned.has(other) && other.t > start && other.t <= k.t)) keys.splice(keys.indexOf(k), 1);
+    if (keys.some((other) => other.cut && !planned.has(other) && other.t > start && other.t < k.t)) keys.splice(keys.indexOf(k), 1);
   }
   // Keys written out of order (inside a background branch) go to their place; equal times keep the order they were written in.
   const camera = keys.map((k, i) => ({ k, i })).sort((a, b) => a.k.t - b.k.t || a.i - b.i).map(({ k }) => k);
