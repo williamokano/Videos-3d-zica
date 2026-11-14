@@ -51,6 +51,11 @@ export default direct(
 | `d.camera.cut({ pos, lookAt, fov })` | corta para uma câmera posta à mão |
 | `d.camera.moveTo({ pos, lookAt })` | dentro do plano atual: a câmera se move e chega aqui agora |
 | `d.camera.fpv(ana)`, `d.camera.thirdPerson(ana, { distance, height })` | corta para a câmera presa ao personagem |
+| `d.camera.orbit({ center, radius, height, from, to, duration })` | gira em volta de um ponto olhando para ele (ângulos em graus: 0 ao sul do ponto, 90 a leste). Começa com corte, a não ser `cut: false`; não anda o relógio |
+| `shake` (0 a 1) em `cut`, `moveTo`, `thirdPerson`, `orbit` | tremor: câmera na mão correndo (~0.3), chão tremendo com passos de gigante (picos perto de 1). Varia entre keyframes |
+| `d.do(ana, 'move', { name, amount })` | movimento do corpo inteiro que fica até outro `move` com `amount: 0`: `kneel` (ajoelhar), `sling` (girar a funda sobre a cabeça), `dance`, `cheer` (braços para cima), `cower` (encolher) |
+| `d.do(ana, 'fall', {}, { ease: 'linear' })` | cai duro de frente, girando nos pés, e fica de bruços |
+| `d.do('pedra', 'throw', { hit: 'golias', speed }, { ease: 'linear' })` | quem segura o item o arremessa (braço por cima do ombro); voa em arco até `to` ou até a testa de `hit`. `speed` baixo parece câmera lenta |
 
 - Os passos de um mesmo personagem são um depois do outro; para dois personagens ao mesmo tempo use `together` ou `background`.
 - Chamadas de câmera não andam o relógio. Para um corte no meio de uma ação longa: `d.background(() => { d.wait(1); d.camera.cut(...); })` antes da ação.
