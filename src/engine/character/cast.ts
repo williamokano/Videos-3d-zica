@@ -63,6 +63,10 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const hand = new THREE.Vector3();
   // Where a hand that holds something up to be read turns its palm: back to the face, and a little up.
   const face = new THREE.Vector3(0, 0.25, 1).normalize();
+  // Arms crossed: elbows out to the sides and a little ahead, not back into the body; palms against the body.
+  const crossBend = new THREE.Vector3(1, -0.7, -0.35);
+  const inward = new THREE.Vector3(0, 0, 1);
+  const wide = def.build ?? 1;
 
   const tick = (t: number): void => {
     object.position.set(state.x, state.y, state.z);
@@ -72,6 +76,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     pose = movePose(pose, Object.fromEntries(MOVE_NAMES.map((n) => [n, state[`move.${n}`]])), t + seed);
     // What each hand does because of what the arm is doing: open when it talks, closed on what it holds.
     const busy = { L: { open: 0, grip: 0 }, R: { open: 0, grip: 0 } };
+    const crossed = { L: 0, R: 0 };
     for (const side of ['L', 'R'] as Side[]) {
       busy[side].grip = state[`carry${side}`];
       pose = carryPose(pose, side, state[`carry${side}`]);
@@ -83,7 +88,17 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
         const toward = (x: number, y: number, z: number, weight: number): void => {
           if (weight > 0.001) pose = reachPose(pose, side, wristPosition(pose, side).lerp(hand.set(x, y + pose.lift, z), weight));
         };
-        toward(-sign * 0.1, side === 'R' ? 1.15 : 1.1, side === 'R' ? -0.16 : -0.2, ambient?.cross ?? 0);
+        // Arms crossed at the ribs: the right forearm over the left, each wrist across to the other arm, the hand
+        // tucked against it by the elbow (the left one under the right upper arm), so no hand sticks out.
+        // Seated (a throne, a bench), the arms rest on the lap and the armrests instead.
+        const cross = (ambient?.cross ?? 0) * (1 - state.sit);
+        if (cross > 0.001) {
+          const top = side === 'R';
+          const wrist = hand.set(-sign * 0.115 * wide, (top ? 1.19 : 1.13) + pose.lift, -(0.1 * wide + (top ? 0.12 : 0.075)));
+          pose = reachPose(pose, side, wristPosition(pose, side).lerp(wrist, cross), crossBend);
+          crossed[side] = cross;
+          busy[side].grip = Math.max(busy[side].grip, cross * 0.75);
+        }
         const talking = Math.max(ambient?.[`gesture${side}`] ?? 0, side === 'R' ? state.gesture : state.gesture * 0.6);
         toward(sign * 0.21, 1.07 + 0.07 * Math.sin(t * 5.5 + seed + sign), -0.28 + 0.04 * Math.cos(t * 4.1 + seed), talking);
         if (side === 'R') toward(0.1 + 0.16 * Math.sin(t * 1.2 + seed), 1.5 + 0.05 * Math.sin(t * 7.5), -0.44, ambient?.write ?? 0);
@@ -128,6 +143,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       weights.grip *= 1 - raised;
       shapes[side] = resolveHand(weights, t + seed);
       if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
+      else if (crossed[side] > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, inward) * crossed[side], 0, 0] } };
     }
     for (const channel of worn) rig.showWear?.(channel.slice(5), state[channel] >= 0.5);
     rig.applyPose(pose);

@@ -46,7 +46,7 @@ export function wristPosition(pose: Pose, side: Side): THREE.Vector3 {
  * The elbow goes down and a little out and back, like a relaxed arm. When the arm alone is short, the
  * body helps: it leans forward and turns that shoulder toward the point.
  */
-export function reachPose(pose: Pose, side: Side, target: THREE.Vector3): Pose {
+export function reachPose(pose: Pose, side: Side, target: THREE.Vector3, bend?: THREE.Vector3): Pose {
   const sign = side === 'R' ? 1 : -1;
   const arm = Math.abs(OFFSETS[`forearm${side}`][0]) + Math.abs(OFFSETS[`hand${side}`][0]);
   const short = target.distanceTo(shoulder(pose, side).at) - arm;
@@ -65,7 +65,8 @@ export function reachPose(pose: Pose, side: Side, target: THREE.Vector3): Pose {
   const n = to.lengthSq() > 1e-8 ? to.normalize() : new THREE.Vector3(0, -1, 0);
   const cos = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d);
   const sin = Math.sqrt(Math.max(0, 1 - cos * cos));
-  const pole = new THREE.Vector3(sign * 0.35, -1, 0.45);
+  // Where the elbow goes: by default down, a little out and back; `bend` (x mirrored per side) changes it.
+  const pole = bend ? new THREE.Vector3(sign * bend.x, bend.y, bend.z) : new THREE.Vector3(sign * 0.35, -1, 0.45);
   pole.addScaledVector(n, -pole.dot(n));
   if (pole.lengthSq() < 1e-6) pole.set(sign, 0, 0);
   pole.normalize();

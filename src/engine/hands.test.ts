@@ -308,3 +308,34 @@ describe('direction in code', () => {
     })).toThrow(/o canal "yaw" de "ana" ainda está em uso por outra ação até 2s/);
   });
 });
+
+describe('crossed arms', () => {
+  // The elbow in the character's frame (standard 1.7 m body), composed as the IK composes it.
+  const elbowOf = (pose: ReturnType<typeof idlePose>): THREE.Vector3 => {
+    const turn = (j: keyof typeof pose.joints) => {
+      const [x, y, z] = pose.joints[j] ?? [0, 0, 0];
+      return new THREE.Quaternion().setFromEuler(new THREE.Euler(x * (Math.PI / 180), y * (Math.PI / 180), z * (Math.PI / 180)));
+    };
+    const at = new THREE.Vector3(0, pose.lift, 0);
+    const q = new THREE.Quaternion();
+    const offsets: Record<string, [number, number, number]> = { hips: [0, 0.9, 0], spine: [0, 0.1, 0], chest: [0, 0.16, 0] };
+    for (const j of ['hips', 'spine', 'chest'] as const) {
+      at.add(new THREE.Vector3(...offsets[j]).applyQuaternion(q));
+      q.multiply(turn(j));
+    }
+    at.add(new THREE.Vector3(0.19, 0.2, 0).applyQuaternion(q));
+    return at.add(new THREE.Vector3(0.26, 0, 0).applyQuaternion(q.multiply(turn('upperArmR'))));
+  };
+
+  it('reaches across the body with the elbow ahead of the chest, not back into the torso', () => {
+    const pose = idlePose(0);
+    const target = new THREE.Vector3(-0.115, 1.19, -0.22);
+    const crossed = reachPose(pose, 'R', target, new THREE.Vector3(1, -0.7, -0.35));
+    expect(wristPosition(crossed, 'R').distanceTo(target)).toBeLessThan(0.01);
+    const elbow = elbowOf(crossed);
+    const plain = elbowOf(reachPose(pose, 'R', target));
+    // Further ahead (-z) than the default relaxed bend, and in front of the chest (its front is at z = -0.1).
+    expect(elbow.z).toBeLessThan(plain.z);
+    expect(elbow.z).toBeLessThan(-0.1);
+  });
+});
