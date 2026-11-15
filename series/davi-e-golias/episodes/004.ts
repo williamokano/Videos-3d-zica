@@ -512,8 +512,11 @@ export default direct(
     // Do outro lado do corpo caído: o Davi de frente, a espada no alto e descendo.
     d.camera.cut({ pos: [caido[0] + 3.4, pescoco[1] + 1.2, caido[2] - 2.4], lookAt: [caido[0] - 0.6, pescoco[1] + 0.6, caido[2] - 0.6], fov: 46 });
     const golpe = d.do('espada-golias', 'chop', { at: pescoco }, { duration: 0.8 });
+    // A tarja vai do golpe até o corte para a cabeça no chão (golpe.end + 0.9); dali em diante, o mosaico.
+    const TARJA = golpe.end + 0.9 - (golpe.start + 0.42);
     d.at(golpe.start + 0.42);
-    d.censor({ at: [pescoco[0] - 0.15, pescoco[1] + 0.25, pescoco[2]], size: 0.7, mode: 'tarja' }, { duration: 1.4 });
+    // A tarja cobre o pescoço, o vão e a cabeça que cai logo à frente: nada do corte aparece em volta dela.
+    d.censor({ at: [pescoco[0] + 0.05, pescoco[1] + 0.05, pescoco[2] - 0.45], size: 1.0, mode: 'tarja' }, { duration: TARJA });
     d.at(golpe.start + 0.55);
     d.sound('golpe-espada');
     // Debaixo da tarja, a cabeça sai do corpo e fica no chão logo à frente dele, o corte virado para o pescoço, com
@@ -523,7 +526,7 @@ export default direct(
     const noChao: [number, number] = [pescoco[0] + 0.12, pescoco[2] - 0.3 - R * 1.3];
     d.do('cabeca-golias', 'moveTo', { to: noChao, y: d.ground(...noChao), yaw: 90 }, { duration: 0 });
     const vao: V3 = [(pescoco[0] + noChao[0]) / 2, pescoco[1] - 0.02, (pescoco[2] + noChao[1] + R) / 2];
-    d.at(golpe.start + 0.42 + 1.4);
+    d.at(golpe.start + 0.42 + TARJA);
     d.censor({ at: vao, size: 0.5, mode: 'mosaico' }, { duration: 3.4 });
     d.at(golpe.end);
     d.wait(0.9);
