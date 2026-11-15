@@ -1,0 +1,24 @@
+{
+ "key": "06451da849a8139f",
+ "duration": 2.351,
+ "text": "Cinco.",
+ "starts": [
+  1.14,
+  1.16,
+  1.18,
+  1.2,
+  1.32,
+  1.44
+ ],
+ "ends": [
+  1.16,
+  1.18,
+  1.2,
+  1.32,
+  1.44,
+  2.32
+ ],
+ "speaker": "davi-vale",
+ "spoken": "[whispers] Cinco.",
+ "level": -18
+}

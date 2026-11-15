@@ -1,0 +1,26 @@
+{
+ "key": "53ed706afd6539e3",
+ "duration": 1.489,
+ "text": "Quatro.",
+ "starts": [
+  0.147,
+  0.153,
+  0.16,
+  0.28,
+  0.4,
+  0.52,
+  0.64
+ ],
+ "ends": [
+  0.153,
+  0.16,
+  0.28,
+  0.4,
+  0.52,
+  0.64,
+  1.36
+ ],
+ "speaker": "davi-vale",
+ "spoken": "[whispers] Quatro.",
+ "level": -18
+}
