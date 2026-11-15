@@ -1,6 +1,17 @@
-# Para continuar (estado em 2026-11-14, 20:10 de Brasília)
+# Para continuar (estado em 2026-11-15)
 
-Leia antes: `tasks/lessons.md`, `canal/vozes.json` e as skills em `.claude/skills/`. Responda ao autor sempre em português. Nunca ponha Co-Authored-By nos commits. Nada é publicado, agendado, comentado ou apagado sem um "pode" do autor.
+Leia antes de tudo: `tasks/lessons.md` (todas as lições valem), `canal/vozes.json`, as skills em `.claude/skills/`
+(`write-episode`, `direct-actions`, `create-character`, `publicar`, `agendar`) e as fichas em
+`series/davi-e-golias/characters/*.md` e `*.json`.
+
+Regras do autor:
+- Responda sempre em português.
+- Nunca ponha Co-Authored-By nem outro trailer nos commits.
+- Nada é publicado, agendado, comentado ou apagado sem um "pode" do autor; o "pode" de um episódio não vale para o
+  próximo.
+- Não gere áudio (ElevenLabs) antes de o autor aprovar a prévia muda: os créditos são caros.
+- Voz nova só depois do teste com o autor (`npm run testar-voz`, skill `create-character`, seção "Voz").
+- Commit e push na `main` ao fim de cada etapa.
 
 ## DAVI (série `davi-e-golias`, canal historinhas.animadas.3d)
 
@@ -14,22 +25,66 @@ Leia antes: `tasks/lessons.md`, `canal/vozes.json` e as skills em `.claude/skill
 O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 
 ### Episódio 4, "O gigante": PRONTO, esperando o "pode" para publicar
-- Final com áudio: `Videos Curtos/Davi/ep04/final.mp4` (2:33.2, -13,5 LUFS), `roteiro.md` e `publicacao/` (capa "O GIGANTE", story, `textos.md`).
-- O autor aprovou a censura só no pescoço: o golpe sob tarja e o vão do pescoço sob mosaico, com a cabeça visível ao lado.
-- Para publicar: o autor dá data e hora e o "pode" (skill `agendar`). Foi sempre só no YouTube williamokano. Depois, grave `publicacao/ep004/agendamento.md`.
-- Falta atualizar as fichas (`## Arco na série`, `## Cânone`, `profile.episodes`) de Davi, Golias, Saul, Eliabe, Abinadabe e Abner.
-- `episodes/005.ts` é a versão antiga ("Dez milhares") e ainda mostra a pedra, a queda e a espada: reescrever pelo `005-roteiro.md` v2.
+- No NAS, em `Videos Curtos/Davi/ep04/`:
+  - `final.mp4` (2:33.2, -13,5 LUFS, sem falas sobrepostas nem silêncio longo);
+  - `roteiro.md`;
+  - `publicacao/` (capa "O GIGANTE", story, `textos.md` com legenda, título, descrição com capítulos e comentário fixado).
+- Censura aprovada pelo autor:
+  - o golpe da espada sob tarja preta, cobrindo o pescoço e a cabeça que cai, até o corte;
+  - no plano seguinte, mosaico só no vão do pescoço, com a cabeça visível ao lado, sem sangue;
+  - mostrar sem censura, não.
+- Para publicar:
+  1. O autor dá data e hora e o "pode" (skill `agendar`). Use o MCP `mcp__publisher__*`: série DAVI `220a4abec4565b436e9dc51b48f10e3d`, temporada `183c4ce9103f2b3d73d19fee029c3062`, conta YouTube williamokano `5eef6660dda51d3a36f07fc52aaad771`.
+  2. Faça `create_content` com `media_path` `Videos Curtos/Davi/ep04/final.mp4` e `cover_path` `Videos Curtos/Davi/ep04/publicacao/capa_ep04.png`. Os textos vêm de `publicacao/ep004/textos.md`; o comentário fixado é a opção A.
+  3. Faça `schedule_release`, leia o resultado de volta e grave `series/davi-e-golias/publicacao/ep004/agendamento.md`, como nos eps. 1–3.
+- Depois, atualize as fichas de Davi, Golias, Saul, Eliabe, Abinadabe e Abner (`## Arco na série`, `## Cânone`, `profile.episodes` com o 4) e o cânone da `biblia.md`, se mudou algo.
+
+### Episódio 5, "De herói a ameaça": A FAZER
+- Bíblia (`series/davi-e-golias/biblia.md`, tabela de episódios e cânone):
+  - o povo canta "Saul matou os seus milhares, e Davi os seus dez milhares";
+  - o Jônatas dá ao Davi manto, espada, arco e cinto e faz aliança com ele (18:1-4);
+  - o Saul ouve a canção e passa a invejar (18:6-9);
+  - numa noite, enquanto o Davi toca a harpa, o Saul atira a lança, e o Davi se desvia (18:10-11);
+  - fim da temporada.
+- `series/davi-e-golias/episodes/005.ts` existe, mas é a versão antiga ("Dez milhares"): ainda mostra a pedra, a queda e a espada, que agora são do ep. 4. Reescreva pelo `roteiros/005-roteiro.md` (v2), sem repetir o ep. 4. O ep. 4 termina com Israel descendo o monte e o narrador: "No próximo episódio: de herói a ameaça."
+- Fluxo:
+  1. Use a skill `write-episode`. Grave `roteiros/005-pedido.md`, depois `005-roteiro.md`. Implemente `episodes/005.ts` (skill `direct-actions`) e rode `npm run roteiro`.
+  2. Faça a prévia muda com `npm run render -- --series davi-e-golias --ep 5 --scale 1 --no-audio --out out/davi-e-golias/ep005/davi-e-golias-ep005-previa.mp4` e ponha em `Videos Curtos/Davi/ep05/previa.mp4` + `roteiro.md` no NAS.
+  3. Espere a revisão do autor. Só depois rode `npm run voz` e o render final, nesta ordem: NAS, `publicar` e, com "pode", `agendar`.
+- Personagens novos com nome (Jônatas já tem ficha; as mulheres que cantam são figurantes) ganham ficha (`create-character`). Quem fala e não tem voz passa pelo teste de voz com o autor. Para figurantes, prefira vozes já `aprovada`s em `canal/vozes.json` que não falam no mesmo episódio.
+- A lança do Saul (18:11): o Davi se desvia, e a série corta no som (ponta solta na bíblia).
+- Limite de 3:00 (Instagram); mire em ~2:40.
+
+### Recursos novos do motor (use; documentados na skill `direct-actions`)
+- **Entregar e vestir:**
+  - `give` passa um item de uma mão para outra;
+  - `don` funciona em si mesmo, para vestir com as próprias mãos;
+  - `doff` tira.
+- **Espada:** `draw` tira da bainha de alguém e ergue; `chop` desce num golpe até um ponto.
+- **Censura:** `d.censor({ at, size, mode: 'tarja' | 'mosaico' }, { duration })` cobre um ponto da cena na imagem final.
+  - Confira quadro a quadro no `final.mp4`.
+  - Cubra também para onde as coisas vão.
+- **Cabeça separada:** `headOff` esconde a cabeça; `ancient.severedHead` é a cabeça separada.
+- **Câmera lenta:** `d.slowMo(de, até, fator)`.
+- **Funda:** `arms.sling` tem o parâmetro `cord`; `whirl` gira a funda acima da cabeça; `throw` com `hit` crava na testa (use `arc` perto de 0 contra capacete).
+- **Exército:** `reforcoDeIsrael()` em `cena.ts`. Numa carga, cada um corre reto no seu corredor; a checagem de multidão reprova quem se cruza.
+- **Multidão gritando:** sons com `speak` na `bible.json` (uma voz como som, sem legenda); veja os `grito-ataque-*`.
+- **Rostos:** o tom da fala muda o rosto (`TONE_FACES`), e o sorriso de descanso some enquanto o personagem fala.
+- **Legendas dos figurantes:** "Soldado", "Guarda", sem número, a não ser quando dois do mesmo nome conversam.
 
 ### Vozes
-- Estado de cada voz em `canal/vozes.json`. Vetadas (locutor ou sotaque): Adriano, Diego, Borges, Carlos.
+- O estado de cada voz está em `canal/vozes.json`.
+- Vetadas (locutor ou sotaque): Adriano, Diego, Borges, Carlos.
 - Em `teste` (o autor ainda não comentou): Golias (Lucas – Deep & Profound), Abner (Paulo), soldado 12 do ep. 3 (Davi Andrei).
 
 ## Selado (pasta `Videos Curtos/Bunker`, série `selado` no publicador)
-- Eps. 15–22 tinham falhado no YouTube: a capa apontava para `epNN/publicacao/capa_epNN.png`, que não existe. Agora aponta para `epNN/capa_epNN.png`. Os eps. 23–25 foram cadastrados com os textos do `textos.md` de cada um.
-- Agendados no YouTube williamokano (Brasília): ep. 15 em 14/11 às 20:30; ep. 16 em 14/11 às 22:00; depois 12:00 e 18:00, um por horário, até o ep. 25 em 19/11 às 12:00.
-- **Conferir** se o ep. 15 (20:30) saiu com a capa. Se falhar, ver `last_error` em `list_publications` antes das 22:00.
-- O Instagram contosdesobreviventes está **pausado** desde 10/11 por decisão do autor. As publicações dele ficam pendentes; não mexer.
+- Eps. 15–25 agendados no YouTube williamokano, um às 12:00 e outro às 18:00 de Brasília, de 14/11 a 19/11. O ep. 15 saiu (https://youtube.com/shorts/XQASrubr5Wk).
+- Se algum falhar, veja o `last_error` em `list_publications`. A causa da falha anterior era o caminho da capa: as capas ficam em `Bunker/epNN/capa_epNN.png`, sem a pasta `publicacao`.
+- O Instagram contosdesobreviventes está **pausado** por decisão do autor. Não mexa.
 
 ## Avisos
-- As estatísticas do YouTube não chegam: "YouTube Analytics API has not been used in project 228597281341" (403). O autor precisa ativar a API no Google Cloud Console desse projeto. Só views, likes e comentários vêm da listagem.
-- O publicador não apaga vídeo já publicado. Para trocar um vídeo, o autor apaga no YouTube Studio e um conteúdo novo é criado (slug diferente, título original na publicação), como no ep. 3.
+- As estatísticas do YouTube não chegam: "YouTube Analytics API has not been used in project 228597281341" (403). O autor precisa ativar a API no Google Cloud Console. Por enquanto, só views, likes e comentários vêm da listagem.
+- O publicador não apaga vídeo já publicado e não aceita um segundo lançamento do mesmo conteúdo. Para trocar um vídeo:
+  1. o autor apaga no YouTube Studio;
+  2. cria-se um conteúdo novo, com slug diferente (por exemplo, título com "(v2)");
+  3. `update_publication` põe o título original. Foi feito assim no ep. 3.
