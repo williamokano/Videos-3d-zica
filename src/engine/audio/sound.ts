@@ -13,6 +13,11 @@ export interface SoundDef {
   prompt?: string;
   /** Or a file in audio/sons/, e.g. "porta-rangendo.ogg", from a library with a permissive license. */
   file?: string;
+  /**
+   * Or a voice saying something, made like a line (ElevenLabs text to speech) but played as a sound: no subtitle,
+   * no mouth. For crowds: many voices shouting at once, each one a sound, laid over each other.
+   */
+  speak?: { voice: string; text: string; tone?: string };
   /** For a file: its license ("CC0-1.0", "CC-BY-4.0"...), where it came from, and who made it (for credits). */
   license?: string;
   source?: string;
@@ -48,7 +53,8 @@ function hash(text: string): string {
 /** The file of a sound, inside audio/sons/. */
 export function soundFile(name: string, def: SoundDef): string {
   if (def.file) return def.file;
-  if (!def.prompt) throw new Error(`O som "${name}" precisa de "prompt" (para gerar) ou de "file" (um arquivo baixado).`);
+  if (def.speak) return `${name}-${hash(JSON.stringify(['speak', def.speak.voice, def.speak.text, def.speak.tone ?? null]))}.mp3`;
+  if (!def.prompt) throw new Error(`O som "${name}" precisa de "prompt" (para gerar), "speak" (uma voz) ou "file" (um arquivo baixado).`);
   return `${name}-${hash(JSON.stringify([def.prompt, def.duration ?? null, def.influence ?? null, Boolean(def.loop)]))}.mp3`;
 }
 

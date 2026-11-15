@@ -2662,21 +2662,33 @@ registerAsset(
 
 registerAsset(
   'ancient.severedHead',
-  'Uma cabeça separada do corpo, deitada de lado no chão, com barba e capacete de bronze: só para aparecer sob censura ("mosaico"), nunca à mostra. Feita nas cores do personagem (params: radius da cabeça em metros, padrão 0.27; skin; hair, cor da barba e do cabelo; helmet; stone — 1 para a pedra na testa)',
+  'A cabeça de um gigante separada do corpo, caída de lado no chão, de olhos fechados, com cabelo comprido, barba e o capacete de bronze. O corte fica do lado de -x (com "yaw" 90, virado para +z) e vai sempre sob censura ("mosaico" só no corte). Nas cores do personagem (params: radius em metros, padrão 0.27; skin; hair, barba e cabelo; helmet; stone — 1 para a pedra na testa)',
   (p) => {
     const r = Number(p.radius ?? 0.27);
     const skin = String(p.skin ?? '#b98a62');
     const hair = String(p.hair ?? '#22160f');
+    const bronze = String(p.helmet ?? '#b8862f');
+    // Upright first (top +y, face -z, the cut at -y), as the head sits on a body; then laid on its side.
     const head = group(
-      mesh(new THREE.SphereGeometry(r, 18, 12), skin),
-      // Beard over the lower front, hair at the back, a bronze helmet on the top.
-      mesh(new THREE.SphereGeometry(r * 0.92, 16, 10, 0, Math.PI * 2, Math.PI * 0.55, Math.PI * 0.45), hair, [0, -r * 0.08, -r * 0.12]),
-      mesh(new THREE.SphereGeometry(r * 1.06, 18, 10, 0, Math.PI * 2, 0, Math.PI * 0.42), String(p.helmet ?? '#b8862f'), [0, r * 0.05, 0]),
+      mesh(new THREE.SphereGeometry(r, 20, 14), skin),
+      // Long hair down the back, a full beard over the jaw and the chin.
+      mesh(new THREE.SphereGeometry(r * 1.04, 18, 12, Math.PI * 0.15, Math.PI * 1.7, Math.PI * 0.3, Math.PI * 0.55), hair, [0, -r * 0.05, r * 0.05]),
+      mesh(new THREE.SphereGeometry(r * 0.95, 18, 12, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.52, Math.PI * 0.4), hair, [0, -r * 0.06, -r * 0.08]),
+      // Nose, and the eyes closed: two dark lines.
+      mesh(new THREE.SphereGeometry(r * 0.13, 10, 8), skin, [0, r * 0.02, -r * 0.98]),
+      mesh(new THREE.BoxGeometry(r * 0.24, r * 0.035, r * 0.04), '#2a1a12', [-r * 0.3, r * 0.16, -r * 0.93]),
+      mesh(new THREE.BoxGeometry(r * 0.24, r * 0.035, r * 0.04), '#2a1a12', [r * 0.3, r * 0.16, -r * 0.93]),
+      // The bronze helmet: the shell, its rim and the knob on top, as the "bronzeHelmet" piece.
+      mesh(new THREE.SphereGeometry(r * 1.1, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.45), bronze, [0, r * 0.1, 0]),
+      mesh(new THREE.TorusGeometry(r * 1.08, r * 0.055, 8, 28).rotateX(Math.PI / 2), bronze, [0, r * 0.42, 0]),
+      mesh(new THREE.ConeGeometry(r * 0.12, r * 0.32, 12), bronze, [0, r * 1.28, 0]),
+      // The neck, short, where it was cut.
+      mesh(new THREE.CylinderGeometry(r * 0.42, r * 0.45, r * 0.35, 14), skin, [0, -r * 1.0, 0]),
     );
-    if (Number(p.stone ?? 1) > 0.5) head.add(mesh(new THREE.SphereGeometry(r * 0.13, 10, 8).scale(1, 0.75, 0.6), '#9a958c', [r * 0.05, r * 0.22, -r * 0.97]));
-    // Lying on its side on the ground, the face turned away.
-    head.rotation.set(0, 0, Math.PI / 2);
-    head.position.y = r * 0.9;
+    if (Number(p.stone ?? 1) > 0.5) head.add(mesh(new THREE.SphereGeometry(r * 0.13, 10, 8).scale(1, 0.75, 0.6), '#9a958c', [r * 0.05, r * 0.18, -r * 0.98]));
+    // On its side on the ground: the top toward +x, the cut toward -x, the face down a little.
+    head.rotation.set(0.35, 0, -Math.PI / 2);
+    head.position.y = r * 0.95;
     return loose(group(head));
   },
 );

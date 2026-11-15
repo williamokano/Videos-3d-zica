@@ -71,7 +71,7 @@ registerAction({
     speed: { type: 'number', description: 'velocidade do voo em m/s (padrão 20). Mais baixo parece câmera lenta' },
     arc: { type: 'number', description: 'quanto o arco sobe no meio do voo, em metros (padrão 1/20 da distância)' },
     with: { type: 'string', description: 'id de um item que lança (a funda) na mão de quem arremessa; o item arremessado sai do bolso dele no instante de soltar, e a funda fica vazia (canal "loaded") e volta a pender da mão' },
-    stick: { type: 'boolean', description: 'com "hit": o item crava e some no impacto (para mostrar a pedra na testa, ligue uma peça de roupa como "foreheadStone")' },
+    stick: { type: 'boolean', description: 'com "hit": o item crava e some no impacto (para mostrar a pedra na testa, ligue uma peça de roupa como "foreheadStone"). Num alvo de capacete, use "arc" perto de 0: a pedra sobe reta por baixo da aba' },
   },
   duration: 1,
   compile(ctx) {
@@ -92,10 +92,10 @@ registerAction({
       const [fx, fz] = facing(victim.yaw);
       const { eyeHeight: eye = 1.6, headRadius } = ctx.object(hit).traits;
       // The forehead: on the front of the head, a little above the eyes, under a helmet's rim; exactly where the
-      // "foreheadStone" piece sits (a tenth of the head's radius above the eyes, on its surface). A big head (a
-      // giant) has its forehead farther out, so it is measured, not guessed from the height.
+      // "foreheadStone" piece sits (0.06 of the head's radius above the eyes, on its surface, under a helmet's
+      // shell). A big head (a giant) has its forehead farther out, so it is measured, not guessed from the height.
       const r = headRadius ?? 0.1 * (eye / 1.6);
-      to = [victim.pos[0] + fx * r * 0.97, victim.pos[1] + eye + r * 0.1, victim.pos[2] + fz * r * 0.97];
+      to = [victim.pos[0] + fx * r * 0.98, victim.pos[1] + eye + r * 0.06, victim.pos[2] + fz * r * 0.98];
     }
     const thrower = ctx.placeOf(by);
     const [fx, fz] = facing(thrower.yaw);

@@ -258,6 +258,70 @@
         "prompt": "a heavy iron sword swung down hard, a fast whoosh ending in a dull thud on the ground, short, no gore",
         "duration": 1.5,
         "volume": 0.6
+      },
+      "grito-ataque-1": {
+        "speak": {
+          "voice": "GnDrTQvdzZ7wqAKfLzVQ",
+          "text": "Aaaaaaaah!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-2": {
+        "speak": {
+          "voice": "tS45q0QcrDHqHoaWdCDR",
+          "text": "Por Israel! Aaaaah!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-3": {
+        "speak": {
+          "voice": "mBxe7tYxRAMLpIP3fPEp",
+          "text": "Avante! Avante!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-4": {
+        "speak": {
+          "voice": "ZYCQDYoXnl78dNdU6JeG",
+          "text": "Aaaaah! Atrás deles!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-5": {
+        "speak": {
+          "voice": "Dps47AVoFamqqkDShRDS",
+          "text": "Uaaaaaaah!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-6": {
+        "speak": {
+          "voice": "2CECaLAGTS5NRGxgbcxr",
+          "text": "Pelo Senhor! Aaaaah!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-7": {
+        "speak": {
+          "voice": "Qrdut83w0Cr152Yb4Xn3",
+          "text": "Vamos! Aaaaaah!",
+          "tone": "grito"
+        },
+        "volume": 0.55
+      },
+      "grito-ataque-8": {
+        "speak": {
+          "voice": "zoe2cQFqDDW4DteHDEWI",
+          "text": "Aaaaaaaaaaah!",
+          "tone": "grito"
+        },
+        "volume": 0.55
       }
     }
   },

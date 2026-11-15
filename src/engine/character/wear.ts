@@ -515,7 +515,8 @@ registerWearable('foreheadStone', 'Pedra lisa cravada na testa, logo abaixo da b
   const r = b.head;
   const stone = new THREE.Mesh(new THREE.SphereGeometry(r * 0.13, 12, 8), mat(s.color ?? '#9a958c'));
   stone.scale.set(1, 0.75, 0.6);
-  stone.position.set(r * 0.05, r * 0.22, -r * 0.97);
+  // Above the brows and clear of a helmet's shell, which comes down to 0.27 of the head's radius.
+  stone.position.set(r * 0.05, r * 0.18, -r * 0.98);
   return [part('head', stone)];
 });
 

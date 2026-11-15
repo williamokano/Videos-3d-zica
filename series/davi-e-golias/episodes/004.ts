@@ -1,6 +1,6 @@
 import type { CastMember } from '../../../src/engine/character/cast';
 import { direct, type Director } from '../../../src/engine/timeline/direct';
-import { IRMAOS, LINHA, TOPO, atentos, filaDeIsrael, filaFilisteia, ids } from '../cena';
+import { IRMAOS, LINHA, TOPO, atentos, filaDeIsrael, filaFilisteia, ids, reforcoDeIsrael } from '../cena';
 
 /*
  * Episódio 4, "O gigante". Roteiro de trabalho em series/davi-e-golias/roteiros/004-roteiro.md (as cenas abaixo têm
@@ -27,6 +27,7 @@ const voz = (m: CastMember, id: string | undefined): CastMember => (id ? { ...m,
 const fila = filaDeIsrael().map((m) =>
   voz(m, { 'israel-2': 'GnDrTQvdzZ7wqAKfLzVQ', 'israel-6': 'ZYCQDYoXnl78dNdU6JeG', 'israel-4': 'mBxe7tYxRAMLpIP3fPEp' }[m.id!]),
 );
+const reforco = reforcoDeIsrael();
 const filisteus = filaFilisteia().map((m) => voz(m, { 'filisteu-6': 'zoe2cQFqDDW4DteHDEWI' }[m.id!]));
 const tropa = ids(fila);
 const irmaos = ['sama', 'eliabe', 'abinadabe'];
@@ -107,12 +108,15 @@ export default direct(
       { character: 'eliabe', at: [...IRMAOS.eliabe], yaw: 180 },
       { character: 'abinadabe', at: [...IRMAOS.abinadabe], yaw: 180 },
       ...fila,
+      ...reforco,
       ...filisteus,
     ],
     props: [
       // O que o rei dá ao Davi.
       { id: 'capacete', asset: 'arms.helmet', pos: [0, 0], pocketOf: 'saul', params: { size: 0.19 } },
       { id: 'couraca', asset: 'arms.armor', pos: [0, 0], pocketOf: 'saul', params: { size: 0.5 } },
+      // A espada do rei: sai do Saul, passa para o Davi e vai para a bainha dele.
+      { id: 'espada-saul', asset: 'arms.sword', pos: [0, 0], pocketOf: 'saul', params: { length: 0.8 } },
       // O cajado do Davi, que ficou com a carga (ep. 3), encostado na boca da tenda.
       { id: 'cajado', asset: 'arms.staff', pos: [2.0, -40.9], pickable: true },
       // No vale: o cajado na mão, a funda no alforje, as cinco pedras na margem.
@@ -146,7 +150,7 @@ export default direct(
 
     // ---- O mundo vivo desde o primeiro quadro ----
     for (const rule of ['noite', 'amanhecer', 'entardecer', 'fim-de-tarde']) d.world.rule(rule, false, { duration: 0 });
-    atentos(d, [...tropa, ...irmaos], 'golias', 'worried');
+    atentos(d, [...tropa, ...irmaos, ...ids(reforco)], 'golias', 'worried');
     atentos(d, ids(filisteus), 'golias', 'happy');
     golias.behave('attend', { object: 'israel-6', mood: 'happy' });
     escudeiro.behave('attend', { object: 'golias' });
@@ -169,15 +173,19 @@ export default direct(
     let cena = d.now;
 
     // ---- 1. A armadura (0:00) ----
-    // [GANCHO] Close, de lado: um capacete de bronze desce sobre a cabeça do Davi. Ele fecha os olhos com o peso.
+    // [GANCHO] O rei estende o capacete de bronze ao Davi; close de lado quando o Davi o desce sobre a cabeça.
     const cabeca = d.where('davi');
-    d.camera.cut({ pos: [cabeca[0] - 0.85, cabeca[1] + 1.78, cabeca[2] + 1.45], lookAt: [cabeca[0] - 0.05, cabeca[1] + 1.76, cabeca[2]], fov: 34 });
+    const meio: V3 = [(REI[0] + DIANTE[0]) / 2, cabeca[1] + 1.35, DIANTE[1]];
+    d.camera.cut({ pos: [meio[0] + 0.6, meio[1] + 0.35, meio[2] + 4.9], lookAt: meio, fov: 38 });
     saul.pickUp('capacete', { hand: 'right', duration: 0.5 });
-    d.camera.moveTo({ pos: [cabeca[0] - 0.75, cabeca[1] + 1.74, cabeca[2] + 1.3], lookAt: [cabeca[0] - 0.05, cabeca[1] + 1.7, cabeca[2]], fov: 34 });
     d.background(() => {
       d.wait(0.2);
       saul.say('Meu capacete.', { to: davi, gesture: 0 });
     });
+    // O rei entrega; o Davi põe com as próprias mãos, por cima da cabeça.
+    d.do('capacete', 'give', { to: 'davi' });
+    d.camera.cut({ pos: [cabeca[0] - 0.85, cabeca[1] + 1.78, cabeca[2] + 1.45], lookAt: [cabeca[0] - 0.05, cabeca[1] + 1.76, cabeca[2]], fov: 34 });
+    d.camera.moveTo({ pos: [cabeca[0] - 0.75, cabeca[1] + 1.74, cabeca[2] + 1.3], lookAt: [cabeca[0] - 0.05, cabeca[1] + 1.7, cabeca[2]], fov: 34 });
     d.sound('armadura-bronze');
     const capacete = d.do('capacete', 'don', { on: 'davi', wear: 'bronzeHelmet' }, { duration: 1.8 });
     d.background(() => {
@@ -186,15 +194,18 @@ export default direct(
     });
     d.wait(0.3);
     // Por cima do ombro do rei, o Davi de frente: a couraça.
-    const meio: V3 = [(REI[0] + DIANTE[0]) / 2, cabeca[1] + 1.35, DIANTE[1]];
     d.camera.cut({ pos: [meio[0] + 0.6, meio[1] + 0.35, meio[2] + 4.9], lookAt: meio, fov: 38 });
     d.camera.moveTo({ pos: [meio[0] + 0.5, meio[1] + 0.3, meio[2] + 4.4], lookAt: meio, fov: 38 });
     saul.pickUp('couraca', { hand: 'right', duration: 0.6 });
     d.background(() => saul.say('Minha couraça.', { to: davi, gesture: 0 }));
+    d.do('couraca', 'give', { to: 'davi' });
     d.sound('armadura-bronze');
     d.do('couraca', 'don', { on: 'davi', wear: 'scaleArmor' }, { duration: 1.8 });
-    saul.say('Minha espada.', { to: davi, gesture: 0 });
-    saul.pointAt([cabeca[0] + 0.1, cabeca[1] + 0.95, cabeca[2] - 0.2], { duration: 0.8 });
+    saul.pickUp('espada-saul', { hand: 'right', duration: 0.6 });
+    d.background(() => saul.say('Minha espada.', { to: davi, gesture: 0 }));
+    d.do('espada-saul', 'give', { to: 'davi' });
+    // O Davi guarda a espada na bainha da cintura.
+    davi.putAway('espada-saul', { duration: 0.7 });
     d.do('davi', 'set', { channel: 'wear.scabbard', value: 1 }, { duration: 0 });
     davi.express('neutral');
 
@@ -410,7 +421,7 @@ export default direct(
     golias.behave('attend', { object: 'davi-vale', mood: 'calm' });
 
     // A pedra. Câmera lenta: o braço solta, a pedra voa com o rastro, a câmera vai junto até a testa.
-    const tiro = d.do('pedra1', 'throw', { hit: 'golias', with: 'funda', speed: 14, arc: 0.35, stick: true }, { ease: 'linear' });
+    const tiro = d.do('pedra1', 'throw', { hit: 'golias', with: 'funda', speed: 14, arc: 0.03, stick: true }, { ease: 'linear' });
     d.background(() => {
       d.wait(0.95);
       d.do('davi-vale', 'move', { name: 'sling', amount: 0 }, { duration: 0.35 });
@@ -504,18 +515,20 @@ export default direct(
     d.censor({ at: [pescoco[0] - 0.15, pescoco[1] + 0.25, pescoco[2]], size: 0.7, mode: 'tarja' }, { duration: 1.4 });
     d.at(golpe.start + 0.55);
     d.sound('golpe-espada');
-    // Debaixo da tarja, a cabeça sai do corpo; ela só aparece no chão no corte, já sob mosaico.
+    // Debaixo da tarja, a cabeça sai do corpo e fica no chão logo à frente dele, o corte virado para o pescoço, com
+    // um palmo de vão. A censura fica só nos cortes: a tarja no golpe, e depois um mosaico pequeno no vão.
     d.do('golias', 'set', { channel: 'headOff', value: 1 }, { duration: 0 });
-    const noChao: [number, number] = [pescoco[0] + 0.55, pescoco[2] - 0.55];
+    const R = 0.27;
+    const noChao: [number, number] = [pescoco[0] + 0.12, pescoco[2] - 0.3 - R * 1.3];
+    d.do('cabeca-golias', 'moveTo', { to: noChao, y: d.ground(...noChao), yaw: 90 }, { duration: 0 });
+    const vao: V3 = [(pescoco[0] + noChao[0]) / 2, pescoco[1] - 0.02, (pescoco[2] + noChao[1] + R) / 2];
+    d.at(golpe.start + 0.42 + 1.4);
+    d.censor({ at: vao, size: 0.5, mode: 'mosaico' }, { duration: 3.4 });
     d.at(golpe.end);
     d.wait(0.9);
-    d.do('cabeca-golias', 'moveTo', { to: noChao, y: d.ground(...noChao) }, { duration: 0 });
-    // A cabeça, separada, sob mosaico; o Davi de pé ao lado, com a espada baixa.
-    const c3: V3 = [noChao[0], d.ground(...noChao) + 0.25, noChao[1]];
-    d.camera.cut({ pos: [c3[0] - 2.6, c3[1] + 1.1, c3[2] - 1.9], lookAt: [c3[0] - 0.6, c3[1] + 0.3, c3[2] + 0.2], fov: 44 });
-    d.censor({ at: c3, size: 0.85, mode: 'mosaico' }, { duration: 2.2 });
-    // O pescoço do corpo, onde a cabeça estava, também sob mosaico.
-    d.censor({ at: [pescoco[0], pescoco[1] + 0.05, pescoco[2] + 0.1], size: 0.6, mode: 'mosaico' }, { duration: 2.2 });
+    // A cabeça no chão, ao lado do corpo; o Davi de pé, com a espada baixa.
+    const c3: V3 = [noChao[0], d.ground(...noChao) + 0.3, noChao[1]];
+    d.camera.cut({ pos: [c3[0] + 2.4, c3[1] + 1.3, c3[2] - 1.8], lookAt: [c3[0] - 0.3, c3[1], c3[2] + 0.4], fov: 44 });
     d.wait(2.2);
 
     // O monte dos filisteus: um recua, depois outro; em instantes todos fogem.
@@ -528,8 +541,9 @@ export default direct(
     d.sound('fuga-filisteus');
     d.actor('filisteu-6').walkTo([-2.2, LINHA + 1.6], { speed: 0.8 });
     filisteus.forEach((f, i) => d.background(() => {
-      d.wait(0.5 + 0.1 * (i % 5));
-      d.actor(f.id!).runTo([((i % 5) - 2) * 1.6, 50 + (i % 3) * 4], { speed: 3.6 + (i % 3) * 0.3 });
+      // Cada um com o seu corredor e a sua largada, para ninguém correr dentro do outro.
+      d.wait(0.5 + 0.09 * i);
+      d.actor(f.id!).runTo([((i % 9) - 4) * 1.5 + (i >= 9 ? 0.75 : 0), 50 + (i % 3) * 4], { speed: 3.6 + (i % 3) * 0.3 });
       d.actor(f.id!).behave('idle', { mood: 'scared' });
     }));
     escudeiro.behave('none');
@@ -549,7 +563,17 @@ export default direct(
     grito.say('Israel!', { tone: 'grito', gesture: 0 });
     d.sound('grito-guerra');
     d.sound('corrida-exercito', { length: 12, fade: 1.5 });
-    const correm = [...tropa, 'sama', 'abinadabe', 'eliabe'];
+    // Muitas vozes gritando no ataque, umas por cima das outras, em duas ondas (cada voz é um som, sem legenda).
+    for (let i = 1; i <= 8; i++) {
+      d.background(() => {
+        d.wait(0.5 + ((i * 0.37) % 1.4));
+        d.sound(`grito-ataque-${i}`);
+        d.wait(2.4 + ((i * 0.53) % 1.1));
+        d.sound(`grito-ataque-${((i + 3) % 8) + 1}`, { volume: 0.35 });
+      });
+    }
+    // Todo o exército desce: a fila, os irmãos e o resto da tropa nos flancos.
+    const correm = [...tropa, 'sama', 'abinadabe', 'eliabe', ...ids(reforco)];
     for (const id of correm) d.background(() => d.do(id, 'move', { name: 'cheer' }, { duration: 0.5 }));
     d.background(() => {
       d.wait(0.6);
@@ -560,17 +584,20 @@ export default direct(
       d.wait(0.08 * (i % 7));
       d.do(id, 'move', { name: 'cheer', amount: 0 }, { duration: 0.3 });
       d.actor(id).express('happy', { amount: 0.6 });
-      const x = -14 + (i * 28) / correm.length;
+      // Os dos flancos fecham para o meio enquanto descem: a carga se junta no vale, onde a câmera está olhando.
+      const x0 = d.where(id)[0];
+      const x = Math.abs(x0) > 14 ? Math.sign(x0) * (3 + ((i * 1.7) % 9)) : -12 + (i * 24) / correm.length;
       d.actor(id).runTo([x, 26 + (i % 4)], { speed: 3.8 + (i % 4) * 0.25 });
       d.actor(id).behave('idle', { mood: 'happy' });
     }));
-    // A câmera sobe: o vale inteiro em movimento.
-    d.camera.cut({ pos: [5, TOPO + 2.4, -41], lookAt: [0, TOPO - 1, -30], fov: 50, shake: 0.06 });
+    // Por trás da fila, rente aos soldados e fora da tenda do rei: as costas da tropa se derramando monte abaixo. A
+    // câmera sobe e mostra o vale inteiro cheio de gente correndo.
+    d.camera.cut({ pos: [10, TOPO + 2.0, -38.2], lookAt: [2, TOPO - 2.5, -24], fov: 56, shake: 0.05 });
     d.background(() => {
-      d.wait(3.2);
-      d.camera.moveTo({ pos: [9, TOPO + 9, -48], lookAt: [0, 1, -12], fov: 50 });
+      d.wait(2.2);
+      d.camera.moveTo({ pos: [6, TOPO + 11, -47], lookAt: [0, 0, -16], fov: 56 });
       d.wait(5);
-      d.camera.moveTo({ pos: [14, TOPO + 18, -50], lookAt: [0, 0, 2], fov: 50 });
+      d.camera.moveTo({ pos: [2, TOPO + 21, -46], lookAt: [0, 0, -2], fov: 58 });
     });
     d.narrate('E naquele dia, o gigante que havia aterrorizado Israel por quarenta dias caiu diante de um pastor.');
     d.wait(0.3);

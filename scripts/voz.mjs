@@ -25,7 +25,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, w
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createServer } from 'vite';
-import { levelTake } from './nivel.mjs';
+import { levelFile, levelTake } from './nivel.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -76,7 +76,7 @@ try {
     } else toMake.push({ name, def, file });
   }
   console.log(`Sons: ${used.size} usados, ${toMake.length} a gerar.`);
-  for (const s of toMake) console.log(`  ${s.name}: "${s.def.prompt}"`);
+  for (const s of toMake) console.log(`  ${s.name}: ${s.def.speak ? `voz ${s.def.speak.voice}, "${s.def.speak.text}"` : `"${s.def.prompt}"`}`);
   if (dry) process.exit(failed ? 1 : 0);
 
   for (const line of missing) {
@@ -89,8 +89,10 @@ try {
     console.log(`✓ ${line.speaker}: ${line.text}  (${t.duration.toFixed(2)} s, ${take.cost ?? '?'} créditos)`);
   }
   for (const s of toMake) {
-    const audio = await makeSound(s.def);
+    const audio = s.def.speak ? await makeSpoken(s.def.speak, voice.spokenText) : await makeSound(s.def);
     writeFileSync(join(sons, s.file), audio);
+    // A voice made as a sound is levelled like the takes, so the crowd's voices sit together.
+    if (s.def.speak) levelFile(join(sons, s.file));
     console.log(`✓ som ${s.name} → ${s.file}`);
   }
 } catch (error) {
@@ -160,6 +162,15 @@ async function makeTake(line) {
     tempo,
     cost,
   };
+}
+
+/** A voice as a sound: text to speech, without the timing of the letters (nobody's mouth follows it). */
+async function makeSpoken(speak, spokenText) {
+  const response = await post(`/v1/text-to-speech/${speak.voice}?output_format=mp3_44100_128`, {
+    text: spokenText(speak.text, speak.tone),
+    model_id: 'eleven_v3',
+  });
+  return Buffer.from(await response.arrayBuffer());
 }
 
 async function makeSound(def) {

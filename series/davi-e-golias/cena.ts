@@ -49,6 +49,26 @@ export function figurante(id: string, character: string, at: [number, number], y
   };
 }
 
+/**
+ * O resto do exército de Israel, nos flancos da fila, em duas fileiras, nos espaços livres do acampamento (entre
+ * |x| 20 e 25 ficam os estandartes, os escudos e as lanças): aparece como tropa nos planos gerais e desce o monte
+ * com todos no ataque. Ninguém fala.
+ */
+export function reforcoDeIsrael(): CastMember[] {
+  const xs = [15.4, 17.6, 27, 29.2, 31.4, 33.6, 35.8, 38];
+  const out: CastMember[] = [];
+  let k = 0;
+  for (const z of [-LINHA, -LINHA - 1.6]) {
+    for (const side of [-1, 1]) {
+      for (const x of xs) {
+        k++;
+        out.push(figurante(`reforco-${k}`, 'soldado', [side * (x + (z === -LINHA ? 0 : 1.1)), z], 180, 301 + k * 11, 'Soldado'));
+      }
+    }
+  }
+  return out;
+}
+
 /** A fila de Israel: duas fileiras, com um vão no meio (|x| < 1.5) por onde o Davi passa. */
 export function filaDeIsrael(): CastMember[] {
   const frente = [-13.2, -11, -8.8, -6.6, -4.4, -2.2, 8.8, 11, 13.2];

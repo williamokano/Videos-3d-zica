@@ -43,7 +43,7 @@ function wearChannel(ctx: ActionContext, who: string, wear: string): string {
 
 registerAction({
   id: 'don',
-  description: 'Quem segura o item (um capacete, uma couraça) veste outra pessoa com ele: a mão leva o item por cima da cabeça dela e desce; o item some da mão e a peça "wear" aparece no corpo dela (a peça precisa estar na ficha, escondida). Depois, o item fica com ela, guardado, para um "doff".',
+  description: 'Quem segura o item (um capacete, uma couraça) veste alguém com ele. Em outra pessoa: a mão leva o item por cima da cabeça dela e desce. Em si mesmo ("on" é quem segura, na mão direita, com a esquerda livre): as duas mãos levam o item por cima da cabeça e o descem até a cabeça ou o peito, o contrário de um "doff". O item some da mão e a peça "wear" aparece no corpo (a peça precisa estar na ficha, escondida). Depois, o item fica com quem vestiu, guardado, para um "doff".',
   appliesTo: ['item'],
   params: {
     on: { type: 'string', description: 'quem é vestido', required: true },
@@ -57,7 +57,7 @@ registerAction({
     if (!link || !side) ctx.fail('ninguém está segurando o item; use pickUp com "by" antes.');
     const by = link!.to;
     const on = ctx.params.on as string;
-    if (on === by) ctx.fail('para vestir a si mesmo, ainda não há ação; quem veste é outra pessoa.');
+    if (on === by) return donSelf(ctx, by, side!);
     const who = actor(ctx, on);
     const wear = ctx.params.wear as string;
     const channel = wearChannel(ctx, on, wear);
@@ -79,6 +79,83 @@ registerAction({
       ],
       detach: { at: DOWN },
       attach: { to: on, socket: 'pocket', at: DOWN },
+    };
+  },
+});
+
+/** Putting on what one holds: the reverse of a "doff", from the hand in front of the chest up over the head and down. */
+function donSelf(ctx: ActionContext, by: string, side: 'L' | 'R') {
+  if (side !== 'R') ctx.fail('para vestir a si mesmo, segure o item na mão direita.');
+  if (ctx.riderOn(by, 'handL')) ctx.fail(`para vestir, "${by}" precisa da mão esquerda livre (está segurando "${ctx.riderOn(by, 'handL')}").`);
+  const wear = ctx.params.wear as string;
+  const channel = wearChannel(ctx, by, wear);
+  const chest = placeOfWear(ctx, wear) === 'chest';
+  // In meters of the standard body, as in "doff", the other way round: in front of the chest, up over the head,
+  // and down to where the piece sits; it is on as the hands get there.
+  const ON = 0.68;
+  const fit = chest ? [0.21, 1.0, -0.14] : [0.15, 1.7, -0.03];
+  const keys = (sign: number): [number, Point3][] => [
+    [0, [sign * 0.11, 1.2, -0.34]],
+    [0.35, [sign * 0.13, 1.98, -0.12]],
+    [ON, [sign * fit[0], fit[1], fit[2]]],
+    [0.85, [sign * fit[0], fit[1], fit[2]]],
+  ];
+  const writes: ChannelWrite[] = (['L', 'R'] as const).flatMap((s) => {
+    const path = keys(s === 'R' ? 1 : -1);
+    return [
+      { target: by, channel: `reach${s}.x`, at: along(path, 0) },
+      { target: by, channel: `reach${s}.y`, at: along(path, 1) },
+      { target: by, channel: `reach${s}.z`, at: along(path, 2) },
+      { target: by, channel: `reach${s}.local`, at: () => 1 },
+      { target: by, channel: `reach${s}`, at: (u: number) => Math.min(ramp(u, 0, 0.2), 1 - ramp(u, 0.85, 1)) },
+    ];
+  });
+  return {
+    writes: [
+      ...writes,
+      { target: by, channel: 'carryR', at: (u: number) => 1 - ramp(u, ON, ON + 0.05) },
+      { target: by, channel, at: (u: number) => (u < ON ? ctx.current(channel, by) : 1) },
+      { channel: 'held', at: (u: number) => (u < ON ? 1 : 0) },
+    ],
+    detach: { at: ON },
+    attach: { to: by, socket: 'pocket', at: ON },
+  };
+}
+
+registerAction({
+  id: 'give',
+  description: 'Quem segura o item o entrega a outra pessoa ("to"): os dois estendem a mão, o item passa de uma mão para a outra no meio, e quem recebe fica segurando na mão direita. Precisam estar perto (até 1,5 m um do outro), e a mão direita de quem recebe, livre.',
+  appliesTo: ['item'],
+  params: {
+    to: { type: 'string', description: 'quem recebe', required: true },
+  },
+  duration: 1.4,
+  compile(ctx) {
+    const link = ctx.linkOf(ctx.target.id);
+    const side = link?.socket.match(/^hand([LR])$/)?.[1] as 'L' | 'R' | undefined;
+    if (!link || !side) ctx.fail('ninguém está segurando o item; use pickUp antes.');
+    const by = link!.to;
+    const to = ctx.params.to as string;
+    if (to === by) ctx.fail('quem entrega e quem recebe são a mesma pessoa.');
+    if (ctx.riderOn(to, 'handR')) ctx.fail(`a mão direita de "${to}" está ocupada com "${ctx.riderOn(to, 'handR')}".`);
+    const [a, b] = [ctx.placeOf(by), ctx.placeOf(to)];
+    const far = Math.hypot(a.pos[0] - b.pos[0], a.pos[2] - b.pos[2]);
+    if (far > 1.5) ctx.fail(`"${by}" e "${to}" estão a ${far.toFixed(2)} m; chegue mais perto (até 1,5 m) antes de entregar.`);
+    const k = Math.min(actor(ctx, by).traits.bodyScale ?? 1, actor(ctx, to).traits.bodyScale ?? 1);
+    // The hands meet between them, at the height of a chest.
+    const meet: Point3 = [(a.pos[0] + b.pos[0]) / 2, Math.max(a.pos[1], b.pos[1]) + 1.15 * k, (a.pos[2] + b.pos[2]) / 2];
+    const PASS = 0.5;
+    const giver = reach(ctx, by, side!, meet, (u) => Math.min(ramp(u, 0, 0.4), 1 - ramp(u, 0.55, 0.95)), `a mão de "${to}"`);
+    const taker = reach(ctx, to, 'R', meet, (u) => Math.min(ramp(u, 0.1, 0.45), 1 - ramp(u, 0.6, 1)), `a mão de "${by}"`);
+    return {
+      writes: [
+        ...giver,
+        ...taker,
+        { target: by, channel: `carry${side}`, at: (u: number) => 1 - ramp(u, PASS, PASS + 0.05) },
+        { target: to, channel: 'carryR', at: (u: number) => ramp(u, PASS, PASS + 0.1) },
+      ],
+      detach: { at: PASS },
+      attach: { to, socket: 'handR', at: PASS },
     };
   },
 });
