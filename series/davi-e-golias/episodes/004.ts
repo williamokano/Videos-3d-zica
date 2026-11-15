@@ -309,12 +309,13 @@ export default direct(
         const m = d.where('davi-vale');
         d.camera.cut({ pos: [m[0] + 0.7, m[1] + 1.15, m[2] + 1.9], lookAt: [m[0] + 0.05, m[1] + 0.5, m[2] + 0.35], fov: 34 });
       }
-      if (i === 4) {
-        // Do outro lado do riacho, os filisteus riem.
-        d.background(() => d.actor('filisteu-6').say('Mandaram um menino!', { tone: 'laughs', gesture: 0.6 }));
-        const f = d.where('davi-vale');
-        d.camera.cut({ pos: [f[0] - 1.5, f[1] + 1.3, f[2] + 2.6], lookAt: [f[0], f[1] + 0.6, f[2] + 0.2], fov: 42 });
-      }
+    }
+    // Do outro lado do riacho, os filisteus riem, depois que ele termina de contar.
+    {
+      const f = d.where('davi-vale');
+      d.camera.cut({ pos: [f[0] - 1.5, f[1] + 1.3, f[2] + 2.6], lookAt: [f[0], f[1] + 0.6, f[2] + 0.2], fov: 42 });
+      d.wait(1.0);
+      d.actor('filisteu-6').say('Mandaram um menino!', { tone: 'laughs', gesture: 0.6 });
     }
     d.do('davi-vale', 'move', { name: 'kneel', amount: 0 }, { duration: 0.7 });
     dv.behave('attend', { object: 'golias' });
@@ -584,21 +585,24 @@ export default direct(
       d.wait(0.08 * (i % 7));
       d.do(id, 'move', { name: 'cheer', amount: 0 }, { duration: 0.3 });
       d.actor(id).express('happy', { amount: 0.6 });
-      // Os dos flancos fecham para o meio enquanto descem: a carga se junta no vale, onde a câmera está olhando.
+      // Cada um corre reto para a frente, no seu corredor e na velocidade do corredor: ninguém cruza o caminho de
+      // ninguém. Até o meio do vale, antes do fim do cartão.
       const x0 = d.where(id)[0];
-      const x = Math.abs(x0) > 14 ? Math.sign(x0) * (3 + ((i * 1.7) % 9)) : -12 + (i * 24) / correm.length;
-      d.actor(id).runTo([x, 26 + (i % 4)], { speed: 3.8 + (i % 4) * 0.25 });
+      d.actor(id).runTo([x0, 12 + (i % 4)], { speed: 4.2 + (Math.round(Math.abs(x0) / 1.1) % 3) * 0.25 });
       d.actor(id).behave('idle', { mood: 'happy' });
     }));
     // Por trás da fila, rente aos soldados e fora da tenda do rei: as costas da tropa se derramando monte abaixo. A
     // câmera sobe e mostra o vale inteiro cheio de gente correndo.
     d.camera.cut({ pos: [10, TOPO + 2.0, -38.2], lookAt: [2, TOPO - 2.5, -24], fov: 56, shake: 0.05 });
+    // Os movimentos terminam antes do cartão final: o episódio acaba com ele.
     d.background(() => {
-      d.wait(2.2);
+      d.wait(2.0);
       d.camera.moveTo({ pos: [6, TOPO + 11, -47], lookAt: [0, 0, -16], fov: 56 });
-      d.wait(5);
+      d.wait(2.5);
       d.camera.moveTo({ pos: [2, TOPO + 21, -46], lookAt: [0, 0, -2], fov: 58 });
     });
+    // O narrador entra depois do último grito.
+    d.wait(1.2);
     d.narrate('E naquele dia, o gigante que havia aterrorizado Israel por quarenta dias caiu diante de um pastor.');
     d.wait(0.3);
     const cartao = d.endCard({
