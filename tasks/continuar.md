@@ -13,24 +13,11 @@ Leia antes: `tasks/lessons.md`, `canal/vozes.json` e as skills em `.claude/skill
 
 O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 
-### Episódio 4, "O gigante" (a luta): ESPERANDO A REVISÃO DO AUTOR
-- Já na main (merge `f480acf` da branch `worktree-agent-ab28c9c39b577f3e5`; `npm test` e `npm run typecheck` passando):
-  - os movimentos da luta no motor (`lumber`, `stagger`, armadura com `size`, `don`/`doff`, alforje, funda com `whirl`, pedra com rastro, poeira, `draw`, câmera lenta `d.slowMo`), com testes em `src/engine/fight.test.ts`;
-  - `episodes/004.ts`, `roteiros/004-pedido.md`, `004-roteiro.md` e `004-marcado.md`.
-- `0a56949`: as vozes dos figurantes que falam e a trilha.
-  - Vozes, todas já aprovadas pelo autor: israel-2 = Guilherme, israel-6 = Arnold, israel-4 = Papai Noel, filisteu-6 = Manoel Lopes.
-  - Trilha: as músicas CC0 de sempre, mais 11 efeitos novos em `bible.json` (armadura, riacho, pedras, funda, pedra voando, impacto, queda, espada, golpe, fuga, exército correndo), **ainda não gerados**.
-- Prévia muda nova, renderizada da main com `--no-audio`: `Videos Curtos/Davi/ep04/previa.mp4` no NAS.
-- Próximos passos:
-  1. **O autor revisa a prévia.** Não gere áudio antes: os créditos da ElevenLabs são caros e o roteiro pode mudar.
-  2. Com a aprovação, rode `npm run voz -- --series davi-e-golias --ep 4`: 26 falas (~1.030 caracteres) e os 11 efeitos. As falas saem niveladas.
-  3. Rode `npm run render -- --series davi-e-golias --ep 4`. Confira:
-     - loudness em torno de -14 LUFS;
-     - nenhum silêncio longo, exceto o silêncio de propósito depois da queda;
-     - falas sem sobreposição.
-  4. Ponha no NAS `Videos Curtos/Davi/ep04/`: `final.mp4`, `roteiro.md` e `publicacao/` (capa, story, `textos.md`), seguindo a skill `publicar`. Tire a `previa.mp4`.
-  5. Publique ou agende só com o "pode" do autor (skill `agendar`). Até agora foi só no YouTube williamokano.
-  6. Atualize as fichas (`## Arco na série`, `## Cânone`, `profile.episodes`) de Davi, Golias, Saul, Eliabe, Abinadabe e Abner.
+### Episódio 4, "O gigante": PRONTO, esperando o "pode" para publicar
+- Final com áudio: `Videos Curtos/Davi/ep04/final.mp4` (2:33.2, -13,5 LUFS), `roteiro.md` e `publicacao/` (capa "O GIGANTE", story, `textos.md`).
+- O autor aprovou a censura só no pescoço: o golpe sob tarja e o vão do pescoço sob mosaico, com a cabeça visível ao lado.
+- Para publicar: o autor dá data e hora e o "pode" (skill `agendar`). Foi sempre só no YouTube williamokano. Depois, grave `publicacao/ep004/agendamento.md`.
+- Falta atualizar as fichas (`## Arco na série`, `## Cânone`, `profile.episodes`) de Davi, Golias, Saul, Eliabe, Abinadabe e Abner.
 - `episodes/005.ts` é a versão antiga ("Dez milhares") e ainda mostra a pedra, a queda e a espada: reescrever pelo `005-roteiro.md` v2.
 
 ### Vozes
