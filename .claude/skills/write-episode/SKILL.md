@@ -94,4 +94,5 @@ Sugestões suas que mudam o cânone (um mistério novo, uma pista) ficam marcada
 3. Implemente com a skill `direct-actions` em `episodes/<n>.ts`, com os números das cenas nos comentários, e:
    - `npm run voz -- --series <s> --ep <n> --dry` para listar as falas e o custo; sem `--dry`, gera o que falta;
    - `npm run roteiro -- --series <s> --ep <n>` exporta `roteiros/<nnn>-marcado.md` com cada fala, ação, mensagem e pausa no seu tempo. É esse arquivo que o autor lê para pedir ajustes;
+   - `npm run revisar -- --series <s> --ep <n>` antes de qualquer render: corrija os ✖ e justifique ou corrija os ⚠;
    - `npm run look` para ver os quadros antes de renderizar, e `npm run render` no fim.

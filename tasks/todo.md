@@ -113,3 +113,12 @@ Episódio:
 - [ ] Vozes dos figurantes (escolha do autor) e `npm run voz`
 - [ ] Sons da luta (funda girando, impacto, queda, passos do gigante, vento) e trilha
 - [ ] `005.ts` ainda mostra a pedra, a queda e a espada (é a versão antiga, "Dez milhares"): reescrever pelo `005-roteiro.md` v2
+
+## 13. Melhorias do motor (2026-11-16, pedido: "façamos em ordem pra ver até onde dá pra ir")
+
+- [x] 1. Revisor de episódio (`npm run revisar`): `src/engine/review.ts` puro + `scripts/revisar.mjs` + testes; rodar nos eps. 1–4 de Davi e ajustar os falsos positivos
+- [ ] 2. Câmera de diálogo automática (`d.dialogo`)
+- [ ] 3. Folha de contato automática no render
+- [ ] 4. Animais que andam (quatro patas)
+- [ ] 5. Dividir `assets/ancient.ts`
+  - Achados reais nos eps. de Davi (não corrigidos: o ep. 4 está pronto esperando o "pode"): ep. 4 câmera dentro do `reforco-2` (~0:16), "Cinco." sobre "Mandaram um menino!" (0,7 s), quatro pares `israel-N`/`reforco-M` terminando a carga no mesmo ponto (2:26 em diante); ep. 1 seis falas na borda e 173,6 s.

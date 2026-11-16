@@ -17,6 +17,7 @@
     "voz": "node scripts/voz.mjs",
     "testar-voz": "node scripts/testar-voz.mjs",
     "roteiro": "node scripts/roteiro.mjs",
+    "revisar": "node scripts/revisar.mjs",
     "nivelar": "node scripts/nivel.mjs"
   },
   "dependencies": {
