@@ -43,3 +43,9 @@
 - **Multidão em vídeo vertical.** O quadro 9:16 só pega uns 16 m de largura a meia distância: soldados nos flancos ficam fora do quadro. Para "muita gente", faça a tropa convergir para onde a câmera olha, filme por trás e de cima, e confira se a câmera não está dentro de uma tenda ou de alguém que vai correr na direção dela.
 - **Entregar e vestir de verdade.** O autor notou a armadura "aparecendo" no corpo. Objeto que passa de uma pessoa para outra usa `give`, e quem se veste usa `don` em si mesmo (o contrário do `doff`): o público precisa ver as mãos fazendo.
 - **Censura: conferir na câmera do plano, quadro a quadro, do golpe até o corte.** A tarja do ep. 4 ficou alta e curta: a cabeça caía fora dela e o corte apareceu. A tarja tem que cobrir onde o golpe acontece *e* para onde as coisas vão (a cabeça que cai), e durar até o corte para o próximo plano; confira no `final.mp4` com ffmpeg, a cada 0,1–0,3 s em volta do golpe.
+
+## Câmera de diálogo (2026-11-17)
+
+- **Plano por cima do ombro no vertical é alto, não de lado.** Com a câmera 0,4 m ao lado da cabeça de quem ouve, ele some do quadro estreito e o plano vira um solo. O que funciona: quase atrás de quem ouve, alto o bastante para a linha até o queixo de quem fala passar sobre a cabeça dele (`overShot` em `direct.ts`).
+- **Conferir a imagem mesmo quando o revisor diz "nada a apontar".** A conta da linha de visão passou com o rosto do policial encostado no alto da cabeça do gigante; só o quadro mostrou. O revisor agora confere olhos, boca e queixo.
+- **Medida já escalada não se escala de novo.** `traits.headRadius` já vem no tamanho do corpo; multiplicar pela escala inventou um gigante com o dobro de cabeça e um aviso falso.

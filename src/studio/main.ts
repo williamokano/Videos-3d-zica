@@ -544,6 +544,11 @@ function renderPanel(): void {
 
 // ---- Timeline ----
 
+// Size of the stage in CSS pixels: declared before the first shot is applied, since a line at 0 s draws its subtitle
+// right away. `resize` (below) sets them.
+let width = 1;
+let height = 1;
+
 let timeline: TimelineBar | undefined;
 if (episode) {
   timeline = new TimelineBar(episode, bible.format.fps, () => applyShot(timeline!.time), actions.clips);
@@ -569,8 +574,6 @@ const studioSound = new StudioSound(rendering ? [] : (episode?.actions ?? []).fl
 
 // ---- Loop ----
 
-let width = 1;
-let height = 1;
 function resize(): void {
   width = stage.clientWidth;
   height = stage.clientHeight;

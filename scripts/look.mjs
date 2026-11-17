@@ -79,8 +79,14 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 });
   const problems = [];
   page.on('pageerror', (error) => problems.push(error.message));
+  page.on('console', (message) => message.type() === 'error' && problems.push(message.text()));
   await page.goto(url);
-  await page.waitForFunction(() => window.__render, null, { timeout: 120000 });
+  try {
+    await page.waitForFunction(() => window.__render, null, { timeout: 120000 });
+  } catch (error) {
+    // Without this, a page that broke while loading only says "timeout".
+    fail(`O estúdio não ficou pronto em 2 min.${problems.length ? ` Erros da página:\n${problems.join('\n')}` : ` (${error.message})`}`);
+  }
   const info = await page.evaluate(() => ({ ...window.__render, frame: undefined }));
   if (info.error) console.warn(`O episódio tem erro:\n${info.error}`);
   const outDir = resolve(option('out', join(episodeFolder(info.series, info.episode, { dir: option('dir'), output: info.output }), 'quadros')));

@@ -13,7 +13,7 @@ import '../actions/audio';
 import '../actions/endcard';
 import '../actions/titlecard';
 import '../actions/censor';
-import { channelAt, compileActions, focusAt, placementAt, type ActionClip, type Ease, type WalkPath } from '../actions/catalog';
+import { channelAt, compileActions, focusAt, placementAt, seatedDrop, type ActionClip, type Ease, type WalkPath } from '../actions/catalog';
 import type { CastMember } from '../character/cast';
 import type { Bible } from '../bible';
 import type { CharacterDef } from '../character/types';
@@ -63,6 +63,10 @@ type Shot = { pos: Vec3; lookAt: Vec3; fov?: number; lens?: number; shake?: numb
 /** A camera that keeps a cast member in the middle of the picture while it moves from `from` to `to`. */
 type Track = { from: Vec3; to?: Vec3; duration?: number; fov?: number; lens?: number; shake?: number; aimHeight?: number; cut?: boolean };
 /** Two people seen from the side, both in the picture, the camera turning a little round them. */
+/** A shot over the listener's shoulder at the speaker (see `d.camera.over`). */
+type Over = { side?: 1 | -1; fov?: number; back?: number; cut?: boolean };
+/** One turn of a conversation: who speaks, what, and how (see `d.conversa`). */
+export type Turn = [who: Actor | string, text: string, options?: StepOptions & { tone?: string; gesture?: number }];
 type TwoShot = { distance?: number; height?: number; swing?: number; duration?: number; side?: 1 | -1; fov?: number; turn?: number };
 
 /** A character of the cast, as the script sees it. Every method is one step: it starts now and the clock moves to its end. */
@@ -218,9 +222,24 @@ export interface Director {
      * The clock does not move.
      */
     twoShot(a: Actor | string, b: Actor | string, options?: TwoShot): void;
+    /**
+     * Over the shoulder of `listener`, at `speaker`, worked out from where both are now; the camera keeps aiming at
+     * the speaker's face if they move. Speaker in the middle third, the listener's head and shoulder at the side.
+     * Closer than OVER_MIN_APART (the listener's back would fill the picture) it becomes a shot from the side,
+     * far enough back for both to stay near the middle. Comes in rather than go through a wall.
+     * `side`: 1 over the right shoulder (default), -1 over the left.
+     */
+    over(listener: Actor | string, speaker: Actor | string, options?: Over): void;
   };
   /** Where a cast member is now (their feet), as the script stands: [x, y, z]. */
   where(who: Actor | string): Vec3;
+  /**
+   * A conversation between two people, written as the turns: each one is said to the other, and every time the
+   * speaker changes the camera cuts to a shot over the listener's shoulder (`camera.over`), always from the same
+   * side of the line between them (the 180° rule: each stays on their side of the picture). `side` picks that side
+   * for the first speaker; `camera: false` leaves the camera alone. Returns the whole conversation as a step.
+   */
+  conversa(turns: Turn[], options?: { side?: 1 | -1; fov?: number; camera?: boolean; gap?: number }): Step;
 }
 
 /** Declare an episode as a script. */
@@ -317,6 +336,13 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
   const whereNow = (id: string): Vec3 => {
     if (!targets.some((t) => t.id === id && t.kind === 'character')) throw new Error(`"${id}" não está no elenco.`);
     return placementAt(compileActions(clips, targets, services, initial), id, now).pos;
+  };
+  /** Where the eyes of a cast member are now: their own height, lower when seated. */
+  const eyesNow = (id: string): Vec3 => {
+    const compiled = compileActions(clips, targets, services, initial);
+    const { pos } = placementAt(compiled, id, now);
+    const eye = (targets.find((t) => t.id === id)?.traits.eyeHeight as number | undefined) ?? 1.6;
+    return [pos[0], pos[1] + eye - seatedDrop(compiled, id, now), pos[2]];
   };
   /**
    * A head turns 75° at most. To look at (or talk to) someone further round, a person turns the body too: when
@@ -438,6 +464,22 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     },
     ground: (x, z) => round(built.groundAt(x, z)),
     where: (who) => whereNow(idOf(who)),
+    conversa: (turns, { side = 1, fov, camera = true, gap = 0.25 } = {}) => {
+      const people = [...new Set(turns.map(([who]) => idOf(who)))];
+      if (people.length !== 2) throw new Error(`d.conversa: uma conversa é entre duas pessoas, e estas falas têm ${people.length} (${people.join(', ')}).`);
+      const start = now;
+      let previous: string | undefined;
+      turns.forEach(([who, text, options = {}], i) => {
+        const id = idOf(who);
+        const other = people.find((p) => p !== id)!;
+        if (i > 0) director.wait(gap);
+        // The first speaker is seen over the other's chosen shoulder; the reverse, over the opposite one, keeps both on their side.
+        if (camera && id !== previous) director.camera.over(other, id, { side: (id === people[0] ? side : -side) as 1 | -1, fov });
+        director.actor(id).say(text, { ...options, to: other });
+        previous = id;
+      });
+      return { start: round(start), end: round(now) };
+    },
     endCard: (card, options) => run(WORLD, 'endCard', { card }, options),
     censor: (censor, options) => {
       const start = now;
@@ -492,6 +534,10 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
           planned.set(keys[keys.length - 1], round(start));
           now = start;
         }
+      },
+      over: (listener, speaker, options = {}) => {
+        const head = (targets.find((t) => t.id === idOf(listener))?.traits.headRadius as number | undefined) ?? 0.14;
+        key(overShot(eyesNow(idOf(listener)), eyesNow(idOf(speaker)), idOf(speaker), { ...options, head }, (from, to) => clearFraction(built.colliders, from, to), keys.length > 0));
       },
       twoShot: (a, b, { distance, height = 1.5, swing = 14, duration = 8, side = 1, fov = 40, turn = 0 } = {}) => {
         const [pa, pb] = [whereNow(idOf(a)), whereNow(idOf(b))];
@@ -600,4 +646,59 @@ export function stillWithNothingToDo(clips: ActionClip[], cast: string[], viewer
     }
   }
   return out;
+}
+
+/** Closer than this (m), a shot over the shoulder shows only the listener's back: it becomes a shot from the side. */
+export const OVER_MIN_APART = 1.3;
+const round3 = (p: Vec3): Vec3 => p.map((v) => Math.round(v * 1000) / 1000) as Vec3;
+/** How far to the side of the listener's head the camera sits, in meters: a touch, so the head is not dead center. */
+const OVER_ASIDE = 0.16;
+
+/**
+ * The key of a shot over `listener`'s shoulder at `speaker` (eyes given), aiming at `aim`. `clear` says how much of
+ * a straight line is free of walls. Pure, so the shot can be checked without a scene.
+ */
+export function overShot(listener: Vec3, speaker: Vec3, aim: string, { side = 1, fov = 36, back, head = 0.14 }: Over & { head?: number }, clear: (from: Vec3, to: Vec3) => number, cut: boolean): Omit<CameraKey, 't'> {
+  const [dx, dz] = [speaker[0] - listener[0], speaker[2] - listener[2]];
+  const apart = Math.hypot(dx, dz);
+  if (apart < 0.05) throw new Error('d.camera.over: as duas pessoas estão no mesmo lugar.');
+  const [fx, fz] = [dx / apart, dz / apart];
+  // Right of the listener as they face the speaker (yaw 0 faces -z, so right is +x).
+  const [rx, rz] = [-fz, fx];
+  const eyes = Math.max(listener[1], speaker[1]);
+  // Far enough back that the listener's head stays a frame at the bottom, not half the picture (a giant's is bigger).
+  // Not more than 60% of the distance between them, or the camera has to climb too high to clear a tall listener.
+  back ??= Math.min(1.7 * Math.max(1, head / 0.15), Math.max(1.1, apart * 0.6));
+  let pos: Vec3;
+  if (apart >= OVER_MIN_APART) {
+    // Nearly behind the listener and high: the line to the speaker's face passes just over their head, so the
+    // listener's head and shoulder sit at the bottom edge of the picture and the speaker in the middle (a vertical
+    // picture has no room for the usual shot from beside the shoulder).
+    const at = (k: number): Vec3 => {
+      const behind = back * k;
+      const along = behind / (apart + behind);
+      const top = listener[1] + head * 1.3 + 0.06;
+      // The whole face clears the head, down to the chin, not only the eyes.
+      const chin = speaker[1] - 0.2;
+      const y = Math.min(top + 1.4, Math.max(listener[1] + 0.3, (top - chin * along) / (1 - along)));
+      return [listener[0] - fx * behind + rx * side * OVER_ASIDE, y, listener[2] - fz * behind + rz * side * OVER_ASIDE];
+    };
+    pos = at(1);
+    // Against a wall behind the listener: come in until the camera itself is clear of it and sees the speaker.
+    for (const k of [1, 0.8, 0.6, 0.45, 0.33, 0.22, 0.15]) {
+      pos = at(k);
+      if (clear(speaker, pos) > 0.98 && clear(listener, pos) > 0.98) break;
+    }
+  } else {
+    // From the side, off the middle of the two, far enough back that both faces stay in the middle of a vertical picture.
+    const across = Math.tan((fov * Math.PI) / 360) * (9 / 16);
+    let distance = Math.max(2.4, (apart / 2 + 0.2) / (0.55 * across));
+    const middle: Vec3 = [(listener[0] + speaker[0]) / 2, eyes, (listener[2] + speaker[2]) / 2];
+    const far: Vec3 = [middle[0] + rx * side * distance, middle[1], middle[2] + rz * side * distance];
+    distance = Math.max(1.2, clear(middle, far) * distance - 0.3);
+    pos = [middle[0] + rx * side * distance, eyes + 0.1, middle[2] + rz * side * distance];
+    // Both in the picture: look at the middle of them rather than follow one.
+    return { pos: round3(pos), lookAt: round3([middle[0], eyes - 0.1, middle[2]]), fov, ...(cut ? { cut: true } : {}) };
+  }
+  return { pos: round3(pos), aim, aimHeight: -0.1, fov, ...(cut ? { cut: true } : {}) };
 }

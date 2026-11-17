@@ -117,7 +117,7 @@ Episódio:
 ## 13. Melhorias do motor (2026-11-16, pedido: "façamos em ordem pra ver até onde dá pra ir")
 
 - [x] 1. Revisor de episódio (`npm run revisar`): `src/engine/review.ts` puro + `scripts/revisar.mjs` + testes; rodar nos eps. 1–4 de Davi e ajustar os falsos positivos
-- [ ] 2. Câmera de diálogo automática (`d.dialogo`)
+- [x] 2. Câmera de diálogo automática (`d.conversa`, `d.camera.over`), banco em `demo-acoes` ep. 7; o `look` mostra os erros da página; corrigido o estúdio que quebrava com fala no instante 0
 - [ ] 3. Folha de contato automática no render
 - [ ] 4. Animais que andam (quatro patas)
 - [ ] 5. Dividir `assets/ancient.ts`

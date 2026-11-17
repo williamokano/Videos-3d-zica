@@ -254,17 +254,18 @@ export function reviewEpisode(episode: Episode, built: BuiltLocation, characters
     const turned = Math.abs(Math.atan2(Math.sin(towards - facing), Math.cos(towards - facing)));
     if (turned > (100 * Math.PI) / 180) continue;
     if (Math.abs(mid.p.x) > edge) add('fala-na-borda', 'aviso', l.t, l.end, `${quote(l)}: o rosto está a ${Math.round(Math.abs(mid.p.x) * 100)}% do caminho até a borda ${mid.p.x < 0 ? 'esquerda' : 'direita'}; quem fala fica no terço central.`);
-    // The eyes and the mouth both have to be seen.
+    // The eyes, the mouth and the chin all have to be seen.
     const mouth: Vec3 = [mid.head[0], mid.head[1] - 0.1 * scaleOf(l.who), mid.head[2]];
+    const chin: Vec3 = [mid.head[0], mid.head[1] - 0.18 * scaleOf(l.who), mid.head[2]];
     const blocker = at(mid.t).find(({ id, s }) => {
       if (id === l.who || (mid.pose.follow === id && mid.pose.mode === 'fpv')) return false;
       const k = scaleOf(id);
-      return [mid.head, mouth].some((aim) => {
+      return [mid.head, mouth, chin].some((aim) => {
         const { distance, along } = flatDistance(mid.pose.pos, aim, [s.pos[0], 0, s.pos[2]]);
         if (along < 0.05 || along > 0.95) return false;
         // Height of the sight line where it passes them: the head is a ball, the body a narrower column under it.
         const y = mid.pose.pos[1] + (aim[1] - mid.pose.pos[1]) * along - s.pos[1];
-        const head = headRadius(id) * k + 0.03;
+        const head = headRadius(id) + 0.03; // already the size of this body
         if (Math.hypot(distance, y - s.eyeHeight) < head) return true;
         return y > 0 && y < s.eyeHeight - head && distance < TORSO * k;
       });
