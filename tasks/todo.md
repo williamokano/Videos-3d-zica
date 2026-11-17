@@ -118,7 +118,7 @@ Episódio:
 
 - [x] 1. Revisor de episódio (`npm run revisar`): `src/engine/review.ts` puro + `scripts/revisar.mjs` + testes; rodar nos eps. 1–4 de Davi e ajustar os falsos positivos
 - [x] 2. Câmera de diálogo automática (`d.conversa`, `d.camera.over`), banco em `demo-acoes` ep. 7; o `look` mostra os erros da página; corrigido o estúdio que quebrava com fala no instante 0
-- [ ] 3. Folha de contato automática no render
+- [x] 3. Folha de contato automática no render (`scripts/folha.mjs`, `npm run folha`)
 - [ ] 4. Animais que andam (quatro patas)
 - [ ] 5. Dividir `assets/ancient.ts`
   - Achados reais nos eps. de Davi (não corrigidos: o ep. 4 está pronto esperando o "pode"): ep. 4 câmera dentro do `reforco-2` (~0:16), "Cinco." sobre "Mandaram um menino!" (0,7 s), quatro pares `israel-N`/`reforco-M` terminando a carga no mesmo ponto (2:26 em diante); ep. 1 seis falas na borda e 173,6 s.

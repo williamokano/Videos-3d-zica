@@ -23,6 +23,8 @@
  *   --no-subs       leave the subtitles of spoken lines out
  *   --crf <n>       x264 quality, lower is better (default 18)
  *   --no-audio      picture only (by default the voice takes and sounds are mixed in; see scripts/mix.mjs)
+ *   --no-sheets     leave out the contact sheets (<video>-folha.png, a frame every 3 s, and <video>-folha-falas.png,
+ *                   the middle of every line; see scripts/folha.mjs), made by default unless --step is given
  *
  * Needs ffmpeg on the PATH and a Chrome: CHROME_PATH, an installed Google Chrome, or Playwright's Chromium.
  */
@@ -34,7 +36,8 @@ import { dirname, join, resolve } from 'node:path';
 import { createServer } from 'vite';
 import { cuesOf, episodeAudio, mix, mux } from './mix.mjs';
 import { episodeFile, episodeFolder } from './paths.mjs';
-import { frameList } from './tempo.mjs';
+import { finalOf, frameList } from './tempo.mjs';
+import { episodeSheets } from './folha.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -233,6 +236,25 @@ try {
     }
   }
   renameSync(joined, out);
+  // The whole video at a glance, to look at before calling it done. An animatic (--step) is not worth one.
+  if (!flag('no-sheets') && step === 1) {
+    try {
+      const library = await server.ssrLoadModule('/src/tools/library.ts');
+      const { episode, characters } = library.loadEpisode(info.series, info.episode);
+      const nameOf = (id) => {
+        if (id === 'world') return 'Narrador';
+        const m = episode.cast?.find((c) => (c.id ?? c.character) === id);
+        return m?.look?.name ?? characters.find((c) => c.id === m?.character)?.name ?? id;
+      };
+      // Where this video starts in the finished episode (a render with --from).
+      const from = finalOf(episode)(frames[0] / info.fps);
+      const sheets = await episodeSheets(out, { episode, from, width: Math.round(216 * Math.min(1, 1 / scale)), labelOf: (c) => nameOf(c.action === 'narrate' ? c.params?.as ?? 'world' : c.target) });
+      console.log(`\nFolhas de contato: ${sheets.join(', ')}`);
+    } catch (error) {
+      // The video is done; a sheet that fails is said, not hidden, and does not undo the render.
+      console.log(`\nAs folhas de contato não saíram: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
   const minutes = (Date.now() - started) / 60000;
   console.log(`\nPronto em ${minutes >= 1 ? `${minutes.toFixed(1)} min` : `${Math.round(minutes * 60)} s`}: ${out}`);
   finished = true;
