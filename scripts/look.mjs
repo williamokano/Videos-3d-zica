@@ -100,6 +100,8 @@ try {
     window.dispatchEvent(new Event('resize'));
   }, size);
   await page.evaluate(() => document.fonts.ready);
+  // The stage takes its new size from a ResizeObserver, a frame or two later: drawing before that gave a black picture.
+  await page.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))));
   const written = [];
   for (const t of times) {
     const frame = Math.min(info.frames - 1, Math.max(0, Math.round(t * info.fps)));

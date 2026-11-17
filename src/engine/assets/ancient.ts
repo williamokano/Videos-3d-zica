@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { channelAt, type CompiledActions } from '../actions/catalog';
 import { rng } from '../core/rng';
+import { legPose, odometer } from './gait';
 import { group, loose, mat, place, post, rbox, registerAsset, setChannels } from './registry';
 
 /*
@@ -819,18 +820,28 @@ registerAsset(
       head.rotation.y = 0.12 * Math.sin(t * 0.27 + phase);
       ears.forEach((ear, i) => (ear.rotation.x = 0.35 + 0.25 * Math.max(0, Math.sin(t * (1.3 + i * 0.4) + phase * (i + 1))) ** 6));
     };
-    // Led along (moveTo), it walks: speed from where it is a moment before and after, a diagonal gait
-    // (front left with back right), one step about every 0.45 m, and a small bob of the head.
+    // Led along (moveTo), it walks: the four-beat walk of a donkey (gait.ts), its phase taken from the distance
+    // covered so the legs never race when the pace changes, each hoof still on the ground while it bears weight.
+    // Standing, the legs come back straight under it.
+    const HIP = 0.84;
+    const CYCLE = 0.9;
+    let travelled: ((t: number) => number) | undefined;
     g.userData.present = (compiled: CompiledActions, t: number, id: string) => {
+      const at = (u: number): [number, number] => [channelAt(compiled, id, 'x', u), channelAt(compiled, id, 'z', u)];
+      travelled ??= odometer(at);
       const dt = 0.12;
-      const at = (u: number) => [channelAt(compiled, id, 'x', u), channelAt(compiled, id, 'z', u)];
       const [a, b] = [at(Math.max(0, t - dt)), at(t + dt)];
-      const speed = Math.hypot(b[0] - a[0], b[1] - a[1]) / (2 * dt);
-      const walk = Math.min(1, speed / 0.5);
-      const stride = (t * speed * Math.PI * 2) / 0.9;
-      legs.forEach((leg, i) => (leg.rotation.x = walk * 0.38 * Math.sin(stride + (i === 0 || i === 3 ? 0 : Math.PI))));
-      head.position.y = 1.0 + walk * 0.025 * Math.abs(Math.sin(stride));
-      head.rotation.x += walk * 0.08 * Math.sin(stride * 2);
+      const walk = Math.min(1, Math.hypot(b[0] - a[0], b[1] - a[1]) / (2 * dt) / 0.35);
+      const phase = travelled(t) / CYCLE;
+      legs.forEach((leg, i) => {
+        const pose = legPose(phase, i, HIP, CYCLE);
+        leg.rotation.x = walk * pose.angle;
+        // A rigid leg is lifted by drawing it a little shorter from the hip.
+        leg.scale.y = 1 - (walk * pose.lift) / HIP;
+      });
+      // The head nods twice a cycle, with the steps.
+      head.position.y = 1.0 + walk * 0.02 * Math.abs(Math.sin(phase * Math.PI * 2));
+      head.rotation.x += walk * 0.07 * Math.sin(phase * Math.PI * 4);
     };
     return g;
   },
@@ -1387,6 +1398,8 @@ function inflated(g: THREE.BufferGeometry, by: number): THREE.BufferGeometry {
  */
 const NECK = v3(0, 0.46, -0.3);
 const EAR = v3(0.072, 0.19, -0.255);
+/** Meters a sheep covers in one cycle of its walk. */
+const SHEEP_CYCLE = 0.5;
 const HIPS: [number, number, number][] = [[-0.12, 0.34, -0.22], [0.12, 0.34, -0.22], [-0.12, 0.34, 0.26], [0.12, 0.34, 0.26]];
 
 interface SheepShape { body: THREE.BufferGeometry; head: THREE.BufferGeometry; ear: THREE.BufferGeometry; leg: THREE.BufferGeometry }
@@ -1455,9 +1468,10 @@ function poseSheep(out: THREE.Matrix4[], base: THREE.Matrix4, life: SheepLife, t
     // The left ear is the right one turned round: the same geometry, never mirrored.
     partAt(out[i], out[1], _p.set(s * EAR.x, EAR.y, EAR.z), 0, s > 0 ? -0.25 : Math.PI + 0.25, -0.35 + 0.55 * flick);
   }
+  // The four-beat walk (gait.ts); `stride` is in radians of the cycle.
   HIPS.forEach(([x, y, z], i) => {
-    const swing = walk * 0.45 * Math.sin(stride + (i === 0 || i === 3 ? 0 : Math.PI));
-    partAt(out[4 + i], base, _p.set(x, y, z), swing, 0, 0);
+    const pose = legPose(stride / (Math.PI * 2), i, y, SHEEP_CYCLE);
+    partAt(out[4 + i], base, _p.set(x, y + walk * pose.lift * 0.5, z), walk * pose.angle, 0, 0);
   });
 }
 
@@ -1553,7 +1567,11 @@ registerAsset(
         k: reach > 0.01 ? 0.25 / (4 * reach) : 0,
         heading: rand() * Math.PI * 2,
       };
-    });
+    }).map((s) => ({
+      ...s,
+      // Meters walked by the time it is `along` its path (the path's own measure, which only grows with time).
+      walked: odometer((along) => [s.ax * Math.sin(along * s.f1 + s.a1), s.az * Math.sin(along * s.f2 + s.a2)]),
+    }));
     const tint = new THREE.Color();
     flock.forEach((s, i) => {
       for (const { mesh, each } of parts) for (let j = 0; j < each; j++) mesh.setColorAt(i * each + j, tint.copy(s.life.tint));
@@ -1573,7 +1591,8 @@ registerAsset(
         const [dx, dz] = [s.ax * s.f1 * c1, s.az * s.f2 * c2];
         const speed = Math.hypot(dx, dz) * rate;
         const walk = Math.min(1, speed / 0.12);
-        const stride = ((along * s.reach * 0.7) / 0.5) * Math.PI * 2;
+        // Cycles of the walk from the meters really walked, so a planted hoof stays put (gait.ts).
+        const stride = (s.walked(along) / SHEEP_CYCLE) * Math.PI * 2;
         const heading = s.reach > 0.01 ? Math.atan2(-dx, -dz) : s.heading;
         at.set(s.home[0] + s.ax * Math.sin(along * s.f1 + s.a1), 0.012 * walk * Math.abs(Math.sin(stride)), s.home[1] + s.az * Math.sin(along * s.f2 + s.a2));
         // On a hillside, each sheep stands on the ground under it (the location gives the height; see build.ts).
