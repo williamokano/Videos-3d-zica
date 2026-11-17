@@ -237,6 +237,12 @@ Pedra baixa de topo chato, para sentar: o banco dos anciãos no portão, a pedra
 
 - **sit / standUp**: lugares: seat
 
+### `ancient.severedHead`
+
+A cabeça de um gigante separada do corpo, caída de lado no chão, de olhos fechados, com cabelo comprido, barba e o capacete de bronze. O corte fica do lado de -x (com "yaw" 90, virado para +z) e vai sempre sob censura ("mosaico" só no corte). Nas cores do personagem (params: radius em metros, padrão 0.27; skin; hair, barba e cabelo; helmet; stone — 1 para a pedra na testa)
+
+- **knockOver / setUpright**: derrubar e pôr de pé
+
 ### `ancient.sheep`
 
 Ovelha de lã fofa, cara e pernas escuras, de frente para -z, 75 cm até o lombo. Pasta sozinha com o tempo: baixa a cabeça até o capim e mordisca, levanta e olha em volta, mexe as orelhas; cada `seed` pasta num ritmo seu e tem tamanho e tom de lã um pouco diferentes (params: seed, color — da lã —, face — da cara e das pernas)
@@ -346,7 +352,7 @@ Escudo: redondo de couro com borda e umbo de bronze, ou o grande escudo filisteu
 
 ### `arms.sling`
 
-Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás), `overhead` (1: as cordas saem quase deitadas da mão e `spin` gira em volta dela, como acima da cabeça; é o que a ação `whirl` faz) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas
+Funda de pastor: duas cordas e a bolsinha de couro, pendurada da mão. Canais: `spin` (voltas, 0 a 1 é uma volta inteira, girando num plano em pé de frente para trás), `overhead` (1: as cordas saem quase deitadas da mão e `spin` gira em volta dela, como acima da cabeça; é o que a ação `whirl` faz) e `loaded` (1 com a pedra na bolsinha). Pegável, pelas pontas das cordas (params: cord, o comprimento das cordas em metros, padrão 0.6)
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
 - **set**: canais: spin, loaded
@@ -375,9 +381,11 @@ Pedra lisa de riacho, pequena, do tamanho de um ovo; pegável. Canal `trail` (0 
 
 ### `arms.sword`
 
-Espada reta de ferro com guarda e punho de bronze; pegável, pelo punho, com a lâmina para cima e um pouco à frente (params: length da lâmina, padrão 0.7; color)
+Espada reta de ferro com guarda e punho de bronze; pegável, pelo punho, com a lâmina para cima e um pouco à frente. Canal `swing` (0 a 1) leva a lâmina para a frente e para baixo, como no fim de um golpe (params: length da lâmina, padrão 0.7; color)
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+- **draw / chop**: tirar da bainha de alguém e erguer; descer num golpe até um ponto (a lâmina gira para baixo)
+- Canais: `swing`
 
 ### `arms.tambourine`
 

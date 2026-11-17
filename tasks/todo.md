@@ -120,5 +120,5 @@ Episódio:
 - [x] 2. Câmera de diálogo automática (`d.conversa`, `d.camera.over`), banco em `demo-acoes` ep. 7; o `look` mostra os erros da página; corrigido o estúdio que quebrava com fala no instante 0
 - [x] 3. Folha de contato automática no render (`scripts/folha.mjs`, `npm run folha`)
 - [x] 4. Animais que andam: passo de quatro tempos com casco parado no apoio e fase pela distância andada (`assets/gait.ts`), no jumento e nas ovelhas; banco em `demo-acoes` ep. 8; `look --wide` não sai mais preto no primeiro quadro
-- [ ] 5. Dividir `assets/ancient.ts`
+- [x] 5. Dividir `assets/ancient.ts`: um arquivo por parte do kit em `assets/ancient/` (kit, camp, royal-tent, nature, town, sheep, lamps, cattle, palace, house); `ASSETS.md` e quadros do ep. 3 idênticos byte a byte
   - Achados reais nos eps. de Davi (não corrigidos: o ep. 4 está pronto esperando o "pode"): ep. 4 câmera dentro do `reforco-2` (~0:16), "Cinco." sobre "Mandaram um menino!" (0,7 s), quatro pares `israel-N`/`reforco-M` terminando a carga no mesmo ponto (2:26 em diante); ep. 1 seis falas na borda e 173,6 s.
