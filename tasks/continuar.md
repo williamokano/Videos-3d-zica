@@ -24,8 +24,9 @@ Regras do autor:
 
 O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 
-### Episódio 4, "O gigante": PUBLICADO pelo autor (fora do publicador)
-- Registro em `series/davi-e-golias/publicacao/ep004/agendamento.md`; o link não foi registrado. Fichas e bíblia atualizadas.
+### Episódio 4, "O gigante": no Instagram (pelo autor); YouTube FALHOU, esperando token novo
+- Registro em `series/davi-e-golias/publicacao/ep004/agendamento.md`. Fichas e bíblia atualizadas.
+- YouTube: a conexão do publicador está recusada (`invalid_grant`, refresh token vencido). Quando o autor trocar o token: `retry_publication` em `874dd9d6d3d6e5cfce65afe32439ceeb` e anotar o link. Ninguém mais publica no YouTube até lá (o Selado também usa essa conta: confira os agendados dele com `list_publications`).
 - Fica como saiu: as correções que o revisor achou nele não se aplicam (decisão do autor). Valem do ep. 5 em diante.
 
 ### Episódio 5, "De herói a ameaça": A FAZER
