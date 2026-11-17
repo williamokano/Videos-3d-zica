@@ -24,10 +24,10 @@ Regras do autor:
 
 O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 
-### Episódio 4, "O gigante": no Instagram (pelo autor); YouTube FALHOU, esperando token novo
-- Registro em `series/davi-e-golias/publicacao/ep004/agendamento.md`. Fichas e bíblia atualizadas.
-- YouTube: a conexão do publicador está recusada (`invalid_grant`, refresh token vencido). Quando o autor trocar o token: `retry_publication` em `874dd9d6d3d6e5cfce65afe32439ceeb` e anotar o link. Ninguém mais publica no YouTube até lá (o Selado também usa essa conta: confira os agendados dele com `list_publications`).
+### Episódio 4, "O gigante": PUBLICADO
+- Instagram (pelo autor) e YouTube: https://youtube.com/shorts/pP49s9jd09I. Registro em `series/davi-e-golias/publicacao/ep004/agendamento.md`.
 - Fica como saiu: as correções que o revisor achou nele não se aplicam (decisão do autor). Valem do ep. 5 em diante.
+- **Token do YouTube vence por volta de 24/11** (app OAuth em "Testing"). Para emitir outro: URL de autorização com `client_id` da conexão, `redirect_uri=http://localhost`, `access_type=offline`, `prompt=consent` e os escopos `youtube.upload youtube.force-ssl yt-analytics.readonly`; o autor manda o endereço de retorno e o client secret; troca em `https://oauth2.googleapis.com/token` e `edit_connection` com o `refresh_token`. Os eps. do Selado que falharam em 16/11 (12:00 e 18:00) só voltam à fila com o "pode" do autor.
 
 ### Episódio 5, "De herói a ameaça": A FAZER
 - Bíblia (`series/davi-e-golias/biblia.md`, tabela de episódios e cânone):
