@@ -11,6 +11,7 @@ Irônico, de poucas palavras.
 ## Arco na série
 - Ep. 1: passa diante do Samuel.
 - Ep. 3: na fila de Israel; não fala.
+- Ep. 4: reconhece o irmão descendo para o vale ("É o Davi.").
 
 ## Voz
 Lax (`canal/vozes.json`), a mesma de alguns figurantes; cuidado para não pôr os dois na mesma cena.

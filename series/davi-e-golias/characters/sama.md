@@ -11,6 +11,7 @@ O mais leve dos irmãos mais velhos; o primeiro a reconhecer o Davi no acampamen
 ## Arco na série
 - Ep. 1: passa diante do Samuel.
 - Ep. 3: na fila de Israel; surpreso com a chegada do caçula.
+- Ep. 4: na fila, um dos rostos parados no silêncio depois da queda do gigante.
 
 ## Voz
 Guilherme (`canal/vozes.json`).

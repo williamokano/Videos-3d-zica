@@ -24,20 +24,9 @@ Regras do autor:
 
 O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 
-### Episódio 4, "O gigante": PRONTO, esperando o "pode" para publicar
-- No NAS, em `Videos Curtos/Davi/ep04/`:
-  - `final.mp4` (2:33.2, -13,5 LUFS, sem falas sobrepostas nem silêncio longo);
-  - `roteiro.md`;
-  - `publicacao/` (capa "O GIGANTE", story, `textos.md` com legenda, título, descrição com capítulos e comentário fixado).
-- Censura aprovada pelo autor:
-  - o golpe da espada sob tarja preta, cobrindo o pescoço e a cabeça que cai, até o corte;
-  - no plano seguinte, mosaico só no vão do pescoço, com a cabeça visível ao lado, sem sangue;
-  - mostrar sem censura, não.
-- Para publicar:
-  1. O autor dá data e hora e o "pode" (skill `agendar`). Use o MCP `mcp__publisher__*`: série DAVI `220a4abec4565b436e9dc51b48f10e3d`, temporada `183c4ce9103f2b3d73d19fee029c3062`, conta YouTube williamokano `5eef6660dda51d3a36f07fc52aaad771`.
-  2. Faça `create_content` com `media_path` `Videos Curtos/Davi/ep04/final.mp4` e `cover_path` `Videos Curtos/Davi/ep04/publicacao/capa_ep04.png`. Os textos vêm de `publicacao/ep004/textos.md`; o comentário fixado é a opção A.
-  3. Faça `schedule_release`, leia o resultado de volta e grave `series/davi-e-golias/publicacao/ep004/agendamento.md`, como nos eps. 1–3.
-- Depois, atualize as fichas de Davi, Golias, Saul, Eliabe, Abinadabe e Abner (`## Arco na série`, `## Cânone`, `profile.episodes` com o 4) e o cânone da `biblia.md`, se mudou algo.
+### Episódio 4, "O gigante": PUBLICADO pelo autor (fora do publicador)
+- Registro em `series/davi-e-golias/publicacao/ep004/agendamento.md`; o link não foi registrado. Fichas e bíblia atualizadas.
+- Fica como saiu: as correções que o revisor achou nele não se aplicam (decisão do autor). Valem do ep. 5 em diante.
 
 ### Episódio 5, "De herói a ameaça": A FAZER
 - Bíblia (`series/davi-e-golias/biblia.md`, tabela de episódios e cânone):
@@ -77,7 +66,7 @@ O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 - `d.conversa([[a, 'fala'], [b, 'fala'], ...])` e `d.camera.over(ouve, fala)`: diálogo a dois com plano por cima do ombro e contraplano automáticos (banco em `demo-acoes` ep. 7). Use no ep. 5 (Jônatas e Davi; Saul e Abner).
 - O render grava `<vídeo>-folha.png` e `<vídeo>-folha-falas.png`; `npm run folha` para vídeos já feitos.
 - Jumento e ovelhas andam em quatro tempos sem deslizar (banco em `demo-acoes` ep. 8).
-- **Achados do revisor no ep. 4 (não corrigidos: esperando o autor decidir):** câmera dentro do `reforco-2` (~0:16), "Cinco." atropelando "Mandaram um menino!" (0,7 s) e quatro pares de soldados terminando a carga no mesmo ponto (2:26 em diante).
+- Episódios já publicados não são corrigidos pelas ferramentas novas (decisão do autor); no ep. 5, rode `npm run revisar` e corrija os ✖ antes da prévia.
 
 ### Vozes
 - O estado de cada voz está em `canal/vozes.json`.

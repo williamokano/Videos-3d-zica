@@ -29,7 +29,7 @@ Orientações do autor em `series/davi-e-golias/roteiros/orientacoes-do-autor.md
 ## 5. Depois de "O escolhido" (em ordem)
 - [ ] Palácio do Saul (salão do trono com colunas, tochas, trono, janela) e episódio 2
 - [x] Episódio 3 a partir do 003.ts atual (montagem dos 40 dias, abertura com narrador, Saul reconhece o Davi), cortado na saída da tenda (ver seção 11)
-- [ ] Episódio 4 (armadura, riacho, confronto, queda, silêncio e grito) a partir do resto do 003.ts e do começo do 005.ts
+- [x] Episódio 4 (publicado) (armadura, riacho, confronto, queda, silêncio e grito) a partir do resto do 003.ts e do começo do 005.ts
 - [ ] Episódio 5 (cidade, Jônatas na praça, janela do palácio, a lança)
 - [ ] Tela de abertura da série em todos
 
@@ -87,7 +87,7 @@ Texto do autor guardado em `series/davi-e-golias/roteiros/001-ajustes.md`.
 - [ ] Revisão do autor.
 - [ ] Vozes que faltam: Golias, Abner, guarda das bagagens (fichas) e os soldados 6, 12 e da fogueira 2 (figurantes da ficha soldado, sem voz; precisam de look.voice ou de voz na ficha soldado).
 
-## 12. Episódio 4 — O gigante (pedido de 2026-11-14: "bastante ênfase nas animações da luta")
+## 12. Episódio 4 — O gigante — PUBLICADO (pelo autor, 2026-11-17) (pedido de 2026-11-14: "bastante ênfase nas animações da luta")
 
 Motor (cada pose nova conferida de frente, 3/4 e lado na vitrine, num personagem de manga curta):
 - [x] `lumber`: andar pesado e desajeitado (armadura grande demais; passo de gigante com menos peso)
@@ -109,7 +109,7 @@ Episódio:
 - [x] Prévia muda em tamanho cheio, quadros-chave da luta conferidos e varredura inteira
 - [x] Lições em `tasks/lessons.md`
 
-- [ ] Revisão do autor (prévia muda)
+- [x] Revisão do autor (prévia muda): publicado pelo autor
 - [ ] Vozes dos figurantes (escolha do autor) e `npm run voz`
 - [ ] Sons da luta (funda girando, impacto, queda, passos do gigante, vento) e trilha
 - [ ] `005.ts` ainda mostra a pedra, a queda e a espada (é a versão antiga, "Dez milhares"): reescrever pelo `005-roteiro.md` v2
@@ -121,4 +121,4 @@ Episódio:
 - [x] 3. Folha de contato automática no render (`scripts/folha.mjs`, `npm run folha`)
 - [x] 4. Animais que andam: passo de quatro tempos com casco parado no apoio e fase pela distância andada (`assets/gait.ts`), no jumento e nas ovelhas; banco em `demo-acoes` ep. 8; `look --wide` não sai mais preto no primeiro quadro
 - [x] 5. Dividir `assets/ancient.ts`: um arquivo por parte do kit em `assets/ancient/` (kit, camp, royal-tent, nature, town, sheep, lamps, cattle, palace, house); `ASSETS.md` e quadros do ep. 3 idênticos byte a byte
-  - Achados reais nos eps. de Davi (não corrigidos: o ep. 4 está pronto esperando o "pode"): ep. 4 câmera dentro do `reforco-2` (~0:16), "Cinco." sobre "Mandaram um menino!" (0,7 s), quatro pares `israel-N`/`reforco-M` terminando a carga no mesmo ponto (2:26 em diante); ep. 1 seis falas na borda e 173,6 s.
+  - Achados nos eps. já publicados (1 a 4) ficam como estão, por decisão do autor (2026-11-17): o revisor vale do ep. 5 em diante.

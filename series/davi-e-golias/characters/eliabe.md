@@ -20,6 +20,7 @@ Elogia o irmão em voz alta.
 ## Arco na série
 - Ep. 1: passa primeiro diante do Samuel e não é escolhido; fica ofendido.
 - Ep. 3: dá a bronca no Davi no acampamento (17:28).
+- Ep. 4: grita para o irmão voltar ("Davi! Volta!"); depois, no silêncio, só olha.
 
 ## Voz
 Fabio Oliveira (`canal/vozes.json`).
