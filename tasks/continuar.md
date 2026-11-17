@@ -72,6 +72,13 @@ O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 - **Rostos:** o tom da fala muda o rosto (`TONE_FACES`), e o sorriso de descanso some enquanto o personagem fala.
 - **Legendas dos figurantes:** "Soldado", "Guarda", sem número, a não ser quando dois do mesmo nome conversam.
 
+### Ferramentas novas (2026-11-17; skill `direct-actions`, seção "Conferir")
+- `npm run revisar -- --series <s> --ep <n>`: revisa sem renderizar (falas sobrepostas, trechos parados, câmera dentro de coisas, quem fala fora do quadro, na borda ou tapado, gente no mesmo lugar, censura curta, tremor, duração). Rode antes de toda prévia.
+- `d.conversa([[a, 'fala'], [b, 'fala'], ...])` e `d.camera.over(ouve, fala)`: diálogo a dois com plano por cima do ombro e contraplano automáticos (banco em `demo-acoes` ep. 7). Use no ep. 5 (Jônatas e Davi; Saul e Abner).
+- O render grava `<vídeo>-folha.png` e `<vídeo>-folha-falas.png`; `npm run folha` para vídeos já feitos.
+- Jumento e ovelhas andam em quatro tempos sem deslizar (banco em `demo-acoes` ep. 8).
+- **Achados do revisor no ep. 4 (não corrigidos: esperando o autor decidir):** câmera dentro do `reforco-2` (~0:16), "Cinco." atropelando "Mandaram um menino!" (0,7 s) e quatro pares de soldados terminando a carga no mesmo ponto (2:26 em diante).
+
 ### Vozes
 - O estado de cada voz está em `canal/vozes.json`.
 - Vetadas (locutor ou sotaque): Adriano, Diego, Borges, Carlos.
