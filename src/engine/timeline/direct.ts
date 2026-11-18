@@ -707,5 +707,9 @@ export function overShot(listener: Vec3, speaker: Vec3, aim: string, { side = 1,
     // Both in the picture: look at the middle of them rather than follow one.
     return { pos: round3(pos), lookAt: round3([middle[0], eyes - 0.1, middle[2]]), fov, ...(cut ? { cut: true } : {}) };
   }
-  return { pos: round3(pos), aim, aimHeight: -0.1, fov, ...(cut ? { cut: true } : {}) };
+  // Eyes on the upper third, not in the middle: aim below them by a sixth of the picture's height at their distance
+  // (from the middle to a third from the top). In a vertical picture the middle leaves half of it above the head.
+  const reach = Math.hypot(speaker[0] - pos[0], speaker[1] - pos[1], speaker[2] - pos[2]);
+  const below = (2 * reach * Math.tan((fov * Math.PI) / 360)) / 6;
+  return { pos: round3(pos), aim, aimHeight: Math.round(-below * 1000) / 1000, fov, ...(cut ? { cut: true } : {}) };
 }
