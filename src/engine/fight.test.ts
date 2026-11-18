@@ -76,6 +76,20 @@ describe('the fight', () => {
     expect(channelAt(compiled, 'funda', 'loaded', load.t + load.duration)).toBe(1);
   });
 
+  it('a spear thrown with "tip" leaves the hand standing and flies lying along its way, point first', () => {
+    const { compiled } = play([{ id: 'lanca', asset: 'arms.spear', pos: [0.3, 0.6], pickable: true, params: { length: 2.4 } }], (d) => {
+      d.actor('saul').pickUp('lanca', { hand: 'right' });
+      d.do('lanca', 'throw', { to: [0, 1.6, -8], speed: 12, tip: true }, { ease: 'linear' });
+    });
+    const throwing = compiled.clips.find((c) => c.action === 'throw')!;
+    expect(channelAt(compiled, 'lanca', 'lean', throwing.t + 0.05)).toBe(0);
+    const middle = throwing.t + throwing.duration * 0.75;
+    expect(channelAt(compiled, 'lanca', 'lean', middle)).toBeGreaterThan(70);
+    expect(channelAt(compiled, 'lanca', 'lean', middle)).toBeLessThan(110);
+    // Thrown north (toward -z): the heading is 0.
+    expect(Math.abs(channelAt(compiled, 'lanca', 'leanTo', middle))).toBeLessThan(5);
+  });
+
   it('stones go in the bag; one goes in the sling, which spins over the head in step with the hand', () => {
     const { compiled } = play([
       { id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi' },

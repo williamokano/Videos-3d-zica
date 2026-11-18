@@ -120,9 +120,11 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 **[GANCHO ~2:12 — pico]**
 - **SAUL** (baixo): Vou cravar o Davi na parede.
 
-*A música para. O Davi levanta os olhos. O Saul se levanta e ergue a lança. O rosto do Davi muda.*
+*A música para. O Davi levanta os olhos. O Saul se levanta com a lança. O rosto do Davi muda.*
 
-*Corte abrupto para preto. O som de uma lança se cravando na parede.* `⏸` *2 s de preto. A imagem volta devagar: o banco vazio e a harpa caída no chão (o Davi se desviou e saiu, 18:11). O narrador fala por cima.*
+**Câmera:** do lugar do Davi, por cima do ombro dele. *O rei arremessa. Em câmera lenta, a lança vem direto na lente, rente à cabeça do Davi.* **Corte** *antes de ela chegar: o som do impacto.* (Decisão do autor: mostrar o arremesso, nunca o que ela acerta.)
+
+*O rei, de pé, ofegante, olhando para onde ela foi. O alvo fica fora do quadro.*
 
 ## 7. Fim (2:25–2:42)
 

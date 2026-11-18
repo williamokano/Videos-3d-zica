@@ -27,7 +27,7 @@
 3. **Deus não aparece e não fala.** Não há voz do céu, luz sobrenatural ou milagre visível. O "É este" da unção sai da boca do Samuel. O "espírito mau" que atormenta o Saul aparece só no comportamento dele. A fé aparece no que o Davi diz e faz.
 4. **Tom:** épico histórico, contido. Começa contemplativo, cresce em tensão e culmina em cenas de grande impacto. Pode ter humor leve (a armadura que não serve), nunca deboche do texto.
 5. **Davi não é super-herói:** é um jovem comum, com coragem, habilidade com a funda e convicção. **Golias não é monstro:** é um guerreiro humano, enorme e experiente. **O medo dos soldados** é o coração do drama.
-6. **Violência:** sem sangue na tela. A pedra acertando e a queda do Golias podem ser mostradas. A espada e a cabeça ficam fora do quadro: corte antes do golpe e planos do peito para cima. A lança do Saul (ep. 5) é só som, no escuro.
+6. **Violência:** sem sangue na tela. A pedra acertando e a queda do Golias podem ser mostradas. A espada e a cabeça ficam fora do quadro: corte antes do golpe e planos do peito para cima. A lança do Saul (ep. 5): o arremesso aparece, vindo na direção da câmera, do lugar do Davi; o que ela acerta, não. Corta antes, e o impacto é só som (decisão do autor, 2026-11-18).
 7. **Escala:** o Golias tem 3,1 m (decisão do autor, entre 3 e 3,2 m). Todo plano com ele e outra pessoa mostra a diferença.
 8. **Duração:** no máximo 3:00 por episódio (Instagram), com meta de 2:40.
 9. **Estrutura de cada episódio:**
@@ -97,7 +97,7 @@ A ficha completa de cada um está em `characters/<id>.md` (personalidade, como f
 
 ## Pontas soltas (segunda temporada)
 
-- A lança do Saul: o Davi se desvia (18:11), mas a série corta no som.
+- A lança do Saul: o Davi se desvia (18:11), mas a série corta antes de ela chegar, no som do impacto.
 - A amizade com o Jônatas, a perseguição do Saul, a fuga do Davi, a recusa dele em matar o rei e a coroação.
 
 ## Cânone

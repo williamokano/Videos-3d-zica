@@ -26,6 +26,10 @@ const JANELA: [number, number] = [11.6, -14];
 const FRENTE: [number, number] = [7, -11.6];
 /** O portão da cidade, no lado oeste da praça; a estrada chega por ali, em z = 3. */
 const PORTAO: [number, number] = [-10, 3];
+/** Por cima do ombro do Davi sentado no banco, de onde se vê o arremesso; a lança passa por ali e vai além. */
+const OMBRO: [number, number, number] = [7.28, 1.22, -28.4];
+/** O comprimento da lança do rei. */
+const LANCA = 2.4;
 /** O meio da praça, onde as mulheres dançam. */
 const PRACA: [number, number] = [6, 2];
 
@@ -103,7 +107,7 @@ export default direct(
       { id: 'espada', asset: 'arms.sword', pos: [0, 0], pocketOf: 'jonatas', params: { length: 0.8 } },
       { id: 'arco', asset: 'arms.bow', pos: [0, 0], pocketOf: 'jonatas' },
       // A lança do rei e a harpa do Davi.
-      { id: 'lanca', asset: 'arms.spear', pos: [TRONO[0] - 0.5, TRONO[1] + 0.3], params: { length: 2.4 }, pickable: true },
+      { id: 'lanca', asset: 'arms.spear', pos: [TRONO[0] - 0.5, TRONO[1] + 0.3], params: { length: LANCA }, pickable: true },
       { id: 'harpa', asset: 'arms.lyre', pos: [0, 0], pocketOf: 'davi-salao' },
     ],
   },
@@ -395,28 +399,39 @@ export default direct(
     daviS.behave('attend', { object: 'saul', mood: 'worried' });
     daviS.lookAt('saul', { duration: 0.4 });
     d.wait(0.6);
-    // O rei se levanta e ergue a lança. O rosto do Davi muda.
+    // O rei se levanta, com a lança. O rosto do Davi muda.
     // De lado, longe da linha entre os dois: o Davi fica fora do caminho da câmera.
     d.camera.cut({ pos: [TRONO[0] + 2.8, 1.55, TRONO[1] + 2.2], lookAt: [TRONO[0], 1.6, TRONO[1] + 0.5], fov: 40 });
     saul.standUp([TRONO[0], TRONO[1] + 0.9], { yaw: 180, duration: 0.9 });
-    saul.raise('eyes', { duration: 0.6 });
     d.camera.cut({ pos: [DIANTE[0] - 0.5, 1.35, DIANTE[1] - 3.0], lookAt: [DIANTE[0], 1.05, DIANTE[1] - 0.7], fov: 30 });
     daviS.express('scared', { amount: 0.75, duration: 0.3 });
-    d.wait(0.7);
-    // Corte abrupto para preto. O som de uma lança se cravando na parede.
-    d.world.blackout(true);
+    d.wait(0.6);
+    // [GANCHO, pico] O arremesso, do lugar do Davi: por cima do ombro dele, o rei arremessa e a lança vem direto na
+    // lente, em câmera lenta. Corta antes de ela chegar: ninguém vê o que ela acerta (18:11).
+    d.camera.cut({ pos: OMBRO, lookAt: [TRONO[0], 1.6, TRONO[1] + 0.9], fov: 42 });
+    // A mão solta acima do ombro direito do rei (o mesmo ponto que o "throw" usa). A lança vem entre a lente e a
+    // cabeça do Davi, rente aos dois: em diagonal, com a haste à vista, ela lê como lança, e não se vê onde acaba.
+    const escala = 1.95 / 1.7;
+    const mao: [number, number, number] = [TRONO[0] - 0.25 * escala, 1.85 * escala, TRONO[1] + 0.9 + 0.3 * escala];
+    const RENTE: [number, number, number] = [OMBRO[0] - 0.12, OMBRO[1] + 0.1, OMBRO[2]];
+    const rumoRente = [RENTE[0] - mao[0], RENTE[1] - mao[1], RENTE[2] - mao[2]];
+    const ateRente = Math.hypot(...rumoRente);
+    const alem: [number, number, number] = [mao[0] + rumoRente[0] * 1.4, mao[1] + rumoRente[1] * 1.4, mao[2] + rumoRente[2] * 1.4];
+    const VELOCIDADE = 9;
+    const arremesso = d.do('lanca', 'throw', { to: alem, speed: VELOCIDADE, arc: 0, tip: true }, { ease: 'linear' });
+    // O ponto que voa é o pé da lança; a ponta vai LANCA metros à frente. Corta quando a ponta está a 0,5 m de passar.
+    const solta = arremesso.start + 0.45;
+    const corte = solta + Math.max(0.05, ateRente - LANCA - 0.5) / VELOCIDADE;
+    d.slowMo(solta - 0.05, corte, 5);
+    d.at(corte);
     d.sound('lanca-parede');
-    // No escuro, o Davi larga a harpa e sai (18:11: ele se desvia). Ninguém vê.
-    d.background(() => {
-      daviS.standUp([DIANTE[0] + 0.5, DIANTE[1] + 0.3], { yaw: -90, duration: 0.5 });
-      daviS.putDown('harpa', [DIANTE[0] + 0.2, 0.03, DIANTE[1] - 0.35], { duration: 0.6 });
-      daviS.walkTo([DIANTE[0] + 3.6, DIANTE[1] + 2.4], { speed: 2.2 });
-    });
-    d.wait(2.2);
-    // A imagem volta devagar: o banco vazio e a harpa caída no chão.
-    d.camera.cut({ pos: [DIANTE[0] - 0.9, 0.5, DIANTE[1] - 2.0], lookAt: [DIANTE[0] + 0.05, 0.3, DIANTE[1] - 0.55], fov: 40 });
-    d.camera.moveTo({ pos: [DIANTE[0] - 0.7, 0.45, DIANTE[1] - 1.6], lookAt: [DIANTE[0] + 0.05, 0.3, DIANTE[1] - 0.55], fov: 38 });
-    d.world.blackout(false, { duration: 1.2 });
+    // O rei, depois do arremesso, ofegante, olhando para onde ela foi. O alvo fica fora do quadro.
+    d.camera.cut({ pos: [TRONO[0] + 1.9, 1.62, TRONO[1] + 3.2], lookAt: [TRONO[0], 1.6, TRONO[1] + 0.9], fov: 34 });
+    d.camera.moveTo({ pos: [TRONO[0] + 1.5, 1.62, TRONO[1] + 2.6], lookAt: [TRONO[0], 1.62, TRONO[1] + 0.9], fov: 32 });
+    saul.express('angry', { amount: 0.5, duration: 0.6 });
+    // O braço do arremesso volta devagar para o lado do corpo.
+    d.waitFor(arremesso);
+    d.do('saul', 'move', { name: 'throw', amount: 0 }, { duration: 1.2 });
     ambiente('palacio-noite', cena, 0.4);
 
     // ---- 7. Fim (2:25) ----

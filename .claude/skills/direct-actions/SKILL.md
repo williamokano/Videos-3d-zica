@@ -48,6 +48,7 @@ export default direct(
 | `d.phone('celular')` | a tela de um celular: `setup({...})`, `receive(texto)`, `send(texto)`, `typing(true)`, `open(chat)`, `screen(false)`, `network(false)`. Acontecem na hora |
 | `d.world.rule('id', true, { duration })` | faz uma regra da bíblia entrar (ou sair) aos poucos, ex.: o céu ficando vermelho |
 | `d.world.network(false)` | cai o sinal de todos os celulares |
+| `d.do('lanca', 'throw', { to, speed, arc: 0, tip: true }, { ease: 'linear' })` | arremesso de lança ou flecha: com `tip` ela voa deitada, de ponta para a frente. O ponto que voa é o pé da lança; a ponta vai o comprimento dela à frente (para cortar antes de algo, conte a ponta) |
 | `d.world.blackout(true)` / `d.world.blackout(false, { duration: 1 })` | a imagem vai ao preto (corte seco, ou em fade com `duration`) e volta; o som, as legendas, o narrador e o cartão final continuam por cima. Para o que só se ouve (a lança no escuro) |
 | `d.camera.cut({ pos, lookAt, fov })` | corta para uma câmera posta à mão |
 | `d.camera.moveTo({ pos, lookAt })` | dentro do plano atual: a câmera se move e chega aqui agora |

@@ -71,6 +71,7 @@ registerAction({
     speed: { type: 'number', description: 'velocidade do voo em m/s (padrão 20). Mais baixo parece câmera lenta' },
     arc: { type: 'number', description: 'quanto o arco sobe no meio do voo, em metros (padrão 1/20 da distância)' },
     with: { type: 'string', description: 'id de um item que lança (a funda) na mão de quem arremessa; o item arremessado sai do bolso dele no instante de soltar, e a funda fica vazia (canal "loaded") e volta a pender da mão' },
+    tip: { type: 'boolean', description: 'voa deitado, de ponta para a frente, inclinando com o arco do voo (uma lança, uma flecha). O item é medido em pé, com a ponta para cima' },
     stick: { type: 'boolean', description: 'com "hit": o item crava e some no impacto (para mostrar a pedra na testa, ligue uma peça de roupa como "foreheadStone"). Num alvo de capacete, use "arc" perto de 0: a pedra sobe reta por baixo da aba' },
   },
   duration: 1,
@@ -116,6 +117,11 @@ registerAction({
     };
     // The arm: a whole throw takes twice the wind-up, the hand letting go halfway.
     const arm = (u: number): number => Math.min(1, (u * total) / (RELEASE * 2));
+    // Which way it flies, as headings count (0 north, 90 west), and how steeply at each point of the flight.
+    const heading = (Math.atan2(-(to[0] - from[0]), -(to[2] - from[2])) * 180) / Math.PI;
+    const level = Math.hypot(to[0] - from[0], to[2] - from[2]);
+    const rise = (s: number): number => to[1] - from[1] + arc * 4 * (1 - 2 * s);
+    if (ctx.params.tip === true && !('lean' in ctx.target.channels)) ctx.fail('"tip" precisa de um item que se inclina (canais "lean" e "leanTo").');
     const sling = launcher ? ctx.object(launcher).channels : {};
     // Once the stone is gone, a sling spun over the head falls back to hanging from the hand.
     const spun = launcher ? ctx.current('spin', launcher) : 0;
@@ -140,6 +146,13 @@ registerAction({
         ? [
             { channel: 'trail', at: (u: number) => (u <= release || u >= 1 ? 0 : Math.min(1, (u - release) / 0.06)) },
             { channel: 'yaw', at: () => (Math.atan2(-(to[0] - from[0]), -(to[2] - from[2])) * 180) / Math.PI },
+          ]
+        : []),
+      // A spear flies point first: tipped from standing up to along the flight, rising and falling with the arc.
+      ...(ctx.params.tip === true
+        ? [
+            { channel: 'leanTo', at: () => heading },
+            { channel: 'lean', at: (u: number) => (u <= release ? 0 : 90 - (Math.atan2(rise(along(u)), level) * 180) / Math.PI) },
           ]
         : []),
     ];

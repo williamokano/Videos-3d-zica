@@ -1,6 +1,6 @@
 # Episódio 5 — De herói a ameaça (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:42.8. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:41.9. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -100,7 +100,7 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `1:51.2` **ABNER**: Sim, majestade. ⚠ sem gravação
 - `1:51.2` 🎥 corte: câmera fov 36
 - `1:53.0` 🎥 corte: câmera fov 30
-- `1:55.2` 🔊 palacio-noite (30 s)
+- `1:55.2` 🔊 palacio-noite (29 s)
 - `1:55.2` 🎥 corte: câmera fov 42
 - `1:56.5` 🔊 tensao-saul
 - ⏸ **4.7 s sem fala**
@@ -119,14 +119,14 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `2:16.1` **REI SAUL** (baixo): Vou cravar o Davi na parede. ⚠ sem gravação
 - `2:18.8` 🎥 corte: câmera fov 34
 - `2:19.8` 🎥 corte: câmera fov 40
-- `2:21.3` 🎥 corte: câmera fov 30
-- `2:22.3` 🌍 black → 1
-- `2:22.3` 🔊 lanca-parede
-- `2:24.5` 🌍 black → 0 em 1.2 s
-- `2:24.5` 🎥 corte: câmera fov 40
-- `2:24.5` 🎥  fov 38
-- `2:25.7` 🔊 musica-saul (18 s)
-- ⏸ **7.3 s sem fala**
-- `2:25.7` **Narrador**: Davi havia derrotado o gigante de Israel. Mas agora teria que enfrentar algo muito mais próximo. A inveja de um rei. ⚠ sem gravação
-- `2:34.3` 🟥 cartão final: "Você fugia do palácio ou ficava com o rei?" — FUGIR / FICAR — Comenta FUGIR ou FICAR 👇 e marca quem tá esperando a segunda temporada
-- `2:34.7` **Narrador**: Você fugia do palácio, ou ficava com o rei? Comenta aí. A segunda temporada vem aí. ⚠ sem gravação
+- `2:20.7` 🎥 corte: câmera fov 30
+- `2:21.6` 🎥 corte: câmera fov 42
+- `2:22.0` 🐢 **câmera lenta** (0.2 s do episódio, 5 vezes mais devagar: 1.0 s de vídeo)
+- `2:23.0` 🔊 lanca-parede
+- `2:23.0` 🎥 corte: câmera fov 34
+- `2:23.0` 🎥  fov 32
+- `2:24.8` 🔊 musica-saul (18 s)
+- ⏸ **6.4 s sem fala**
+- `2:24.8` **Narrador**: Davi havia derrotado o gigante de Israel. Mas agora teria que enfrentar algo muito mais próximo. A inveja de um rei. ⚠ sem gravação
+- `2:33.4` 🟥 cartão final: "Você fugia do palácio ou ficava com o rei?" — FUGIR / FICAR — Comenta FUGIR ou FICAR 👇 e marca quem tá esperando a segunda temporada
+- `2:33.8` **Narrador**: Você fugia do palácio, ou ficava com o rei? Comenta aí. A segunda temporada vem aí. ⚠ sem gravação
