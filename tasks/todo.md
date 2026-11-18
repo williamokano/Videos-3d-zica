@@ -129,8 +129,9 @@ Episódio:
 - [x] Lugar novo: Gibeá (`world/gerar-gibea.py`), com o salão do trono compartilhado (`world/sala_saul.py`; `belem.json` idêntico)
 - [x] Motor: `d.world.blackout`, `arms.cloth` (manto e faixa soltos), `don` de manto nos ombros e faixa na cintura
 - [x] `episodes/005.ts` (2:40,5), revisor sem erros, prévia muda em tamanho cheio no NAS (`Videos Curtos/Davi/ep05/`)
-- [ ] Revisão do autor (prévia muda)
-- [ ] Teste de voz do Jônatas (3 a 6 candidatas) e amostra do Abner (Paulo); vozes das mulheres, do morador, do menino e do servo
-- [ ] Sons novos (`festa-tamborins`, `lanca-parede`) e `npm run voz`
-- [ ] Render final, `publicar`, e com "pode" `agendar` (token do YouTube vence por volta de 24/11)
+- [x] Revisão do autor (prévia muda): aprovado, com ajustes (abertura, closes, harpa, arremesso na lente, "derrotou")
+- [x] Vozes: Jônatas = Gabriel; mulheres = Keren e Yasmin Alves; figurantes com vozes aprovadas; `npm run voz`
+- [x] Sons novos (`festa-tamborins`, `lanca-parede`) e música sob a aliança e a janela
+- [x] Render final (2:50.1) e pacote de lançamento (`publicacao/ep005/`)
+- [ ] Data, hora e "pode" para `agendar` (token do YouTube vence por volta de 24/11)
 - [ ] Revisor: a parede de uma janela conta como inteira (aviso falso em "fala-tapada" pela janela); conferir "a mesma pessoa duas vezes no quadro"
