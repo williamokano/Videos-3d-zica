@@ -19,8 +19,7 @@ import { figurante, ids } from '../cena';
 /** O trono e o banco do Davi, no salão (o mesmo salão dos eps. 1 e 2, com o canto noroeste em [0, -36]). */
 const TRONO: [number, number] = [7, -33.78];
 const DIANTE: [number, number] = [7, -28.3];
-/** A porta do salão e a janela, na parede sul (z = -14), dando para a praça. */
-const PORTA: [number, number] = [7, -14];
+/** A janela do salão, na parede sul (z = -14), à direita da porta (em x = 7), dando para a praça. */
 const JANELA: [number, number] = [11.6, -14];
 /** A frente do palácio, na praça, onde o rei para ao chegar. */
 const FRENTE: [number, number] = [7, -11.6];
@@ -39,6 +38,12 @@ const PERTO: [number, number] = [DAVI_FRENTE[0] + 0.62, DAVI_FRENTE[1] + 0.12];
 /** O meio dos dois, para a câmera. */
 const MEIO: [number, number] = [(DAVI_FRENTE[0] + PERTO[0]) / 2, (DAVI_FRENTE[1] + PERTO[1]) / 2];
 
+/** Uma voz da conta para quem fala e não tem ficha própria (aprovadas em canal/vozes.json, que não falam neste episódio). */
+const voz = (m: CastMember, id: string): CastMember => ({ ...m, look: { ...m.look, voice: { id } } });
+const JAIRO = '362PVGN0qz9gh4Hb4qdA';
+const MANOEL = 'zoe2cQFqDDW4DteHDEWI';
+const ARNOLD = 'ZYCQDYoXnl78dNdU6JeG';
+
 const rumo = (from: [number, number], to: [number, number]): number => (Math.atan2(-(to[0] - from[0]), -(to[1] - from[1])) * 180) / Math.PI;
 
 // ---- O povo ----
@@ -56,7 +61,9 @@ const gente = (id: string, at: [number, number], yaw: number, seed: number, name
 };
 /** O povo em volta da praça, olhando para o portão. */
 const povo: CastMember[] = ([[-4, -8], [0, -8.6], [15, -8], [18, -5], [20, 4], [19, 9], [12, 13], [6, 13.6], [-1, 12.5], [-6, 9]] as [number, number][])
-  .map((at, i) => gente(`povo-${i + 1}`, at, rumo(at, PORTAO), 300 + i * 11, 'Morador'));
+  .map((at, i) => gente(`povo-${i + 1}`, at, rumo(at, PORTAO), 300 + i * 11, 'Morador'))
+  // Os dois que falam: o "É ele!" e o "Davi! Davi!".
+  .map((m) => (m.id === 'povo-9' ? voz(m, JAIRO) : m.id === 'povo-3' ? voz(m, MANOEL) : m));
 /** O exército voltando: atrás do rei, em duas filas pela estrada. O Davi vem no meio deles. */
 const MARCHA_X = -12.5;
 const marcha: CastMember[] = Array.from({ length: 8 }, (_, k) => figurante(`marcha-${k + 1}`, 'soldado', [MARCHA_X - 7.5 - Math.floor(k / 2) * 1.9, 3 + (k % 2 ? 1 : -1)], -90, 410 + k * 13, 'Soldado'));
@@ -91,10 +98,11 @@ export default direct(
       // ---- O salão, à noite (cenas 1, 5 e 6) ----
       { id: 'saul', character: 'saul', at: TRONO, yaw: 180, seated: 0.64 },
       { id: 'saul-janela', character: 'saul', at: [JANELA[0], JANELA[1] - 0.75], yaw: 180 },
-      { id: 'abner-salao', character: 'abner', at: [PORTA[0] - 0.4, PORTA[1] - 1.2], yaw: 180 },
-      gente('servo', [4.2, -24.5], 120, 81, 'Servo'),
+      // Atrás da fachada, a oeste da porta: da praça, de dia, ninguém o vê pela porta aberta.
+      voz(gente('servo', [1.6, -30.5], 120, 81, 'Servo'), ARNOLD),
       {
-        id: 'davi-salao', character: 'davi', at: [PORTA[0], PORTA[1] - 8.6], yaw: 0,
+        // Também atrás da fachada, entre a parede e as colunas, até a cena dele.
+        id: 'davi-salao', character: 'davi', at: [2.2, -21.5], yaw: 180,
         // Já com o manto azul do Jônatas.
         look: { wear: [{ id: 'tunic', color: '#a88a62', accent: '#6b5236' }, 'sandals', { id: 'cloak', color: '#2f56a8', accent: '#d9b04a' }, { id: 'sash', color: '#2f56a8', accent: '#d9b04a' }] },
       },
@@ -113,7 +121,7 @@ export default direct(
   },
   (d) => {
     const [saulP, abner, davi, eliabe, sama, jonatas, menino] = ['saul-praca', 'abner', 'davi', 'eliabe', 'sama', 'jonatas', 'menino'].map((id) => d.actor(id));
-    const [saul, saulJ, abnerS, servo, daviS] = ['saul', 'saul-janela', 'abner-salao', 'servo', 'davi-salao'].map((id) => d.actor(id));
+    const [saul, saulJ, servo, daviS] = ['saul', 'saul-janela', 'servo', 'davi-salao'].map((id) => d.actor(id));
 
     /** Um som de fundo (ambiente ou música) de `from` até agora, com entrada e saída suaves. */
     const ambiente = (name: string, from: number, volume?: number) => {
@@ -134,7 +142,6 @@ export default direct(
     jonatas.behave('watch', { point: [PORTAO[0], 1.6, PORTAO[1]], mood: 'calm' });
     menino.behave('watch', { point: [PORTAO[0], 1.3, PORTAO[1]], mood: 'happy' });
     saulJ.behave('idle', { mood: 'calm' });
-    abnerS.behave('idle', { mood: 'calm' });
     servo.behave('idle', { mood: 'worried' });
     daviS.behave('idle', { mood: 'calm' });
     saul.behave('attend', { object: 'banco-davi', mood: 'worried' });
@@ -326,23 +333,27 @@ export default direct(
     // Agora ele entende. Do lado de fora da janela, o rosto do rei.
     d.camera.cut({ pos: [JANELA[0] + 0.15, 1.85, JANELA[1] + 1.4], lookAt: [JANELA[0], 1.85, JANELA[1] - 0.75], fov: 32 });
     saulJ.express('angry', { amount: 0.3, duration: 1 });
-    saulJ.say('Dez milhares? E a mim... apenas milhares?', { tone: 'baixo', gesture: 0 });
-    // [GANCHO] O Abner entra pela porta grande.
-    const entra = abnerS.walkTo([JANELA[0] - 2.0, JANELA[1] - 2.3], { speed: 1.1 });
+    saulJ.say('Dez milhares? E a mim... apenas milhares?', { tone: 'quietly', gesture: 0 });
+    // [GANCHO] O Abner, que ficou na porta desde a chegada, entra pela porta grande.
+    d.sound('porta-madeira-passos');
+    const entra = abner.walkTo([JANELA[0] - 2.0, JANELA[1] - 2.3], { speed: 1.1 });
+    // De dentro do salão, perto da janela: o Abner atravessando a porta.
+    d.at(entra.start + 1.6);
+    d.camera.cut({ pos: [JANELA[0] - 0.4, 1.75, JANELA[1] - 3.6], lookAt: [7, 1.5, -14.6], fov: 40 });
     d.waitFor(entra);
-    abnerS.turnTo(onde('saul-janela'));
-    saulJ.turnTo(onde('abner-salao'));
-    abnerS.behave('attend', { object: 'saul-janela', mood: 'calm' });
-    saulJ.behave('attend', { object: 'abner-salao', mood: 'worried' });
+    abner.turnTo(onde('saul-janela'));
+    saulJ.turnTo(onde('abner'));
+    abner.behave('attend', { object: 'saul-janela', mood: 'calm' });
+    saulJ.behave('attend', { object: 'abner', mood: 'worried' });
     d.conversa([
-      ['abner-salao', 'Majestade. O povo pede o rapaz na praça.'],
+      ['abner', 'Majestade. O povo pede o rapaz na praça.'],
       ['saul-janela', 'Deram a ele dez milhares. O que mais lhe falta? Só o reino.', { tone: 'bravo' }],
     ]);
     // Silêncio. O Abner não responde.
     d.wait(1.2);
     d.conversa([
       ['saul-janela', 'Abner. De hoje em diante, os teus olhos nele.', { tone: 'firme' }],
-      ['abner-salao', 'Sim, majestade.'],
+      ['abner', 'Sim, majestade.'],
     ]);
     // O rosto do rei na janela, de fora, de perto (o rosto inteiro, não só os olhos).
     saulJ.turnTo(180);
@@ -363,11 +374,11 @@ export default direct(
     // O rei, sozinho com a canção na cabeça. [Liberdade]
     d.background(() => {
       d.wait(1.2);
-      saul.say('Dez milhares...', { tone: 'baixo', gesture: 0 });
+      saul.say('Dez milhares...', { tone: 'quietly', gesture: 0 });
     });
     // O Davi entra com a harpa, ainda com o manto azul do Jônatas.
     d.sound('porta-madeira-passos');
-    const harpista = d.background(() => daviS.walkTo(DIANTE, { speed: 1.1 }));
+    const harpista = d.background(() => daviS.walkTo(DIANTE, { speed: 1.3 }));
     d.camera.track('davi-salao', { from: [TRONO[0] + 3.8, 1.7, -21.5], to: [TRONO[0] + 3.8, 1.75, -25.0], duration: 4.5, fov: 44 });
     d.waitFor(harpista);
     daviS.sit('banco-davi', 'seat');
@@ -391,7 +402,7 @@ export default direct(
     // [GANCHO, pico] O rosto do rei, de perto.
     d.camera.cut({ pos: [TRONO[0] + 0.45, 1.65, TRONO[1] + 2.0], lookAt: [TRONO[0], 1.55, TRONO[1]], fov: 32 });
     saul.express('angry', { amount: 0.6, duration: 0.8 });
-    saul.say('Vou cravar o Davi na parede.', { tone: 'baixo', gesture: 0 });
+    saul.say('Vou cravar o Davi na parede.', { tone: 'quietly', gesture: 0 });
     // A música para. O Davi levanta os olhos.
     d.do('davi-salao', 'move', { name: 'strum', amount: 0 }, { duration: 0.4 });
     ambiente('harpa-pastor', harpa, 0.55);
