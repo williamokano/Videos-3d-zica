@@ -37,7 +37,7 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 *Um menino corre ao lado do Davi, que sorri sem graça.*
 
 **[GANCHO ~0:18]**
-- **MULHERES** (cantando): Saul feriu os seus milhares… ⏸ porém Davi, os seus dez milhares!
+- **MULHERES** (cantando): Saul derrotou os seus milhares… ⏸ e Davi, os seus dez milhares!
 
 *O Saul acena para o povo, sorrindo: ele ainda não entendeu a canção. Ao lado dele, o **Abner** entendeu. Para de sorrir e olha de lado para o rei.* **Câmera:** os dois de frente, o Abner um passo atrás, no terço central.
 
@@ -86,7 +86,7 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 
 *Noite. O palácio. O Saul, sozinho, à janela do salão. Lá embaixo, na praça, fogueiras e o povo ainda cantando.*
 
-- **MULHERES** (cantando, de longe): Saul feriu os seus milhares… ⏸ porém Davi, os seus dez milhares!
+- **MULHERES** (cantando, de longe): Saul derrotou os seus milhares… ⏸ e Davi, os seus dez milhares!
 
 *Agora ele entende. O sorriso desaparece.*
 
@@ -139,6 +139,8 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 ---
 
 ## O que mudou e por quê
+
+- **A canção** (18:7) diz "derrotou" (decisão do autor, 2026-11-18): "feriu", da Almeida, soa hoje como "machucou", e "matou" é violento demais para o tom. O sentido é o mesmo: inimigos vencidos na guerra.
 
 - **Fiel ao texto:**
   - o Saul não deixa o Davi voltar para a casa do pai (18:2);

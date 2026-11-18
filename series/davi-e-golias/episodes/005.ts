@@ -191,8 +191,8 @@ export default direct(
         davi.express('happy', { amount: 0.3 });
         // As mulheres cantam para o rei que chega.
         d.camera.cut({ pos: [PRACA[0] - 5.0, 1.7, PRACA[1] + 5.6], lookAt: [PRACA[0], 1.45, PRACA[1]], fov: 38 });
-        d.actor('mulher-2').say('Saul feriu os seus milhares...', { tone: 'animado', gesture: 0 });
-        d.actor('mulher-4').say('...porém Davi, os seus dez milhares!', { tone: 'animado', gesture: 0 });
+        d.actor('mulher-2').say('Saul derrotou os seus milhares...', { tone: 'animado', gesture: 0 });
+        d.actor('mulher-4').say('...e Davi, os seus dez milhares!', { tone: 'animado', gesture: 0 });
         // O rei acena sem entender; ao lado, o Abner entende e olha de lado para ele. A câmera vai com os dois.
         d.camera.track('abner', { from: [9.0, 1.85, -1.6], to: [9.4, 1.85, -3.0], duration: 4.4, fov: 38 });
         d.do('saul-praca', 'move', { name: 'cheer', amount: 0.45 }, { duration: 0.7 });
@@ -317,8 +317,8 @@ export default direct(
     saulJ.behave('watch', { point: [PRACA[0], 0.8, PRACA[1]], mood: 'calm' });
     d.camera.cut({ pos: [JANELA[0] - 0.4, 2.1, JANELA[1] - 1.55], lookAt: [PRACA[0] + 3, 0.4, PRACA[1] + 2], fov: 46 });
     d.sound('fogueira-noite', { length: 30, fade: 1 });
-    d.actor('mulher-1').say('Saul feriu os seus milhares...', { tone: 'animado', gesture: 0 });
-    d.actor('mulher-5').say('...porém Davi, os seus dez milhares!', { tone: 'animado', gesture: 0 });
+    d.actor('mulher-1').say('Saul derrotou os seus milhares...', { tone: 'animado', gesture: 0 });
+    d.actor('mulher-5').say('...e Davi, os seus dez milhares!', { tone: 'animado', gesture: 0 });
     // Agora ele entende. Do lado de fora da janela, o rosto do rei.
     d.camera.cut({ pos: [JANELA[0] + 0.15, 1.85, JANELA[1] + 1.4], lookAt: [JANELA[0], 1.85, JANELA[1] - 0.75], fov: 32 });
     saulJ.express('angry', { amount: 0.3, duration: 1 });
