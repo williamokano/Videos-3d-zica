@@ -45,7 +45,8 @@
       "nome": "Arnold",
       "status": "aprovada",
       "usos": [
-        "davi-e-golias/guarda (ep. 3+)"
+        "davi-e-golias/guarda (ep. 3+)",
+        "davi-e-golias ep. 5 servo"
       ],
       "nota": "Escolhida pelo autor entre 6 amostras, 2026-11-14."
     },
@@ -64,7 +65,8 @@
       "status": "aprovada",
       "usos": [
         "davi-e-golias/jesse (velocidade 1.08)",
-        "ceu-vermelho/roberto"
+        "ceu-vermelho/roberto",
+        "davi-e-golias ep. 5 morador (\"É ele!\")"
       ]
     },
     {
@@ -81,8 +83,18 @@
       "nome": "Manoel Lopes",
       "status": "aprovada",
       "usos": [
-        "davi-e-golias/samuel (velocidade 1.12)"
+        "davi-e-golias/samuel (velocidade 1.12)",
+        "davi-e-golias ep. 5 morador (\"Davi! Davi!\")"
       ]
+    },
+    {
+      "id": "lvkgCBi6spByiTZMPJEK",
+      "nome": "Gabriel",
+      "status": "aprovada",
+      "usos": [
+        "davi-e-golias/jonatas"
+      ],
+      "nota": "Calma, jovem, conversa. Escolhida pelo autor entre 5 amostras (Matheus Santos, Gabriel, Pietro, Rener, Sandro Dutra), 2026-11-18."
     },
     {
       "id": "fUAUU80st9SqdYx319Zk",

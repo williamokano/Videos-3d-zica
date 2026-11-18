@@ -21,4 +21,4 @@ Tem inveja do Davi.
 - Ep. 5: dá ao Davi o manto, a espada, o arco e o cinto e faz aliança com ele (18:1-4).
 
 ## Voz
-Ainda não escolhida: testar com o autor (`npm run testar-voz`).
+Gabriel (`canal/vozes.json`), escolhida pelo autor entre 5 amostras em 2026-11-18. Calma, jovem.
