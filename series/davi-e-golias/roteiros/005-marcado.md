@@ -1,6 +1,6 @@
 # Episódio 5 — De herói a ameaça (marcado)
 
-Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:41.9. Tempos já sem os cortes secos.
+Gerado por `npm run roteiro` a partir de `series/davi-e-golias/episodes/`. Duração: 2:50.1. Tempos já sem os cortes secos.
 
 Pausas sem fala de 3 s ou mais aparecem como ⏸.
 
@@ -20,113 +20,118 @@ Pausas sem fala de 3 s ou mais aparecem como ⏸.
 - `0:04.1` 🎬 abertura: DAVI — Uma história de coragem e destino — Episódio 5 · De herói a ameaça
 - `0:04.1` 🔊 marcha-exercito (22 s)
 - `0:04.1` *REI SAUL anda até [7.0,-11.6]*
-- `0:04.1` 🔊 marcha-exercito (18 s)
-- `0:04.1` 🔊 festa-tamborins (81 s)
+- `0:04.1` 🔊 marcha-exercito (19 s)
+- `0:04.1` 🔊 festa-tamborins (83 s)
 - `0:04.1` 🎥 corte: câmera fov 44
 - `0:04.7` 🔊 festa-tamborins (30 s)
 - `0:04.7` 🎥 corte: câmera fov 40
 - ⏸ **5.2 s sem fala**
-- `0:05.2` **MORADOR 1** (animado): É ele! O rapaz do gigante! ⚠ sem gravação
-- `0:07.4` 🎥 corte: câmera fov 40
-- `0:07.7` **MULHER 1** (animado): Saul derrotou os seus milhares... ⚠ sem gravação
-- `0:07.7` 🎥 corte: câmera fov 38
-- `0:10.3` **MULHER 2** (animado): ...e Davi, os seus dez milhares! ⚠ sem gravação
-- `0:12.9` 🎥 corte: câmera fov 38
-- `0:17.3` 🎥  fov 38
-- `0:17.3` 🎥 corte: câmera fov 36
+- `0:05.2` **MORADOR 1** (animado): É ele! O rapaz do gigante!
+- `0:07.6` 🎥 corte: câmera fov 40
+- `0:07.9` **MULHER 1** (animado): Saul derrotou os seus milhares...
+- `0:07.9` 🎥 corte: câmera fov 38
+- `0:10.4` **MULHER 2** (animado): ...e Davi, os seus dez milhares!
+- `0:13.7` 🎥 corte: câmera fov 38
+- `0:18.1` 🎥  fov 38
+- `0:18.1` 🎥 corte: câmera fov 36
 - ⏸ **4.8 s sem fala**
-- `0:17.7` **SAMÁ** (animado): Olha lá o caçula, Eliabe. ⚠ sem gravação
-- `0:20.2` **ELIABE** (bravo): Tô vendo. ⚠ sem gravação
-- `0:21.9` *REI SAUL passa a: idle (calm)*
-- `0:21.9` *REI SAUL vira*
-- `0:22.3` **REI SAUL** (firme): Davi. ⚠ sem gravação
-- `0:22.3` 🎥 corte: câmera fov 42
-- `0:23.3` 🎥 corte: câmera fov 40
-- `0:26.4` 🎥  fov 40
-- `0:26.4` 🎥 corte: câmera fov 38
-- `0:29.4` 🎥  fov 38
-- `0:29.8` *REI SAUL passa a: attend (calm)*
+- `0:18.5` **SAMÁ** (animado): Olha lá o caçula, Eliabe.
+- `0:21.2` **ELIABE** (bravo): Tô vendo.
+- `0:23.4` *REI SAUL passa a: idle (calm)*
+- `0:23.4` *REI SAUL vira*
+- `0:23.8` **REI SAUL** (firme): Davi.
+- `0:23.8` 🎥 corte: câmera fov 42
+- `0:24.9` 🎥 corte: câmera fov 40
+- `0:28.0` 🎥  fov 40
+- `0:28.0` 🎥 corte: câmera fov 38
+- `0:31.0` 🎥  fov 38
+- `0:31.4` *REI SAUL passa a: attend (calm)*
 - ⏸ **6.5 s sem fala**
-- `0:29.8` **REI SAUL** (firme): De hoje em diante, ficas na minha casa. Não voltas mais para as ovelhas do teu pai. ⚠ sem gravação
-- `0:29.8` 🎥 corte: câmera fov 36
-- `0:36.0` **DAVI**: Teu servo fará o que o rei mandar. ⚠ sem gravação
-- `0:36.0` 🎥 corte: câmera fov 36
-- `0:38.7` *REI SAUL aponta / toca*
-- `0:41.1` *REI SAUL faz cara de happy*
-- `0:41.1` 🎥 corte: câmera fov 34
-- `0:41.6` **MORADOR 2** (grito): Davi! Davi! ⚠ sem gravação
-- `0:43.0` *REI SAUL faz cara de angry*
-- `0:45.2` *REI SAUL passa a: attend (calm)*
-- `0:45.2` 🎥 corte: câmera fov 36
-- ⏸ **5.1 s sem fala**
-- `0:47.9` **JÔNATAS**: Foste tu que enfrentaste Golias? ⚠ sem gravação
-- `0:47.9` 🎥 corte: câmera fov 36
-- `0:50.7` **DAVI** (firme): Foi o Senhor quem me deu a vitória. ⚠ sem gravação
-- `0:50.7` 🎥 corte: câmera fov 36
+- `0:31.4` **REI SAUL** (firme): De hoje em diante, ficas na minha casa. Não voltas mais para as ovelhas do teu pai.
+- `0:31.4` 🎥 corte: câmera fov 36
+- `0:37.4` **DAVI**: Teu servo fará o que o rei mandar.
+- `0:37.4` 🎥 corte: câmera fov 36
+- `0:39.3` *REI SAUL aponta / toca*
+- `0:41.7` *REI SAUL faz cara de happy*
+- `0:41.7` 🎥 corte: câmera fov 34
+- `0:42.2` **MORADOR 2** (grito): Davi! Davi!
+- `0:43.6` *REI SAUL faz cara de angry*
+- `0:45.8` *REI SAUL passa a: attend (calm)*
+- `0:45.8` 🔊 musica-escudeiro (41 s)
+- `0:45.8` 🎥 corte: câmera fov 36
+- ⏸ **4.2 s sem fala**
+- `0:48.5` **JÔNATAS**: Foste tu que enfrentaste Golias?
+- `0:48.5` 🎥 corte: câmera fov 36
+- `0:50.6` **DAVI** (firme): Foi o Senhor quem me deu a vitória.
+- `0:50.6` 🎥 corte: câmera fov 36
 - `0:53.5` 🎥 corte: câmera fov 40
 - ⏸ **5.6 s sem fala**
-- `0:59.1` **DAVI** (surpreso): Esse é o manto do príncipe. ⚠ sem gravação
-- `0:59.1` 🎥 corte: câmera fov 36
-- `1:01.6` **JÔNATAS**: Fica com ele. E com isto também. ⚠ sem gravação
-- `1:01.6` 🎥 corte: câmera fov 36
-- `1:04.1` 🎥 corte: câmera fov 38
-- `1:08.5` *guarda espada*
+- `0:59.0` **DAVI** (surpreso): Esse é o manto do príncipe.
+- `0:59.0` 🎥 corte: câmera fov 36
+- `1:02.0` **JÔNATAS**: Fica com ele. E com isto também.
+- `1:02.0` 🎥 corte: câmera fov 36
+- `1:04.9` 🎥 corte: câmera fov 38
+- `1:09.3` *guarda espada*
 - ⏸ **5.4 s sem fala**
-- `1:09.5` **DAVI**: Eu sou filho de um pastor, Jônatas. ⚠ sem gravação
-- `1:14.5` **JÔNATAS**: E eu, de um rei. Hoje isso não importa. ⚠ sem gravação
-- `1:17.6` **JÔNATAS** (firme): A partir de hoje, és meu irmão. Eu te amo como à minha própria vida. ⚠ sem gravação
-- `1:17.6` 🎥 corte: câmera fov 38
-- `1:19.2` 🎥  fov 38
-- `1:20.8` 🎥  fov 38
-- `1:22.4` 🎥  fov 38
-- `1:22.8` 🎥 corte: câmera fov 34
-- `1:23.4` *REI SAUL faz cara de angry*
-- `1:25.5` 🌍 rule.noite → 1
-- `1:25.5` 🔊 fogueira-noite (30 s)
+- `1:10.3` **DAVI**: Eu sou filho de um pastor, Jônatas.
+- ⏸ **3.1 s sem fala**
+- `1:15.3` **JÔNATAS**: E eu, de um rei. Hoje isso não importa.
+- `1:19.0` **JÔNATAS** (firme): A partir de hoje, és meu irmão. Eu te amo como à minha própria vida.
+- `1:19.0` 🎥 corte: câmera fov 38
+- `1:20.6` 🎥  fov 38
+- `1:22.2` 🎥  fov 38
+- `1:23.8` 🎥  fov 38
+- `1:24.6` 🎥 corte: câmera fov 34
+- `1:25.2` *REI SAUL faz cara de angry*
+- `1:27.3` 🌍 rule.noite → 1
+- `1:27.3` 🔊 fogueira-noite (30 s)
 - ⏸ **3.0 s sem fala**
-- `1:25.5` **MULHER 3** (animado): Saul derrotou os seus milhares... ⚠ sem gravação
-- `1:25.5` 🔊 palacio-noite (30 s)
-- `1:25.5` 🎥 corte: câmera fov 46
-- `1:28.1` **MULHER 4** (animado): ...e Davi, os seus dez milhares! ⚠ sem gravação
-- `1:30.7` 🎥 corte: câmera fov 32
-- `1:31.7` **REI SAUL** (baixo): Dez milhares? E a mim... apenas milhares? ⚠ sem gravação
-- ⏸ **3.7 s sem fala**
-- `1:38.6` **ABNER**: Majestade. O povo pede o rapaz na praça. ⚠ sem gravação
-- `1:38.6` 🎥 corte: câmera fov 36
-- `1:41.9` **REI SAUL** (bravo): Deram a ele dez milhares. O que mais lhe falta? Só o reino. ⚠ sem gravação
-- `1:41.9` 🎥 corte: câmera fov 36
-- `1:47.5` **REI SAUL** (firme): Abner. De hoje em diante, os teus olhos nele. ⚠ sem gravação
-- `1:47.5` 🎥 corte: câmera fov 36
-- `1:51.2` **ABNER**: Sim, majestade. ⚠ sem gravação
-- `1:51.2` 🎥 corte: câmera fov 36
-- `1:53.0` 🎥 corte: câmera fov 30
-- `1:55.2` 🔊 palacio-noite (29 s)
-- `1:55.2` 🎥 corte: câmera fov 42
-- `1:56.5` 🔊 tensao-saul
+- `1:27.3` **MULHER 3** (animado): Saul derrotou os seus milhares...
+- `1:27.3` 🔊 palacio-noite (35 s)
+- `1:27.3` 🔊 musica-ameaca (35 s)
+- `1:27.3` 🎥 corte: câmera fov 46
+- `1:29.9` **MULHER 4** (animado): ...e Davi, os seus dez milhares!
+- `1:33.1` 🎥 corte: câmera fov 32
+- `1:34.1` **REI SAUL** (quietly): Dez milhares? E a mim... apenas milhares?
+- `1:38.4` 🔊 porta-madeira-passos
+- `1:40.0` 🎥 corte: câmera fov 40
+- ⏸ **6.2 s sem fala**
+- `1:44.6` **ABNER**: Majestade. O povo pede o rapaz na praça.
+- `1:44.6` 🎥 corte: câmera fov 36
+- `1:48.1` **REI SAUL** (bravo): Deram a ele dez milhares. O que mais lhe falta? Só o reino.
+- `1:48.1` 🎥 corte: câmera fov 36
+- `1:54.6` **REI SAUL** (firme): Abner. De hoje em diante, os teus olhos nele.
+- `1:54.6` 🎥 corte: câmera fov 36
+- `1:58.4` **ABNER**: Sim, majestade.
+- `1:58.4` 🎥 corte: câmera fov 36
+- `2:00.2` 🎥 corte: câmera fov 30
+- `2:02.4` 🔊 palacio-noite (30 s)
+- `2:02.4` 🎥 corte: câmera fov 42
+- `2:03.7` 🔊 tensao-saul
 - ⏸ **4.7 s sem fala**
-- `1:57.3` **SERVO** (preocupado): O rei está mal de novo. Chamem o Davi. ⚠ sem gravação
-- `2:00.3` 🔊 porta-madeira-passos
-- `2:00.3` 🎥 corte: câmera fov 44
-- `2:01.5` **REI SAUL** (baixo): Dez milhares... ⚠ sem gravação
-- `2:04.8` 🎥  fov 44
-- `2:07.1` 🔊 harpa-pastor (12 s)
-- `2:07.1` 🎥 corte: câmera fov 42
-- `2:09.3` 🎥 corte: câmera fov 42
-- `2:09.3` 🎥  fov 40
-- `2:13.5` 🎥 corte: câmera fov 38
-- `2:15.3` 🎥 corte: câmera fov 32
-- ⏸ **13.1 s sem fala**
-- `2:16.1` **REI SAUL** (baixo): Vou cravar o Davi na parede. ⚠ sem gravação
-- `2:18.8` 🎥 corte: câmera fov 34
-- `2:19.8` 🎥 corte: câmera fov 40
-- `2:20.7` 🎥 corte: câmera fov 30
-- `2:21.6` 🎥 corte: câmera fov 42
-- `2:22.0` 🐢 **câmera lenta** (0.2 s do episódio, 5 vezes mais devagar: 1.0 s de vídeo)
-- `2:23.0` 🔊 lanca-parede
-- `2:23.0` 🎥 corte: câmera fov 34
-- `2:23.0` 🎥  fov 32
-- `2:24.8` 🔊 musica-saul (18 s)
+- `2:04.5` **SERVO** (preocupado): O rei está mal de novo. Chamem o Davi.
+- `2:07.3` 🔊 porta-madeira-passos
+- `2:07.3` 🎥 corte: câmera fov 44
+- `2:08.5` **REI SAUL** (quietly): Dez milhares...
+- `2:11.8` 🎥  fov 44
+- `2:15.4` 🔊 harpa-pastor (12 s)
+- `2:15.4` 🎥 corte: câmera fov 42
+- `2:17.6` 🎥 corte: câmera fov 42
+- `2:17.6` 🎥  fov 40
+- `2:21.8` 🎥 corte: câmera fov 38
+- `2:23.6` 🎥 corte: câmera fov 32
+- ⏸ **13.3 s sem fala**
+- `2:24.4` **REI SAUL** (quietly): Vou cravar o Davi na parede.
+- `2:27.0` 🎥 corte: câmera fov 34
+- `2:28.0` 🎥 corte: câmera fov 40
+- `2:28.9` 🎥 corte: câmera fov 30
+- `2:29.8` 🎥 corte: câmera fov 42
+- `2:30.2` 🐢 **câmera lenta** (0.2 s do episódio, 5 vezes mais devagar: 1.0 s de vídeo)
+- `2:31.2` 🔊 lanca-parede
+- `2:31.2` 🎥 corte: câmera fov 34
+- `2:31.2` 🎥  fov 32
+- `2:33.0` 🔊 musica-saul (18 s)
 - ⏸ **6.4 s sem fala**
-- `2:24.8` **Narrador**: Davi havia derrotado o gigante de Israel. Mas agora teria que enfrentar algo muito mais próximo. A inveja de um rei. ⚠ sem gravação
-- `2:33.4` 🟥 cartão final: "Você fugia do palácio ou ficava com o rei?" — FUGIR / FICAR — Comenta FUGIR ou FICAR 👇 e marca quem tá esperando a segunda temporada
-- `2:33.8` **Narrador**: Você fugia do palácio, ou ficava com o rei? Comenta aí. A segunda temporada vem aí. ⚠ sem gravação
+- `2:33.0` **Narrador**: Davi havia derrotado o gigante de Israel. Mas agora teria que enfrentar algo muito mais próximo. A inveja de um rei.
+- `2:41.6` 🟥 cartão final: "Você fugia do palácio ou ficava com o rei?" — FUGIR / FICAR — Comenta FUGIR ou FICAR 👇 e marca quem tá esperando a segunda temporada
+- `2:42.0` **Narrador**: Você fugia do palácio, ou ficava com o rei? Comenta aí. A segunda temporada vem aí.

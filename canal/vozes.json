@@ -108,11 +108,12 @@
     {
       "id": "33B4UnXyTNbgLmdEDh5P",
       "nome": "Keren",
-      "status": "teste",
+      "status": "aprovada",
       "usos": [
-        "ceu-vermelho/maria"
+        "ceu-vermelho/maria",
+        "davi-e-golias ep. 5 mulheres (primeiro verso da canção)"
       ],
-      "nota": "Da demo do céu vermelho; o autor não comentou."
+      "nota": "Da demo do céu vermelho; o autor não comentou. Aprovada pelo autor em 2026-11-18 (amostra do canto do ep. 5)."
     },
     {
       "id": "4dlXQwYXFHlCAUmQAu9j",
@@ -184,6 +185,36 @@
         "davi-e-golias ep. 1 saul"
       ],
       "nota": "Em algumas falas puxa para o português de Portugal. O ep. 1 ficou com ela."
+    },
+    {
+      "id": "lWq4KDY8znfkV0DrK8Vb",
+      "nome": "Yasmin Alves",
+      "status": "aprovada",
+      "usos": [
+        "davi-e-golias ep. 5 mulheres (segundo verso da canção)"
+      ],
+      "nota": "Leve, clara, musical. Aprovada pelo autor entre 5 amostras do canto (2026-11-18)."
+    },
+    {
+      "id": "GDzHdQOi6jjf8zaXhCYD",
+      "nome": "Raquel",
+      "status": "aprovada",
+      "usos": [],
+      "nota": "Expressiva. Aprovada pelo autor entre as amostras do canto do ep. 5 (2026-11-18), não usada ainda."
+    },
+    {
+      "id": "UZ8QqWVrz7tMdxiglcLh",
+      "nome": "Livia",
+      "status": "aprovada",
+      "usos": [],
+      "nota": "Calorosa, calma. Aprovada pelo autor entre as amostras do canto do ep. 5 (2026-11-18), não usada ainda."
+    },
+    {
+      "id": "iw7467blzNLEVe32avRC",
+      "nome": "Alcione",
+      "status": "teste",
+      "usos": [],
+      "nota": "O autor: não fica bom no canto \"dez milhares\" do ep. 5 (2026-11-18); não excluir, só não usar nessa frase."
     }
   ]
 }

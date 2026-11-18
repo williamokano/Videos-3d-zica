@@ -43,6 +43,8 @@ const voz = (m: CastMember, id: string): CastMember => ({ ...m, look: { ...m.loo
 const JAIRO = '362PVGN0qz9gh4Hb4qdA';
 const MANOEL = 'zoe2cQFqDDW4DteHDEWI';
 const ARNOLD = 'ZYCQDYoXnl78dNdU6JeG';
+const KEREN = '33B4UnXyTNbgLmdEDh5P';
+const YASMIN = 'lWq4KDY8znfkV0DrK8Vb';
 
 const rumo = (from: [number, number], to: [number, number]): number => (Math.atan2(-(to[0] - from[0]), -(to[1] - from[1])) * 180) / Math.PI;
 
@@ -53,7 +55,9 @@ const LENCOS = ['#f0e6d0', '#c4503a', '#f0e6d0', '#3a6a8a', '#e0c27a', '#efe3c8'
 const mulheres: CastMember[] = [[-3, -1.6], [-1.6, 1.8], [0.4, -2.6], [1.8, 1.4], [3.4, -1.2], [-0.4, 3.6]].map(([dx, dz], i) => ({
   id: `mulher-${i + 1}`, character: 'mulher', at: [PRACA[0] + dx, PRACA[1] + dz] as [number, number], yaw: 90,
   look: { name: 'Mulher', wear: [{ id: 'robe', color: ROUPAS[i], accent: '#e0c27a' }, { id: 'headwrap', color: LENCOS[i] }, 'sandals'] },
-}));
+}))
+  // Quem canta: a Keren puxa "Saul derrotou os seus milhares..." e a Yasmin Alves responde (escolha do autor: qualquer uma, menos a Alcione).
+  .map((m) => (['mulher-1', 'mulher-2'].includes(m.id!) ? voz(m, KEREN) : ['mulher-4', 'mulher-5'].includes(m.id!) ? voz(m, YASMIN) : m));
 /** Gente comum: túnica e lenço, sem capacete. */
 const gente = (id: string, at: [number, number], yaw: number, seed: number, name: string): CastMember => {
   const m = figurante(id, 'soldado', at, yaw, seed, name);
@@ -266,6 +270,7 @@ export default direct(
     d.wait(1.0);
 
     // ---- 4. Jônatas (0:52) ----
+    const alianca = d.now;
     // À beira da praça, o filho do rei observa o Davi. Ele se aproxima.
     saulP.behave('attend', { object: 'jonatas', mood: 'calm' });
     jonatas.behave('attend', { object: 'davi', mood: 'calm' });
@@ -319,6 +324,8 @@ export default direct(
     saulP.express('angry', { amount: 0.4 });
     d.wait(1.8);
     ambiente('festa-tamborins', cena, 0.5);
+    // Uma música calma por baixo da aliança, sob a festa.
+    ambiente('musica-escudeiro', alianca, 0.7);
 
     // ---- 5. A janela (1:22) ----
     // Noite. O rei, sozinho à janela do salão. Lá embaixo, as fogueiras e o povo ainda cantando.
@@ -361,6 +368,8 @@ export default direct(
     d.camera.cut({ pos: [JANELA[0] + 0.1, 1.85, JANELA[1] + 1.3], lookAt: [JANELA[0], 1.8, JANELA[1] - 0.75], fov: 30 });
     d.wait(2.2);
     ambiente('palacio-noite', cena, 0.6);
+    // A tensão da janela: o rei entende a canção.
+    ambiente('musica-ameaca', cena, 0.8);
 
     // ---- 6. A lança (1:55) ----
     // Outra noite. O salão quase sem luz. O rei, no trono, encolhido: o espírito mau, só no comportamento.
