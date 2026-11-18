@@ -76,7 +76,7 @@ Cenários bem detalhados, com vida e som próprios:
   - o guarda das bagagens.
 - **Tenda do rei Saul:** tapetes, almofadas, baús, mesa baixa com jarra, lança e luz entrando pela abertura.
 - **Monte dos filisteus:** com as tendas deles, os estandartes e os soldados de capacete de penacho.
-- **Cidade de Israel** (ep. 5): portão de pedra, praça, casas com terraço, palmeiras e um poço.
+- **Gibeá, a cidade do rei** (ep. 5, `world/gibea.json`): a estrada, o portão de pedra, a praça da festa com casas de terraço, palmeiras, um poço e fogueiras; no lado norte, o palácio, com o mesmo salão do trono dos eps. 1 e 2, agora com a porta e uma janela dando para a praça.
 
 ## Personagens
 

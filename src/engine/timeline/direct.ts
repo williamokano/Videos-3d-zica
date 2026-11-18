@@ -192,6 +192,12 @@ export interface Director {
   world: {
     /** Bring a rule of the bible into effect (true or 1), or out of it; with `duration`, gradually. */
     rule(id: string, on: boolean | number, options?: StepOptions): Step;
+    /**
+     * The picture goes to black (`true`, or how far, 0 to 1) or comes back (`false`): a cut to black is
+     * `blackout(true)` (instant), a fade is `blackout(true, { duration: 1 })`. Sound, subtitles and the end card
+     * go on over the black. For what is only heard (the spear in the dark).
+     */
+    blackout(on: boolean | number, options?: StepOptions): Step;
     /** Phones get or lose signal everywhere. */
     network(on: boolean, options?: StepOptions): Step;
   };
@@ -518,6 +524,7 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     world: {
       rule: (id, on, options) => run(WORLD, 'set', { channel: `rule.${id}`, value: Number(on) }, { duration: 0, ...options }),
       network: (on, options) => run(WORLD, 'set', { channel: 'network', value: Number(on) }, { duration: 0, ...options }),
+      blackout: (on, options) => run(WORLD, 'set', { channel: 'black', value: Math.max(0, Math.min(1, Number(on))) }, { duration: 0, ...options }),
     },
     camera: {
       cut: (shot) => key({ ...shot, cut: keys.length > 0 || undefined }),

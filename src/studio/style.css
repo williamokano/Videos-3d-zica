@@ -136,6 +136,9 @@ body.render #panel, body.render #hint, body.render #preview-label, body.render .
 body.render #viewport { display: block; width: var(--frame-w); height: var(--frame-h); }
 body.render #stage { width: var(--frame-w); height: var(--frame-h); flex: none; }
 
+#blackout { position: absolute; background: #000; pointer-events: none; }
+#blackout[hidden] { display: none; }
+
 #subtitle {
   position: absolute;
   padding: 0.35em 0.7em;

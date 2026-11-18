@@ -14,6 +14,12 @@ const axes = (yaw: number): { ahead: [number, number]; right: [number, number] }
   return { ahead: [-Math.sin(a), -Math.cos(a)], right: [Math.cos(a), -Math.sin(a)] };
 };
 
+/**
+ * Pieces put on someone else without passing them over the head, and how high the hand takes them, in meters of
+ * the standard body: a cloak is laid over the shoulders, a sash is wrapped round the waist.
+ */
+const LAID_ON: Record<string, number> = { cloak: 1.52, sash: 1.0 };
+
 /** Pieces worn on the body, not on the head: they go on and come off over the head down to the chest. */
 const ON_THE_CHEST = new Set(['scaleArmor', 'vest', 'cloak', 'tunic', 'robe']);
 
@@ -43,7 +49,7 @@ function wearChannel(ctx: ActionContext, who: string, wear: string): string {
 
 registerAction({
   id: 'don',
-  description: 'Quem segura o item (um capacete, uma couraça) veste alguém com ele. Em outra pessoa: a mão leva o item por cima da cabeça dela e desce. Em si mesmo ("on" é quem segura, na mão direita, com a esquerda livre): as duas mãos levam o item por cima da cabeça e o descem até a cabeça ou o peito, o contrário de um "doff". O item some da mão e a peça "wear" aparece no corpo (a peça precisa estar na ficha, escondida). Depois, o item fica com quem vestiu, guardado, para um "doff".',
+  description: 'Quem segura o item (um capacete, uma couraça) veste alguém com ele. Em outra pessoa: a mão leva o item por cima da cabeça dela e desce; o manto (cloak) ela põe sobre os ombros, e a faixa (sash) na cintura. Em si mesmo ("on" é quem segura, na mão direita, com a esquerda livre): as duas mãos levam o item por cima da cabeça e o descem até a cabeça ou o peito, o contrário de um "doff". O item some da mão e a peça "wear" aparece no corpo (a peça precisa estar na ficha, escondida). Depois, o item fica com quem vestiu, guardado, para um "doff".',
   appliesTo: ['item'],
   params: {
     on: { type: 'string', description: 'quem é vestido', required: true },
@@ -65,10 +71,12 @@ registerAction({
     const scale = who.traits.bodyScale ?? 1;
     const top = place.pos[1] + (who.traits.eyeHeight ?? 1.6 * scale) + 0.17 * scale;
     const low = placeOfWear(ctx, wear) === 'chest' ? place.pos[1] + 1.25 * scale : top;
-    const over: Point3 = [place.pos[0], top + 0.22 * scale, place.pos[2]];
+    // A cloak is laid on the shoulders, a sash wrapped round the waist: the hand goes only to them.
+    const laid = ctx.params.place === undefined ? LAID_ON[wear] : undefined;
+    const over: Point3 = [place.pos[0], laid !== undefined ? place.pos[1] + laid * scale : top + 0.22 * scale, place.pos[2]];
     const DOWN = 0.68;
     const amount = (u: number): number => Math.min(ramp(u, 0, 0.3), 1 - ramp(u, 0.8, 1));
-    const height = (u: number): number => over[1] + (low - over[1]) * ramp(u, 0.35, DOWN);
+    const height = (u: number): number => (laid !== undefined ? over[1] : over[1] + (low - over[1]) * ramp(u, 0.35, DOWN));
     const writes = reach(ctx, by, side!, over, amount, `a cabeça de "${on}"`).map((w): ChannelWrite => (w.channel === `reach${side}.y` ? { ...w, at: height } : w));
     return {
       writes: [

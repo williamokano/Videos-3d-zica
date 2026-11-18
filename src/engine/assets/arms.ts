@@ -366,6 +366,35 @@ registerAsset('arms.helmet', 'Capacete de bronze redondo, com ponta e protetor d
   return g;
 });
 
+registerAsset('arms.cloth', 'Pano solto na mão: um manto dobrado ao meio, pendurado de onde a mão segura (`kind: "cloak"`), ou uma faixa de cintura enrolada (`kind: "sash"`). É a peça de roupa cloak ou sash fora do corpo, para tirar com "doff", entregar com "give" e vestir com "don". Pegável pela borda de cima (params: kind, color, accent — a barra do manto ou a listra da faixa)', (p) => {
+  const kind = String(p.kind ?? 'cloak');
+  const color = String(p.color ?? '#2f56a8');
+  const accent = p.accent === undefined ? undefined : String(p.accent);
+  const g = new THREE.Group();
+  if (kind === 'sash') {
+    // Enrolada: um rolo curto e as duas pontas caindo.
+    g.add(rbox(0.12, 0.09, 0.09, color, [0, 0.42, 0], 0.035));
+    for (const s of [-1, 1]) {
+      g.add(rbox(0.07, 0.36, 0.02, color, [s * 0.035, 0.2, 0.01 * s], 0.008));
+      if (accent) g.add(rbox(0.072, 0.02, 0.022, accent, [s * 0.035, 0.05, 0.01 * s], 0.004));
+    }
+    g.userData.grip = [0, 0.44, 0];
+    return g;
+  }
+  // O manto dobrado ao meio: três dobras verticais, levemente em leque, com a barra embaixo.
+  const [w, h] = [0.5, 0.82];
+  for (const [i, x] of [-1, 0, 1].entries()) {
+    const fold = rbox(w / 3 + 0.02, h, 0.025, color, [x * (w / 3), h / 2, (i % 2) * 0.03], 0.01);
+    fold.rotation.y = x * 0.18;
+    g.add(fold);
+    if (accent) g.add(rbox(w / 3 + 0.024, 0.04, 0.029, accent, [x * (w / 3), 0.05, (i % 2) * 0.03], 0.006));
+  }
+  // A borda de cima, dobrada, por onde a mão segura.
+  g.add(rbox(w + 0.04, 0.05, 0.06, color, [0, h, 0.015], 0.02));
+  g.userData.grip = [0, h, 0.015];
+  return g;
+});
+
 registerAsset('arms.armor', 'Couraça de escamas de bronze, solta (a peça de roupa scaleArmor fora do corpo, para vestir com "don" e tirar com "doff"): peito, barriga e ombreiras. Pegável, pelos ombros (params: size, a largura, padrão 0.45; color)', (p) => {
   const w = num(p.size, 0.45);
   const color = String(p.color ?? BRONZE);

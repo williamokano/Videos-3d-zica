@@ -48,6 +48,7 @@ export default direct(
 | `d.phone('celular')` | a tela de um celular: `setup({...})`, `receive(texto)`, `send(texto)`, `typing(true)`, `open(chat)`, `screen(false)`, `network(false)`. Acontecem na hora |
 | `d.world.rule('id', true, { duration })` | faz uma regra da bíblia entrar (ou sair) aos poucos, ex.: o céu ficando vermelho |
 | `d.world.network(false)` | cai o sinal de todos os celulares |
+| `d.world.blackout(true)` / `d.world.blackout(false, { duration: 1 })` | a imagem vai ao preto (corte seco, ou em fade com `duration`) e volta; o som, as legendas, o narrador e o cartão final continuam por cima. Para o que só se ouve (a lança no escuro) |
 | `d.camera.cut({ pos, lookAt, fov })` | corta para uma câmera posta à mão |
 | `d.camera.moveTo({ pos, lookAt })` | dentro do plano atual: a câmera se move e chega aqui agora |
 | `d.camera.fpv(ana)`, `d.camera.thirdPerson(ana, { distance, height })` | corta para a câmera presa ao personagem |
@@ -59,7 +60,7 @@ export default direct(
 | `d.do(ana, 'fall', {}, { ease: 'linear' })` | cai duro de frente, girando nos pés, e fica de bruços |
 | `d.do('pedra', 'throw', { hit: 'golias', speed }, { ease: 'linear' })` | quem segura o item o arremessa (braço por cima do ombro); voa em arco até `to` ou até a testa de `hit`, com rastro se for `arms.stone`. `with: 'funda'` solta da funda; `stick: true` crava (some no impacto: mostre a peça `foreheadStone`) |
 | `d.do(ana, 'move', { name: 'lumber' })` / `'stagger'` | andar pesado e desajeitado (armadura grande, passo de gigante); cambalear depois de um golpe (cabeça para trás, joelhos moles), antes do `fall` |
-| `d.do('capacete', 'don', { on: 'davi', wear: 'bronzeHelmet' })` / `d.do('capacete', 'doff', { wear })` | quem segura veste outra pessoa (a mão desce o item na cabeça; a peça da ficha aparece); quem veste tira com as duas mãos por cima da cabeça e fica com o item na mão direita. Props `arms.helmet` e `arms.armor`; peça com `size` (ex.: 1.2) fica grande demais |
+| `d.do('capacete', 'don', { on: 'davi', wear: 'bronzeHelmet' })` / `d.do('capacete', 'doff', { wear })` | quem segura veste outra pessoa (a mão desce o item na cabeça; a peça da ficha aparece); quem veste tira com as duas mãos por cima da cabeça e fica com o item na mão direita. Props `arms.helmet` e `arms.armor`; peça com `size` (ex.: 1.2) fica grande demais. Manto e faixa soltos: `arms.cloth` (`kind: 'cloak'` ou `'sash'`, com `color` e `accent` iguais aos da peça); em outra pessoa o manto vai nos ombros e a faixa na cintura, sem passar pela cabeça. Para dar o que está vestido: `doff` em quem usa, chegar perto (até 0,8 m) e `don` no outro |
 | `pickUp(item, { bag: true })`, `putAway(item, { bag: true })` | tira ou guarda no alforje do quadril esquerdo, não no bolso |
 | `d.do('funda', 'load', { with: 'pedra' })`, `d.do('funda', 'whirl', {}, { duration, ease: 'linear' })` | põe na funda a pedra da outra mão; gira a funda acima da cabeça no compasso da mão (depois `throw` com `with`; desfaça com move `sling` 0) |
 | `d.do('espada', 'draw', { by: 'davi', from: 'golias' })` | tira a espada da bainha de alguém (de pé ou caído) e a ergue; a ficha dele precisa de `scabbard` e `scabbardEmpty` escondida |

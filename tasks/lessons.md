@@ -49,3 +49,9 @@
 - **Plano por cima do ombro no vertical é alto, não de lado.** Com a câmera 0,4 m ao lado da cabeça de quem ouve, ele some do quadro estreito e o plano vira um solo. O que funciona: quase atrás de quem ouve, alto o bastante para a linha até o queixo de quem fala passar sobre a cabeça dele (`overShot` em `direct.ts`).
 - **Conferir a imagem mesmo quando o revisor diz "nada a apontar".** A conta da linha de visão passou com o rosto do policial encostado no alto da cabeça do gigante; só o quadro mostrou. O revisor agora confere olhos, boca e queixo.
 - **Medida já escalada não se escala de novo.** `traits.headRadius` já vem no tamanho do corpo; multiplicar pela escala inventou um gigante com o dobro de cabeça e um aviso falso.
+
+## Ep. 5 de Davi (2026-11-18)
+
+- **Personagem em dois lugares do elenco aparece duas vezes.** O "Saul da janela" (cena da noite) estava parado no salão de dia e apareceu pela janela num plano da praça, com o outro Saul na porta. Quem tem uma entrada por lugar fica fora do caminho das câmeras dos outros lugares; confira as janelas e portas ao fundo dos planos.
+- **Folha de contato pega o que o revisor não pega.** O revisor zerou e a folha ainda mostrou câmera atrás de cabeça, objeto grande na frente da lente e o personagem principal de costas. Rode o revisor e depois olhe a folha inteira, sempre.
+- **Câmera fixa de quem anda: calcule pelo lugar onde a pessoa vai estar** (as posições no instante, por `d.where` ou um script), não pelo lugar de onde ela sai.

@@ -122,3 +122,15 @@ Episódio:
 - [x] 4. Animais que andam: passo de quatro tempos com casco parado no apoio e fase pela distância andada (`assets/gait.ts`), no jumento e nas ovelhas; banco em `demo-acoes` ep. 8; `look --wide` não sai mais preto no primeiro quadro
 - [x] 5. Dividir `assets/ancient.ts`: um arquivo por parte do kit em `assets/ancient/` (kit, camp, royal-tent, nature, town, sheep, lamps, cattle, palace, house); `ASSETS.md` e quadros do ep. 3 idênticos byte a byte
   - Achados nos eps. já publicados (1 a 4) ficam como estão, por decisão do autor (2026-11-17): o revisor vale do ep. 5 em diante.
+
+## 14. Episódio 5 — De herói a ameaça (2026-11-18)
+
+- [x] Roteiro v3 (`roteiros/005-roteiro.md`); decisões delegadas pelo autor: abertura com a lança, liberdades, cartão FUGIR / FICAR
+- [x] Lugar novo: Gibeá (`world/gerar-gibea.py`), com o salão do trono compartilhado (`world/sala_saul.py`; `belem.json` idêntico)
+- [x] Motor: `d.world.blackout`, `arms.cloth` (manto e faixa soltos), `don` de manto nos ombros e faixa na cintura
+- [x] `episodes/005.ts` (2:40,5), revisor sem erros, prévia muda em tamanho cheio no NAS (`Videos Curtos/Davi/ep05/`)
+- [ ] Revisão do autor (prévia muda)
+- [ ] Teste de voz do Jônatas (3 a 6 candidatas) e amostra do Abner (Paulo); vozes das mulheres, do morador, do menino e do servo
+- [ ] Sons novos (`festa-tamborins`, `lanca-parede`) e `npm run voz`
+- [ ] Render final, `publicar`, e com "pode" `agendar` (token do YouTube vence por volta de 24/11)
+- [ ] Revisor: a parede de uma janela conta como inteira (aviso falso em "fala-tapada" pela janela); conferir "a mesma pessoa duas vezes no quadro"

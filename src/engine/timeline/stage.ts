@@ -34,13 +34,13 @@ export function buildCast(episode: Episode, characters: CharacterDef[], rigs: Re
 export const WORLD = 'world';
 
 /**
- * The state of the world as an object actions can animate. Channels: `network` (1 while phones have signal)
- * and one `rule.<id>` per rule of the bible, from 0 to 1: how much the rule is in effect. A rule that holds
+ * The state of the world as an object actions can animate. Channels: `network` (1 while phones have signal),
+ * `black` (how far the picture has gone to black, 0 to 1: `d.blackout`) and one `rule.<id>` per rule of the bible, from 0 to 1: how much the rule is in effect. A rule that holds
  * in this episode starts at 1; an episode in which it comes true starts by setting it to 0.
  */
 export function buildWorld(bible?: Bible, episode = 1): InteractiveObject {
   const active = new Set(bible ? activeRules(bible, episode).map((r) => r.id) : []);
-  const channels: Record<string, number> = { network: 1 };
+  const channels: Record<string, number> = { network: 1, black: 0 };
   for (const rule of bible?.rules ?? []) channels[`rule.${rule.id}`] = active.has(rule.id) ? 1 : 0;
   const state = { ...channels };
   return {

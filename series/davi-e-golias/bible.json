@@ -322,6 +322,17 @@
           "tone": "grito"
         },
         "volume": 0.55
+      },
+      "festa-tamborins": {
+        "prompt": "ancient town square celebration in daylight, many frame drums and tambourines beating a joyful rhythm, women ululating and clapping, crowd cheering in the distance, no modern instruments, no words",
+        "duration": 15,
+        "loop": true,
+        "volume": 0.3
+      },
+      "lanca-parede": {
+        "prompt": "a heavy spear thrown hard and striking a stone wall in a dark hall, sharp wooden thunk and a short shuddering vibration of the shaft, then silence, short",
+        "duration": 2,
+        "volume": 0.8
       }
     }
   },

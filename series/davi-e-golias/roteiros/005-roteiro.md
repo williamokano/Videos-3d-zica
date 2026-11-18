@@ -1,5 +1,7 @@
 # Episódio 5 — "De herói a ameaça" (roteiro, versão 3)
 
+**Decisões (2026-11-18):** o autor deixou as escolhas abertas comigo ("faz o que você achar melhor"). Ficam: a abertura com a mão na lança, as liberdades marcadas e o cartão FUGIR / FICAR.
+
 A partir do texto do autor em [`005-pedido.md`](005-pedido.md), das [orientações](orientacoes-do-autor.md) e de 1 Samuel 18:1-11. Este é o roteiro de trabalho: o que está aqui vira `episodes/005.ts`. O ep. 4 termina com Israel descendo o monte e o narrador dizendo "No próximo episódio: de herói a ameaça". O ep. 5 começa na volta e não repete nada da luta.
 
 Legenda: **[GANCHO]**, **(tom)**, *itálico* é ação, **Câmera:**, `⏸` é pausa, **[Liberdade]**, **Sugestão**.
@@ -48,7 +50,7 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 
 ## 3. "Ficas na minha casa" (0:38–0:52)
 
-*Na escada do palácio, o Saul para e chama o Davi. O povo abre caminho.*
+*Na frente do palácio, o Saul para e chama o Davi. O povo abre caminho.*
 
 - **SAUL** (firme): Davi. ⏸ De hoje em diante, ficas na minha casa. ⏸ Não voltas mais para as ovelhas do teu pai.
 - **DAVI**: Teu servo fará o que o rei mandar.
@@ -78,7 +80,7 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 
 - **JÔNATAS** (firme): A partir de hoje, és meu irmão. ⏸ Eu te amo como à minha própria vida.
 
-*Eles apertam os antebraços. No alto da escada, no fundo do quadro, o Saul vê o filho dar o manto real ao pastor.*
+*Na porta do palácio, no fundo do quadro, o Saul vê o filho dar o manto real ao pastor.*
 
 ## 5. A janela (1:22–1:55)
 
@@ -107,6 +109,7 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 *Outro dia. O salão do trono, quase sem luz, as tochas baixas. O Saul anda de um lado para o outro, falando sozinho, as mãos na cabeça (o espírito mau, só no comportamento).*
 
 - **SERVO** (preocupado): O rei está mal de novo. ⏸ Chamem o Davi.
+- **SAUL** (baixo, sozinho): Dez milhares... **[Liberdade]**
 
 *O Davi entra com a harpa, ainda com o manto azul do Jônatas. Senta num banco e toca, como no ep. 2. O Saul se senta no trono, com uma lança na mão.*
 
@@ -158,7 +161,15 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 - **Cartão final:** é sobre a ação do Davi, com custo nas duas opções. Fugir é perder a corte e o amigo; ficar é ficar ao alcance da lança.
 - **Sem "A maioria de vocês disse…":** o ep. 4 ainda não saiu, então não há voto. Se ele sair antes e houver resultado, cabe uma linha do narrador depois do título.
 
-## O que a engine precisa
+## Na implementação (`episodes/005.ts`)
+
+- Lugar novo, **Gibeá** (`world/gerar-gibea.py`): estrada, portão, a praça da festa e o palácio, com o mesmo salão do trono dos eps. 1 e 2 (`world/sala_saul.py`), agora com a porta e a janela dando para a praça.
+- Os presentes passam de mão em mão: o Jônatas tira o manto (`doff`) e põe nos ombros do Davi (`don`), tira a espada da bainha e entrega (`draw`, `give`), tira o cinto e amarra na cintura dele, e entrega o arco.
+- Os diálogos parados saem pelo `d.conversa` (plano por cima do ombro e contraplano).
+- O corte para preto da lança é o `d.world.blackout`; os sons novos são `festa-tamborins` e `lanca-parede`.
+- Sem escada na frente do palácio: o rei para na porta, no chão da praça.
+
+## O que a engine precisava (feito)
 
 - **Já existe:**
   - a cidade com portão e praça, o povo, as mulheres com tamborins (versão antiga do `005.ts`);

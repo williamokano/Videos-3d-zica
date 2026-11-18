@@ -29,21 +29,10 @@ O Instagram do canal ainda não está no publicador: lá a postagem é manual.
 - Fica como saiu: as correções que o revisor achou nele não se aplicam (decisão do autor). Valem do ep. 5 em diante.
 - **Token do YouTube vence por volta de 24/11** (app OAuth em "Testing"). Para emitir outro: URL de autorização com `client_id` da conexão, `redirect_uri=http://localhost`, `access_type=offline`, `prompt=consent` e os escopos `youtube.upload youtube.force-ssl yt-analytics.readonly`; o autor manda o endereço de retorno e o client secret; troca em `https://oauth2.googleapis.com/token` e `edit_connection` com o `refresh_token`. Em 2026-11-18 o client secret guardado também foi recusado (`invalid_client`); o secret que o autor passou foi posto na conexão. Os quatro eps. do Selado que falharam (16/11 e 17/11) saíram em 2026-11-18 00:18 UTC, com o "pode" do autor: d0GVrx4x_Zg, Vxue7oSQGZs, s0fGb_4hPnQ, ZVjTh5luLqQ. O comentário do ep. 4 de Davi também foi postado.
 
-### Episódio 5, "De herói a ameaça": A FAZER
-- Bíblia (`series/davi-e-golias/biblia.md`, tabela de episódios e cânone):
-  - o povo canta "Saul matou os seus milhares, e Davi os seus dez milhares";
-  - o Jônatas dá ao Davi manto, espada, arco e cinto e faz aliança com ele (18:1-4);
-  - o Saul ouve a canção e passa a invejar (18:6-9);
-  - numa noite, enquanto o Davi toca a harpa, o Saul atira a lança, e o Davi se desvia (18:10-11);
-  - fim da temporada.
-- `series/davi-e-golias/episodes/005.ts` existe, mas é a versão antiga ("Dez milhares"): ainda mostra a pedra, a queda e a espada, que agora são do ep. 4. Reescreva pelo `roteiros/005-roteiro.md` (v2), sem repetir o ep. 4. O ep. 4 termina com Israel descendo o monte e o narrador: "No próximo episódio: de herói a ameaça."
-- Fluxo:
-  1. Use a skill `write-episode`. Grave `roteiros/005-pedido.md`, depois `005-roteiro.md`. Implemente `episodes/005.ts` (skill `direct-actions`) e rode `npm run roteiro`.
-  2. Faça a prévia muda com `npm run render -- --series davi-e-golias --ep 5 --scale 1 --no-audio --out out/davi-e-golias/ep005/davi-e-golias-ep005-previa.mp4` e ponha em `Videos Curtos/Davi/ep05/previa.mp4` + `roteiro.md` no NAS.
-  3. Espere a revisão do autor. Só depois rode `npm run voz` e o render final, nesta ordem: NAS, `publicar` e, com "pode", `agendar`.
-- Personagens novos com nome (Jônatas já tem ficha; as mulheres que cantam são figurantes) ganham ficha (`create-character`). Quem fala e não tem voz passa pelo teste de voz com o autor. Para figurantes, prefira vozes já `aprovada`s em `canal/vozes.json` que não falam no mesmo episódio.
-- A lança do Saul (18:11): o Davi se desvia, e a série corta no som (ponta solta na bíblia).
-- Limite de 3:00 (Instagram); mire em ~2:40.
+### Episódio 5, "De herói a ameaça": PRÉVIA MUDA NO NAS, esperando a revisão do autor
+- `series/davi-e-golias/episodes/005.ts` (2:40,5), em Gibeá (`world/gibea.json`). Roteiro v3 em `roteiros/005-roteiro.md`; marcado em `005-marcado.md`.
+- No NAS: `Videos Curtos/Davi/ep05/previa.mp4`, `roteiro.md` e as duas folhas de contato.
+- Depois da revisão: teste de voz do Jônatas e amostra do Abner (Paulo), vozes dos figurantes (`canal/vozes.json`, aprovadas que não falam no episódio), `npm run voz` (gera também `festa-tamborins` e `lanca-parede`), render final, `publicar` e, com "pode", `agendar`.
 
 ### Recursos novos do motor (use; documentados na skill `direct-actions`)
 - **Entregar e vestir:**

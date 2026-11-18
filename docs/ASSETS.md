@@ -323,6 +323,12 @@ Arco de madeira com a corda, em pé; pegável, pelo meio (params: size, a altura
 
 - **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
 
+### `arms.cloth`
+
+Pano solto na mão: um manto dobrado ao meio, pendurado de onde a mão segura (`kind: "cloak"`), ou uma faixa de cintura enrolada (`kind: "sash"`). É a peça de roupa cloak ou sash fora do corpo, para tirar com "doff", entregar com "give" e vestir com "don". Pegável pela borda de cima (params: kind, color, accent — a barra do manto ou a listra da faixa)
+
+- **pickUp / putDown / putAway**: pegar, largar e guardar no bolso (com "pickable" ou "pocketOf")
+
 ### `arms.helmet`
 
 Capacete de bronze redondo, com ponta e protetor de nuca, solto (o mesmo da peça de roupa bronzeHelmet, para vestir com "don" e tirar com "doff"). Pegável, pela borda (params: size, o raio da cabeça, padrão 0.16; color)

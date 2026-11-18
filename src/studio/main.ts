@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '../engine/assets';
-import { evaluateActions, type CompiledActions } from '../engine/actions/catalog';
+import { channelAt, evaluateActions, type CompiledActions } from '../engine/actions/catalog';
 import { loadGlbCharacter } from '../engine/character/glb';
 import type { CharacterDef, CharacterRig } from '../engine/character/types';
-import { applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpisode } from '../engine/timeline/stage';
+import { WORLD, applyStage, buildCast, buildProps, buildWorld, cameraStage, compileEpisode } from '../engine/timeline/stage';
 import { activeRules, resolveEnvironment, resolveGrade, resolveStyle, type Bible } from '../engine/bible';
 import { EnvironmentRig } from '../engine/environment';
 import { GradePass } from '../engine/grade';
@@ -61,6 +61,11 @@ const stage = document.getElementById('stage')!;
 const hint = document.getElementById('hint')!;
 const panel = document.getElementById('panel')!;
 const previewLabel = document.getElementById('preview-label')!;
+// The picture gone to black (d.world.blackout): over the 3D picture, under the subtitles and the cards.
+const blackout = document.createElement('div');
+blackout.id = 'blackout';
+blackout.hidden = true;
+stage.append(blackout);
 // Spoken lines, shown while there is no voice. ?subs=0 leaves them out of a render.
 const subtitle = document.createElement('div');
 subtitle.id = 'subtitle';
@@ -212,6 +217,7 @@ function applyShot(t: number): void {
   shotCamera.fov = pose.fov;
   shotCamera.updateProjectionMatrix();
   shotCamera.updateMatrixWorld();
+  showBlackout(t);
   showLine(t);
   showEndCard(t);
   showTitleCard(t);
@@ -260,6 +266,15 @@ function showLine(t: number): void {
 }
 
 /** The end card at time t, drawn over the episode camera's picture. Sizes follow the height of the frame. */
+/** How far the episode picture has gone to black at time t (the world's `black` channel). */
+function showBlackout(t: number): void {
+  const black = (mode === 'shot' || rendering) ? channelAt(actions, WORLD, 'black', t) : 0;
+  blackout.hidden = !(black > 0.001);
+  if (blackout.hidden) return;
+  const [x, y, w, h] = fit(0, 0, width, height);
+  Object.assign(blackout.style, { left: `${x}px`, bottom: `${y}px`, width: `${w}px`, height: `${h}px`, opacity: String(Math.min(1, black)) });
+}
+
 function showEndCard(t: number): void {
   const view = (mode === 'shot' || rendering) ? endCardAt(actions, t) : undefined;
   endCard.hidden = !view;
@@ -394,6 +409,7 @@ function setMode(next: Mode): void {
   }
   // Subtitles and the end card belong to the episode camera's view only.
   if (timeline) {
+    showBlackout(timeline.time);
     showLine(timeline.time);
     showEndCard(timeline.time);
     showTitleCard(timeline.time);
