@@ -125,7 +125,7 @@ registerAction({
       ...(launcher
         ? [
             ...('loaded' in sling ? [{ target: launcher, channel: 'loaded', at: (u: number) => (u < release ? 1 : 0) }] : []),
-            ...('overhead' in sling ? [{ target: launcher, channel: 'overhead', at: (u: number) => (u < release ? ctx.current('overhead', launcher!) : 0) }] : []),
+            ...('overhead' in sling ? [{ target: launcher, channel: 'overhead', at: ((was: number) => (u: number) => (u < release ? was : 0))(ctx.current('overhead', launcher!)) }] : []),
             ...('spin' in sling ? [{ target: launcher, channel: 'spin', at: (u: number) => (u < release ? spun : Math.round(spun)) }] : []),
           ]
         : [
@@ -203,7 +203,7 @@ registerAction({
         ...reachBody(by, side!, [sign * 0.2, 1.4, -0.42], outAndBack(0.3, 0.78)),
         ...reachBody(by, other!, [sign * 0.16, 0.93, -0.4], outAndBack(0.4, 0.7)),
         { target: by, channel: `carry${other}`, at: (u) => 1 - ramp(u, IN, IN + 0.1) },
-        { channel: 'loaded', at: (u) => (u < IN ? ctx.current('loaded') : 1) },
+        { channel: 'loaded', at: ((was: number) => (u: number) => (u < IN ? was : 1))(ctx.current('loaded')) },
       ],
       detach: { target: stone, at: IN },
       attach: { target: stone, to: by, socket: 'pocket', at: IN },

@@ -75,6 +75,8 @@ registerAction({
     const laid = ctx.params.place === undefined ? LAID_ON[wear] : undefined;
     const over: Point3 = [place.pos[0], laid !== undefined ? place.pos[1] + laid * scale : top + 0.22 * scale, place.pos[2]];
     const DOWN = 0.68;
+    // Read now: inside `at` it would be read while the frames are drawn, when this very clip has already put it on.
+    const was = ctx.current(channel, on);
     const amount = (u: number): number => Math.min(ramp(u, 0, 0.3), 1 - ramp(u, 0.8, 1));
     const height = (u: number): number => (laid !== undefined ? over[1] : over[1] + (low - over[1]) * ramp(u, 0.35, DOWN));
     const writes = reach(ctx, by, side!, over, amount, `a cabeça de "${on}"`).map((w): ChannelWrite => (w.channel === `reach${side}.y` ? { ...w, at: height } : w));
@@ -82,7 +84,7 @@ registerAction({
       writes: [
         ...writes,
         { target: by, channel: `carry${side}`, at: (u) => 1 - ramp(u, DOWN, DOWN + 0.08) },
-        { target: on, channel, at: (u) => (u < DOWN ? ctx.current(channel, on) : 1) },
+        { target: on, channel, at: (u) => (u < DOWN ? was : 1) },
         { channel: 'held', at: (u) => (u < DOWN ? 1 : 0) },
       ],
       detach: { at: DOWN },
@@ -101,6 +103,8 @@ function donSelf(ctx: ActionContext, by: string, side: 'L' | 'R') {
   // In meters of the standard body, as in "doff", the other way round: in front of the chest, up over the head,
   // and down to where the piece sits; it is on as the hands get there.
   const ON = 0.68;
+  // Read now, not inside `at` (see the other "don").
+  const was = ctx.current(channel, by);
   const fit = chest ? [0.21, 1.0, -0.14] : [0.15, 1.7, -0.03];
   const keys = (sign: number): [number, Point3][] => [
     [0, [sign * 0.11, 1.2, -0.34]],
@@ -122,7 +126,7 @@ function donSelf(ctx: ActionContext, by: string, side: 'L' | 'R') {
     writes: [
       ...writes,
       { target: by, channel: 'carryR', at: (u: number) => 1 - ramp(u, ON, ON + 0.05) },
-      { target: by, channel, at: (u: number) => (u < ON ? ctx.current(channel, by) : 1) },
+      { target: by, channel, at: (u: number) => (u < ON ? was : 1) },
       { channel: 'held', at: (u: number) => (u < ON ? 1 : 0) },
     ],
     detach: { at: ON },

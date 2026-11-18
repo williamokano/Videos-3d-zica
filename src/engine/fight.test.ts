@@ -56,6 +56,26 @@ describe('the fight', () => {
     expect(channelAt(compiled, 'davi', 'carryR', end)).toBeCloseTo(1);
   });
 
+  it('what is put on shows on the body only when the hand gets there, never in the hand and on the body at once', () => {
+    // The last thing done with the piece: nothing after it to hide a value read at the wrong time (DAVI ep. 5).
+    const { compiled } = play([{ id: 'capacete', asset: 'arms.helmet', pos: [0, 0], pocketOf: 'saul' }, { id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi' }, { id: 'pedra', asset: 'arms.stone', pos: [0, 0], pocketOf: 'davi' }], (d) => {
+      d.actor('saul').pickUp('capacete');
+      d.do('capacete', 'don', { on: 'davi', wear: 'bronzeHelmet' });
+      d.actor('davi').pickUp('funda', { hand: 'right', bag: true });
+      d.actor('davi').pickUp('pedra', { hand: 'left', bag: true });
+      d.do('funda', 'load', { with: 'pedra' });
+    });
+    const don = compiled.clips.find((c) => c.action === 'don')!;
+    for (const u of [0.05, 0.3, 0.6]) {
+      expect(channelAt(compiled, 'davi', 'wear.bronzeHelmet', don.t + don.duration * u), `aos ${u}`).toBe(0);
+      expect(evaluateLinks(compiled, don.t + don.duration * u).find((l) => l.target === 'capacete')).toMatchObject({ to: 'saul' });
+    }
+    expect(channelAt(compiled, 'davi', 'wear.bronzeHelmet', don.t + don.duration)).toBe(1);
+    const load = compiled.clips.find((c) => c.action === 'load')!;
+    expect(channelAt(compiled, 'funda', 'loaded', load.t + load.duration * 0.1)).toBe(0);
+    expect(channelAt(compiled, 'funda', 'loaded', load.t + load.duration)).toBe(1);
+  });
+
   it('stones go in the bag; one goes in the sling, which spins over the head in step with the hand', () => {
     const { compiled } = play([
       { id: 'funda', asset: 'arms.sling', pos: [0, 0], pocketOf: 'davi' },

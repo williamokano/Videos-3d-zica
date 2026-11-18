@@ -140,15 +140,19 @@ export default direct(
     saul.pickUp('lanca', { hand: 'right', duration: 0.3 });
 
     // ---- 1. Gancho (0:00) ----
-    // [Sugestão aceita] Escuro. Uma harpa toca baixinho; a mão do rei aperta o cabo da lança.
+    // [Sugestão aceita] Escuro. Uma harpa toca baixinho. O rei no trono, a lança em pé na mão, olhando fixo para a
+    // frente, para onde alguém toca. A câmera chega perto; de lado, a mão aperta o cabo, com o rosto dele em cima.
     d.at(0);
-    d.camera.cut({ pos: [TRONO[0] - 1.25, 1.2, TRONO[1] + 1.75], lookAt: [TRONO[0] - 0.4, 1.1, TRONO[1] + 0.3], fov: 28 });
-    d.sound('harpa-pastor', { length: 3.2, fade: 0.4 });
+    saul.behave('watch', { point: [DIANTE[0], 1.0, DIANTE[1] - 0.7], mood: 'calm' });
+    saul.express('angry', { amount: 0.8 });
+    d.camera.cut({ pos: [TRONO[0] + 0.5, 1.15, TRONO[1] + 3.6], lookAt: [TRONO[0] - 0.1, 1.35, TRONO[1]], fov: 40 });
+    d.camera.moveTo({ pos: [TRONO[0] + 0.35, 1.25, TRONO[1] + 2.6], lookAt: [TRONO[0] - 0.1, 1.4, TRONO[1]], fov: 38 });
+    d.sound('harpa-pastor', { length: 3.6, fade: 0.4 });
     d.sound('tensao-saul');
-    d.wait(0.8);
-    saul.hand('fist', { hand: 'right', duration: 1.4 });
-    d.camera.moveTo({ pos: [TRONO[0] - 1.05, 1.18, TRONO[1] + 1.5], lookAt: [TRONO[0] - 0.4, 1.08, TRONO[1] + 0.3], fov: 24 });
-    d.wait(1.0);
+    d.wait(1.7);
+    d.camera.cut({ pos: [TRONO[0] + 0.45, 1.35, TRONO[1] + 1.9], lookAt: [TRONO[0] - 0.12, 1.3, TRONO[1] + 0.15], fov: 38 });
+    saul.hand('fist', { hand: 'right', duration: 0.9 });
+    d.wait(1.2);
 
     // ---- Abertura ----
     d.world.rule('noite', false, { duration: 0 });
@@ -336,10 +340,10 @@ export default direct(
       ['saul-janela', 'Abner. De hoje em diante, os teus olhos nele.', { tone: 'firme' }],
       ['abner-salao', 'Sim, majestade.'],
     ]);
-    // Close nos olhos do rei, as fogueiras atrás dele, pela janela.
+    // O rosto do rei na janela, de fora, de perto (o rosto inteiro, não só os olhos).
     saulJ.turnTo(180);
     saulJ.behave('watch', { point: [PRACA[0], 0.8, PRACA[1]], mood: 'worried' });
-    d.camera.cut({ pos: [JANELA[0] + 0.05, 1.86, JANELA[1] + 0.25], lookAt: [JANELA[0], 1.86, JANELA[1] - 0.75], fov: 24 });
+    d.camera.cut({ pos: [JANELA[0] + 0.1, 1.85, JANELA[1] + 1.3], lookAt: [JANELA[0], 1.8, JANELA[1] - 0.75], fov: 30 });
     d.wait(2.2);
     ambiente('palacio-noite', cena, 0.6);
 
@@ -366,8 +370,8 @@ export default direct(
     daviS.behave('attend', { object: 'saul', mood: 'calm' });
     d.do('davi-salao', 'move', { name: 'strum' }, { duration: 0.6 });
     const harpa = d.now;
-    // O Davi tocando, como no ep. 2: de frente, do lado do trono.
-    d.camera.cut({ pos: [DIANTE[0] + 1.1, 1.45, DIANTE[1] - 2.4], lookAt: [DIANTE[0], 1.0, DIANTE[1] - 0.7], fov: 38 });
+    // O Davi tocando, como no ep. 2: de frente, do lado do trono, de corpo inteiro no banco, com a harpa.
+    d.camera.cut({ pos: [DIANTE[0] + 1.5, 1.35, DIANTE[1] - 3.6], lookAt: [DIANTE[0], 0.75, DIANTE[1] - 0.7], fov: 42 });
     d.wait(2.2);
     // O mesmo travelling do ep. 2, do Davi até o rei. Mas agora o Saul não fecha os olhos: olha fixo para o Davi.
     d.camera.cut({ pos: [TRONO[0] + 1.3, 1.2, TRONO[1] + 6.4], lookAt: [TRONO[0], 1.0, TRONO[1] + 4.6], fov: 42 });
@@ -376,18 +380,19 @@ export default direct(
     saul.express('scared', { amount: 0 });
     saul.behave('watch', { point: [DIANTE[0], 1.1, DIANTE[1] - 0.7], mood: 'calm' });
     d.wait(2.4);
-    // A mão aperta a lança (o plano do gancho, agora com o rosto).
-    d.camera.cut({ pos: [TRONO[0] - 1.25, 1.2, TRONO[1] + 1.75], lookAt: [TRONO[0] - 0.4, 1.1, TRONO[1] + 0.3], fov: 28 });
+    // A mão aperta a lança: o mesmo plano do gancho, o rosto em cima e a mão no cabo embaixo.
+    d.camera.cut({ pos: [TRONO[0] + 0.45, 1.35, TRONO[1] + 1.9], lookAt: [TRONO[0] - 0.12, 1.3, TRONO[1] + 0.15], fov: 38 });
     saul.hand('fist', { hand: 'right', duration: 1.0 });
     d.wait(0.8);
     // [GANCHO, pico] O rosto do rei, de perto.
-    d.camera.cut({ pos: [TRONO[0] + 0.35, 1.68, TRONO[1] + 1.15], lookAt: [TRONO[0], 1.62, TRONO[1]], fov: 30 });
+    d.camera.cut({ pos: [TRONO[0] + 0.45, 1.65, TRONO[1] + 2.0], lookAt: [TRONO[0], 1.55, TRONO[1]], fov: 32 });
     saul.express('angry', { amount: 0.6, duration: 0.8 });
     saul.say('Vou cravar o Davi na parede.', { tone: 'baixo', gesture: 0 });
     // A música para. O Davi levanta os olhos.
     d.do('davi-salao', 'move', { name: 'strum', amount: 0 }, { duration: 0.4 });
     ambiente('harpa-pastor', harpa, 0.55);
-    d.camera.cut({ pos: [DIANTE[0] - 0.3, 1.25, DIANTE[1] - 1.4], lookAt: [DIANTE[0], 1.05, DIANTE[1] - 0.7], fov: 32 });
+    d.camera.cut({ pos: [DIANTE[0] + 0.7, 1.3, DIANTE[1] - 3.1], lookAt: [DIANTE[0], 0.95, DIANTE[1] - 0.7], fov: 34 });
+    daviS.behave('attend', { object: 'saul', mood: 'worried' });
     daviS.lookAt('saul', { duration: 0.4 });
     d.wait(0.6);
     // O rei se levanta e ergue a lança. O rosto do Davi muda.
@@ -401,8 +406,18 @@ export default direct(
     // Corte abrupto para preto. O som de uma lança se cravando na parede.
     d.world.blackout(true);
     d.sound('lanca-parede');
+    // No escuro, o Davi larga a harpa e sai (18:11: ele se desvia). Ninguém vê.
+    d.background(() => {
+      daviS.standUp([DIANTE[0] + 0.5, DIANTE[1] + 0.3], { yaw: -90, duration: 0.5 });
+      daviS.putDown('harpa', [DIANTE[0] + 0.2, 0.03, DIANTE[1] - 0.35], { duration: 0.6 });
+      daviS.walkTo([DIANTE[0] + 3.6, DIANTE[1] + 2.4], { speed: 2.2 });
+    });
+    d.wait(2.2);
+    // A imagem volta devagar: o banco vazio e a harpa caída no chão.
+    d.camera.cut({ pos: [DIANTE[0] - 0.9, 0.5, DIANTE[1] - 2.0], lookAt: [DIANTE[0] + 0.05, 0.3, DIANTE[1] - 0.55], fov: 40 });
+    d.camera.moveTo({ pos: [DIANTE[0] - 0.7, 0.45, DIANTE[1] - 1.6], lookAt: [DIANTE[0] + 0.05, 0.3, DIANTE[1] - 0.55], fov: 38 });
+    d.world.blackout(false, { duration: 1.2 });
     ambiente('palacio-noite', cena, 0.4);
-    d.wait(1.8);
 
     // ---- 7. Fim (2:25) ----
     d.sound('musica-saul', { length: 18, fade: 1.5 });

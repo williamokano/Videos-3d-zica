@@ -122,7 +122,7 @@ Novo na v3 (ver "O que mudou e por quê"): a abertura com a lança, o Abner ouvi
 
 *A música para. O Davi levanta os olhos. O Saul se levanta e ergue a lança. O rosto do Davi muda.*
 
-*Corte abrupto para preto. O som de uma lança se cravando na parede.* `⏸` *2 s de preto e silêncio.*
+*Corte abrupto para preto. O som de uma lança se cravando na parede.* `⏸` *2 s de preto. A imagem volta devagar: o banco vazio e a harpa caída no chão (o Davi se desviou e saiu, 18:11). O narrador fala por cima.*
 
 ## 7. Fim (2:25–2:42)
 
