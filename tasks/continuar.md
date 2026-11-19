@@ -1,4 +1,6 @@
-# Para continuar (estado em 2026-11-15)
+# Para continuar (estado em 2026-11-19)
+
+**Próximo passo:** a série nova do relógio no braço. Leia primeiro `tasks/handoff-serie-tempo.md` (o pedido do autor como ele escreveu e as decisões).
 
 Leia antes de tudo: `tasks/lessons.md` (todas as lições valem), `canal/vozes.json`, as skills em `.claude/skills/`
 (`write-episode`, `direct-actions`, `create-character`, `publicar`, `agendar`) e as fichas em
