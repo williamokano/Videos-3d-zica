@@ -23,7 +23,8 @@ Em São Paulo, todo mundo nasce com um relógio na pele do antebraço. Até os 2
 3. **Aos 25, a pressão.** Na meia-noite do aniversário, a pessoa sente um aperto no braço e no peito, como uma mão fechando. Dura um segundo. O relógio começa a contar para baixo e não para mais.
 4. **Ninguém envelhece depois dos 25.** O corpo para nos 25 para sempre. **Não existem velhos nem idosos.** Uma mãe de 49 e o filho de 24 parecem da mesma idade.
    - **Os muito ricos esquecem o parentesco.** Quem tem séculos já não sabe direito quem é mãe, filha, irmã ou tia. Ninguém envelhece, e com tanto tempo há coisa demais para lembrar.
-   - **Ninguém é imortal.** Morre-se de acidente, de doença e de violência. Por isso todo mundo tem medo de arma, de assalto e de trânsito, e quem tem séculos tem mais medo ainda.
+   - **Imortal só para o tempo.** Ninguém morre de velhice, e as doenças que vêm com a idade (as de idoso) quase não aparecem. Mas todo mundo pode adoecer e morrer de doença, de acidente e de violência. Por isso todo mundo tem medo de arma, de assalto e de trânsito, e quem tem séculos tem mais medo ainda.
+   - **A medicina avançou, para quem paga.** Câncer e outras doenças graves se curam com relativa facilidade, mas o tratamento custa caro em tempo. O rico se cura; o pobre adoece e conta os dias. (A bombinha da Bia está nessa conta.)
 5. **Tempo é dinheiro.** Salário, gorjeta, preço, dívida e aluguel são em tempo. Os preços aparecem em placas e telas: "Pastel 1:30", "Passagem 1:00", "Aluguel 6 dias". A tabela está em "Economia".
 6. **Como o tempo passa de um para o outro.**
    - **Máquinas:** encostando o braço na maquininha, no cofre ou num sistema de cobrança (catraca, caixa do mercado, app). Com isso se paga e se recebe.
