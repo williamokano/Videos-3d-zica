@@ -21,6 +21,7 @@ Elogia o irmão em voz alta.
 - Ep. 1: passa primeiro diante do Samuel e não é escolhido; fica ofendido.
 - Ep. 3: dá a bronca no Davi no acampamento (17:28).
 - Ep. 4: grita para o irmão voltar ("Davi! Volta!"); depois, no silêncio, só olha.
+- Ep. 5: na volta, vê o povo cercar o caçula e não elogia ("Tô vendo.").
 
 ## Voz
 Fabio Oliveira (`canal/vozes.json`).

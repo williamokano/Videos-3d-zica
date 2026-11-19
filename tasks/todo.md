@@ -133,5 +133,5 @@ Episódio:
 - [x] Vozes: Jônatas = Gabriel; mulheres = Keren e Yasmin Alves; figurantes com vozes aprovadas; `npm run voz`
 - [x] Sons novos (`festa-tamborins`, `lanca-parede`) e música sob a aliança e a janela
 - [x] Render final (2:50.1) e pacote de lançamento (`publicacao/ep005/`)
-- [ ] Data, hora e "pode" para `agendar` (token do YouTube vence por volta de 24/11)
+- [x] Publicado no YouTube em 2026-11-19: https://youtube.com/shorts/t9SlkPqou5I
 - [ ] Revisor: a parede de uma janela conta como inteira (aviso falso em "fala-tapada" pela janela); conferir "a mesma pessoa duas vezes no quadro"
