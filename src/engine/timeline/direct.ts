@@ -13,6 +13,8 @@ import '../actions/audio';
 import '../actions/endcard';
 import '../actions/titlecard';
 import '../actions/censor';
+import '../actions/clock';
+import { parseAmount, parseClock } from '../character/clock';
 import { channelAt, compileActions, focusAt, placementAt, seatedDrop, type ActionClip, type Ease, type WalkPath } from '../actions/catalog';
 import type { CastMember } from '../character/cast';
 import type { Bible } from '../bible';
@@ -105,12 +107,22 @@ export interface Actor {
   /** Put a held item in the pocket; `pickUp` takes it out again. */
   putAway(item: string, options?: StepOptions & { bag?: boolean }): Step;
   /** Lift what is in the hand to the eyes (to read a phone) or to the chest; stays up until `lower`. */
-  raise(to?: 'eyes' | 'chest', options?: StepOptions): Step;
+  raise(to?: 'eyes' | 'chest', options?: StepOptions & { hand?: 'left' | 'right' }): Step;
+  /** Turn the inside of the forearm up, where the clock is (hora-contada): `'self'` to read it, `'out'` to show it. Stays until `lower`. */
+  showArm(to?: 'self' | 'out', options?: StepOptions & { hand?: 'left' | 'right' }): Step;
   lower(options?: StepOptions): Step;
   /** Point at another character, an object by id, or a point: arm out, eyes on it, arm back at the end. A longer `duration` holds it. */
   pointAt(target: Actor | string | Vec3, options?: StepOptions & { hand?: 'left' | 'right' }): Step;
   /** Hold the hands in a pose until told otherwise: "grip", "point", "fist", "open", "type", or "relaxed". */
   hand(pose: 'relaxed' | 'grip' | 'point' | 'fist' | 'open' | 'type', options?: StepOptions & { hand?: 'left' | 'right' | 'both' }): Step;
+  /**
+   * The clock on the arm (hora-contada). Balances are seconds or "AAAA:DDD:HH:MM:SS" ("02:00:00" is two hours).
+   * `set` puts the balance at a value (a jump in time; with `duration` the numbers run to it), `add` adds or,
+   * with "-", takes away over the step (a payment: 1.2 s), `run: true` starts it at 25.
+   */
+  clock(change: { set?: number | string; add?: number | string; run?: boolean }, options?: StepOptions): Step;
+  /** Time from this arm to another's, over the step (3 s): the "queda de mão", or both arms on a machine. */
+  transfer(to: Actor | string, amount: number | string, options?: StepOptions): Step;
 }
 
 /** A phone of the episode, as the script sees it. None of these take time: they happen now. */
@@ -143,6 +155,11 @@ export interface Director {
   /** Any action of the catalog on any object, e.g. `d.do('carro', 'drive', { path })`. */
   do(target: string, action: string, params?: Record<string, unknown>, options?: StepOptions): Step;
   wait(seconds: number): void;
+  /**
+   * A jump in the story's time (hora-contada): every clock on an arm that is running goes down by `amount`
+   * (seconds or "AAAA:DDD:HH:MM:SS"), all together, the numbers running fast over `duration` (default 1.5 s).
+   */
+  passTime(amount: number | string, options?: StepOptions): Step;
   /** Move the clock to a time. */
   at(time: number): void;
   /** Wait until a time, if it has not passed yet. Takes a time or a step (its end). */
@@ -404,10 +421,14 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
       say: (text, options) => (options?.to !== undefined && faceFor(id, options.to), run(id, 'say', { text, to: options?.to === undefined ? undefined : idOf(options.to), tone: options?.tone, gesture: options?.gesture, filter: options?.filter, take: voiced(id, text, options?.tone) }, options)),
       behave: (mode, options) => instant(id, 'behave', { mode, group: options?.group, object: options?.object === undefined ? undefined : idOf(options.object), point: options?.point, mood: options?.mood }),
       putAway: (item, options) => run(item, 'putAway', { bag: options?.bag }, options),
-      raise: (to, options) => run(id, 'raise', { to }, options),
+      raise: (to, options) => run(id, 'raise', { to, hand: options?.hand }, options),
+      showArm: (to, options) => run(id, 'showArm', { to, hand: options?.hand }, options),
       lower: (options) => run(id, 'lower', {}, options),
       pointAt: (target, options) => run(id, 'pointAt', { ...(Array.isArray(target) ? { point: target } : { object: idOf(target) }), hand: options?.hand }, options),
       hand: (pose, options) => run(id, 'hand', { pose, hand: options?.hand }, options),
+      clock: (change, options) =>
+        run(id, 'clock', { set: change.set === undefined ? undefined : parseClock(change.set), add: change.add === undefined ? undefined : parseAmount(change.add), run: change.run }, options),
+      transfer: (to, amount, options) => run(id, 'transfer', { to: idOf(to), amount: parseClock(amount) }, options),
     };
   };
 
@@ -437,6 +458,19 @@ export function resolveScript(source: EpisodeScript, built: BuiltLocation, chara
     actor,
     phone,
     do: run,
+    passTime(amount, options) {
+      const seconds = parseClock(amount);
+      const compiled = compileActions(clips, targets, services, initial);
+      const running = targets.filter((t) => t.kind === 'character' && 'clock' in t.channels && channelAt(compiled, t.id, 'clock.rate', now) > 0);
+      const start = now;
+      let end = start;
+      for (const t of running) {
+        now = start;
+        end = Math.max(end, run(t.id, 'clock', { add: -seconds }, { duration: 1.5, ...options }).end);
+      }
+      now = end;
+      return { start, end };
+    },
     wait(seconds) {
       if (!(seconds >= 0)) throw new Error(`wait: os segundos precisam ser zero ou mais, e veio ${seconds}.`);
       now = round(now + seconds);

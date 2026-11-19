@@ -9,6 +9,7 @@ import '../actions/titlecard';
 import '../actions/censor';
 import '../actions/audio';
 import '../actions/phone';
+import '../actions/clock';
 import '../assets';
 import { channelAt, compileActions, evaluateActions, evaluateLinks, gazeAt, placementAt, seatedDrop, type CompiledActions, type Link } from '../actions/catalog';
 import * as THREE from 'three';
@@ -25,8 +26,9 @@ export function buildCast(episode: Episode, characters: CharacterDef[], rigs: Re
   return (episode.cast ?? []).map((member) => {
     const def = characters.find((c) => c.id === member.character);
     if (!def) throw new Error(`Personagem "${member.character}" não existe na pasta characters da série.`);
-    // A ready-made body (GLB) cannot take a different look.
-    return buildCharacter(member, { ...def, ...member.look, id: def.id }, member.look ? undefined : rigs[def.id]);
+    // A ready-made body (GLB) cannot take a different look, nor a clock on the arm.
+    const changed = member.look || member.clock;
+    return buildCharacter(member, { ...def, ...member.look, ...(member.clock ? { clock: member.clock } : {}), id: def.id }, changed ? undefined : rigs[def.id]);
   });
 }
 

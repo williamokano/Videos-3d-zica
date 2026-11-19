@@ -5,6 +5,7 @@ import { buildBody } from './body';
 import { palmToward, reachPose, wristPosition, type Side } from './ik';
 import { EXPRESSIONS, HAND_POSE_NAMES, MOVE_NAMES, VISEME_NAMES, blink, carryPose, crouchPose, locomotionPose, motionSeed, movePose, resolveFace, resolveHand, ridePose, sitPose, splitGaze, throwWeight } from './motion';
 import type { CharacterDef, CharacterRig, HandShape, Joint } from './types';
+import { parseClock, type ClockSpec } from './clock';
 
 /** A character placed in an episode. */
 export interface CastMember {
@@ -22,6 +23,8 @@ export interface CastMember {
   look?: Partial<CharacterDef>;
   /** Starts sitting on something this high above the floor (a chair seat is about 0.46), at `at`. `standUp` gets them up. */
   seated?: number;
+  /** The clock on the arm in this episode (hora-contada): takes the place of the one in the character file. */
+  clock?: ClockSpec;
 }
 
 /** Meters covered by one walk cycle of a 1.7 m character. */
@@ -43,6 +46,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   object.name = id;
   object.add(rig.object);
   const names = Object.keys(EXPRESSIONS);
+  const spec = member.clock ?? def.clock;
   const state: Record<string, number> = {
     x: member.at[0], y: (member.elevation ?? 0) + (member.seated ?? 0), z: member.at[1], yaw: member.yaw ?? 0,
     // `seat` is how far above the floor the seat under the character is.
@@ -50,11 +54,15 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     carryL: 0, carryR: 0,
     reachL: 0, 'reachL.x': 0, 'reachL.y': 0, 'reachL.z': 0, 'reachL.local': 0,
     reachR: 0, 'reachR.x': 0, 'reachR.y': 0, 'reachR.z': 0, 'reachR.local': 0,
+    // The inside of the forearm turned up (the clock): to read it (`.out` 0) or to show it (`.out` 1).
+    showArmL: 0, 'showArmL.out': 0, showArmR: 0, 'showArmR.out': 0,
     ...Object.fromEntries(names.map((n) => [`expr.${n}`, 0])),
     ...Object.fromEntries(names.map((n) => [`tone.${n}`, 0])),
     ...Object.fromEntries(MOVE_NAMES.map((n) => [`move.${n}`, 0])),
     // One channel per worn piece: shown from 0.5 up, so an episode can put armor on and take it off.
     ...Object.fromEntries((def.wear ?? []).map((w) => (typeof w === 'string' ? { id: w } : w)).map((w) => [`wear.${w.id}`, w.hidden ? 0 : 1])),
+    // The clock on the arm: the balance at time t is `clock - clock.rate * t` (see clock.ts).
+    ...(spec ? { clock: parseClock(spec.left), 'clock.rate': spec.running === false ? 0 : 1 } : {}),
     ...Object.fromEntries(VISEME_NAMES.map((n) => [`vis.${n}`, 0])),
     ...Object.fromEntries((['L', 'R'] as Side[]).flatMap((side) => HAND_POSE_NAMES.map((n) => [`hand${side}.${n}`, 0]))),
   };
@@ -67,6 +75,10 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
   const hand = new THREE.Vector3();
   // Where a hand that holds something up to be read turns its palm: back to the face, and a little up.
   const face = new THREE.Vector3(0, 0.25, 1).normalize();
+  // Showing the inside of the forearm: up and toward the eyes to read it, or forward and up to show it.
+  const toEyes = new THREE.Vector3(0, 1, 0.55).normalize();
+  const toFront = new THREE.Vector3(0, 0, -1);
+  const shownTo = new THREE.Vector3();
   // Arms crossed: elbows out to the sides and a little ahead, not back into the body; palms against the body.
   const crossBend = new THREE.Vector3(1, -0.7, -0.35);
   const inward = new THREE.Vector3();
@@ -157,7 +169,13 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
       weights.hold = Math.max(weights.hold, raised * (1 - weights.type));
       weights.grip *= 1 - raised;
       shapes[side] = resolveHand(weights, t + seed);
-      if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
+      const shown = state[`showArm${side}`];
+      if (shown > 0.01) {
+        // The palm up, open, so the clock on the inside of the forearm faces the eyes or whoever is in front.
+        weights.open = Math.max(weights.open * (1 - shown), shown * 0.6);
+        shownTo.copy(toEyes).lerp(toFront, state[`showArm${side}.out`]).normalize();
+        pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, shownTo) * shown, 0, 0] } };
+      } else if (raised > 0.01) pose = { lift: pose.lift, joints: { ...pose.joints, [`hand${side}`]: [palmToward(pose, side, face) * raised, 0, 0] } };
       else if (crossed[side] > 0.01) {
         // The palm toward the other arm and the body, the wrist bent so the hand wraps around that arm.
         const sign = side === 'R' ? 1 : -1;
@@ -168,6 +186,7 @@ export function buildCharacter(member: CastMember, def: CharacterDef, rig: Chara
     for (const channel of worn) rig.showWear?.(channel.slice(5), state[channel] >= 0.5);
     rig.applyPose(pose);
     rig.setHands?.(shapes.L, shapes.R);
+    if (spec) rig.setClock?.(Math.max(0, state.clock - state['clock.rate'] * t), state['clock.rate'] > 0, t);
     const expressions = Object.fromEntries(names.map((n) => [n, Math.max(state[`expr.${n}`], state[`tone.${n}`], ambient?.expressions[n] ?? 0)]));
     // A fixed stare blinks only now and then.
     const stare = ambient?.stare ?? 0;

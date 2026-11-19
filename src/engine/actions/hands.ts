@@ -81,6 +81,10 @@ export const BODY = {
   /** Where a hand holds something to be read. */
   eyes: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.05 : -0.05, 1.4, -0.36],
   chest: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.08 : -0.08, 1.2, -0.3],
+  /** The wrist when the forearm lies across in front of the chest, to read the clock on it. */
+  arm: (side: 'L' | 'R'): Point3 => [side === 'R' ? -0.04 : 0.04, 1.13, -0.34],
+  /** The wrist when the forearm stands up in front of the shoulder, palm forward, to show the clock to someone. */
+  armOut: (side: 'L' | 'R'): Point3 => [side === 'R' ? 0.2 : -0.2, 1.47, -0.3],
 };
 
 /** Channel writes that take a hand of `by` to a place on its own body, following `amount(u)`. */

@@ -326,6 +326,41 @@ registerAction({
 });
 
 registerAction({
+  id: 'showArm',
+  description: 'O personagem vira a parte de dentro do antebraço para cima, onde fica o relógio (hora-contada): "self" deita o antebraço à frente do peito para ler; "out" levanta o antebraço em pé à frente do ombro, palma para a frente, para mostrar a alguém. Lendo, a cabeça baixa para o braço (depois, "lookAt" ou "lookAhead"). Fica assim até um "lower".',
+  appliesTo: ['character'],
+  params: {
+    to: { type: 'string', description: '"self" (padrão, para ler) ou "out" (para mostrar)' },
+    hand: { type: 'string', description: '"left" (padrão, o braço do relógio) ou "right"' },
+  },
+  duration: 0.7,
+  compile(ctx) {
+    const to = (ctx.params.to as string | undefined) ?? 'self';
+    if (to !== 'self' && to !== 'out') ctx.fail('"to" precisa ser "self" ou "out".');
+    const asked = (ctx.params.hand as string | undefined) ?? 'left';
+    if (asked !== 'left' && asked !== 'right') ctx.fail('"hand" precisa ser "left" ou "right".');
+    const side = asked === 'left' ? 'L' : 'R';
+    if (ctx.riderOn(ctx.target.id, `hand${side}`)) ctx.fail(`a mão ${asked === 'left' ? 'esquerda' : 'direita'} está segurando algo; guarde antes de mostrar o braço.`);
+    const out = to === 'out' ? 1 : 0;
+    const point = (out ? BODY.armOut : BODY.arm)(side);
+    // Reading it, the eyes go to the middle of the forearm, a little before the wrist.
+    const { pos, yaw } = ctx.placeOf(ctx.target.id);
+    const k = ctx.target.traits.bodyScale ?? 1;
+    const a = (yaw * Math.PI) / 180;
+    const [lx, ly, lz] = [point[0] * k + (side === 'L' ? -0.06 : 0.06) * k, (point[1] - 0.02) * k, point[2] * k];
+    const look: [number, number, number] = [pos[0] + lx * Math.cos(a) + lz * Math.sin(a), pos[1] + ly, pos[2] - lx * Math.sin(a) + lz * Math.cos(a)];
+    return {
+      gaze: out ? undefined : { at: look },
+      writes: [
+        ...reachBody(ctx.target.id, side, point, 1),
+        { channel: `showArm${side}`, to: 1 },
+        { channel: `showArm${side}.out`, at: () => out },
+      ],
+    };
+  },
+});
+
+registerAction({
   id: 'lower',
   description: 'O personagem abaixa a mão que tinha levantado com "raise".',
   appliesTo: ['character'],
@@ -334,7 +369,9 @@ registerAction({
   compile(ctx) {
     const sides = (['L', 'R'] as const).filter((s) => ctx.current(`reach${s}`) > 0.01);
     if (!sides.length) ctx.fail('o personagem não está com a mão levantada.');
-    return { writes: sides.map((s) => ({ channel: `reach${s}`, to: 0 })) };
+    // An arm turned to show its clock turns back as it comes down.
+    const shown = (['L', 'R'] as const).filter((s) => ctx.current(`showArm${s}`) > 0.01);
+    return { writes: [...sides.map((s) => ({ channel: `reach${s}`, to: 0 })), ...shown.map((s) => ({ channel: `showArm${s}`, to: 0 }))] };
   },
 });
 

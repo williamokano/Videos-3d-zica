@@ -157,6 +157,12 @@ export interface CharacterDef {
    */
   wear?: (string | import('./wear').WearSpec)[];
   /**
+   * The clock in the skin of the forearm (series hora-contada): the balance when the episode starts and whether
+   * it is counting down. It counts by itself from there; the actions `clock` and `transfer` change it. A cast
+   * member's `clock` takes its place in one episode.
+   */
+  clock?: import('./clock').ClockSpec;
+  /**
    * Replace the built-in body by a model: file name of a GLB next to this file. The model must be skinned
    * and stand in a T-pose. Without face morph targets it has no expressions and no lip-sync.
    */
@@ -189,4 +195,6 @@ export interface CharacterRig {
   palm?(side: 'L' | 'R'): import('three').Object3D;
   /** Bodies with `wear`: show or hide every part of one worn piece, by its wearable id (putting armor on and off). */
   showWear?(id: string, on: boolean): void;
+  /** Bodies with a clock on the arm: what it shows now (seconds left, whether it runs, the time, for the blinking). */
+  setClock?(seconds: number, running: boolean, t: number): void;
 }

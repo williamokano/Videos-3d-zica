@@ -1,4 +1,5 @@
 import { buildWear } from './wear';
+import { buildArmClock } from './clock';
 import * as THREE from 'three';
 import { mat, rbox } from '../assets/registry';
 import { JOINTS, OFFSETS, PARENT, type CharacterDef, type CharacterRig, type FaceParams, type HandShape, type Joint } from './types';
@@ -488,6 +489,11 @@ export function buildBody(def: CharacterDef): CharacterRig {
     worn.set(id!, [...(worn.get(id!) ?? []), object]);
   }
 
+  // The clock in the skin of the forearm, just over the skin: a sleeve over the forearm covers it.
+  const clockSide = def.clock?.arm ?? 'L';
+  const clock = def.clock ? buildArmClock(clockSide, 0.045 * wide * 1.035, 0.035, 0.215) : undefined;
+  if (clock) joints[`forearm${clockSide}`].add(clock.object);
+
   root.traverse((o) => {
     if (o instanceof THREE.Mesh && !o.userData.noShadow) o.castShadow = o.receiveShadow = true;
   });
@@ -517,5 +523,7 @@ export function buildBody(def: CharacterDef): CharacterRig {
     showWear(id, on) {
       for (const object of worn.get(id) ?? []) object.visible = on;
     },
+    // The forearm turns with the wrist, so the numbers stay on the palm side.
+    setClock: clock && ((seconds, running, t) => clock.show(seconds, running, t, joints[`hand${clockSide}`].rotation.x)),
   };
 }

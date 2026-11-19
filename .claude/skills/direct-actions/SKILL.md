@@ -112,6 +112,32 @@ A tela é desenhada pelo motor (`src/engine/ui/phone.ts`) a partir dos eventos d
 
 Para ler em primeira pessoa: `pickUp`, `raise()`, `lookAt('celular')` e aproxime com `d.camera.moveTo({ fov: 38 })` (duas chamadas com `fov` diferente, separadas por um `wait`, fazem o zoom; 38 deixa as mensagens legíveis sem cortar a tela).
 
+### Relógio no braço (hora-contada)
+
+Números verdes na pele de dentro do antebraço esquerdo, no formato `AAAA:DDD:HH:MM:SS` (`src/engine/character/clock.ts`). O saldo é uma propriedade que conta de verdade: os canais `clock` e `clock.rate` dão `saldo(t) = clock - rate * t`. Um relógio ligado desce sozinho, segundo a segundo, sem nada escrito; um parado (menos de 25 anos) fica em `0001:000:00:00:00`.
+
+- **Saldo inicial:** `clock: { left: '0000:002:02:17:40' }` na ficha (`characters/<id>.json`) ou no elenco do episódio, que manda sobre a ficha. Use `running: false` para quem tem menos de 25 e `arm: 'R'` para o braço direito.
+- **Saldos:** em segundos ou como no braço. Com menos campos, a conta é da direita: `'02:00:00'` são duas horas, e `'1:00:00:00'` é um dia.
+- **Mudanças:**
+  - `ator.clock({ set })` acerta o saldo, no começo de uma cena ou depois de um pulo. Com `duration`, os números correm até o valor.
+  - `ator.clock({ add: '-01:00:00' })` paga ou recebe ao longo de 1,2 s.
+  - `ator.clock({ run: true })` liga o relógio aos 25, sem salto nos números.
+  - `ator.transfer(outro, '01:00:00')` passa tempo de um braço para o outro em 3 s: é a queda de mão ou a máquina.
+  - `d.passTime('1:00:00:00')` é um pulo de tempo: todos os relógios ligados descem juntos e rápido (1,5 s).
+- **O motor recusa:**
+  - gastar ou receber no braço de quem tem menos de 25 (paga-se pelo cofre);
+  - tirar mais do que o braço tem;
+  - transferir de ou para quem não tem relógio.
+- **Gesto:**
+  - `ator.showArm('self')` deita o antebraço à frente do peito, com a palma para cima, e a cabeça baixa para ler.
+  - `ator.showArm('out')` levanta o antebraço em pé à frente do ombro, de palma para a frente, para mostrar a alguém.
+  - `lower()` desfaz os dois.
+  - O antebraço gira com o pulso, e a manga comprida (`longSleeves`) cobre o relógio.
+- **Câmera:**
+  - Os números estão no sentido de quem é dono do braço. No `showArm('self')`, filme por cima do ombro do lado do relógio, afastado da cabeça (a cabeça cartum tapa o braço). Visto de frente, o número fica de cabeça para baixo.
+  - No `showArm('out')`, filme de frente: os números ficam em pé, legíveis.
+- **Banco:** `demo-acoes` ep. 9, com manga curta e comprida, leitura, pulo de tempo, transferência e virada aos 25.
+
 ## Voz e som
 
 - **Voz de cada personagem**: `voice: { id }` na ficha (id de voz da ElevenLabs), ou em `look.voice` no elenco para um figurante falar com outra voz. **Voz nova só depois do teste com o autor** (skill `create-character`, "Voz": `npm run testar-voz`, amostras para ele escolher). Nunca uma voz `vetada` em `canal/vozes.json`. O narrador é `audio.narrator` na bíblia. Modelo: `audio.model` (padrão `eleven_v3`, que entende os tons).

@@ -59,3 +59,7 @@
 - **Close: rosto e ombros, não só o rosto.** O autor reclamou de três closes "com zoom muito grande" (o rei na janela, o rei e o Davi na cena da lança). Câmera a uns 2 m, `fov` 30 a 34; olhos de perto, só se o autor pedir.
 - **Preto longo cansa.** A lança no escuro funciona com ~2 s; depois a imagem volta (o banco vazio) para o narrador e o cartão final.
 - **Vertical: olhos no terço de cima.** O plano de conversa mirava os olhos no meio do quadro; no 9:16 metade da imagem ficava acima da cabeça (uma faixa de parede vazia em 0:30). `overShot` agora mira abaixo dos olhos para eles ficarem a um terço do topo.
+
+## Shell (2026-11-20)
+
+- **`rm` com variável sempre protegido.** `rm -f $S/*` dispara o alerta de apagar com caminho possivelmente vazio (viraria `rm -f /*`). Use `rm -f "${S:?}"/*` ou o caminho literal, sempre.
