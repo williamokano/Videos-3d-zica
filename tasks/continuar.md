@@ -1,6 +1,6 @@
 # Para continuar (estado em 2026-11-19)
 
-**Próximo passo:** a série nova do relógio no braço. Leia primeiro `tasks/handoff-serie-tempo.md` (o pedido do autor como ele escreveu e as decisões).
+**Próximo passo:** HORA CONTADA (série `hora-contada`), a série do relógio no braço. O pedido está em `tasks/handoff-serie-tempo.md` e em `series/hora-contada/roteiros/001-pedido.md`, junto com as respostas do autor. A bíblia (`series/hora-contada/biblia.md`) e o roteiro do ep. 1 v1 (`roteiros/001-roteiro.md`) foram escritos em 2026-11-19 e esperam a revisão do autor. Depois vêm as fichas e o teste de voz, os lugares, o mostrador no braço no motor e `episodes/001.ts`.
 
 Leia antes de tudo: `tasks/lessons.md` (todas as lições valem), `canal/vozes.json`, as skills em `.claude/skills/`
 (`write-episode`, `direct-actions`, `create-character`, `publicar`, `agendar`) e as fichas em
