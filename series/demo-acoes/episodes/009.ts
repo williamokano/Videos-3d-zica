@@ -65,5 +65,14 @@ export default direct(
     d.at(PARTES.virada);
     menino.clock({ run: true });
     d.wait(2);
+
+    // Os planos: aberto; a rica mostrando de frente; o braço do rapaz de perto, de frente e de baixo (pulo e
+    // transferência); o do menino, do mesmo jeito (a virada).
+    d.at(PARTES.lendo + 0.2);
+    d.camera.cut({ pos: [11.4, 1.4, Z + 2.2], lookAt: [11.4, 1.2, Z], fov: 30 });
+    d.at(PARTES.pulo - 0.8);
+    d.camera.cut({ pos: [9.75, 1.25, Z + 0.95], lookAt: [10.02, 1.0, Z + 0.45], fov: 30 });
+    d.at(PARTES.virada - 1);
+    d.camera.cut({ pos: [13.93, 1.3, Z + 1.0], lookAt: [14.2, 1.04, Z + 0.4], fov: 30 });
   },
 );

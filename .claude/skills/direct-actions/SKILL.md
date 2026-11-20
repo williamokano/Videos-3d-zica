@@ -134,7 +134,7 @@ Números verdes na pele de dentro do antebraço esquerdo, no formato `AAAA:DDD:H
   - `lower()` desfaz os dois.
   - O antebraço gira com o pulso, e a manga comprida (`longSleeves`) cobre o relógio.
 - **Câmera:**
-  - Os números estão no sentido de quem é dono do braço. No `showArm('self')`, filme por cima do ombro do lado do relógio, afastado da cabeça (a cabeça cartum tapa o braço). Visto de frente, o número fica de cabeça para baixo.
+  - No `showArm('self')`, o antebraço fica estendido à frente da barriga e a cabeça baixa para ele. Por cima do ombro não funciona, porque a cabeça cartum, grande e inclinada, tapa o braço. Filme de frente, a uns 50 cm do antebraço, um pouco de lado e de cima: os números ficam em pé, ao longo do braço (banco: `pos [9.75, 1.25, 6.95]`, `lookAt [10.02, 1.0, 6.45]`, `fov 30` para quem está em `[10, 6]` virado para +z).
   - No `showArm('out')`, filme de frente: os números ficam em pé, legíveis.
 - **Banco:** `demo-acoes` ep. 9, com manga curta e comprida, leitura, pulo de tempo, transferência e virada aos 25.
 
