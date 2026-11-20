@@ -1,6 +1,9 @@
 # Para continuar (estado em 2026-11-19)
 
-**Próximo passo:** HORA CONTADA (série `hora-contada`), a série do relógio no braço. O pedido está em `tasks/handoff-serie-tempo.md` e em `series/hora-contada/roteiros/001-pedido.md`, junto com as respostas do autor. A bíblia (`series/hora-contada/biblia.md`) e o roteiro do ep. 1 v1 (`roteiros/001-roteiro.md`) foram escritos em 2026-11-19 e esperam a revisão do autor. Depois vêm as fichas e o teste de voz, os lugares, o mostrador no braço no motor e `episodes/001.ts`.
+**Próximo passo:** HORA CONTADA (série `hora-contada`). Leia `tasks/todo.md` (plano e o que falta), `series/hora-contada/roteiros/001-pedido.md` (o pedido e todas as respostas do autor, como ele escreveu) e `series/hora-contada/biblia.md`. Estado em 2026-11-20:
+- bíblia e roteiro do ep. 1 v2 aprovados nos pontos que o autor respondeu (nomes, a Rosa diarista da Dona Vera, relógio verde só com números, a economia);
+- o relógio no braço está pronto no motor e foi aprovado pelo autor ("tá funcionando"): banco `demo-acoes` ep. 9, documentado na skill `direct-actions`;
+- falta, em ordem: a queda de mão (as duas mãos segurando os antebraços) e o pulso no `showArm('out')`, puxar a manga, a maquininha e o app do cofre no celular, as fichas e o teste das 6 vozes novas, os lugares e o `episodes/001.ts`.
 
 Leia antes de tudo: `tasks/lessons.md` (todas as lições valem), `canal/vozes.json`, as skills em `.claude/skills/`
 (`write-episode`, `direct-actions`, `create-character`, `publicar`, `agendar`) e as fichas em
